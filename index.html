@@ -213,7 +213,6 @@
     </main>
 
     <script>
-        // CREDENCIALES OFICIALES DE SUPABASE
         const SUPABASE_URL = 'https://cjtseuctrbdvgagudyyr.supabase.co'; 
         const SUPABASE_ANON_KEY = 'sb_publishable_4ElaI13qIakKqei9_-OiNA__PpbBBjX';
         
@@ -281,7 +280,13 @@
         function initLocalFallback() {
             let local = localStorage.getItem('jireth_geocore_db');
             if(local) {
-                db = JSON.parse(local);
+                try {
+                    let parsed = JSON.parse(local);
+                    if(parsed && parsed.holes) db = parsed;
+                } catch(e) {}
+            }
+            if(!db.holes[db.currentHole]) {
+                db.currentHole = Object.keys(db.holes)[0] || "S0001-ET";
             }
             populateSelect();
             loadCollar();
@@ -291,9 +296,9 @@
         }
 
         async function saveToSupabase(code) {
-            localStorage.setItem('jireth_geocore_db', JSON.stringify(db));
-            if(!supabaseClient) return;
             try {
+                localStorage.setItem('jireth_geocore_db', JSON.stringify(db));
+                if(!supabaseClient) return;
                 const holeData = db.holes[code];
                 await supabaseClient.from('jireth_geocore').upsert({
                     code: code,
@@ -307,6 +312,7 @@
 
         function populateSelect() {
             const sel = document.getElementById('globalHoleSelect');
+            if(!sel) return;
             sel.innerHTML = '';
             Object.keys(db.holes).forEach(code => {
                 const opt = document.createElement('option');
@@ -326,16 +332,21 @@
 
         function switchTab(id) {
             ['collar', 'logging', 'report', 'monthly'].forEach(t => {
-                document.getElementById(`sec-${t}`).classList.add('hidden');
-                document.getElementById(`tab-${t}`).classList.remove('active');
+                const el = document.getElementById(`sec-${t}`);
+                const tb = document.getElementById(`tab-${t}`);
+                if(el) el.classList.add('hidden');
+                if(tb) tb.classList.remove('active');
             });
-            document.getElementById(`sec-${id}`).classList.remove('hidden');
-            document.getElementById(`tab-${id}`).classList.add('active');
+            const targetSec = document.getElementById(`sec-${id}`);
+            const targetTab = document.getElementById(`tab-${id}`);
+            if(targetSec) targetSec.classList.remove('hidden');
+            if(targetTab) targetTab.classList.add('active');
             if(id === 'report') renderReport();
             if(id === 'monthly') renderMonthly();
         }
 
         function loadCollar() {
+            if(!db.holes[db.currentHole]) return;
             const c = db.holes[db.currentHole].collar;
             document.getElementById('collarCode').value = c.code || '';
             document.getElementById('collarCompany').value = c.company || 'IVM';
@@ -351,12 +362,188 @@
 
         async function saveCollar(e) {
             e.preventDefault();
-            const oldCode = db.currentHole;
-            const newCode = document.getElementById('collarCode').value.toUpperCase().trim();
-            
-            const hData = db.holes[oldCode];
-            hData.collar = {
-                code: newCode,
-                company: document.getElementById('collarCompany').value,
-                rig: document.getElementById('collarRig').value,
-                project: document.getElementById('collarProject')
+            try {
+                const oldCode = db.currentHole || "S0001-ET";
+                const newCode = document.getElementById('collarCode').value.toUpperCase().trim();
+                
+                if(!newCode) {
+                    alert("Por favor ingresa un código de pozo válido.");
+                    return;
+                }
+
+                if(!db.holes[oldCode]) {
+                    db.holes[oldCode] = { collar: {}, intervals: [] };
+                }
+                
+                const hData = db.holes[oldCode];
+                hData.collar = {
+                    code: newCode,
+                    company: document.getElementById('collarCompany').value,
+                    rig: document.getElementById('collarRig').value,
+                    project: document.getElementById('collarProject').value,
+                    east: parseFloat(document.getElementById('collarEast').value) || 0,
+                    north: parseFloat(document.getElementById('collarNorth').value) || 0,
+                    elev: parseFloat(document.getElementById('collarElev').value) || 0,
+                    azimuth: parseFloat(document.getElementById('collarAzimuth').value) || 0,
+                    dip: parseFloat(document.getElementById('collarDip').value) || -90,
+                    target: parseFloat(document.getElementById('collarTarget').value) || 100
+                };
+
+                if(oldCode !== newCode) {
+                    db.holes[newCode] = hData;
+                    delete db.holes[oldCode];
+                    db.currentHole = newCode;
+                }
+
+                await saveToSupabase(newCode);
+                populateSelect();
+                showMsg("✓ Ficha de Collar Guardada Correctamente");
+            } catch(err) {
+                console.error("Error al guardar collar:", err);
+                alert("Error al guardar: " + err.message);
+            }
+        }
+
+        async function createNewHoleDirect(e) {
+            e.preventDefault();
+            try {
+                const inputVal = document.getElementById('newCode').value.toUpperCase().trim();
+                const comp = document.getElementById('newCompany').value;
+                
+                if(!inputVal) return;
+
+                if(db.holes[inputVal]) {
+                    alert("¡Ya existe un pozo con este código!");
+                    return;
+                }
+
+                db.holes[inputVal] = {
+                    collar: { code: inputVal, company: comp, rig: "Geomax", project: "Complejo Jireth", east: 0, north: 0, elev: 0, azimuth: 0, dip: -90, target: 100 },
+                    intervals: []
+                };
+                db.currentHole = inputVal;
+                await saveToSupabase(inputVal);
+                populateSelect();
+                loadCollar();
+                renderIntervals();
+                switchTab('collar');
+                showMsg("✓ Pozo " + inputVal + " Creado con Éxito");
+                document.getElementById('newCode').value = '';
+            } catch(err) {
+                console.error("Error al crear pozo:", err);
+                alert("Error al crear pozo: " + err.message);
+            }
+        }
+
+        async function saveInterval(e) {
+            e.preventDefault();
+            try {
+                if(!db.holes[db.currentHole]) {
+                    db.holes[db.currentHole] = { collar: { code: db.currentHole }, intervals: [] };
+                }
+                const h = db.holes[db.currentHole];
+                const newInt = {
+                    id: Date.now(),
+                    date: document.getElementById('intDate').value,
+                    shift: document.getElementById('intShift').value,
+                    diameter: document.getElementById('intDiameter').value,
+                    from: parseFloat(document.getElementById('intFrom').value) || 0,
+                    to: parseFloat(document.getElementById('intTo').value) || 0,
+                    rec: parseFloat(document.getElementById('intRec').value) || 0,
+                    litho: document.getElementById('intLitho').value
+                };
+                h.intervals.push(newInt);
+                await saveToSupabase(db.currentHole);
+                renderIntervals();
+                showMsg("✓ Tramo Registrado con Éxito");
+            } catch(err) {
+                console.error("Error al guardar intervalo:", err);
+                alert("Error al registrar tramo: " + err.message);
+            }
+        }
+
+        async function deleteInt(id) {
+            try {
+                const h = db.holes[db.currentHole];
+                if(!h) return;
+                h.intervals = h.intervals.filter(i => i.id !== id);
+                await saveToSupabase(db.currentHole);
+                renderIntervals();
+                showMsg("✓ Tramo Eliminado");
+            } catch(err) {
+                console.error("Error al eliminar tramo:", err);
+            }
+        }
+
+        function renderIntervals() {
+            const h = db.holes[db.currentHole];
+            const tbody = document.getElementById('loggingTableBody');
+            if(!tbody || !h) return;
+            tbody.innerHTML = '';
+            h.intervals.forEach(i => {
+                const adv = i.to - i.from;
+                const recPct = adv > 0 ? (i.rec / adv) * 100 : 0;
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${i.date} (${i.shift})</td>
+                    <td style="color:#f59e0b; font-weight:bold;">${i.diameter}</td>
+                    <td>${i.from.toFixed(2)} - ${i.to.toFixed(2)}</td>
+                    <td>${adv.toFixed(2)} m</td>
+                    <td>${i.rec.toFixed(2)} m</td>
+                    <td style="font-weight:bold; color:${recPct>=80?'#10b981':'#f59e0b'};">${recPct.toFixed(1)}%</td>
+                    <td>${i.litho}</td>
+                    <td><button type="button" onclick="deleteInt(${i.id})" class="btn-danger"><i class="fa-solid fa-trash"></i></button></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function renderReport() {
+            const h = db.holes[db.currentHole];
+            const tbody = document.getElementById('dsrTableBody');
+            if(!tbody || !h) return;
+            let advSum = 0, recSum = 0;
+            tbody.innerHTML = '';
+            h.intervals.forEach(i => {
+                const adv = i.to - i.from;
+                advSum += adv;
+                recSum += i.rec;
+                const recPct = adv > 0 ? (i.rec / adv) * 100 : 0;
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${i.date}</td><td>${i.diameter}</td><td>${i.from.toFixed(2)}</td><td>${i.to.toFixed(2)}</td>
+                    <td>${adv.toFixed(2)}</td><td>${i.rec.toFixed(2)}</td><td>${recPct.toFixed(1)}%</td><td>${i.litho}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+            const globalRec = advSum > 0 ? (recSum / advSum) * 100 : 0;
+            const targetPct = h.collar.target > 0 ? (advSum / h.collar.target) * 100 : 0;
+            document.getElementById('kpiDepth').textContent = `${advSum.toFixed(2)} m`;
+            document.getElementById('kpiRec').textContent = `${globalRec.toFixed(1)}%`;
+            document.getElementById('kpiProgress').textContent = `${targetPct.toFixed(1)}%`;
+            document.getElementById('dsrTitle').textContent = `REPORTE OFICIAL DSR - POZO: ${h.collar.code} (${h.collar.company})`;
+        }
+
+        function renderMonthly() {
+            const tbody = document.getElementById('monthlyTableBody');
+            if(!tbody) return;
+            tbody.innerHTML = '';
+            Object.keys(db.holes).forEach(code => {
+                const h = db.holes[code];
+                let advSum = 0, recSum = 0;
+                h.intervals.forEach(i => { advSum += (i.to - i.from); recSum += i.rec; });
+                const avgRec = advSum > 0 ? (recSum / advSum) * 100 : 0;
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td style="color:#f59e0b; font-weight:bold;">${code}</td>
+                    <td>${h.collar.company}</td>
+                    <td>${h.collar.rig}</td>
+                    <td>${advSum.toFixed(2)} m</td>
+                    <td style="color:#10b981; font-weight:bold;">${avgRec.toFixed(1)}%</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+    </script>
+</body>
+</html>
