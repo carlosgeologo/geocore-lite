@@ -361,5 +361,58 @@
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td>${i.date}</td><td>${i.diameter}</td><td>${i.from.toFixed(2)}</td><td>${i.to.toFixed(2)}</td>
-                    <td>${adv.toFixed(2)}</td><td>${i.rec.toFixed(
+                    <td>${adv.toFixed(2)}</td><td>${i.rec.toFixed(2)}</td><td>${recPct.toFixed(1)}%</td><td>${i.litho}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+            const globalRec = advSum > 0 ? (recSum / advSum) * 100 : 0;
+            const targetPct = h.collar.target > 0 ? (advSum / h.collar.target) * 100 : 0;
+            document.getElementById('kpiDepth').textContent = `${advSum.toFixed(2)} m`;
+            document.getElementById('kpiRec').textContent = `${globalRec.toFixed(1)}%`;
+            document.getElementById('kpiProgress').textContent = `${targetPct.toFixed(1)}%`;
+            document.getElementById('dsrTitle').textContent = `REPORTE OFICIAL DSR - POZO: ${h.collar.code} (${h.collar.company})`;
+        }
 
+        function renderMonthly() {
+            const tbody = document.getElementById('monthlyTableBody');
+            tbody.innerHTML = '';
+            Object.keys(db.holes).forEach(code => {
+                const h = db.holes[code];
+                let advSum = 0, recSum = 0;
+                h.intervals.forEach(i => { advSum += (i.to - i.from); recSum += i.rec; });
+                const avgRec = advSum > 0 ? (recSum / advSum) * 100 : 0;
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td style="color:#f59e0b; font-weight:bold;">${code}</td>
+                    <td>${h.collar.company}</td>
+                    <td>${h.collar.rig}</td>
+                    <td>${advSum.toFixed(2)} m</td>
+                    <td style="color:#10b981; font-weight:bold;">${avgRec.toFixed(1)}%</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function openModal() { document.getElementById('newHoleModal').classList.remove('hidden'); }
+        function closeModal() { document.getElementById('newHoleModal').classList.add('hidden'); }
+
+        function createNewHole(e) {
+            e.preventDefault();
+            const code = document.getElementById('newCode').value.toUpperCase().trim();
+            const comp = document.getElementById('newCompany').value;
+            if(db.holes[code]) return alert("¡Ese código ya existe!");
+            db.holes[code] = {
+                collar: { code: code, company: comp, rig: "Geomax", project: "Complejo Jireth", east: 0, north: 0, elev: 0, azimuth: 0, dip: -90, target: 100 },
+                intervals: []
+            };
+            db.currentHole = code;
+            saveDB();
+            closeModal();
+            populateSelect();
+            loadCollar();
+            renderIntervals();
+            switchTab('collar');
+        }
+    </script>
+</body>
+</html>
