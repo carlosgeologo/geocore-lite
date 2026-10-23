@@ -3,273 +3,125 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jireth GeoCore Lite | Control Operativo de Perforación</title>
+    <title>Jireth GeoCore Lite | Control Operativo</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Chart.js para gráficos -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        .btn-field { min-height: 52px; font-size: 1.1rem; font-weight: 700; border-radius: 0.5rem; }
-        .input-field { min-height: 48px; font-size: 1rem; border: 2px solid #cbd5e1; }
-        .input-field:focus { border-color: #0284c7; outline: none; box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.2); }
-        @media print {
-            body * { visibility: hidden; }
-            #printable-report, #printable-report * { visibility: visible; }
-            #printable-report { position: absolute; left: 0; top: 0; width: 100%; }
-        }
-    </style>
 </head>
-<body class="bg-slate-900 text-slate-100 min-h-screen font-sans antialiased">
+<body class="bg-slate-900 text-slate-100 min-h-screen p-4 font-sans">
 
-    <!-- NOTIFICACIÓN FLOTANTE (TOAST) -->
-    <div id="toastNotification" class="fixed top-4 right-4 z-50 hidden bg-emerald-600 text-white font-bold px-6 py-3 rounded-xl shadow-2xl transition-all duration-300">
-        <span id="toastMessage">Operación realizada con éxito</span>
-    </div>
+    <div class="max-w-xl mx-auto space-y-6">
+        <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 flex justify-between items-center">
+            <h1 class="text-lg font-bold text-amber-400">Jireth GeoCore Lite</h1>
+            <span id="contadorPozos" class="text-xs bg-emerald-900 text-emerald-300 px-3 py-1 rounded font-bold">Pozos: 0</span>
+        </div>
 
-    <!-- BARRA SUPERIOR Y SELECTOR GLOBAL -->
-    <header class="bg-slate-800 border-b border-slate-700 sticky top-0 z-40 shadow-lg">
-        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col md:flex-row justify-between items-center gap-4">
-            <div class="flex items-center space-x-3">
-                <span class="bg-amber-500 text-slate-950 font-black px-3 py-1.5 rounded-lg text-lg">JGL</span>
-                <div>
-                    <h1 class="text-xl font-bold tracking-wide text-white">Jireth GeoCore Lite</h1>
-                    <p class="text-xs text-slate-400">Control Operativo & Auditoría de Sondajes</p>
-                </div>
+        <!-- FORMULARIO DE APERTURA DIRECTA -->
+        <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700 space-y-4">
+            <h2 class="text-xl font-black text-white">🛠️ Apertura de Sondaje</h2>
+            
+            <div>
+                <label class="block text-sm font-bold text-slate-300 mb-1">Código del Sondaje *</label>
+                <input type="text" id="txtCodigo" placeholder="Ej. S0003ET" class="w-full p-3 bg-slate-900 text-white border border-slate-600 rounded-lg font-bold text-lg">
             </div>
-            <div class="flex items-center gap-3 w-full md:w-auto">
-                <span class="text-xs px-3 py-1.5 rounded bg-emerald-900 text-emerald-300 font-bold shadow">⚡ Sistema Local Activo</span>
-                <label for="globalWellSelect" class="text-sm font-semibold text-slate-300 whitespace-nowrap">Pozo Activo:</label>
-                <select id="globalWellSelect" class="input-field bg-slate-700 text-white px-4 py-2 rounded-lg w-full md:w-64 font-bold">
-                    <option value="">-- Seleccione un Sondaje --</option>
-                </select>
+
+            <div>
+                <label class="block text-sm font-bold text-slate-300 mb-1">Proyecto / Sector *</label>
+                <input type="text" id="txtProyecto" placeholder="Ej. El Tronco" class="w-full p-3 bg-slate-900 text-white border border-slate-600 rounded-lg font-bold text-lg">
+            </div>
+
+            <button type="button" onclick="registrarPozo()" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-black p-4 rounded-xl text-lg shadow-lg active:scale-95 transition">
+                💾 Registrar Sondaje Ahora
+            </button>
+        </div>
+
+        <!-- LISTA DE POZOS REGISTRADOS -->
+        <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700 space-y-3">
+            <h3 class="text-md font-bold text-sky-400">📋 Sondajes Registrados en este Dispositivo</h3>
+            <div id="listaPozos" class="space-y-2">
+                <p class="text-sm text-slate-400">No hay pozos creados todavía.</p>
             </div>
         </div>
-    </header>
+    </div>
 
-    <!-- CONTENEDOR PRINCIPAL -->
-    <main class="max-w-7xl mx-auto px-4 py-6 space-y-8">
+    <script>
+        let baseDatos = { pozos: [] };
 
-        <!-- NAVEGACIÓN DE MÓDULOS -->
-        <nav class="flex flex-wrap gap-2 bg-slate-800 p-2 rounded-xl border border-slate-700 shadow-md">
-            <button onclick="switchTab('mod1')" id="btn-mod1" class="flex-1 min-w-[140px] py-3 px-4 rounded-lg font-bold text-sm bg-sky-600 text-white transition shadow">1. Apertura</button>
-            <button onclick="switchTab('mod2')" id="btn-mod2" class="flex-1 min-w-[140px] py-3 px-4 rounded-lg font-bold text-sm bg-slate-700 text-slate-300 hover:bg-slate-600 transition">2. Topografía</button>
-            <button onclick="switchTab('mod3')" id="btn-mod3" class="flex-1 min-w-[140px] py-3 px-4 rounded-lg font-bold text-sm bg-slate-700 text-slate-300 hover:bg-slate-600 transition">3. Logging & Turno</button>
-            <button onclick="switchTab('mod4')" id="btn-mod4" class="flex-1 min-w-[140px] py-3 px-4 rounded-lg font-bold text-sm bg-slate-700 text-slate-300 hover:bg-slate-600 transition">4. Cierre Pozo</button>
-            <button onclick="switchTab('mod5')" id="btn-mod5" class="flex-1 min-w-[140px] py-3 px-4 rounded-lg font-bold text-sm bg-slate-700 text-slate-300 hover:bg-slate-600 transition">5. Repositorio</button>
-        </nav>
+        function cargarDatos() {
+            try {
+                const guardado = localStorage.getItem('geo_db_v3');
+                if (guardado) {
+                    baseDatos = JSON.parse(guardado);
+                }
+            } catch(e) {
+                baseDatos = { pozos: [] };
+            }
+            actualizarVista();
+        }
 
-        <!-- MÓDULO 1: APERTURA -->
-        <section id="mod1" class="space-y-6 bg-slate-800/80 p-6 rounded-2xl border border-slate-700 shadow-xl">
-            <div class="border-b border-slate-700 pb-4">
-                <h2 class="text-2xl font-black text-amber-400 flex items-center gap-2">🛠️ Módulo 1: Apertura de Nuevo Sondaje</h2>
-                <p class="text-sm text-slate-400 mt-1">Registre la identidad administrativa del pozo antes de iniciar perforación en tajo.</p>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <label class="block text-sm font-bold text-slate-300 mb-2">Código del Sondaje *</label>
-                    <input type="text" id="codigoPozo" value="" placeholder="Ej. S0001-ET" class="input-field w-full px-4 rounded-lg bg-slate-900 text-white uppercase font-bold">
-                </div>
-                <div>
-                    <label class="block text-sm font-bold text-slate-300 mb-2">Empresa Titular / Contratista *</label>
-                    <select id="empresaSelect" onchange="toggleOtraEmpresa()" class="input-field w-full px-4 rounded-lg bg-slate-900 text-white font-bold">
-                        <option value="IVM C.A.">IVM C.A.</option>
-                        <option value="Minería Carabobo C.A.">Minería Carabobo C.A.</option>
-                        <option value="Industrias Audit">Industrias Audit</option>
-                        <option value="Havila 318">Havila 318</option>
-                        <option value="OTRA">Otra (Especificar)</option>
-                    </select>
-                </div>
-                <div id="otraEmpresaContainer" class="hidden md:col-span-2">
-                    <label class="block text-sm font-bold text-amber-300 mb-2">Especifique el Nombre de la Empresa *</label>
-                    <input type="text" id="otraEmpresaInput" placeholder="Nombre de la contrata" class="input-field w-full px-4 rounded-lg bg-slate-900 text-white">
-                </div>
-                <div>
-                    <label class="block text-sm font-bold text-slate-300 mb-2">Proyecto / Sector *</label>
-                    <input type="text" id="proyectoSector" placeholder="Ej. El Tronco / Florinda / Los Patos" class="input-field w-full px-4 rounded-lg bg-slate-900 text-white font-bold">
-                </div>
-                <div class="md:col-span-2 pt-4">
-                    <button type="button" onclick="crearNuevoPozoDirecto()" class="btn-field w-full bg-amber-500 hover:bg-amber-400 text-slate-950 shadow-lg flex items-center justify-center gap-2 cursor-pointer active:scale-95 transition-transform">
-                        💾 Crear y Abrir Sondaje en Sistema
-                    </button>
-                </div>
-            </div>
-        </section>
+        function registrarPozo() {
+            const codigoInput = document.getElementById('txtCodigo');
+            const proyectoInput = document.getElementById('txtProyecto');
 
-        <!-- MÓDULO 2: TOPOGRAFÍA -->
-        <section id="mod2" class="hidden space-y-6 bg-slate-800/80 p-6 rounded-2xl border border-slate-700 shadow-xl">
-            <div class="border-b border-slate-700 pb-4 flex justify-between items-center flex-wrap gap-4">
-                <div>
-                    <h2 class="text-2xl font-black text-amber-400 flex items-center gap-2">📍 Módulo 2: Ficha de Collar y Topografía</h2>
-                    <p class="text-sm text-slate-400 mt-1">Configuración espacial inicial y actualización con datos oficiales de topografía.</p>
-                </div>
-                <button type="button" onclick="habilitarEdicionTopografia()" class="bg-sky-600 hover:bg-sky-500 text-white font-bold px-4 py-2 rounded-lg text-sm shadow cursor-pointer">
-                    ✏️ Actualizar Datos Topográficos Oficiales
-                </button>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div>
-                    <label class="block text-sm font-bold text-slate-300 mb-2">Perforadora / Máquina *</label>
-                    <select id="maquinaSelect" onchange="toggleOtraMaquina()" class="input-field w-full px-4 rounded-lg bg-slate-900 text-white">
-                        <option value="Geomax">Geomax</option>
-                        <option value="Heng Wang">Heng Wang</option>
-                        <option value="Longyear">Longyear</option>
-                        <option value="OTRA">Otra (Especificar)</option>
-                    </select>
-                </div>
-                <div id="otraMaquinaContainer" class="hidden">
-                    <label class="block text-sm font-bold text-amber-300 mb-2">Especifique la Máquina *</label>
-                    <input type="text" id="otraMaquinaInput" placeholder="Modelo o marca" class="input-field w-full px-4 rounded-lg bg-slate-900 text-white">
-                </div>
-                <div>
-                    <label class="block text-sm font-bold text-slate-300 mb-2">Coordenada Este (m) *</label>
-                    <input type="number" step="0.01" id="topoEste" class="topo-input input-field w-full px-4 rounded-lg bg-slate-900 text-white font-bold" disabled>
-                </div>
-                <div>
-                    <label class="block text-sm font-bold text-slate-300 mb-2">Coordenada Norte (m) *</label>
-                    <input type="number" step="0.01" id="topoNorte" class="topo-input input-field w-full px-4 rounded-lg bg-slate-900 text-white font-bold" disabled>
-                </div>
-                <div>
-                    <label class="block text-sm font-bold text-slate-300 mb-2">Cota Z (m) *</label>
-                    <input type="number" step="0.01" id="topoCota" class="topo-input input-field w-full px-4 rounded-lg bg-slate-900 text-white font-bold" disabled>
-                </div>
-                <div>
-                    <label class="block text-sm font-bold text-slate-300 mb-2">Azimut (°) *</label>
-                    <input type="number" step="0.1" id="topoAzimut" class="topo-input input-field w-full px-4 rounded-lg bg-slate-900 text-white font-bold" disabled>
-                </div>
-                <div>
-                    <label class="block text-sm font-bold text-slate-300 mb-2">Inclinación (Dip °) *</label>
-                    <input type="number" step="0.1" id="topoDip" class="topo-input input-field w-full px-4 rounded-lg bg-slate-900 text-white font-bold" disabled>
-                </div>
-                <div>
-                    <label class="block text-sm font-bold text-slate-300 mb-2">Profundidad Target (m) *</label>
-                    <input type="number" step="0.1" id="topoTarget" class="topo-input input-field w-full px-4 rounded-lg bg-slate-900 text-white font-bold" disabled>
-                </div>
-                <div id="topoBtnContainer" class="hidden md:col-span-3 pt-4">
-                    <button type="button" onclick="guardarTopografiaDirecto()" class="btn-field w-full bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg cursor-pointer">
-                        💾 Guardar / Actualizar Ficha Topográfica Oficial
-                    </button>
-                </div>
-            </div>
-        </section>
+            const codigo = codigoInput.value.trim().toUpperCase();
+            const proyecto = proyectoInput.value.trim();
 
-        <!-- MÓDULO 3: CORE LOGGING & TURNOS -->
-        <section id="mod3" class="hidden space-y-8 bg-slate-800/80 p-6 rounded-2xl border border-slate-700 shadow-xl">
-            <div class="border-b border-slate-700 pb-4">
-                <h2 class="text-2xl font-black text-amber-400 flex items-center gap-2">🪵 Módulo 3: Core Logging & Control de Turnos</h2>
-                <p class="text-sm text-slate-400 mt-1">Registro de turnos, automatismo de avances por profundidad y cálculo de pago por meteorización.</p>
-            </div>
+            if (!codigo || !proyecto) {
+                alert("⚠️ Por favor ingrese el Código y el Proyecto.");
+                return;
+            }
 
-            <div class="bg-slate-900/90 p-5 rounded-xl border border-slate-700 shadow-inner">
-                <h3 class="text-lg font-bold text-sky-400 mb-3">⏱️ Apertura de Turno de Perforación</h3>
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                    <div>
-                        <label class="block text-xs font-bold text-slate-300 mb-1">Fecha del Turno *</label>
-                        <input type="date" id="turnoFecha" class="input-field w-full px-3 rounded bg-slate-900 text-white text-sm font-bold">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-300 mb-1">Turno *</label>
-                        <select id="turnoTipo" class="input-field w-full px-3 rounded bg-slate-900 text-white text-sm font-bold">
-                            <option value="Diurno">Diurno</option>
-                            <option value="Nocturno">Nocturno</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-300 mb-1">Perforador *</label>
-                        <input type="text" id="turnoPerforador" placeholder="Nombre del operador" class="input-field w-full px-3 rounded bg-slate-900 text-white text-sm font-bold">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-300 mb-1">Supervisor de Geología *</label>
-                        <input type="text" id="turnoGeologo" placeholder="Geólogo responsable" class="input-field w-full px-3 rounded bg-slate-900 text-white text-sm font-bold">
-                    </div>
-                    <div class="md:col-span-4 pt-2">
-                        <button type="button" onclick="guardarTurnoDirecto()" class="btn-field w-full bg-sky-600 hover:bg-sky-500 text-white shadow cursor-pointer">
-                            🚀 Iniciar / Activar Turno para el Sondaje
-                        </button>
-                    </div>
-                </div>
-            </div>
+            const nuevo = {
+                id: Date.now(),
+                codigo: codigo,
+                proyecto: proyecto,
+                fecha: new Date().toLocaleDateString()
+            };
 
-            <div id="seccionAvancesContainer" class="hidden space-y-6 border-t border-slate-700 pt-6">
-                <h3 class="text-lg font-bold text-emerald-400">📊 Registro de Avance y Recuperación (Tramo a Tramo)</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 bg-slate-900/60 p-5 rounded-xl border border-slate-700">
-                    <div>
-                        <label class="block text-xs font-bold text-slate-300 mb-1">Longitud de Maniobra / Avance *</label>
-                        <select id="avanceLongitud" onchange="calcularHastaAuto()" class="input-field w-full px-3 rounded bg-slate-900 text-white text-sm font-bold">
-                            <option value="1.5">1.50 m</option>
-                            <option value="3.0">3.00 m</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-300 mb-1">Desde (m) [Automático]</label>
-                        <input type="number" id="avanceDesde" readonly class="input-field w-full px-3 rounded bg-slate-800 text-slate-400 text-sm font-mono font-bold">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-300 mb-1">Hasta (m) [Cálculo Automático]</label>
-                        <input type="number" id="avanceHasta" readonly class="input-field w-full px-3 rounded bg-slate-800 text-emerald-400 text-sm font-mono font-bold">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-300 mb-1">Diámetro *</label>
-                        <select id="avanceDiametro" class="input-field w-full px-3 rounded bg-slate-900 text-white text-sm font-bold">
-                            <option value="HQ">HQ</option>
-                            <option value="NQ">NQ</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-300 mb-1">Metros Recuperados (Testigo) *</label>
-                        <input type="number" step="0.01" id="avanceRecuperados" placeholder="Ej. 1.42" class="input-field w-full px-3 rounded bg-slate-900 text-white text-sm font-bold">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-300 mb-1">Transición / Meteorización *</label>
-                        <select id="avanceMeteorizacion" class="input-field w-full px-3 rounded bg-slate-900 text-white text-sm font-bold">
-                            <option value="Suelo / Relleno">a. Suelo / Relleno (Umbral &ge; 70%)</option>
-                            <option value="Saprolita">b. Saprolita (Umbral &ge; 70%)</option>
-                            <option value="Saprock">c. Saprock (Umbral &ge; 70%)</option>
-                            <option value="Roca Oxidada">d. Roca Oxidada (Umbral &ge; 80%)</option>
-                            <option value="Roca Fracturada">e. Roca Fracturada (Umbral &ge; 70%)</option>
-                            <option value="Roca Fresca">f. Roca Fresca (Umbral &ge; 90%)</option>
-                            <option value="Zona de Veta">g. Zona de Veta (Umbral &ge; 90%)</option>
-                        </select>
-                    </div>
-                    <div class="md:col-span-3 pt-2 flex gap-3">
-                        <button type="button" id="btnGuardarAvance" onclick="guardarAvanceDirecto()" class="btn-field flex-1 bg-emerald-600 hover:bg-emerald-500 text-white shadow cursor-pointer">
-                            ➕ Registrar y Calcular Avance
-                        </button>
-                        <button type="button" id="btnCancelarEdicion" onclick="cancelarEdicionAvance()" class="hidden bg-rose-600 hover:bg-rose-500 text-white font-bold px-6 rounded-lg cursor-pointer">
-                            ❌ Cancelar Edición
-                        </button>
-                    </div>
-                </div>
+            baseDatos.pozos.push(nuevo);
+            
+            try {
+                localStorage.setItem('geo_db_v3', JSON.stringify(baseDatos));
+            } catch(e) {
+                alert("Error al guardar en el teléfono");
+                return;
+            }
 
-                <div class="overflow-x-auto border border-slate-700 rounded-xl">
-                    <table class="w-full text-left border-collapse text-sm">
-                        <thead class="bg-slate-900 text-slate-300 uppercase text-xs">
-                            <tr>
-                                <th class="p-3">#</th>
-                                <th class="p-3">Turno</th>
-                                <th class="p-3">Intervalo (m)</th>
-                                <th class="p-3">Diam</th>
-                                <th class="p-3">Recup (m)</th>
-                                <th class="p-3">% Recup</th>
-                                <th class="p-3">Meteorización</th>
-                                <th class="p-3">Pago Aplicado</th>
-                                <th class="p-3">Acumulado</th>
-                                <th class="p-3 text-center">Acción</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tablaAvancesBody" class="divide-y divide-slate-700 bg-slate-900/40">
-                        </tbody>
-                    </table>
-                </div>
+            // Limpiar campos
+            codigoInput.value = '';
+            proyectoInput.value = '';
 
-                <div class="space-y-6 pt-4">
-                    <h3 class="text-xl font-black text-amber-400 flex items-center gap-2">📈 Panel Estadístico y Dashboard en Vivo</h3>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                        <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 shadow-md border-l-4 border-l-sky-500">
-                            <p class="text-xs text-slate-400 font-bold uppercase">Metros Totales Acumulados</p>
-                            <p id="kpiMetrosTotales" class="text-3xl font-black text-white mt-1">0.00 m</p>
-                        </div>
-                        <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 shadow-md border-l-4 border-l-emerald-500">
-                            <p class="text-xs text-slate-400 font-bold uppercase">Metros Turno Activo</p>
-                            <p id="kpiMetrosTurno" class="text-3xl font-black text-emerald-400 mt-1">0.00 m</p>
-                        </div>
-                        <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 shadow-md border-l-4 border-l-amber
+            actualizarVista();
+            alert("✅ ¡Sondaje " + codigo + " registrado con éxito!");
+        }
+
+        function actualizarVista() {
+            const contenedor = document.getElementById('listaPozos');
+            const contador = document.getElementById('contadorPozos');
+            
+            contador.textContent = "Pozos: " + baseDatos.pozos.length;
+
+            if (baseDatos.pozos.length === 0) {
+                contenedor.innerHTML = '<p class="text-sm text-slate-400">No hay pozos creados todavía.</p>';
+                return;
+            }
+
+            contenedor.innerHTML = '';
+            baseDatos.pozos.forEach((p, idx) => {
+                const item = document.createElement('div');
+                item.className = "p-3 bg-slate-900 rounded-lg border border-slate-700 flex justify-between items-center";
+                item.innerHTML = `
+                    <div>
+                        <p class="font-black text-amber-400">${p.codigo}</p>
+                        <p class="text-xs text-slate-400">Proyecto: ${p.proyecto} | Fecha: ${p.fecha}</p>
+                    </div>
+                    <span class="bg-emerald-600 text-white text-xs px-2 py-1 rounded font-bold">Activo</span>
+                `;
+                contenedor.appendChild(item);
+            });
+        }
+
+        // Ejecutar al iniciar
+        cargarDatos();
+    </script>
+</body>
+</html>
