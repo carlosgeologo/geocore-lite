@@ -12,7 +12,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         .btn-field { min-height: 52px; font-size: 1.1rem; font-weight: 700; border-radius: 0.5rem; }
-        .input-field { min-height: 48px; font-size: 1rem; border: 2px solid #cbd5e1; color: #0f172a; }
+        .input-field { min-height: 48px; font-size: 1rem; border: 2px solid #cbd5e1; }
         .input-field:focus { border-color: #0284c7; outline: none; box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.2); }
         @media print {
             body * { visibility: hidden; }
@@ -34,7 +34,7 @@
                 </div>
             </div>
             <div class="flex items-center gap-3 w-full md:w-auto">
-                <span id="syncStatus" class="text-xs px-2 py-1 rounded bg-amber-900 text-amber-300 font-bold">💾 Modo Local Activo</span>
+                <span id="syncStatus" class="text-xs px-2 py-1 rounded bg-amber-900 text-amber-300 font-bold">💾 Modo Local</span>
                 <label for="globalWellSelect" class="text-sm font-semibold text-slate-300 whitespace-nowrap">Pozo Activo:</label>
                 <select id="globalWellSelect" class="input-field bg-slate-700 text-white px-4 py-2 rounded-lg w-full md:w-64 font-bold">
                     <option value="">-- Seleccione un Sondaje --</option>
@@ -61,14 +61,14 @@
                 <h2 class="text-2xl font-black text-amber-400 flex items-center gap-2">🛠️ Módulo 1: Apertura de Nuevo Sondaje</h2>
                 <p class="text-sm text-slate-400 mt-1">Registre la identidad administrativa del pozo antes de iniciar perforación en tajo.</p>
             </div>
-            <form id="formApertura" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                     <label class="block text-sm font-bold text-slate-300 mb-2">Código del Sondaje *</label>
-                    <input type="text" id="codigoPozo" required placeholder="Ej. S0001-ET" class="input-field w-full px-4 rounded-lg bg-slate-100 text-slate-900 uppercase font-bold">
+                    <input type="text" id="codigoPozo" placeholder="Ej. S0001-ET" class="input-field w-full px-4 rounded-lg bg-slate-900 text-white uppercase font-bold">
                 </div>
                 <div>
                     <label class="block text-sm font-bold text-slate-300 mb-2">Empresa Titular / Contratista *</label>
-                    <select id="empresaSelect" onchange="toggleOtraEmpresa()" class="input-field w-full px-4 rounded-lg bg-slate-100 text-slate-900 font-bold">
+                    <select id="empresaSelect" onchange="toggleOtraEmpresa()" class="input-field w-full px-4 rounded-lg bg-slate-900 text-white font-bold">
                         <option value="IVM C.A.">IVM C.A.</option>
                         <option value="Minería Carabobo C.A.">Minería Carabobo C.A.</option>
                         <option value="Industrias Audit">Industrias Audit</option>
@@ -78,18 +78,18 @@
                 </div>
                 <div id="otraEmpresaContainer" class="hidden md:col-span-2">
                     <label class="block text-sm font-bold text-amber-300 mb-2">Especifique el Nombre de la Empresa *</label>
-                    <input type="text" id="otraEmpresaInput" placeholder="Nombre de la contrata" class="input-field w-full px-4 rounded-lg bg-slate-100 text-slate-900">
+                    <input type="text" id="otraEmpresaInput" placeholder="Nombre de la contrata" class="input-field w-full px-4 rounded-lg bg-slate-900 text-white">
                 </div>
                 <div>
                     <label class="block text-sm font-bold text-slate-300 mb-2">Proyecto / Sector *</label>
-                    <input type="text" id="proyectoSector" required placeholder="Ej. El Tronco / Florinda / Los Patos" class="input-field w-full px-4 rounded-lg bg-slate-100 text-slate-900 font-bold">
+                    <input type="text" id="proyectoSector" placeholder="Ej. El Tronco / Florinda / Los Patos" class="input-field w-full px-4 rounded-lg bg-slate-900 text-white font-bold">
                 </div>
                 <div class="md:col-span-2 pt-4">
-                    <button type="submit" class="btn-field w-full bg-amber-500 hover:bg-amber-400 text-slate-950 shadow-lg flex items-center justify-center gap-2 cursor-pointer">
+                    <button type="button" onclick="crearNuevoPozoDirecto()" class="btn-field w-full bg-amber-500 hover:bg-amber-400 text-slate-950 shadow-lg flex items-center justify-center gap-2 cursor-pointer active:scale-95 transition-transform">
                         💾 Crear y Abrir Sondaje en Sistema
                     </button>
                 </div>
-            </form>
+            </div>
         </section>
 
         <!-- MÓDULO 2: TOPOGRAFÍA -->
@@ -103,10 +103,10 @@
                     ✏️ Actualizar Datos Topográficos Oficiales
                 </button>
             </div>
-            <form id="formTopografia" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div>
                     <label class="block text-sm font-bold text-slate-300 mb-2">Perforadora / Máquina *</label>
-                    <select id="maquinaSelect" onchange="toggleOtraMaquina()" class="input-field w-full px-4 rounded-lg bg-slate-100 text-slate-900">
+                    <select id="maquinaSelect" onchange="toggleOtraMaquina()" class="input-field w-full px-4 rounded-lg bg-slate-900 text-white">
                         <option value="Geomax">Geomax</option>
                         <option value="Heng Wang">Heng Wang</option>
                         <option value="Longyear">Longyear</option>
@@ -115,38 +115,38 @@
                 </div>
                 <div id="otraMaquinaContainer" class="hidden">
                     <label class="block text-sm font-bold text-amber-300 mb-2">Especifique la Máquina *</label>
-                    <input type="text" id="otraMaquinaInput" placeholder="Modelo o marca" class="input-field w-full px-4 rounded-lg bg-slate-100 text-slate-900">
+                    <input type="text" id="otraMaquinaInput" placeholder="Modelo o marca" class="input-field w-full px-4 rounded-lg bg-slate-900 text-white">
                 </div>
                 <div>
                     <label class="block text-sm font-bold text-slate-300 mb-2">Coordenada Este (m) *</label>
-                    <input type="number" step="0.01" id="topoEste" required class="topo-input input-field w-full px-4 rounded-lg bg-slate-100 text-slate-900 font-bold" disabled>
+                    <input type="number" step="0.01" id="topoEste" class="topo-input input-field w-full px-4 rounded-lg bg-slate-900 text-white font-bold" disabled>
                 </div>
                 <div>
                     <label class="block text-sm font-bold text-slate-300 mb-2">Coordenada Norte (m) *</label>
-                    <input type="number" step="0.01" id="topoNorte" required class="topo-input input-field w-full px-4 rounded-lg bg-slate-100 text-slate-900 font-bold" disabled>
+                    <input type="number" step="0.01" id="topoNorte" class="topo-input input-field w-full px-4 rounded-lg bg-slate-900 text-white font-bold" disabled>
                 </div>
                 <div>
                     <label class="block text-sm font-bold text-slate-300 mb-2">Cota Z (m) *</label>
-                    <input type="number" step="0.01" id="topoCota" required class="topo-input input-field w-full px-4 rounded-lg bg-slate-100 text-slate-900 font-bold" disabled>
+                    <input type="number" step="0.01" id="topoCota" class="topo-input input-field w-full px-4 rounded-lg bg-slate-900 text-white font-bold" disabled>
                 </div>
                 <div>
                     <label class="block text-sm font-bold text-slate-300 mb-2">Azimut (°) *</label>
-                    <input type="number" step="0.1" id="topoAzimut" required class="topo-input input-field w-full px-4 rounded-lg bg-slate-100 text-slate-900 font-bold" disabled>
+                    <input type="number" step="0.1" id="topoAzimut" class="topo-input input-field w-full px-4 rounded-lg bg-slate-900 text-white font-bold" disabled>
                 </div>
                 <div>
                     <label class="block text-sm font-bold text-slate-300 mb-2">Inclinación (Dip °) *</label>
-                    <input type="number" step="0.1" id="topoDip" required class="topo-input input-field w-full px-4 rounded-lg bg-slate-100 text-slate-900 font-bold" disabled>
+                    <input type="number" step="0.1" id="topoDip" class="topo-input input-field w-full px-4 rounded-lg bg-slate-900 text-white font-bold" disabled>
                 </div>
                 <div>
                     <label class="block text-sm font-bold text-slate-300 mb-2">Profundidad Target (m) *</label>
-                    <input type="number" step="0.1" id="topoTarget" required class="topo-input input-field w-full px-4 rounded-lg bg-slate-100 text-slate-900 font-bold" disabled>
+                    <input type="number" step="0.1" id="topoTarget" class="topo-input input-field w-full px-4 rounded-lg bg-slate-900 text-white font-bold" disabled>
                 </div>
                 <div id="topoBtnContainer" class="hidden md:col-span-3 pt-4">
-                    <button type="submit" class="btn-field w-full bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg cursor-pointer">
+                    <button type="button" onclick="guardarTopografiaDirecto()" class="btn-field w-full bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg cursor-pointer">
                         💾 Guardar / Actualizar Ficha Topográfica Oficial
                     </button>
                 </div>
-            </form>
+            </div>
         </section>
 
         <!-- MÓDULO 3: CORE LOGGING & TURNOS -->
@@ -158,66 +158,66 @@
 
             <div class="bg-slate-900/90 p-5 rounded-xl border border-slate-700 shadow-inner">
                 <h3 class="text-lg font-bold text-sky-400 mb-3">⏱️ Apertura de Turno de Perforación</h3>
-                <form id="formTurno" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                     <div>
                         <label class="block text-xs font-bold text-slate-300 mb-1">Fecha del Turno *</label>
-                        <input type="date" id="turnoFecha" required class="input-field w-full px-3 rounded bg-slate-100 text-slate-900 text-sm font-bold">
+                        <input type="date" id="turnoFecha" class="input-field w-full px-3 rounded bg-slate-900 text-white text-sm font-bold">
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-slate-300 mb-1">Turno *</label>
-                        <select id="turnoTipo" class="input-field w-full px-3 rounded bg-slate-100 text-slate-900 text-sm font-bold">
+                        <select id="turnoTipo" class="input-field w-full px-3 rounded bg-slate-900 text-white text-sm font-bold">
                             <option value="Diurno">Diurno</option>
                             <option value="Nocturno">Nocturno</option>
                         </select>
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-slate-300 mb-1">Perforador *</label>
-                        <input type="text" id="turnoPerforador" required placeholder="Nombre del operador" class="input-field w-full px-3 rounded bg-slate-100 text-slate-900 text-sm font-bold">
+                        <input type="text" id="turnoPerforador" placeholder="Nombre del operador" class="input-field w-full px-3 rounded bg-slate-900 text-white text-sm font-bold">
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-slate-300 mb-1">Supervisor de Geología *</label>
-                        <input type="text" id="turnoGeologo" required placeholder="Geólogo responsable" class="input-field w-full px-3 rounded bg-slate-100 text-slate-900 text-sm font-bold">
+                        <input type="text" id="turnoGeologo" placeholder="Geólogo responsable" class="input-field w-full px-3 rounded bg-slate-900 text-white text-sm font-bold">
                     </div>
                     <div class="md:col-span-4 pt-2">
-                        <button type="submit" class="btn-field w-full bg-sky-600 hover:bg-sky-500 text-white shadow cursor-pointer">
+                        <button type="button" onclick="guardarTurnoDirecto()" class="btn-field w-full bg-sky-600 hover:bg-sky-500 text-white shadow cursor-pointer">
                             🚀 Iniciar / Activar Turno para el Sondaje
                         </button>
                     </div>
-                </form>
+                </div>
             </div>
 
             <div id="seccionAvancesContainer" class="hidden space-y-6 border-t border-slate-700 pt-6">
                 <h3 class="text-lg font-bold text-emerald-400">📊 Registro de Avance y Recuperación (Tramo a Tramo)</h3>
-                <form id="formAvance" class="grid grid-cols-1 md:grid-cols-3 gap-4 bg-slate-900/60 p-5 rounded-xl border border-slate-700">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 bg-slate-900/60 p-5 rounded-xl border border-slate-700">
                     <div>
                         <label class="block text-xs font-bold text-slate-300 mb-1">Longitud de Maniobra / Avance *</label>
-                        <select id="avanceLongitud" onchange="calcularHastaAuto()" class="input-field w-full px-3 rounded bg-slate-100 text-slate-900 text-sm font-bold">
+                        <select id="avanceLongitud" onchange="calcularHastaAuto()" class="input-field w-full px-3 rounded bg-slate-900 text-white text-sm font-bold">
                             <option value="1.5">1.50 m</option>
                             <option value="3.0">3.00 m</option>
                         </select>
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-slate-300 mb-1">Desde (m) [Automático]</label>
-                        <input type="number" id="avanceDesde" readonly class="input-field w-full px-3 rounded bg-slate-200 text-slate-700 text-sm font-mono font-bold">
+                        <input type="number" id="avanceDesde" readonly class="input-field w-full px-3 rounded bg-slate-800 text-slate-400 text-sm font-mono font-bold">
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-slate-300 mb-1">Hasta (m) [Cálculo Automático]</label>
-                        <input type="number" id="avanceHasta" readonly class="input-field w-full px-3 rounded bg-slate-200 text-emerald-700 text-sm font-mono font-bold">
+                        <input type="number" id="avanceHasta" readonly class="input-field w-full px-3 rounded bg-slate-800 text-emerald-400 text-sm font-mono font-bold">
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-slate-300 mb-1">Diámetro *</label>
-                        <select id="avanceDiametro" class="input-field w-full px-3 rounded bg-slate-100 text-slate-900 text-sm font-bold">
+                        <select id="avanceDiametro" class="input-field w-full px-3 rounded bg-slate-900 text-white text-sm font-bold">
                             <option value="HQ">HQ</option>
                             <option value="NQ">NQ</option>
                         </select>
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-slate-300 mb-1">Metros Recuperados (Testigo) *</label>
-                        <input type="number" step="0.01" id="avanceRecuperados" required placeholder="Ej. 1.42" class="input-field w-full px-3 rounded bg-slate-100 text-slate-900 text-sm font-bold">
+                        <input type="number" step="0.01" id="avanceRecuperados" placeholder="Ej. 1.42" class="input-field w-full px-3 rounded bg-slate-900 text-white text-sm font-bold">
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-slate-300 mb-1">Transición / Meteorización *</label>
-                        <select id="avanceMeteorizacion" class="input-field w-full px-3 rounded bg-slate-100 text-slate-900 text-sm font-bold">
+                        <select id="avanceMeteorizacion" class="input-field w-full px-3 rounded bg-slate-900 text-white text-sm font-bold">
                             <option value="Suelo / Relleno">a. Suelo / Relleno (Umbral &ge; 70%)</option>
                             <option value="Saprolita">b. Saprolita (Umbral &ge; 70%)</option>
                             <option value="Saprock">c. Saprock (Umbral &ge; 70%)</option>
@@ -228,14 +228,14 @@
                         </select>
                     </div>
                     <div class="md:col-span-3 pt-2 flex gap-3">
-                        <button type="submit" id="btnGuardarAvance" class="btn-field flex-1 bg-emerald-600 hover:bg-emerald-500 text-white shadow cursor-pointer">
+                        <button type="button" id="btnGuardarAvance" onclick="guardarAvanceDirecto()" class="btn-field flex-1 bg-emerald-600 hover:bg-emerald-500 text-white shadow cursor-pointer">
                             ➕ Registrar y Calcular Avance
                         </button>
                         <button type="button" id="btnCancelarEdicion" onclick="cancelarEdicionAvance()" class="hidden bg-rose-600 hover:bg-rose-500 text-white font-bold px-6 rounded-lg cursor-pointer">
                             ❌ Cancelar Edición
                         </button>
                     </div>
-                </form>
+                </div>
 
                 <div class="overflow-x-auto border border-slate-700 rounded-xl">
                     <table class="w-full text-left border-collapse text-sm">
@@ -270,4 +270,5 @@
                             <p id="kpiMetrosTurno" class="text-3xl font-black text-emerald-400 mt-1">0.00 m</p>
                         </div>
                         <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 shadow-md border-l-4 border-l-amber-500">
-                            <p class="text-xs text-slate-400 font-bol
+                            <p class="text-xs text-slate-400 font-bold uppercase">% Recuperación Turno</p>
+                            <p id="kpiRecupTurno" class="text-3xl font-black 
