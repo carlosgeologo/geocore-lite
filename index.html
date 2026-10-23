@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -9,10 +8,12 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Chart.js para gráficos -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Supabase JS Client CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         .btn-field { min-height: 52px; font-size: 1.1rem; font-weight: 700; border-radius: 0.5rem; }
-        .input-field { min-height: 48px; font-size: 1rem; border: 2px solid #334155; }
-        .input-field:focus { border-color: #38bdf8; outline: none; box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.25); }
+        .input-field { min-height: 48px; font-size: 1rem; border: 2px solid #cbd5e1; }
+        .input-field:focus { border-color: #0284c7; outline: none; box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.2); }
         @media print {
             body * { visibility: hidden; }
             #printable-report, #printable-report * { visibility: visible; }
@@ -20,32 +21,27 @@
         }
     </style>
 </head>
-<body class="bg-slate-900 text-slate-100 min-h-screen font-sans antialiased pb-12">
+<body class="bg-slate-900 text-slate-100 min-h-screen font-sans antialiased">
 
-    <!-- CONTENEDOR DE NOTIFICACIONES TOAST -->
-    <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-2 max-w-xs w-full pointer-events-none"></div>
+    <!-- NOTIFICACIÓN FLOTANTE (TOAST) -->
+    <div id="toastNotification" class="fixed top-4 right-4 z-50 hidden bg-emerald-600 text-white font-bold px-6 py-3 rounded-xl shadow-2xl transition-all duration-300">
+        <span id="toastMessage">Operación realizada con éxito</span>
+    </div>
 
     <!-- BARRA SUPERIOR Y SELECTOR GLOBAL -->
     <header class="bg-slate-800 border-b border-slate-700 sticky top-0 z-40 shadow-lg">
         <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col md:flex-row justify-between items-center gap-4">
-            <div class="flex items-center space-x-3 w-full md:w-auto justify-between md:justify-start">
-                <div class="flex items-center space-x-3">
-                    <span class="bg-amber-500 text-slate-950 font-black px-3 py-1.5 rounded-lg text-lg">JGL</span>
-                    <div>
-                        <h1 class="text-xl font-bold tracking-wide text-white">Jireth GeoCore Lite</h1>
-                        <p class="text-xs text-slate-400">Control Operativo & Auditoría de Sondajes</p>
-                    </div>
+            <div class="flex items-center space-x-3">
+                <span class="bg-amber-500 text-slate-950 font-black px-3 py-1.5 rounded-lg text-lg">JGL</span>
+                <div>
+                    <h1 class="text-xl font-bold tracking-wide text-white">Jireth GeoCore Lite</h1>
+                    <p class="text-xs text-slate-400">Control Operativo & Auditoría de Sondajes</p>
                 </div>
-                <span class="md:hidden text-xs px-2.5 py-1 rounded-full bg-emerald-900/80 text-emerald-300 border border-emerald-500 font-bold flex items-center gap-1">
-                    ⚡ Local
-                </span>
             </div>
             <div class="flex items-center gap-3 w-full md:w-auto">
-                <span class="hidden md:flex text-xs px-3 py-1.5 rounded-lg bg-emerald-950 text-emerald-300 border border-emerald-600/50 font-bold items-center gap-1.5">
-                    ⚡ Sistema Local Activo
-                </span>
-                <label for="globalWellSelect" class="text-sm font-semibold text-slate-300 whitespace-nowrap hidden sm:inline">Pozo Activo:</label>
-                <select id="globalWellSelect" class="input-field bg-slate-900 text-amber-400 px-4 py-2 rounded-lg w-full md:w-64 font-bold border-amber-500/50">
+                <span id="syncStatus" class="text-xs px-2 py-1 rounded bg-amber-900 text-amber-300 font-bold">💾 Guardado Local</span>
+                <label for="globalWellSelect" class="text-sm font-semibold text-slate-300 whitespace-nowrap">Pozo Activo:</label>
+                <select id="globalWellSelect" class="input-field bg-slate-700 text-white px-4 py-2 rounded-lg w-full md:w-64 font-bold">
                     <option value="">-- Seleccione un Sondaje --</option>
                 </select>
             </div>
@@ -57,25 +53,23 @@
 
         <!-- NAVEGACIÓN DE MÓDULOS -->
         <nav class="flex flex-wrap gap-2 bg-slate-800 p-2 rounded-xl border border-slate-700 shadow-md">
-            <button type="button" onclick="switchTab('mod1')" id="btn-mod1" class="flex-1 min-w-[130px] py-3 px-3 rounded-lg font-bold text-xs sm:text-sm bg-sky-600 text-white transition shadow">1. Apertura</button>
-            <button type="button" onclick="switchTab('mod2')" id="btn-mod2" class="flex-1 min-w-[130px] py-3 px-3 rounded-lg font-bold text-xs sm:text-sm bg-slate-700 text-slate-300 hover:bg-slate-600 transition">2. Topografía</button>
-            <button type="button" onclick="switchTab('mod3')" id="btn-mod3" class="flex-1 min-w-[130px] py-3 px-3 rounded-lg font-bold text-xs sm:text-sm bg-slate-700 text-slate-300 hover:bg-slate-600 transition">3. Logging & Turno</button>
-            <button type="button" onclick="switchTab('mod4')" id="btn-mod4" class="flex-1 min-w-[130px] py-3 px-3 rounded-lg font-bold text-xs sm:text-sm bg-slate-700 text-slate-300 hover:bg-slate-600 transition">4. Cierre Pozo</button>
-            <button type="button" onclick="switchTab('mod5')" id="btn-mod5" class="flex-1 min-w-[130px] py-3 px-3 rounded-lg font-bold text-xs sm:text-sm bg-slate-700 text-slate-300 hover:bg-slate-600 transition">5. Repositorio</button>
+            <button onclick="switchTab('mod1')" id="btn-mod1" class="flex-1 min-w-[140px] py-3 px-4 rounded-lg font-bold text-sm bg-sky-600 text-white transition shadow">1. Apertura</button>
+            <button onclick="switchTab('mod2')" id="btn-mod2" class="flex-1 min-w-[140px] py-3 px-4 rounded-lg font-bold text-sm bg-slate-700 text-slate-300 hover:bg-slate-600 transition">2. Topografía</button>
+            <button onclick="switchTab('mod3')" id="btn-mod3" class="flex-1 min-w-[140px] py-3 px-4 rounded-lg font-bold text-sm bg-slate-700 text-slate-300 hover:bg-slate-600 transition">3. Logging & Turno</button>
+            <button onclick="switchTab('mod4')" id="btn-mod4" class="flex-1 min-w-[140px] py-3 px-4 rounded-lg font-bold text-sm bg-slate-700 text-slate-300 hover:bg-slate-600 transition">4. Cierre Pozo</button>
+            <button onclick="switchTab('mod5')" id="btn-mod5" class="flex-1 min-w-[140px] py-3 px-4 rounded-lg font-bold text-sm bg-slate-700 text-slate-300 hover:bg-slate-600 transition">5. Repositorio</button>
         </nav>
 
         <!-- MÓDULO 1: APERTURA -->
-        <section id="mod1" class="space-y-6 bg-slate-800/90 p-6 rounded-2xl border border-slate-700 shadow-xl">
+        <section id="mod1" class="space-y-6 bg-slate-800/80 p-6 rounded-2xl border border-slate-700 shadow-xl">
             <div class="border-b border-slate-700 pb-4">
                 <h2 class="text-2xl font-black text-amber-400 flex items-center gap-2">🛠️ Módulo 1: Apertura de Nuevo Sondaje</h2>
                 <p class="text-sm text-slate-400 mt-1">Registre la identidad administrativa del pozo antes de iniciar perforación en tajo.</p>
             </div>
-            
-            <!-- Div contenedor sin etiquetas form -->
-            <div id="form-apertura" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                     <label class="block text-sm font-bold text-slate-300 mb-2">Código del Sondaje *</label>
-                    <input type="text" id="codigoPozo" placeholder="Ej. S0003ET" class="input-field w-full px-4 rounded-lg bg-slate-900 text-white uppercase font-bold tracking-wider">
+                    <input type="text" id="codigoPozo" placeholder="Ej. S0001-ET" class="input-field w-full px-4 rounded-lg bg-slate-900 text-white uppercase font-bold">
                 </div>
                 <div>
                     <label class="block text-sm font-bold text-slate-300 mb-2">Empresa Titular / Contratista *</label>
@@ -104,14 +98,14 @@
         </section>
 
         <!-- MÓDULO 2: TOPOGRAFÍA -->
-        <section id="mod2" class="hidden space-y-6 bg-slate-800/90 p-6 rounded-2xl border border-slate-700 shadow-xl">
+        <section id="mod2" class="hidden space-y-6 bg-slate-800/80 p-6 rounded-2xl border border-slate-700 shadow-xl">
             <div class="border-b border-slate-700 pb-4 flex justify-between items-center flex-wrap gap-4">
                 <div>
                     <h2 class="text-2xl font-black text-amber-400 flex items-center gap-2">📍 Módulo 2: Ficha de Collar y Topografía</h2>
                     <p class="text-sm text-slate-400 mt-1">Configuración espacial inicial y actualización con datos oficiales de topografía.</p>
                 </div>
-                <button type="button" onclick="habilitarEdicionTopografia()" class="bg-sky-600 hover:bg-sky-500 text-white font-bold px-4 py-2.5 rounded-lg text-sm shadow cursor-pointer">
-                    ✏️ Habilitar Edición Topográfica
+                <button type="button" onclick="habilitarEdicionTopografia()" class="bg-sky-600 hover:bg-sky-500 text-white font-bold px-4 py-2 rounded-lg text-sm shadow cursor-pointer">
+                    ✏️ Actualizar Datos Topográficos Oficiales
                 </button>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -161,7 +155,7 @@
         </section>
 
         <!-- MÓDULO 3: CORE LOGGING & TURNOS -->
-        <section id="mod3" class="hidden space-y-8 bg-slate-800/90 p-6 rounded-2xl border border-slate-700 shadow-xl">
+        <section id="mod3" class="hidden space-y-8 bg-slate-800/80 p-6 rounded-2xl border border-slate-700 shadow-xl">
             <div class="border-b border-slate-700 pb-4">
                 <h2 class="text-2xl font-black text-amber-400 flex items-center gap-2">🪵 Módulo 3: Core Logging & Control de Turnos</h2>
                 <p class="text-sm text-slate-400 mt-1">Registro de turnos, automatismo de avances por profundidad y cálculo de pago por meteorización.</p>
@@ -199,7 +193,7 @@
 
             <div id="seccionAvancesContainer" class="hidden space-y-6 border-t border-slate-700 pt-6">
                 <h3 class="text-lg font-bold text-emerald-400">📊 Registro de Avance y Recuperación (Tramo a Tramo)</h3>
-                <div id="formAvance" class="grid grid-cols-1 md:grid-cols-3 gap-4 bg-slate-900/60 p-5 rounded-xl border border-slate-700">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 bg-slate-900/60 p-5 rounded-xl border border-slate-700">
                     <div>
                         <label class="block text-xs font-bold text-slate-300 mb-1">Longitud de Maniobra / Avance *</label>
                         <select id="avanceLongitud" onchange="calcularHastaAuto()" class="input-field w-full px-3 rounded bg-slate-900 text-white text-sm font-bold">
@@ -229,13 +223,13 @@
                     <div>
                         <label class="block text-xs font-bold text-slate-300 mb-1">Transición / Meteorización *</label>
                         <select id="avanceMeteorizacion" class="input-field w-full px-3 rounded bg-slate-900 text-white text-sm font-bold">
-                            <option value="Suelo / Relleno">a. Suelo / Relleno (Umbral ≥ 70%)</option>
-                            <option value="Saprolita">b. Saprolita (Umbral ≥ 70%)</option>
-                            <option value="Saprock">c. Saprock (Umbral ≥ 70%)</option>
-                            <option value="Roca Oxidada">d. Roca Oxidada (Umbral ≥ 80%)</option>
-                            <option value="Roca Fracturada">e. Roca Fracturada (Umbral ≥ 70%)</option>
-                            <option value="Roca Fresca">f. Roca Fresca (Umbral ≥ 90%)</option>
-                            <option value="Zona de Veta">g. Zona de Veta (Umbral ≥ 90%)</option>
+                            <option value="Suelo / Relleno">a. Suelo / Relleno (Umbral &ge; 70%)</option>
+                            <option value="Saprolita">b. Saprolita (Umbral &ge; 70%)</option>
+                            <option value="Saprock">c. Saprock (Umbral &ge; 70%)</option>
+                            <option value="Roca Oxidada">d. Roca Oxidada (Umbral &ge; 80%)</option>
+                            <option value="Roca Fracturada">e. Roca Fracturada (Umbral &ge; 70%)</option>
+                            <option value="Roca Fresca">f. Roca Fresca (Umbral &ge; 90%)</option>
+                            <option value="Zona de Veta">g. Zona de Veta (Umbral &ge; 90%)</option>
                         </select>
                     </div>
                     <div class="md:col-span-3 pt-2 flex gap-3">
@@ -243,7 +237,7 @@
                             ➕ Registrar y Calcular Avance
                         </button>
                         <button type="button" id="btnCancelarEdicion" onclick="cancelarEdicionAvance()" class="hidden bg-rose-600 hover:bg-rose-500 text-white font-bold px-6 rounded-lg cursor-pointer">
-                            ❌ Cancelar
+                            ❌ Cancelar Edición
                         </button>
                     </div>
                 </div>
@@ -253,8 +247,9 @@
                         <thead class="bg-slate-900 text-slate-300 uppercase text-xs">
                             <tr>
                                 <th class="p-3">#</th>
+                                <th class="p-3">Turno</th>
                                 <th class="p-3">Intervalo (m)</th>
-                                <th class="p-3">Diám</th>
+                                <th class="p-3">Diam</th>
                                 <th class="p-3">Recup (m)</th>
                                 <th class="p-3">% Recup</th>
                                 <th class="p-3">Meteorización</th>
@@ -273,4 +268,10 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                         <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 shadow-md border-l-4 border-l-sky-500">
                             <p class="text-xs text-slate-400 font-bold uppercase">Metros Totales Acumulados</p>
-                            <p id="kpiMetrosTotales" class="text-3xl font-black text-white mt-1"
+                            <p id="kpiMetrosTotales" class="text-3xl font-black text-white mt-1">0.00 m</p>
+                        </div>
+                        <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 shadow-md border-l-4 border-l-emerald-500">
+                            <p class="text-xs text-slate-400 font-bold uppercase">Metros Turno Activo</p>
+                            <p id="kpiMetrosTurno" class="text-3xl font-black text-emerald-400 mt-1">0.00 m</p>
+                        </div>
+                 
