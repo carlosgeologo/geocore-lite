@@ -2,136 +2,55 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Jireth GeoCore Lite | Perforación Diamantina de Oro</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jireth GeoCore Lite | Control Operativo de Sondajes</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Estilos personalizados y utilidades offline sin dependencias externas */
-        body {
-            background-color: #0f172a;
-            color: #f8fafc;
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            -webkit-tap-highlight-color: transparent;
-        }
-        
-        .no-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-        .no-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-
-        input, select {
-            background-color: #1e293b !important;
-            color: #ffffff !important;
-            border: 1px solid #475569 !important;
-        }
-
-        input:focus, select:focus {
-            border-color: #38bdf8 !important;
-            outline: none !important;
-            box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2) !important;
-        }
-
-        /* Estilos de Impresión */
+        .btn-field { min-height: 50px; font-weight: 700; border-radius: 0.5rem; }
+        .input-field { min-height: 46px; border: 2px solid #334155; }
         @media print {
-            body {
-                background-color: #ffffff !important;
-                color: #000000 !important;
-            }
-            .no-print {
-                display: none !important;
-            }
-            #printable-area {
-                display: block !important;
-                position: absolute;
-                left: 0;
-                top: 0;
-                width: 100%;
-                margin: 0;
-                padding: 20px;
-                background: #ffffff;
-                color: #000000;
-            }
+            body * { visibility: hidden; }
+            #printable-area, #printable-area * { visibility: visible; }
+            #printable-area { position: absolute; left: 0; top: 0; width: 100%; color: #000; background: #fff; padding: 20px; }
         }
     </style>
 </head>
-<body class="min-h-screen p-3 md:p-6 pb-20">
+<body class="bg-slate-900 text-slate-100 min-h-screen p-3 font-sans antialiased">
 
-    <!-- MENSAJE DE ESTADO / ALERTA DE SISTEMA -->
-    <div id="systemNotification" class="fixed top-2 left-2 right-2 z-50 hidden transition-all duration-300">
-        <div id="notificationBg" class="p-4 rounded-xl shadow-2xl border flex items-center justify-between bg-emerald-600 border-emerald-400 text-white">
-            <span id="notificationMsg" class="font-bold text-sm md:text-base"></span>
-            <button type="button" onclick="cerrarNotificacion()" class="ml-2 font-black text-lg bg-black/20 hover:bg-black/40 rounded-lg px-2 py-1">✕</button>
+    <header class="bg-slate-800 p-3 rounded-xl border border-slate-700 mb-4 flex justify-between items-center flex-wrap gap-2">
+        <div>
+            <h1 class="text-lg font-black text-white">JGL | Jireth GeoCore Lite</h1>
+            <p class="text-xs text-slate-400">Control Operativo & Auditoría de Sondajes</p>
         </div>
-    </div>
-
-    <!-- ENCABEZADO Y SELECTOR GLOBAL -->
-    <header class="no-print bg-slate-800 border border-slate-700 rounded-2xl p-4 mb-4 shadow-lg">
-        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 mb-3">
-            <div>
-                <h1 class="text-xl md:text-2xl font-black text-amber-400 tracking-wide flex items-center gap-2">
-                    <span>⛏️</span> Jireth GeoCore Lite
-                </h1>
-                <p class="text-xs text-slate-400">Control Operativo Diamantina de Oro • Estado Bolívar</p>
-            </div>
-            <div class="flex items-center gap-2 bg-emerald-950/80 border border-emerald-500/50 px-3 py-1.5 rounded-full text-xs font-bold text-emerald-400">
-                <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                <span>Modo 100% Offline (Sin BD Externa)</span>
-            </div>
-        </div>
-
-        <!-- SELECTOR GLOBAL DE POZO -->
-        <div class="bg-slate-900/90 border border-amber-500/40 rounded-xl p-3">
-            <label class="block text-xs font-bold text-amber-400 uppercase tracking-wider mb-1">
-                📍 Sondaje / Pozo Activo en Tajo:
-            </label>
-            <select id="globalWellSelect" onchange="seleccionarPozoGlobal(this.value)" class="w-full text-sm font-bold p-3 rounded-lg border border-slate-600 bg-slate-800 text-amber-300">
-                <option value="">-- No hay sondajes registrados --</option>
-            </select>
-        </div>
+        <span class="text-xs bg-emerald-900 text-emerald-300 px-3 py-1 rounded-full font-bold border border-emerald-700">⚡ Modo Autónomo</span>
     </header>
 
-    <!-- NAVEGACIÓN POR PESTAÑAS (TAB-BUTTONS SOLO DIV) -->
-    <nav class="no-print flex gap-2 overflow-x-auto no-scrollbar mb-4 pb-1">
-        <button type="button" id="tab-mod1" onclick="switchTab('mod1')" class="flex-1 min-w-[110px] py-3 px-3 rounded-xl font-bold text-xs md:text-sm bg-amber-500 text-slate-950 shadow-lg transition-all text-center">
-            1. Apertura
-        </button>
-        <button type="button" id="tab-mod2" onclick="switchTab('mod2')" class="flex-1 min-w-[110px] py-3 px-3 rounded-xl font-bold text-xs md:text-sm bg-slate-800 text-slate-300 transition-all text-center">
-            2. Topografía
-        </button>
-        <button type="button" id="tab-mod3" onclick="switchTab('mod3')" class="flex-1 min-w-[110px] py-3 px-3 rounded-xl font-bold text-xs md:text-sm bg-slate-800 text-slate-300 transition-all text-center">
-            3. Logging/Turno
-        </button>
-        <button type="button" id="tab-mod4" onclick="switchTab('mod4')" class="flex-1 min-w-[110px] py-3 px-3 rounded-xl font-bold text-xs md:text-sm bg-slate-800 text-slate-300 transition-all text-center">
-            4. Cierre
-        </button>
-        <button type="button" id="tab-mod5" onclick="switchTab('mod5')" class="flex-1 min-w-[110px] py-3 px-3 rounded-xl font-bold text-xs md:text-sm bg-slate-800 text-slate-300 transition-all text-center">
-            5. Repositorio
-        </button>
+    <div class="bg-slate-800 p-3 rounded-xl border border-slate-700 mb-4">
+        <label class="block text-xs font-bold text-amber-400 mb-1">Pozo Activo Seleccionado:</label>
+        <select id="globalWellSelect" onchange="seleccionarPozoGlobal(this.value)" class="input-field w-full bg-slate-900 text-white rounded-lg px-3 text-sm font-bold">
+            <option value="">-- Seleccione un Sondaje Registrar o Activo --</option>
+        </select>
+    </div>
+
+    <nav class="flex gap-2 overflow-x-auto mb-4 pb-1">
+        <button type="button" onclick="switchTab('mod1')" id="tab-mod1" class="flex-1 min-w-[110px] py-2.5 px-3 rounded-lg font-bold text-xs bg-sky-600 text-white shadow">1. Apertura</button>
+        <button type="button" onclick="switchTab('mod2')" id="tab-mod2" class="flex-1 min-w-[110px] py-2.5 px-3 rounded-lg font-bold text-xs bg-slate-700 text-slate-300">2. Topografía</button>
+        <button type="button" onclick="switchTab('mod3')" id="tab-mod3" class="flex-1 min-w-[110px] py-2.5 px-3 rounded-lg font-bold text-xs bg-slate-700 text-slate-300">3. Logging/Turno</button>
+        <button type="button" onclick="switchTab('mod4')" id="tab-mod4" class="flex-1 min-w-[110px] py-2.5 px-3 rounded-lg font-bold text-xs bg-slate-700 text-slate-300">4. Cierre</button>
+        <button type="button" onclick="switchTab('mod5')" id="tab-mod5" class="flex-1 min-w-[110px] py-2.5 px-3 rounded-lg font-bold text-xs bg-slate-700 text-slate-300">5. Repositorio</button>
     </nav>
 
-    <!-- CONTENEDORES DE MÓDULOS (SIN FORMULARIO <FORM>) -->
-
-    <!-- MÓDULO 1: APERTURA -->
-    <section id="mod1" class="no-print bg-slate-800 border border-slate-700 rounded-2xl p-4 md:p-6 shadow-xl">
-        <div class="border-b border-slate-700 pb-3 mb-4">
-            <h2 class="text-lg font-bold text-amber-400 flex items-center gap-2">
-                <span>🛠️</span> Módulo 1: Apertura de Nuevo Sondaje
-            </h2>
-            <p class="text-xs text-slate-400">Registre los datos administrativos de la perforación diamantina.</p>
-        </div>
-
-        <div class="space-y-4">
+    <!-- MODULO 1 -->
+    <section id="mod1" class="space-y-4 bg-slate-800 p-5 rounded-2xl border border-slate-700">
+        <h2 class="text-xl font-black text-amber-400">🛠️ Módulo 1: Apertura de Nuevo Sondaje</h2>
+        <div class="space-y-3">
             <div>
                 <label class="block text-xs font-bold text-slate-300 mb-1">Código del Sondaje *</label>
-                <input type="text" id="m1_codigo" placeholder="Ej. S-001-ET" class="w-full p-3 rounded-xl font-mono text-base uppercase font-bold">
+                <input type="text" id="m1_codigo" placeholder="Ej. S0003ET" class="input-field w-full px-3 bg-slate-900 text-white rounded-lg uppercase font-bold text-sm">
             </div>
-
             <div>
                 <label class="block text-xs font-bold text-slate-300 mb-1">Empresa Titular / Contratista *</label>
-                <select id="m1_empresa" onchange="toggleOtraEmpresa()" class="w-full p-3 rounded-xl font-semibold">
+                <select id="m1_empresa" onchange="toggleOtraEmpresa()" class="input-field w-full px-3 bg-slate-900 text-white rounded-lg text-sm font-bold">
                     <option value="IVM C.A.">IVM C.A.</option>
                     <option value="Minería Carabobo C.A.">Minería Carabobo C.A.</option>
                     <option value="Industrias Audit">Industrias Audit</option>
@@ -139,220 +58,595 @@
                     <option value="OTRA">Otra (Especificar)</option>
                 </select>
             </div>
-
             <div id="m1_otra_empresa_box" class="hidden">
-                <label class="block text-xs font-bold text-amber-300 mb-1">Nombre de la Empresa *</label>
-                <input type="text" id="m1_otra_empresa" placeholder="Ingrese nombre de empresa" class="w-full p-3 rounded-xl font-semibold">
+                <label class="block text-xs font-bold text-amber-300 mb-1">Especifique Empresa *</label>
+                <input type="text" id="m1_otra_empresa" placeholder="Nombre de la empresa" class="input-field w-full px-3 bg-slate-900 text-white rounded-lg text-sm">
             </div>
-
             <div>
                 <label class="block text-xs font-bold text-slate-300 mb-1">Proyecto / Sector *</label>
-                <input type="text" id="m1_proyecto" placeholder="Ej. El Tronco / Veta Principal" class="w-full p-3 rounded-xl font-semibold">
+                <input type="text" id="m1_proyecto" placeholder="Ej. El Tronco" class="input-field w-full px-3 bg-slate-900 text-white rounded-lg font-bold text-sm">
             </div>
-
-            <button type="button" onclick="crearPozo()" class="w-full py-4 mt-2 bg-amber-500 hover:bg-amber-400 active:bg-amber-600 text-slate-950 font-black text-base rounded-xl shadow-lg transition-all flex items-center justify-center gap-2">
-                <span>💾</span> Crear y Abrir Sondaje en Sistema
+            <button type="button" onclick="crearPozo()" class="btn-field w-full bg-amber-500 hover:bg-amber-400 text-slate-950 text-base font-black shadow-lg">
+                💾 Crear y Abrir Sondaje en Sistema
             </button>
         </div>
     </section>
 
-    <!-- MÓDULO 2: TOPOGRAFÍA -->
-    <section id="mod2" class="no-print bg-slate-800 border border-slate-700 rounded-2xl p-4 md:p-6 shadow-xl hidden">
-        <div class="border-b border-slate-700 pb-3 mb-4 flex justify-between items-center flex-wrap gap-2">
-            <div>
-                <h2 class="text-lg font-bold text-amber-400 flex items-center gap-2">
-                    <span>📍</span> Módulo 2: Topografía y Collar de Pozo
-                </h2>
-                <p class="text-xs text-slate-400">Coordenadas del collar y geometría del pozo.</p>
-            </div>
-            <button type="button" onclick="habilitarEdicionTopo()" class="py-2 px-3 bg-sky-600 hover:bg-sky-500 text-white rounded-lg font-bold text-xs flex items-center gap-1">
-                <span>✏️</span> Editar Campos
-            </button>
+    <!-- MODULO 2 -->
+    <section id="mod2" class="hidden space-y-4 bg-slate-800 p-5 rounded-2xl border border-slate-700">
+        <div class="flex justify-between items-center flex-wrap gap-2">
+            <h2 class="text-xl font-black text-amber-400">📍 Módulo 2: Ficha Topográfica</h2>
+            <button type="button" onclick="habilitarEdicionTopo()" class="bg-sky-600 text-white font-bold px-3 py-1.5 rounded-lg text-xs">✏️ Actualizar Datos Topográficos</button>
         </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
             <div>
                 <label class="block text-xs font-bold text-slate-300 mb-1">Perforadora / Máquina *</label>
-                <select id="m2_maquina" disabled onchange="toggleOtraMaquina()" class="w-full p-3 rounded-xl font-semibold disabled:opacity-60">
+                <select id="m2_maquina" disabled onchange="toggleOtraMaquina()" class="input-field w-full px-3 bg-slate-900 text-white rounded-lg text-sm">
                     <option value="Geomax">Geomax</option>
                     <option value="Heng Wang">Heng Wang</option>
                     <option value="Longyear">Longyear</option>
                     <option value="OTRA">Otra (Especificar)</option>
                 </select>
             </div>
-
             <div id="m2_otra_maquina_box" class="hidden">
                 <label class="block text-xs font-bold text-amber-300 mb-1">Especifique Máquina *</label>
-                <input type="text" id="m2_otra_maquina" disabled placeholder="Marca / Modelo" class="w-full p-3 rounded-xl font-semibold disabled:opacity-60">
+                <input type="text" id="m2_otra_maquina" disabled placeholder="Modelo/Marca" class="input-field w-full px-3 bg-slate-900 text-white rounded-lg text-sm">
             </div>
-
             <div>
-                <label class="block text-xs font-bold text-slate-300 mb-1">Coordenada Este (m) *</label>
-                <input type="number" step="0.01" id="m2_este" value="0.00" disabled class="w-full p-3 rounded-xl font-mono font-semibold disabled:opacity-60">
+                <label class="block text-xs font-bold text-slate-300 mb-1">Coordenada Este (m)</label>
+                <input type="number" step="0.01" id="m2_este" value="0.00" disabled class="input-field w-full px-3 bg-slate-900 text-white rounded-lg font-bold text-sm">
             </div>
-
             <div>
-                <label class="block text-xs font-bold text-slate-300 mb-1">Coordenada Norte (m) *</label>
-                <input type="number" step="0.01" id="m2_norte" value="0.00" disabled class="w-full p-3 rounded-xl font-mono font-semibold disabled:opacity-60">
+                <label class="block text-xs font-bold text-slate-300 mb-1">Coordenada Norte (m)</label>
+                <input type="number" step="0.01" id="m2_norte" value="0.00" disabled class="input-field w-full px-3 bg-slate-900 text-white rounded-lg font-bold text-sm">
             </div>
-
             <div>
-                <label class="block text-xs font-bold text-slate-300 mb-1">Cota Z (m.s.n.m.) *</label>
-                <input type="number" step="0.01" id="m2_cota" value="0.00" disabled class="w-full p-3 rounded-xl font-mono font-semibold disabled:opacity-60">
+                <label class="block text-xs font-bold text-slate-300 mb-1">Cota Z (m)</label>
+                <input type="number" step="0.01" id="m2_cota" value="0.00" disabled class="input-field w-full px-3 bg-slate-900 text-white rounded-lg font-bold text-sm">
             </div>
-
             <div>
-                <label class="block text-xs font-bold text-slate-300 mb-1">Azimut (°) *</label>
-                <input type="number" step="0.1" id="m2_azimut" value="0.0" disabled class="w-full p-3 rounded-xl font-mono font-semibold disabled:opacity-60">
+                <label class="block text-xs font-bold text-slate-300 mb-1">Azimut (°)</label>
+                <input type="number" step="0.1" id="m2_azimut" value="0.0" disabled class="input-field w-full px-3 bg-slate-900 text-white rounded-lg font-bold text-sm">
             </div>
-
             <div>
-                <label class="block text-xs font-bold text-slate-300 mb-1">Inclinación (Dip °) *</label>
-                <input type="number" step="0.1" id="m2_dip" value="-60.0" disabled class="w-full p-3 rounded-xl font-mono font-semibold disabled:opacity-60">
+                <label class="block text-xs font-bold text-slate-300 mb-1">Inclinación (Dip °)</label>
+                <input type="number" step="0.1" id="m2_dip" value="-60.0" disabled class="input-field w-full px-3 bg-slate-900 text-white rounded-lg font-bold text-sm">
             </div>
-
-            <div class="md:col-span-2">
-                <label class="block text-xs font-bold text-slate-300 mb-1">Profundidad Target / Planificada (m) *</label>
-                <input type="number" step="0.1" id="m2_target" value="100.0" disabled class="w-full p-3 rounded-xl font-mono font-semibold disabled:opacity-60 text-amber-400">
+            <div>
+                <label class="block text-xs font-bold text-slate-300 mb-1">Profundidad Target (m)</label>
+                <input type="number" step="0.1" id="m2_target" value="100.0" disabled class="input-field w-full px-3 bg-slate-900 text-white rounded-lg font-bold text-sm">
             </div>
         </div>
-
-        <div id="m2_btn_box" class="hidden mt-6">
-            <button type="button" onclick="guardarTopografia()" class="w-full py-4 bg-emerald-600 hover:bg-emerald-500 text-white font-black text-base rounded-xl shadow-lg transition-all flex items-center justify-center gap-2">
-                <span>💾</span> Guardar Ficha Topográfica Oficial
-            </button>
+        <div id="m2_btn_box" class="hidden pt-2">
+            <button type="button" onclick="guardarTopografia()" class="btn-field w-full bg-emerald-600 text-white text-sm font-bold">💾 Guardar Ficha Topográfica Oficial</button>
         </div>
     </section>
 
-    <!-- MÓDULO 3: LOGGING Y TURNOS -->
-    <section id="mod3" class="no-print bg-slate-800 border border-slate-700 rounded-2xl p-4 md:p-6 shadow-xl hidden">
-        <div class="border-b border-slate-700 pb-3 mb-4">
-            <h2 class="text-lg font-bold text-amber-400 flex items-center gap-2">
-                <span>🪵</span> Módulo 3: Core Logging, Turnos & Dashboard
-            </h2>
-            <p class="text-xs text-slate-400">Registro operativo diario, control de recuperaciones y regla de pago.</p>
-        </div>
-
-        <!-- APERTURA DE TURNO -->
-        <div class="bg-slate-900 border border-slate-700 p-4 rounded-xl mb-6">
-            <h3 class="text-sm font-bold text-sky-400 mb-3 flex items-center gap-2">
-                <span>⏱️</span> Apertura de Turno Operativo
-            </h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+    <!-- MODULO 3 -->
+    <section id="mod3" class="hidden space-y-4 bg-slate-800 p-5 rounded-2xl border border-slate-700">
+        <h2 class="text-xl font-black text-amber-400">🪵 Módulo 3: Core Logging & Turnos</h2>
+        <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 space-y-3">
+            <h3 class="text-sm font-bold text-sky-400">⏱️ Apertura / Registro de Turno Operativo</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                     <label class="block text-xs font-bold text-slate-300 mb-1">Fecha *</label>
-                    <input type="date" id="m3_fecha" class="w-full p-2.5 rounded-lg text-sm font-semibold">
+                    <input type="date" id="m3_fecha" class="input-field w-full px-3 bg-slate-800 text-white rounded-lg text-xs font-bold">
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-slate-300 mb-1">Turno *</label>
-                    <select id="m3_turno" class="w-full p-2.5 rounded-lg text-sm font-semibold">
+                    <select id="m3_turno" class="input-field w-full px-3 bg-slate-800 text-white rounded-lg text-xs font-bold">
                         <option value="Diurno">Diurno</option>
                         <option value="Nocturno">Nocturno</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-slate-300 mb-1">Perforador / Operador *</label>
-                    <input type="text" id="m3_perforador" placeholder="Nombre de perforador" class="w-full p-2.5 rounded-lg text-sm font-semibold">
+                    <label class="block text-xs font-bold text-slate-300 mb-1">Perforador *</label>
+                    <input type="text" id="m3_perforador" placeholder="Nombre operador" class="input-field w-full px-3 bg-slate-800 text-white rounded-lg text-xs">
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-slate-300 mb-1">Supervisor Geología *</label>
-                    <input type="text" id="m3_geologo" placeholder="Geólogo responsable" class="w-full p-2.5 rounded-lg text-sm font-semibold">
+                    <input type="text" id="m3_geologo" placeholder="Geólogo responsable" class="input-field w-full px-3 bg-slate-800 text-white rounded-lg text-xs">
                 </div>
             </div>
-            <button type="button" onclick="iniciarTurno()" class="w-full py-3 mt-3 bg-sky-600 hover:bg-sky-500 text-white font-bold text-sm rounded-lg shadow-md transition-all flex items-center justify-center gap-1">
-                <span>🚀</span> Activar Turno para Sondaje
-            </button>
+            <button type="button" onclick="iniciarTurno()" class="btn-field w-full bg-sky-600 text-white text-xs font-bold">🚀 Activar Turno para Sondaje</button>
         </div>
 
-        <!-- FORMULARIO DE AVANCES -->
-        <div id="bloqueAvances" class="hidden">
-            <div class="bg-slate-900 border border-emerald-500/30 p-4 rounded-xl mb-6">
-                <h3 class="text-sm font-bold text-emerald-400 mb-3 flex items-center gap-2">
-                    <span>📊</span> Registro de Avance (Tramo a Tramo)
-                </h3>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-                    <div>
-                        <label class="block text-xs font-bold text-slate-300 mb-1">Longitud Maniobra *</label>
-                        <select id="m3_longitud" onchange="autoCalcularHasta()" class="w-full p-2.5 rounded-lg text-sm font-bold text-amber-400">
-                            <option value="1.5">1.50 metros</option>
-                            <option value="3.0">3.00 metros</option>
-                        </select>
-                    </div>
-
-                    <div>
-                        <label class="block text-xs font-bold text-slate-300 mb-1">Desde (m)</label>
-                        <input type="number" id="m3_desde" readonly class="w-full p-2.5 rounded-lg text-sm font-mono font-bold bg-slate-950/60 text-slate-400">
-                    </div>
-
-                    <div>
-                        <label class="block text-xs font-bold text-slate-300 mb-1">Hasta (m)</label>
-                        <input type="number" id="m3_hasta" readonly class="w-full p-2.5 rounded-lg text-sm font-mono font-bold bg-slate-950/60 text-emerald-400">
-                    </div>
-
-                    <div>
-                        <label class="block text-xs font-bold text-slate-300 mb-1">Diámetro *</label>
-                        <select id="m3_diametro" class="w-full p-2.5 rounded-lg text-sm font-bold">
-                            <option value="HQ">HQ</option>
-                            <option value="NQ">NQ</option>
-                        </select>
-                    </div>
-
-                    <div>
-                        <label class="block text-xs font-bold text-slate-300 mb-1">Metros Recuperados *</label>
-                        <input type="number" step="0.01" id="m3_recuperado" placeholder="Ej. 1.45" class="w-full p-2.5 rounded-lg text-sm font-mono font-bold text-sky-400">
-                    </div>
-
-                    <div class="sm:col-span-2 md:col-span-1">
-                        <label class="block text-xs font-bold text-slate-300 mb-1">Meteorización / Litología *</label>
-                        <select id="m3_meteorizacion" class="w-full p-2.5 rounded-lg text-xs font-semibold">
-                            <option value="Suelo / Relleno">Suelo / Relleno (Umbral ≥ 70%)</option>
-                            <option value="Saprolita">Saprolita (Umbral ≥ 70%)</option>
-                            <option value="Saprock">Saprock (Umbral ≥ 70%)</option>
-                            <option value="Roca Oxidada">Roca Oxidada (Umbral ≥ 80%)</option>
-                            <option value="Roca Fracturada">Roca Fracturada (Umbral ≥ 70%)</option>
-                            <option value="Roca Fresca">Roca Fresca (Umbral ≥ 90%)</option>
-                            <option value="Zona de Veta">Zona de Veta (Umbral ≥ 90%)</option>
-                        </select>
-                    </div>
+        <div id="bloqueAvances" class="hidden space-y-4">
+            <h3 class="text-sm font-bold text-emerald-400">📊 Registro de Avance (Tramo a Tramo)</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 bg-slate-900 p-4 rounded-xl border border-slate-700">
+                <div>
+                    <label class="block text-xs font-bold text-slate-300 mb-1">Longitud Maniobra *</label>
+                    <select id="m3_longitud" onchange="autoCalcularHasta()" class="input-field w-full px-3 bg-slate-800 text-white rounded-lg text-xs font-bold">
+                        <option value="1.5">1.50 m</option>
+                        <option value="3.0">3.00 m</option>
+                    </select>
                 </div>
-
-                <div class="flex gap-2 mt-4">
-                    <button type="button" id="btnGuardarAvance" onclick="guardarAvance()" class="flex-1 py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-black text-sm rounded-lg shadow-md transition-all flex items-center justify-center gap-1">
-                        <span>➕</span> Guardar Avance Tramo
-                    </button>
-                    <button type="button" id="btnCancelarEdicion" onclick="cancelarEdicionAvance()" class="hidden py-3 px-4 bg-rose-600 hover:bg-rose-500 text-white font-bold text-sm rounded-lg shadow-md transition-all">
-                        Cancelar
-                    </button>
+                <div>
+                    <label class="block text-xs font-bold text-slate-300 mb-1">Desde (m)</label>
+                    <input type="number" id="m3_desde" readonly class="input-field w-full px-3 bg-slate-800 text-slate-400 rounded-lg text-xs font-mono font-bold">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-300 mb-1">Hasta (m)</label>
+                    <input type="number" id="m3_hasta" readonly class="input-field w-full px-3 bg-slate-800 text-emerald-400 rounded-lg text-xs font-mono font-bold">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-300 mb-1">Diámetro *</label>
+                    <select id="m3_diametro" class="input-field w-full px-3 bg-slate-800 text-white rounded-lg text-xs font-bold">
+                        <option value="HQ">HQ</option>
+                        <option value="NQ">NQ</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-300 mb-1">Metros Recuperados *</label>
+                    <input type="number" step="0.01" id="m3_recuperado" placeholder="Ej. 1.45" class="input-field w-full px-3 bg-slate-800 text-white rounded-lg text-xs font-bold">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-300 mb-1">Meteorización *</label>
+                    <select id="m3_meteorizacion" class="input-field w-full px-3 bg-slate-800 text-white rounded-lg text-xs font-bold">
+                        <option value="Suelo / Relleno">a. Suelo / Relleno (Umbral ≥ 70%)</option>
+                        <option value="Saprolita">b. Saprolita (Umbral ≥ 70%)</option>
+                        <option value="Saprock">c. Saprock (Umbral ≥ 70%)</option>
+                        <option value="Roca Oxidada">d. Roca Oxidada (Umbral ≥ 80%)</option>
+                        <option value="Roca Fracturada">e. Roca Fracturada (Umbral ≥ 70%)</option>
+                        <option value="Roca Fresca">f. Roca Fresca (Umbral ≥ 90%)</option>
+                        <option value="Zona de Veta">g. Zona de Veta (Umbral ≥ 90%)</option>
+                    </select>
+                </div>
+                <div class="sm:col-span-3 flex gap-2 pt-1">
+                    <button type="button" id="btnGuardarAvance" onclick="guardarAvance()" class="btn-field flex-1 bg-emerald-600 text-white text-xs font-bold">➕ Guardar Avance Tramo</button>
+                    <button type="button" id="btnCancelarEdicion" onclick="cancelarEdicionAvance()" class="hidden bg-rose-600 text-white px-4 rounded-lg font-bold text-xs">❌ Cancelar</button>
                 </div>
             </div>
 
-            <!-- SÁBANA DE AVANCES -->
-            <div class="overflow-x-auto rounded-xl border border-slate-700 mb-6">
-                <table class="w-full text-left text-xs text-slate-300">
-                    <thead class="bg-slate-900 text-slate-400 uppercase font-mono border-b border-slate-700">
+            <div class="overflow-x-auto border border-slate-700 rounded-xl">
+                <table class="w-full text-left text-xs border-collapse">
+                    <thead class="bg-slate-900 text-slate-300 uppercase">
                         <tr>
-                            <th class="p-2.5">#</th>
-                            <th class="p-2.5">Tramo (m)</th>
-                            <th class="p-2.5">Diám</th>
-                            <th class="p-2.5">Rec (m)</th>
-                            <th class="p-2.5">% Rec</th>
-                            <th class="p-2.5">Meteorización</th>
-                            <th class="p-2.5">Pago (m)</th>
-                            <th class="p-2.5">Acción</th>
+                            <th class="p-2.5">#</th><th class="p-2.5">Tramo (m)</th><th class="p-2.5">Diám</th><th class="p-2.5">Rec (m)</th><th class="p-2.5">% Rec</th><th class="p-2.5">Meteorización</th><th class="p-2.5">Pago (m)</th><th class="p-2.5">Acción</th>
                         </tr>
                     </thead>
-                    <tbody id="tablaAvances" class="divide-y divide-slate-700/60 bg-slate-800/80 font-mono">
-                        <!-- Filas dinámicas -->
-                    </tbody>
+                    <tbody id="tablaAvances" class="divide-y divide-slate-700 bg-slate-900/60"></tbody>
                 </table>
             </div>
 
-            <!-- DASHBOARD DE KPIS Y GRÁFICOS CANVAS -->
-            <div class="space-y-4">
-                <h3 class="text-sm font-bold text-amber-400 flex items-center gap-2">
-                    <span>📈</span> Dashboard Operativo en Vivo
-                </h3>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2">
+                <div class="bg-slate-900 p-3 rounded-lg border-l-4 border-l-sky-500">
+                    <p class="text-[10px] font-bold text-slate-400 uppercase">Metros Totales</p>
+                    <p id="kpiMetros" class="text-lg font-black text-white mt-1">0.00 m</p>
+                </div>
+                <div class="bg-slate-900 p-3 rounded-lg border-l-4 border-l-emerald-500">
+                    <p class="text-[10px] font-bold text-slate-400 uppercase">Metros Turno</p>
+                    <p id="kpiMetrosTurno" class="text-lg font-black text-emerald-400 mt-1">0.00 m</p>
+                </div>
+                <div class="bg-slate-900 p-3 rounded-lg border-l-4 border-l-amber-500">
+                    <p class="text-[10px] font-bold text-slate-400 uppercase">% Rec. Turno</p>
+                    <p id="kpiRecupTurno" class="text-lg font-black text-amber-400 mt-1">0.0%</p>
+                </div>
+                <div class="bg-slate-900 p-3 rounded-lg border-l-4 border-l-purple-500">
+                    <p class="text-[10px] font-bold text-slate-400 uppercase">% Rec. Global</p>
+                    <p id="kpiRecupGlobal" class="text-lg font-black text-purple-400 mt-1">0.0%</p>
+                </div>
+            </div>
 
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-               
+            <div class="bg-slate-900 p-3 rounded-xl border border-slate-700">
+                <h4 class="text-xs font-bold text-slate-300 mb-2">Curva de Tendencia de Recuperación (%)</h4>
+                <canvas id="canvasTendencia" class="w-full h-36 bg-slate-900 rounded"></canvas>
+            </div>
+
+            <div class="bg-slate-900 p-3 rounded-xl border border-slate-700">
+                <h4 class="text-xs font-bold text-slate-300 mb-2">Metros Brutos vs. Metros Pagables Reales</h4>
+                <canvas id="canvasPagos" class="w-full h-36 bg-slate-900 rounded"></canvas>
+            </div>
+        </div>
+    </section>
+
+    <!-- MODULO 4 -->
+    <section id="mod4" class="hidden space-y-4 bg-slate-800 p-5 rounded-2xl border border-slate-700">
+        <h2 class="text-xl font-black text-amber-400">🏁 Módulo 4: Cierre Formal de Sondajes</h2>
+        <div class="bg-slate-900 p-4 rounded-xl border border-slate-700">
+            <h3 id="cierrePozoNombre" class="text-base font-bold text-white">Seleccione un sondaje</h3>
+            <p id="cierrePozoEstado" class="text-xs text-slate-400 mt-1">Estado actual: --</p>
+        </div>
+        <button type="button" id="btnCulminarPozo" onclick="cerrarPozo()" class="btn-field w-full bg-rose-600 text-white text-sm font-bold">
+            🔒 Cambiar Estado a CULMINADO
+        </button>
+    </section>
+
+    <!-- MODULO 5 -->
+    <section id="mod5" class="hidden space-y-4 bg-slate-800 p-5 rounded-2xl border border-slate-700">
+        <h2 class="text-xl font-black text-amber-400">📑 Módulo 5: Repositorio & Reportes</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div class="bg-slate-900 p-4 rounded-xl border border-slate-700">
+                <h3 class="text-xs font-bold text-sky-400 mb-1">📄 Reporte Diario de Turno (DSR)</h3>
+                <button type="button" onclick="imprimirDSR()" class="btn-field w-full bg-sky-600 text-white text-xs font-bold mt-2">🖨️ Generar DSR</button>
+            </div>
+            <div class="bg-slate-900 p-4 rounded-xl border border-slate-700">
+                <h3 class="text-xs font-bold text-emerald-400 mb-1">🏆 Certificación de Pago</h3>
+                <button type="button" onclick="imprimirCertificado()" class="btn-field w-full bg-emerald-600 text-white text-xs font-bold mt-2">✍️ Ver Certificado de Pago</button>
+            </div>
+        </div>
+        <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 space-y-3">
+            <h3 class="text-sm font-bold text-amber-400">📊 Consolidado Gerencial</h3>
+            <div class="overflow-x-auto border border-slate-700 rounded-xl">
+                <table class="w-full text-left text-xs border-collapse">
+                    <thead class="bg-slate-800 text-slate-300 uppercase">
+                        <tr><th class="p-2">Empresa</th><th class="p-2">Fecha</th><th class="p-2">Sondaje</th><th class="p-2">Proyecto</th><th class="p-2">Total (m)</th><th class="p-2">Recup (m)</th><th class="p-2">% Rec</th><th class="p-2">Pagado (m)</th></tr>
+                    </thead>
+                    <tbody id="tablaConsolidado" class="divide-y divide-slate-700 bg-slate-900/60"></tbody>
+                </table>
+            </div>
+            <button type="button" onclick="exportarCSV()" class="btn-field w-full bg-emerald-600 text-white text-xs font-bold">📥 Exportar a Excel (CSV)</button>
+        </div>
+    </section>
+
+    <div id="printable-area" class="hidden"></div>
+
+    <script>
+        let db = { pozos: [], turnos: [], avances: [] };
+        let pozoId = null, turnoId = null, editandoAvanceId = null;
+
+        function switchTab(id) {
+            ['mod1', 'mod2', 'mod3', 'mod4', 'mod5'].forEach(m => {
+                document.getElementById(m).classList.add('hidden');
+                document.getElementById('tab-' + m).className = "flex-1 min-w-[110px] py-2.5 px-3 rounded-lg font-bold text-xs bg-slate-700 text-slate-300";
+            });
+            document.getElementById(id).classList.remove('hidden');
+            document.getElementById('tab-' + id).className = "flex-1 min-w-[110px] py-2.5 px-3 rounded-lg font-bold text-xs bg-sky-600 text-white shadow";
+        }
+
+        function toggleOtraEmpresa() {
+            const val = document.getElementById('m1_empresa').value;
+            document.getElementById('m1_otra_empresa_box').classList.toggle('hidden', val !== 'OTRA');
+        }
+
+        function toggleOtraMaquina() {
+            const val = document.getElementById('m2_maquina').value;
+            document.getElementById('m2_otra_maquina_box').classList.toggle('hidden', val !== 'OTRA');
+        }
+
+        function cargarDatos() {
+            try {
+                let data = localStorage.getItem('geo_db_safe_v9') || sessionStorage.getItem('geo_db_safe_v9');
+                if (data) db = JSON.parse(data);
+            } catch(e) {}
+            refrescarSelect();
+        }
+
+        function guardarDatos() {
+            try {
+                localStorage.setItem('geo_db_safe_v9', JSON.stringify(db));
+            } catch(e) {
+                try { sessionStorage.setItem('geo_db_safe_v9', JSON.stringify(db)); } catch(err) {}
+            }
+            refrescarSelect();
+        }
+
+        function crearPozo() {
+            const cod = document.getElementById('m1_codigo').value.trim().toUpperCase();
+            let emp = document.getElementById('m1_empresa').value;
+            if (emp === 'OTRA') emp = document.getElementById('m1_otra_empresa').value.trim();
+            const pro = document.getElementById('m1_proyecto').value.trim();
+
+            if (!cod || !pro) { alert("⚠️ Ingrese Código del Sondaje y Proyecto/Sector."); return; }
+
+            const nuevo = { id: Date.now(), codigo: cod, empresa: emp, proyecto: pro, estado: 'ACTIVO', fechaInicio: new Date().toISOString().split('T')[0] };
+            db.pozos.push(nuevo);
+            pozoId = nuevo.id;
+            guardarDatos();
+
+            document.getElementById('m1_codigo').value = '';
+            document.getElementById('m1_proyecto').value = '';
+            alert("✅ Sondaje " + cod + " Registrado con Éxito");
+            switchTab('mod2');
+        }
+
+        function refrescarSelect() {
+            const sel = document.getElementById('globalWellSelect');
+            sel.innerHTML = '<option value="">-- Seleccione un Sondaje Registrar o Activo --</option>';
+            db.pozos.forEach(p => {
+                const opt = document.createElement('option');
+                opt.value = p.id;
+                opt.textContent = `${p.codigo} - ${p.empresa} (${p.proyecto}) [${p.estado || 'ACTIVO'}]`;
+                if (p.id == pozoId) opt.selected = true;
+                sel.appendChild(opt);
+            });
+            cargarDatosPozoActivo();
+            renderConsolidado();
+        }
+
+        function seleccionarPozoGlobal(val) { pozoId = val; cargarDatosPozoActivo(); }
+
+        function cargarDatosPozoActivo() {
+            if (!pozoId) return;
+            const p = db.pozos.find(x => x.id == pozoId);
+            if (!p) return;
+
+            document.getElementById('m2_maquina').value = ['Geomax', 'Heng Wang', 'Longyear'].includes(p.maquina) ? p.maquina : (p.maquina ? 'OTRA' : 'Geomax');
+            toggleOtraMaquina();
+            document.getElementById('m2_este').value = p.este || 0;
+            document.getElementById('m2_norte').value = p.norte || 0;
+            document.getElementById('m2_cota').value = p.cota || 0;
+            document.getElementById('m2_azimut').value = p.azimut || 0;
+            document.getElementById('m2_dip').value = p.dip || -60;
+            document.getElementById('m2_target').value = p.target || 100;
+
+            document.getElementById('cierrePozoNombre').textContent = `Sondaje: ${p.codigo} (${p.proyecto})`;
+            document.getElementById('cierrePozoEstado').textContent = `Estado actual: ${p.estado || 'ACTIVO'}`;
+
+            autoCalcularDesde();
+            renderTabla();
+        }
+
+        function habilitarEdicionTopo() {
+            if (!pozoId) { alert("⚠️ Seleccione un sondaje primero"); return; }
+            ['m2_maquina', 'm2_otra_maquina', 'm2_este', 'm2_norte', 'm2_cota', 'm2_azimut', 'm2_dip', 'm2_target'].forEach(id => {
+                document.getElementById(id).disabled = false;
+            });
+            document.getElementById('m2_btn_box').classList.remove('hidden');
+        }
+
+        function guardarTopografia() {
+            if (!pozoId) return;
+            const p = db.pozos.find(x => x.id == pozoId);
+            if (!p) return;
+
+            let maq = document.getElementById('m2_maquina').value;
+            if (maq === 'OTRA') maq = document.getElementById('m2_otra_maquina').value.trim();
+
+            p.maquina = maq;
+            p.este = parseFloat(document.getElementById('m2_este').value) || 0;
+            p.norte = parseFloat(document.getElementById('m2_norte').value) || 0;
+            p.cota = parseFloat(document.getElementById('m2_cota').value) || 0;
+            p.azimut = parseFloat(document.getElementById('m2_azimut').value) || 0;
+            p.dip = parseFloat(document.getElementById('m2_dip').value) || 0;
+            p.target = parseFloat(document.getElementById('m2_target').value) || 100;
+
+            guardarDatos();
+            ['m2_maquina', 'm2_otra_maquina', 'm2_este', 'm2_norte', 'm2_cota', 'm2_azimut', 'm2_dip', 'm2_target'].forEach(id => {
+                document.getElementById(id).disabled = true;
+            });
+            document.getElementById('m2_btn_box').classList.add('hidden');
+            alert("💾 Ficha Topográfica Guardada");
+            switchTab('mod3');
+        }
+
+        function iniciarTurno() {
+            if (!pozoId) { alert("⚠️ Seleccione un pozo primero"); return; }
+            const perf = document.getElementById('m3_perforador').value.trim();
+            const geo = document.getElementById('m3_geologo').value.trim();
+
+            if (!perf || !geo) { alert("⚠️ Ingrese Perforador y Supervisor de Geología."); return; }
+
+            const t = { id: Date.now(), pozoId, fecha: document.getElementById('m3_fecha').value || new Date().toISOString().split('T')[0], tipo: document.getElementById('m3_turno').value, perforador: perf, geologo: geo };
+            db.turnos.push(t);
+            guardarDatos();
+            turnoId = t.id;
+            document.getElementById('bloqueAvances').classList.remove('hidden');
+            autoCalcularDesde();
+            alert("⏱️ Turno Registrado");
+        }
+
+        function autoCalcularDesde() {
+            if (!pozoId) return;
+            const avs = db.avances.filter(a => a.pozoId == pozoId);
+            let desde = avs.length > 0 ? Math.max(...avs.map(a => a.hasta)) : 0;
+            document.getElementById('m3_desde').value = desde.toFixed(2);
+            autoCalcularHasta();
+        }
+
+        function autoCalcularHasta() {
+            const desde = parseFloat(document.getElementById('m3_desde').value) || 0;
+            const len = parseFloat(document.getElementById('m3_longitud').value) || 1.5;
+            document.getElementById('m3_hasta').value = (desde + len).toFixed(2);
+        }
+
+        function guardarAvance() {
+            if (!pozoId) { alert("⚠️ Seleccione un pozo."); return; }
+            if (!turnoId) { alert("⚠️ Active un turno primero."); return; }
+
+            const len = parseFloat(document.getElementById('m3_longitud').value);
+            const desde = parseFloat(document.getElementById('m3_desde').value);
+            const hasta = parseFloat(document.getElementById('m3_hasta').value);
+            const diam = document.getElementById('m3_diametro').value;
+            const rec = parseFloat(document.getElementById('m3_recuperado').value);
+            const met = document.getElementById('m3_meteorizacion').value;
+
+            if (isNaN(rec)) { alert("⚠️ Ingrese metros recuperados."); return; }
+            if (rec > len) { alert("⚠️ Recuperación no puede superar la maniobra."); return; }
+
+            let umbral = 0.70;
+            if (met.includes('Roca Oxidada')) umbral = 0.80;
+            if (met.includes('Roca Fresca') || met.includes('Zona de Veta')) umbral = 0.90;
+
+            const porc = (rec / len) * 100;
+            let pagado = porc >= (umbral * 100) ? len : rec;
+
+            if (editandoAvanceId) {
+                let av = db.avances.find(x => x.id == editandoAvanceId);
+                if (av) { Object.assign(av, { longitud: len, desde, hasta, diametro: diam, recuperado: rec, meteorizacion: met, porcentaje: porc, pagado }); }
+                editandoAvanceId = null;
+                document.getElementById('btnGuardarAvance').textContent = "➕ Guardar Avance Tramo";
+                document.getElementById('btnCancelarEdicion').classList.add('hidden');
+            } else {
+                db.avances.push({ id: Date.now(), pozoId, turnoId, longitud: len, desde, hasta, diametro: diam, recuperado: rec, meteorizacion: met, porcentaje: porc, pagado });
+            }
+
+            guardarDatos();
+            document.getElementById('m3_recuperado').value = '';
+            autoCalcularDesde();
+            renderTabla();
+            alert("✅ Tramo Guardado con Éxito");
+        }
+
+        function editarAvance(id) {
+            const av = db.avances.find(x => x.id == id);
+            if (!av) return;
+            editandoAvanceId = id;
+            document.getElementById('m3_longitud').value = av.longitud;
+            document.getElementById('m3_desde').value = av.desde;
+            document.getElementById('m3_hasta').value = av.hasta;
+            document.getElementById('m3_diametro').value = av.diametro;
+            document.getElementById('m3_recuperado').value = av.recuperado;
+            document.getElementById('m3_meteorizacion').value = av.meteorizacion;
+
+            document.getElementById('btnGuardarAvance').textContent = "💾 Guardar Cambios Editados";
+            document.getElementById('btnCancelarEdicion').classList.remove('hidden');
+        }
+
+        function cancelarEdicionAvance() {
+            editandoAvanceId = null;
+            document.getElementById('m3_recuperado').value = '';
+            autoCalcularDesde();
+            document.getElementById('btnGuardarAvance').textContent = "➕ Guardar Avance Tramo";
+            document.getElementById('btnCancelarEdicion').classList.add('hidden');
+        }
+
+        function renderTabla() {
+            const tb = document.getElementById('tablaAvances');
+            tb.innerHTML = '';
+            if (!pozoId) return;
+
+            const avs = db.avances.filter(a => a.pozoId == pozoId);
+            let totMetros = 0, totPagable = 0, totRecup = 0, totLong = 0;
+            let turnoMetros = 0, turnoRecup = 0;
+            let dataTendencia = [], labelsTendencia = [];
+
+            avs.forEach((a, i) => {
+                totMetros = a.hasta; totPagable += a.pagado; totRecup += a.recuperado; totLong += a.longitud;
+                if (a.turnoId == turnoId) { turnoMetros += a.longitud; turnoRecup += a.recuperado; }
+
+                labelsTendencia.push(`#${i+1}`); dataTendencia.push(a.porcentaje);
+                let badgeColor = a.porcentaje >= 80 ? 'color:#34d399;' : 'color:#fbbf24;';
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="p-2">${i+1}</td>
+                    <td class="p-2">${a.desde.toFixed(2)}-${a.hasta.toFixed(2)}</td>
+                    <td class="p-2 font-bold text-sky-400">${a.diametro}</td>
+                    <td class="p-2">${a.recuperado.toFixed(2)}</td>
+                    <td class="p-2 font-bold" style="${badgeColor}">${a.porcentaje.toFixed(1)}%</td>
+                    <td class="p-2 text-[10px]">${a.meteorizacion}</td>
+                    <td class="p-2 font-bold text-emerald-400">${a.pagado.toFixed(2)}</td>
+                    <td class="p-2"><button type="button" class="bg-sky-600 text-white px-2 py-1 rounded text-[10px] font-bold" onclick="editarAvance(${a.id})">Editar</button></td>
+                `;
+                tb.appendChild(tr);
+            });
+
+            document.getElementById('kpiMetros').textContent = totMetros.toFixed(2) + " m";
+            document.getElementById('kpiMetrosTurno').textContent = turnoMetros.toFixed(2) + " m";
+            document.getElementById('kpiRecupTurno').textContent = (turnoMetros > 0 ? (turnoRecup / turnoMetros) * 100 : 0).toFixed(1) + "%";
+            document.getElementById('kpiRecupGlobal').textContent = (totLong > 0 ? (totRecup / totLong) * 100 : 0).toFixed(1) + "%";
+
+            renderGraficosCanvas(labelsTendencia, dataTendencia, totLong, totPagable);
+        }
+
+        function renderGraficosCanvas(labels, dataRec, totalBruto, totalPagado) {
+            const c1 = document.getElementById('canvasTendencia'), ctx1 = c1.getContext('2d');
+            c1.width = c1.clientWidth; c1.height = 140;
+            ctx1.clearRect(0, 0, c1.width, c1.height);
+            if (dataRec.length > 0) {
+                ctx1.beginPath(); ctx1.strokeStyle = '#38bdf8'; ctx1.lineWidth = 2;
+                const step = c1.width / Math.max(1, dataRec.length - 1);
+                dataRec.forEach((val, idx) => {
+                    const x = idx * step, y = c1.height - (val / 100 * (c1.height - 20)) - 10;
+                    if (idx === 0) ctx1.moveTo(x, y); else ctx1.lineTo(x, y);
+                });
+                ctx1.stroke();
+            }
+
+            const c2 = document.getElementById('canvasPagos'), ctx2 = c2.getContext('2d');
+            c2.width = c2.clientWidth; c2.height = 140;
+            ctx2.clearRect(0, 0, c2.width, c2.height);
+            const maxVal = Math.max(10, totalBruto, totalPagado);
+            const b1Height = (totalBruto / maxVal) * (c2.height - 30), b2Height = (totalPagado / maxVal) * (c2.height - 30);
+
+            ctx2.fillStyle = '#0284c7'; ctx2.fillRect(c2.width * 0.25, c2.height - b1Height - 15, 30, b1Height);
+            ctx2.fillStyle = '#10b981'; ctx2.fillRect(c2.width * 0.60, c2.height - b2Height - 15, 30, b2Height);
+            ctx2.fillStyle = '#cbd5e1'; ctx2.font = '10px sans-serif';
+            ctx2.fillText('Brutos: ' + totalBruto.toFixed(1) + 'm', c2.width * 0.20, c2.height - 2);
+            ctx2.fillText('Pagados: ' + totalPagado.toFixed(1) + 'm', c2.width * 0.55, c2.height - 2);
+        }
+
+        function cerrarPozo() {
+            if (!pozoId) return;
+            const p = db.pozos.find(x => x.id == pozoId);
+            if (p) {
+                p.estado = 'CULMINADO'; p.fechaCulminacion = new Date().toISOString().split('T')[0];
+                guardarDatos(); alert("🏁 Sondaje Culminado"); cargarDatosPozoActivo();
+            }
+        }
+
+        function imprimirDSR() {
+            if (!pozoId) { alert("⚠️ Seleccione un pozo."); return; }
+            const p = db.pozos.find(x => x.id == pozoId);
+            const t = db.turnos.find(x => x.id == turnoId) || { fecha: 'N/A', tipo: 'N/A', perforador: 'N/A', geologo: 'N/A' };
+            const avs = db.avances.filter(a => a.pozoId == pozoId);
+            let totAcum = avs.reduce((acc, a) => acc + a.longitud, 0);
+
+            let html = `
+                <div style="font-family:Arial; padding:20px; color:#000;">
+                    <h2 style="text-align:center; color:#1e3a8a;">REPORTE DIARIO DE GEOLOGÍA (DSR)</h2><hr><br>
+                    <p><b>Sondaje:</b> ${p.codigo} | <b>Proyecto:</b> ${p.proyecto} | <b>Empresa:</b> ${p.empresa}</p>
+                    <p><b>Fecha Turno:</b> ${t.fecha} (${t.tipo}) | <b>Perforadora:</b> ${p.maquina || 'N/A'}</p>
+                    <p><b>Perforador:</b> ${t.perforador} | <b>Supervisor Geología:</b> ${t.geologo}</p>
+                    <p><b>Profundidad Acumulada:</b> ${totAcum.toFixed(2)} m / Target: ${p.target || 100} m</p><br>
+                    <h3>Sábana de Avances Registrados</h3>
+                    <table border="1" cellspacing="0" cellpadding="5" style="width:100%; border-collapse:collapse; font-size:11px;">
+                        <tr style="background:#f1f5f9;"><th>#</th><th>Intervalo (m)</th><th>Diam</th><th>Recup (m)</th><th>% Rec</th><th>Meteorización</th><th>Pago (m)</th></tr>
+            `;
+            avs.forEach((a, i) => {
+                html += `<tr><td>#${i+1}</td><td>${a.desde.toFixed(2)} - ${a.hasta.toFixed(2)}</td><td>${a.diametro}</td><td>${a.recuperado.toFixed(2)}</td><td>${a.porcentaje.toFixed(1)}%</td><td>${a.meteorizacion}</td><td><b>${a.pagado.toFixed(2)}</b></td></tr>`;
+            });
+            html += `</table><br><br><br><table style="width:100%; text-align:center; font-size:12px;"><tr><td>________________________<br><b>Supervisor Perforación</b></td><td>________________________<br><b>Supervisor Geología</b></td></tr></table></div>`;
+            document.getElementById('printable-area').innerHTML = html; window.print();
+        }
+
+        function imprimirCertificado() {
+            if (!pozoId) { alert("⚠️ Seleccione un pozo."); return; }
+            const p = db.pozos.find(x => x.id == pozoId);
+            const avs = db.avances.filter(a => a.pozoId == pozoId);
+            let totAcum = avs.reduce((acc, a) => acc + a.longitud, 0), totPagado = avs.reduce((acc, a) => acc + a.pagado, 0);
+
+            let html = `
+                <div style="font-family:Arial; padding:25px; color:#000;">
+                    <h2 style="text-align:center; color:#065f46;">CERTIFICADO OFICIAL DE PAGO - POZO CULMINADO</h2><hr><br>
+                    <p><b>Código Sondaje:</b> ${p.codigo}</p>
+                    <p><b>Empresa Contratista:</b> ${p.empresa} | <b>Proyecto:</b> ${p.proyecto}</p>
+                    <p><b>Fecha Inicio:</b> ${p.fechaInicio || 'N/A'} | <b>Fecha Culminación:</b> ${p.fechaCulminacion || 'En Curso'}</p>
+                    <p><b>Coordenadas Collar:</b> Este: ${p.este || 0} m | Norte: ${p.norte || 0} m | Cota Z: ${p.cota || 0} m</p>
+                    <p><b>Geometría:</b> Azimut: ${p.azimut || 0}° | Dip: ${p.dip || -60}° | Profundidad Final: ${totAcum.toFixed(2)} m</p><br>
+                    <h3>Resumen Financiero y Auditoría de Metros Pagables</h3>
+                    <p><b>Total Metros Perforados:</b> ${totAcum.toFixed(2)} m</p>
+                    <p><b>Total Metros Autorizados para Pago:</b> <b style="color:#047857; font-size:16px;">${totPagado.toFixed(2)} m</b></p><br><br><br>
+                    <table style="width:100%; text-align:center; font-size:12px;"><tr><td>________________________<br><b>Supervisor Perforación</b></td><td>________________________<br><b>Supervisor Geología</b></td></tr></table></div>`;
+            document.getElementById('printable-area').innerHTML = html; window.print();
+        }
+
+        function renderConsolidado() {
+            const tb = document.getElementById('tablaConsolidado');
+            tb.innerHTML = '';
+            db.pozos.forEach(p => {
+                const avs = db.avances.filter(a => a.pozoId == p.id);
+                let tot = avs.reduce((acc, a) => acc + a.longitud, 0), rec = avs.reduce((acc, a) => acc + a.recuperado, 0), pag = avs.reduce((acc, a) => acc + a.pagado, 0);
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td class="p-2">${p.empresa}</td><td class="p-2">${p.fechaInicio || 'N/A'}</td><td class="p-2 font-bold text-sky-400">${p.codigo}</td><td class="p-2">${p.proyecto}</td><td class="p-2">${tot.toFixed(2)} m</td><td class="p-2">${rec.toFixed(2)} m</td><td class="p-2">${(tot > 0 ? (rec / tot) * 100 : 0).toFixed(1)}%</td><td class="p-2 font-bold text-emerald-400">${pag.toFixed(2)} m</td>`;
+                tb.appendChild(tr);
+            });
+        }
+
+        function exportarCSV() {
+            let csv = "Empresa,FechaInicio,Sondaje,Proyecto,MetrosTotales,MetrosRecuperados,%Recuperacion,MetrosPagados\n";
+            db.pozos.forEach(p => {
+                const avs = db.avances.filter(a => a.pozoId == p.id);
+                let tot = avs.reduce((acc, a) => acc + a.longitud, 0), rec = avs.reduce((acc, a) => acc + a.recuperado, 0), pag = avs.reduce((acc, a) => acc + a.pagado, 0);
+                csv += `"${p.empresa}","${p.fechaInicio || ''}","${p.codigo}","${p.proyecto}",${tot.toFixed(2)},${rec.toFixed(2)},${(tot > 0 ? (rec / tot) * 100 : 0).toFixed(1)}%,${pag.toFixed(2)}\n`;
+            });
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `Consolidado_Jireth_GeoCore_${new Date().toISOString().split('T')[0]}.csv`; a.click();
+        }
+
+        document.getElementById('m3_fecha').value = new Date().toISOString().split('T')[0];
+        cargarDatos();
+    </script>
+</body>
+</html>
