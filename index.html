@@ -1,116 +1,138 @@
+```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jireth GeoCore Lite | Control Operativo de Perforación</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Jireth GeoCore Lite | Perforación Diamantina de Oro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        body { background-color: #0f172a; color: #f8fafc; padding: 12px; min-height: 100vh; }
+        /* Estilos personalizados y utilidades offline sin dependencias externas */
+        body {
+            background-color: #0f172a;
+            color: #f8fafc;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
         
-        /* HEADER & SELECTOR */
-        .header { background: #1e293b; padding: 14px; border-radius: 12px; border: 1px solid #334155; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
-        .brand-title { font-size: 18px; font-weight: 900; color: #ffffff; letter-spacing: 0.5px; }
-        .brand-sub { font-size: 11px; color: #94a3b8; }
-        .badge-offline { background: #065f46; color: #6ee7b7; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; border: 1px solid #10b981; }
-        
-        /* NAVEGACION POR MODULOS */
-        .nav-tabs { display: flex; gap: 6px; overflow-x: auto; margin-bottom: 14px; padding-bottom: 4px; }
-        .tab-btn { background: #334155; color: #cbd5e1; border: none; padding: 12px 14px; border-radius: 8px; font-weight: bold; font-size: 13px; white-space: nowrap; cursor: pointer; flex: 1; min-width: 110px; text-align: center; }
-        .tab-btn.active { background: #0284c7; color: #ffffff; box-shadow: 0 2px 8px rgba(2, 132, 199, 0.4); }
-        
-        /* CARDS & FORMULARIOS */
-        .card { background: #1e293b; border: 1px solid #334155; border-radius: 14px; padding: 16px; margin-bottom: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.25); }
-        .card-title { color: #fbbf24; font-size: 17px; font-weight: 800; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
-        .card-desc { color: #94a3b8; font-size: 12px; margin-bottom: 16px; border-b: 1px solid #334155; pb: 8px; }
-        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
-        .field-group { margin-bottom: 10px; }
-        label { display: block; font-size: 12px; font-weight: 700; color: #cbd5e1; margin-bottom: 5px; }
-        input, select { width: 100%; min-height: 46px; background: #0f172a; border: 1.5px solid #475569; border-radius: 8px; color: #ffffff; padding: 8px 12px; font-size: 14px; font-weight: 600; }
-        input:focus, select:focus { border-color: #38bdf8; outline: none; box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2); }
-        input[readonly] { background: #1e293b; color: #94a3b8; }
-        
-        /* BOTONES */
-        .btn-main { width: 100%; min-height: 50px; background: #f59e0b; color: #0f172a; border: none; border-radius: 10px; font-size: 15px; font-weight: 900; cursor: pointer; margin-top: 8px; transition: background 0.2s; }
-        .btn-main:active { transform: scale(0.98); }
-        .btn-sec { min-height: 44px; background: #0284c7; color: white; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; padding: 8px 16px; font-size: 13px; }
-        .btn-emerald { background: #059669; color: white; }
-        .btn-rose { background: #e11d48; color: white; }
-        .btn-slate { background: #475569; color: white; }
-        
-        /* TABLAS & KPIS */
-        .table-container { overflow-x: auto; margin-top: 12px; border-radius: 8px; border: 1px solid #334155; }
-        table { width: 100%; border-collapse: collapse; font-size: 12px; text-align: left; }
-        th, td { border: 1px solid #334155; padding: 10px 8px; }
-        th { background: #0f172a; color: #94a3b8; text-transform: uppercase; font-size: 11px; }
-        tbody tr:nth-child(even) { background: #182234; }
-        
-        .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-top: 14px; }
-        .kpi-card { background: #0f172a; padding: 12px; border-radius: 10px; border-left: 4px solid #38bdf8; border-top: 1px solid #334155; }
-        .kpi-label { font-size: 10px; font-weight: 800; color: #94a3b8; text-transform: uppercase; }
-        .kpi-val { font-size: 20px; font-weight: 900; color: #ffffff; margin-top: 4px; }
-        
-        /* GRAFICOS CANVAS */
-        .chart-box { background: #0f172a; border: 1px solid #334155; border-radius: 10px; padding: 12px; margin-top: 12px; }
-        .chart-box h4 { font-size: 12px; color: #cbd5e1; margin-bottom: 8px; }
-        canvas { width: 100% !important; height: 160px !important; background: #0f172a; border-radius: 6px; }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
 
-        /* TOAST & REPORTE IMPRESO */
-        .toast { position: fixed; top: 12px; right: 12px; left: 12px; background: #059669; color: white; padding: 14px; border-radius: 10px; font-weight: bold; text-align: center; z-index: 1000; box-shadow: 0 4px 16px rgba(0,0,0,0.6); }
-        .hidden { display: none !important; }
-        
+        input, select {
+            background-color: #1e293b !important;
+            color: #ffffff !important;
+            border: 1px solid #475569 !important;
+        }
+
+        input:focus, select:focus {
+            border-color: #38bdf8 !important;
+            outline: none !important;
+            box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2) !important;
+        }
+
+        /* Estilos de Impresión */
         @media print {
-            body * { visibility: hidden; }
-            #printable-area, #printable-area * { visibility: visible; }
-            #printable-area { position: absolute; left: 0; top: 0; width: 100%; color: #000000; background: #ffffff; padding: 20px; }
+            body {
+                background-color: #ffffff !important;
+                color: #000000 !important;
+            }
+            .no-print {
+                display: none !important;
+            }
+            #printable-area {
+                display: block !important;
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                margin: 0;
+                padding: 20px;
+                background: #ffffff;
+                color: #000000;
+            }
         }
     </style>
 </head>
-<body>
+<body class="min-h-screen p-3 md:p-6 pb-20">
 
-    <!-- NOTIFICACION TOAST -->
-    <div id="toast" class="toast hidden">Operación Realizada</div>
-
-    <!-- BARRA SUPERIOR -->
-    <div class="header">
-        <div>
-            <div class="brand-title">JGL | Jireth GeoCore Lite</div>
-            <div class="brand-sub">Control Operativo & Auditoría de Sondajes</div>
+    <!-- MENSAJE DE ESTADO / ALERTA DE SISTEMA -->
+    <div id="systemNotification" class="fixed top-2 left-2 right-2 z-50 hidden transition-all duration-300">
+        <div id="notificationBg" class="p-4 rounded-xl shadow-2xl border flex items-center justify-between bg-emerald-600 border-emerald-400 text-white">
+            <span id="notificationMsg" class="font-bold text-sm md:text-base"></span>
+            <button type="button" onclick="cerrarNotificacion()" class="ml-2 font-black text-lg bg-black/20 hover:bg-black/40 rounded-lg px-2 py-1">✕</button>
         </div>
-        <span class="badge-offline">⚡ Modo Local Autónomo</span>
     </div>
 
-    <!-- SELECTOR GLOBAL DE POZO ACTIVO -->
-    <div class="card" style="padding:12px;">
-        <label style="color:#fbbf24;">Sonda / Pozo Activo Seleccionado:</label>
-        <select id="globalWellSelect" onchange="seleccionarPozoGlobal(this.value)">
-            <option value="">-- Seleccione un Sondaje Registrar o Activo --</option>
-        </select>
-    </div>
+    <!-- ENCABEZADO Y SELECTOR GLOBAL -->
+    <header class="no-print bg-slate-800 border border-slate-700 rounded-2xl p-4 mb-4 shadow-lg">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 mb-3">
+            <div>
+                <h1 class="text-xl md:text-2xl font-black text-amber-400 tracking-wide flex items-center gap-2">
+                    <span>⛏️</span> Jireth GeoCore Lite
+                </h1>
+                <p class="text-xs text-slate-400">Control Operativo Diamantina de Oro • Estado Bolívar</p>
+            </div>
+            <div class="flex items-center gap-2 bg-emerald-950/80 border border-emerald-500/50 px-3 py-1.5 rounded-full text-xs font-bold text-emerald-400">
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span>Modo 100% Offline (Sin BD Externa)</span>
+            </div>
+        </div>
 
-    <!-- NAVEGACIÓN DE MÓDULOS -->
-    <div class="nav-tabs">
-        <button type="button" class="tab-btn active" id="tab-mod1" onclick="switchTab('mod1')">1. Apertura</button>
-        <button type="button" class="tab-btn" id="tab-mod2" onclick="switchTab('mod2')">2. Topografía</button>
-        <button type="button" class="tab-btn" id="tab-mod3" onclick="switchTab('mod3')">3. Logging/Turno</button>
-        <button type="button" class="tab-btn" id="tab-mod4" onclick="switchTab('mod4')">4. Cierre</button>
-        <button type="button" class="tab-btn" id="tab-mod5" onclick="switchTab('mod5')">5. Repositorio</button>
-    </div>
+        <!-- SELECTOR GLOBAL DE POZO -->
+        <div class="bg-slate-900/90 border border-amber-500/40 rounded-xl p-3">
+            <label class="block text-xs font-bold text-amber-400 uppercase tracking-wider mb-1">
+                📍 Sondaje / Pozo Activo en Tajo:
+            </label>
+            <select id="globalWellSelect" onchange="seleccionarPozoGlobal(this.value)" class="w-full text-sm font-bold p-3 rounded-lg border border-slate-600 bg-slate-800 text-amber-300">
+                <option value="">-- No hay sondajes registrados --</option>
+            </select>
+        </div>
+    </header>
 
-    <!-- MÓDULO 1: APERTURA Y DATOS RAIZ -->
-    <div id="mod1" class="card">
-        <div class="card-title">🛠️ Módulo 1: Apertura de Nuevo Sondaje</div>
-        <div class="card-desc">Registre la identidad administrativa del pozo antes de iniciar la perforación.</div>
+    <!-- NAVEGACIÓN POR PESTAÑAS (TAB-BUTTONS SOLO DIV) -->
+    <nav class="no-print flex gap-2 overflow-x-auto no-scrollbar mb-4 pb-1">
+        <button type="button" id="tab-mod1" onclick="switchTab('mod1')" class="flex-1 min-w-[110px] py-3 px-3 rounded-xl font-bold text-xs md:text-sm bg-amber-500 text-slate-950 shadow-lg transition-all text-center">
+            1. Apertura
+        </button>
+        <button type="button" id="tab-mod2" onclick="switchTab('mod2')" class="flex-1 min-w-[110px] py-3 px-3 rounded-xl font-bold text-xs md:text-sm bg-slate-800 text-slate-300 transition-all text-center">
+            2. Topografía
+        </button>
+        <button type="button" id="tab-mod3" onclick="switchTab('mod3')" class="flex-1 min-w-[110px] py-3 px-3 rounded-xl font-bold text-xs md:text-sm bg-slate-800 text-slate-300 transition-all text-center">
+            3. Logging/Turno
+        </button>
+        <button type="button" id="tab-mod4" onclick="switchTab('mod4')" class="flex-1 min-w-[110px] py-3 px-3 rounded-xl font-bold text-xs md:text-sm bg-slate-800 text-slate-300 transition-all text-center">
+            4. Cierre
+        </button>
+        <button type="button" id="tab-mod5" onclick="switchTab('mod5')" class="flex-1 min-w-[110px] py-3 px-3 rounded-xl font-bold text-xs md:text-sm bg-slate-800 text-slate-300 transition-all text-center">
+            5. Repositorio
+        </button>
+    </nav>
 
-        <div class="form-grid">
-            <div class="field-group">
-                <label>Código del Sondaje *</label>
-                <input type="text" id="m1_codigo" placeholder="Ej. S0003ET" style="text-transform: uppercase;">
+    <!-- CONTENEDORES DE MÓDULOS (SIN FORMULARIO <FORM>) -->
+
+    <!-- MÓDULO 1: APERTURA -->
+    <section id="mod1" class="no-print bg-slate-800 border border-slate-700 rounded-2xl p-4 md:p-6 shadow-xl">
+        <div class="border-b border-slate-700 pb-3 mb-4">
+            <h2 class="text-lg font-bold text-amber-400 flex items-center gap-2">
+                <span>🛠️</span> Módulo 1: Apertura de Nuevo Sondaje
+            </h2>
+            <p class="text-xs text-slate-400">Registre los datos administrativos de la perforación diamantina.</p>
+        </div>
+
+        <div class="space-y-4">
+            <div>
+                <label class="block text-xs font-bold text-slate-300 mb-1">Código del Sondaje *</label>
+                <input type="text" id="m1_codigo" placeholder="Ej. S-001-ET" class="w-full p-3 rounded-xl font-mono text-base uppercase font-bold">
             </div>
 
-            <div class="field-group">
-                <label>Empresa Titular / Contratista *</label>
-                <select id="m1_empresa" onchange="toggleOtraEmpresa()">
+            <div>
+                <label class="block text-xs font-bold text-slate-300 mb-1">Empresa Titular / Contratista *</label>
+                <select id="m1_empresa" onchange="toggleOtraEmpresa()" class="w-full p-3 rounded-xl font-semibold">
                     <option value="IVM C.A.">IVM C.A.</option>
                     <option value="Minería Carabobo C.A.">Minería Carabobo C.A.</option>
                     <option value="Industrias Audit">Industrias Audit</option>
@@ -119,33 +141,40 @@
                 </select>
             </div>
 
-            <div id="m1_otra_empresa_box" class="field-group hidden">
-                <label style="color:#fbbf24;">Nombre de la Empresa Contratista *</label>
-                <input type="text" id="m1_otra_empresa" placeholder="Especifique el nombre de la empresa">
+            <div id="m1_otra_empresa_box" class="hidden">
+                <label class="block text-xs font-bold text-amber-300 mb-1">Nombre de la Empresa *</label>
+                <input type="text" id="m1_otra_empresa" placeholder="Ingrese nombre de empresa" class="w-full p-3 rounded-xl font-semibold">
             </div>
 
-            <div class="field-group">
-                <label>Proyecto / Sector *</label>
-                <input type="text" id="m1_proyecto" placeholder="Ej. El Tronco / Los Patos / Florinda">
+            <div>
+                <label class="block text-xs font-bold text-slate-300 mb-1">Proyecto / Sector *</label>
+                <input type="text" id="m1_proyecto" placeholder="Ej. El Tronco / Veta Principal" class="w-full p-3 rounded-xl font-semibold">
             </div>
+
+            <button type="button" onclick="crearPozo()" class="w-full py-4 mt-2 bg-amber-500 hover:bg-amber-400 active:bg-amber-600 text-slate-950 font-black text-base rounded-xl shadow-lg transition-all flex items-center justify-center gap-2">
+                <span>💾</span> Crear y Abrir Sondaje en Sistema
+            </button>
+        </div>
+    </section>
+
+    <!-- MÓDULO 2: TOPOGRAFÍA -->
+    <section id="mod2" class="no-print bg-slate-800 border border-slate-700 rounded-2xl p-4 md:p-6 shadow-xl hidden">
+        <div class="border-b border-slate-700 pb-3 mb-4 flex justify-between items-center flex-wrap gap-2">
+            <div>
+                <h2 class="text-lg font-bold text-amber-400 flex items-center gap-2">
+                    <span>📍</span> Módulo 2: Topografía y Collar de Pozo
+                </h2>
+                <p class="text-xs text-slate-400">Coordenadas del collar y geometría del pozo.</p>
+            </div>
+            <button type="button" onclick="habilitarEdicionTopo()" class="py-2 px-3 bg-sky-600 hover:bg-sky-500 text-white rounded-lg font-bold text-xs flex items-center gap-1">
+                <span>✏️</span> Editar Campos
+            </button>
         </div>
 
-        <button type="button" class="btn-main" onclick="crearPozo()">💾 Crear y Abrir Sondaje en Sistema</button>
-    </div>
-
-    <!-- MÓDULO 2: TOPOGRAFÍA Y COLLAR -->
-    <div id="mod2" class="card hidden">
-        <div class="card-title">📍 Módulo 2: Ficha de Collar y Topografía</div>
-        <div class="card-desc">Defina la posición espacial inicial y actualice con datos de estación total.</div>
-
-        <div style="margin-bottom:12px;">
-            <button type="button" class="btn-sec" onclick="habilitarEdicionTopo()">✏️ Actualizar Datos Topográficos Oficiales</button>
-        </div>
-
-        <div class="form-grid">
-            <div class="field-group">
-                <label>Perforadora / Máquina *</label>
-                <select id="m2_maquina" disabled onchange="toggleOtraMaquina()">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                <label class="block text-xs font-bold text-slate-300 mb-1">Perforadora / Máquina *</label>
+                <select id="m2_maquina" disabled onchange="toggleOtraMaquina()" class="w-full p-3 rounded-xl font-semibold disabled:opacity-60">
                     <option value="Geomax">Geomax</option>
                     <option value="Heng Wang">Heng Wang</option>
                     <option value="Longyear">Longyear</option>
@@ -153,204 +182,178 @@
                 </select>
             </div>
 
-            <div id="m2_otra_maquina_box" class="field-group hidden">
-                <label style="color:#fbbf24;">Especifique la Máquina *</label>
-                <input type="text" id="m2_otra_maquina" placeholder="Marca / Modelo" disabled>
+            <div id="m2_otra_maquina_box" class="hidden">
+                <label class="block text-xs font-bold text-amber-300 mb-1">Especifique Máquina *</label>
+                <input type="text" id="m2_otra_maquina" disabled placeholder="Marca / Modelo" class="w-full p-3 rounded-xl font-semibold disabled:opacity-60">
             </div>
 
-            <div class="field-group">
-                <label>Coordenada Este (m) *</label>
-                <input type="number" step="0.01" id="m2_este" value="0.00" disabled>
+            <div>
+                <label class="block text-xs font-bold text-slate-300 mb-1">Coordenada Este (m) *</label>
+                <input type="number" step="0.01" id="m2_este" value="0.00" disabled class="w-full p-3 rounded-xl font-mono font-semibold disabled:opacity-60">
             </div>
 
-            <div class="field-group">
-                <label>Coordenada Norte (m) *</label>
-                <input type="number" step="0.01" id="m2_norte" value="0.00" disabled>
+            <div>
+                <label class="block text-xs font-bold text-slate-300 mb-1">Coordenada Norte (m) *</label>
+                <input type="number" step="0.01" id="m2_norte" value="0.00" disabled class="w-full p-3 rounded-xl font-mono font-semibold disabled:opacity-60">
             </div>
 
-            <div class="field-group">
-                <label>Cota Z (m) *</label>
-                <input type="number" step="0.01" id="m2_cota" value="0.00" disabled>
+            <div>
+                <label class="block text-xs font-bold text-slate-300 mb-1">Cota Z (m.s.n.m.) *</label>
+                <input type="number" step="0.01" id="m2_cota" value="0.00" disabled class="w-full p-3 rounded-xl font-mono font-semibold disabled:opacity-60">
             </div>
 
-            <div class="field-group">
-                <label>Azimut (°) *</label>
-                <input type="number" step="0.1" id="m2_azimut" value="0.0" disabled>
+            <div>
+                <label class="block text-xs font-bold text-slate-300 mb-1">Azimut (°) *</label>
+                <input type="number" step="0.1" id="m2_azimut" value="0.0" disabled class="w-full p-3 rounded-xl font-mono font-semibold disabled:opacity-60">
             </div>
 
-            <div class="field-group">
-                <label>Inclinación (Dip °) *</label>
-                <input type="number" step="0.1" id="m2_dip" value="-60.0" disabled>
+            <div>
+                <label class="block text-xs font-bold text-slate-300 mb-1">Inclinación (Dip °) *</label>
+                <input type="number" step="0.1" id="m2_dip" value="-60.0" disabled class="w-full p-3 rounded-xl font-mono font-semibold disabled:opacity-60">
             </div>
 
-            <div class="field-group">
-                <label>Profundidad Planificada / Target (m) *</label>
-                <input type="number" step="0.1" id="m2_target" value="100.0" disabled>
+            <div class="md:col-span-2">
+                <label class="block text-xs font-bold text-slate-300 mb-1">Profundidad Target / Planificada (m) *</label>
+                <input type="number" step="0.1" id="m2_target" value="100.0" disabled class="w-full p-3 rounded-xl font-mono font-semibold disabled:opacity-60 text-amber-400">
             </div>
         </div>
 
-        <div id="m2_btn_box" class="hidden" style="margin-top:12px;">
-            <button type="button" class="btn-sec btn-emerald" style="width:100%; min-height:48px;" onclick="guardarTopografia()">💾 Guardar Ficha Topográfica Oficial</button>
+        <div id="m2_btn_box" class="hidden mt-6">
+            <button type="button" onclick="guardarTopografia()" class="w-full py-4 bg-emerald-600 hover:bg-emerald-500 text-white font-black text-base rounded-xl shadow-lg transition-all flex items-center justify-center gap-2">
+                <span>💾</span> Guardar Ficha Topográfica Oficial
+            </button>
         </div>
-    </div>
+    </section>
 
-    <!-- MÓDULO 3: CORE LOGGING, TURNO, REGLA DE PAGO & DASHBOARD -->
-    <div id="mod3" class="card hidden">
-        <div class="card-title">🪵 Módulo 3: Core Logging, Control de Turnos & Dashboard</div>
-        <div class="card-desc">Registro diario, cálculo automático de maniobra y aplicación de umbrales por meteorización.</div>
+    <!-- MÓDULO 3: LOGGING Y TURNOS -->
+    <section id="mod3" class="no-print bg-slate-800 border border-slate-700 rounded-2xl p-4 md:p-6 shadow-xl hidden">
+        <div class="border-b border-slate-700 pb-3 mb-4">
+            <h2 class="text-lg font-bold text-amber-400 flex items-center gap-2">
+                <span>🪵</span> Módulo 3: Core Logging, Turnos & Dashboard
+            </h2>
+            <p class="text-xs text-slate-400">Registro operativo diario, control de recuperaciones y regla de pago.</p>
+        </div>
 
-        <!-- CONTROL DE TURNO -->
-        <div style="background:#0f172a; padding:12px; border-radius:10px; border:1px solid #334155; margin-bottom:16px;">
-            <div style="font-size:13px; font-weight:800; color:#38bdf8; margin-bottom:8px;">⏱️ Apertura / Registro de Turno Operativo</div>
-            <div class="form-grid">
-                <div class="field-group">
-                    <label>Fecha *</label>
-                    <input type="date" id="m3_fecha">
+        <!-- APERTURA DE TURNO -->
+        <div class="bg-slate-900 border border-slate-700 p-4 rounded-xl mb-6">
+            <h3 class="text-sm font-bold text-sky-400 mb-3 flex items-center gap-2">
+                <span>⏱️</span> Apertura de Turno Operativo
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-xs font-bold text-slate-300 mb-1">Fecha *</label>
+                    <input type="date" id="m3_fecha" class="w-full p-2.5 rounded-lg text-sm font-semibold">
                 </div>
-                <div class="field-group">
-                    <label>Turno *</label>
-                    <select id="m3_turno">
+                <div>
+                    <label class="block text-xs font-bold text-slate-300 mb-1">Turno *</label>
+                    <select id="m3_turno" class="w-full p-2.5 rounded-lg text-sm font-semibold">
                         <option value="Diurno">Diurno</option>
                         <option value="Nocturno">Nocturno</option>
                     </select>
                 </div>
-                <div class="field-group">
-                    <label>Perforador / Operador *</label>
-                    <input type="text" id="m3_perforador" placeholder="Nombre del perforador">
+                <div>
+                    <label class="block text-xs font-bold text-slate-300 mb-1">Perforador / Operador *</label>
+                    <input type="text" id="m3_perforador" placeholder="Nombre de perforador" class="w-full p-2.5 rounded-lg text-sm font-semibold">
                 </div>
-                <div class="field-group">
-                    <label>Supervisor de Geología *</label>
-                    <input type="text" id="m3_geologo" placeholder="Geólogo responsable">
+                <div>
+                    <label class="block text-xs font-bold text-slate-300 mb-1">Supervisor Geología *</label>
+                    <input type="text" id="m3_geologo" placeholder="Geólogo responsable" class="w-full p-2.5 rounded-lg text-sm font-semibold">
                 </div>
             </div>
-            <button type="button" class="btn-sec" style="width:100%; margin-top:8px;" onclick="iniciarTurno()">🚀 Activar Turno para Sondaje</button>
+            <button type="button" onclick="iniciarTurno()" class="w-full py-3 mt-3 bg-sky-600 hover:bg-sky-500 text-white font-bold text-sm rounded-lg shadow-md transition-all flex items-center justify-center gap-1">
+                <span>🚀</span> Activar Turno para Sondaje
+            </button>
         </div>
 
-        <!-- REGISTRO DE TRAMO Y AVANCES -->
+        <!-- FORMULARIO DE AVANCES -->
         <div id="bloqueAvances" class="hidden">
-            <div id="formAvanceTitle" style="font-size:14px; font-weight:800; color:#34d399; margin-bottom:8px;">📊 Registro de Avance (Tramo a Tramo)</div>
-            
-            <div class="form-grid" style="background:#0f172a; padding:12px; border-radius:10px; border:1px solid #334155;">
-                <div class="field-group">
-                    <label>Longitud Maniobra *</label>
-                    <select id="m3_longitud" onchange="autoCalcularHasta()">
-                        <option value="1.5">1.50 m</option>
-                        <option value="3.0">3.00 m</option>
-                    </select>
+            <div class="bg-slate-900 border border-emerald-500/30 p-4 rounded-xl mb-6">
+                <h3 class="text-sm font-bold text-emerald-400 mb-3 flex items-center gap-2">
+                    <span>📊</span> Registro de Avance (Tramo a Tramo)
+                </h3>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 mb-1">Longitud Maniobra *</label>
+                        <select id="m3_longitud" onchange="autoCalcularHasta()" class="w-full p-2.5 rounded-lg text-sm font-bold text-amber-400">
+                            <option value="1.5">1.50 metros</option>
+                            <option value="3.0">3.00 metros</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 mb-1">Desde (m)</label>
+                        <input type="number" id="m3_desde" readonly class="w-full p-2.5 rounded-lg text-sm font-mono font-bold bg-slate-950/60 text-slate-400">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 mb-1">Hasta (m)</label>
+                        <input type="number" id="m3_hasta" readonly class="w-full p-2.5 rounded-lg text-sm font-mono font-bold bg-slate-950/60 text-emerald-400">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 mb-1">Diámetro *</label>
+                        <select id="m3_diametro" class="w-full p-2.5 rounded-lg text-sm font-bold">
+                            <option value="HQ">HQ</option>
+                            <option value="NQ">NQ</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 mb-1">Metros Recuperados *</label>
+                        <input type="number" step="0.01" id="m3_recuperado" placeholder="Ej. 1.45" class="w-full p-2.5 rounded-lg text-sm font-mono font-bold text-sky-400">
+                    </div>
+
+                    <div class="sm:col-span-2 md:col-span-1">
+                        <label class="block text-xs font-bold text-slate-300 mb-1">Meteorización / Litología *</label>
+                        <select id="m3_meteorizacion" class="w-full p-2.5 rounded-lg text-xs font-semibold">
+                            <option value="Suelo / Relleno">Suelo / Relleno (Umbral ≥ 70%)</option>
+                            <option value="Saprolita">Saprolita (Umbral ≥ 70%)</option>
+                            <option value="Saprock">Saprock (Umbral ≥ 70%)</option>
+                            <option value="Roca Oxidada">Roca Oxidada (Umbral ≥ 80%)</option>
+                            <option value="Roca Fracturada">Roca Fracturada (Umbral ≥ 70%)</option>
+                            <option value="Roca Fresca">Roca Fresca (Umbral ≥ 90%)</option>
+                            <option value="Zona de Veta">Zona de Veta (Umbral ≥ 90%)</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="field-group">
-                    <label>Desde (m) [Automático]</label>
-                    <input type="number" id="m3_desde" readonly>
-                </div>
-                <div class="field-group">
-                    <label>Hasta (m) [Cálculo Automático]</label>
-                    <input type="number" id="m3_hasta" readonly style="color:#34d399; font-weight:bold;">
-                </div>
-                <div class="field-group">
-                    <label>Diámetro *</label>
-                    <select id="m3_diametro">
-                        <option value="HQ">HQ</option>
-                        <option value="NQ">NQ</option>
-                    </select>
-                </div>
-                <div class="field-group">
-                    <label>Metros Recuperados (Testigo) *</label>
-                    <input type="number" step="0.01" id="m3_recuperado" placeholder="Ej. 1.45">
-                </div>
-                <div class="field-group">
-                    <label>Litología / Meteorización *</label>
-                    <select id="m3_meteorizacion">
-                        <option value="Suelo / Relleno">a. Suelo / Relleno (Umbral ≥ 70%)</option>
-                        <option value="Saprolita">b. Saprolita (Umbral ≥ 70%)</option>
-                        <option value="Saprock">c. Saprock (Umbral ≥ 70%)</option>
-                        <option value="Roca Oxidada">d. Roca Oxidada (Umbral ≥ 80%)</option>
-                        <option value="Roca Fracturada">e. Roca Fracturada (Umbral ≥ 70%)</option>
-                        <option value="Roca Fresca">f. Roca Fresca (Umbral ≥ 90%)</option>
-                        <option value="Zona de Veta">g. Zona de Veta (Umbral ≥ 90%)</option>
-                    </select>
+
+                <div class="flex gap-2 mt-4">
+                    <button type="button" id="btnGuardarAvance" onclick="guardarAvance()" class="flex-1 py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-black text-sm rounded-lg shadow-md transition-all flex items-center justify-center gap-1">
+                        <span>➕</span> Guardar Avance Tramo
+                    </button>
+                    <button type="button" id="btnCancelarEdicion" onclick="cancelarEdicionAvance()" class="hidden py-3 px-4 bg-rose-600 hover:bg-rose-500 text-white font-bold text-sm rounded-lg shadow-md transition-all">
+                        Cancelar
+                    </button>
                 </div>
             </div>
 
-            <div style="display:flex; gap:8px; margin-top:10px;">
-                <button type="button" id="btnGuardarAvance" class="btn-main" style="background:#059669; color:white; margin:0;" onclick="guardarAvance()">➕ Guardar Avance Tramo</button>
-                <button type="button" id="btnCancelarEdicion" class="btn-sec btn-rose hidden" onclick="cancelarEdicionAvance()">❌ Cancelar</button>
-            </div>
-
-            <!-- TABLA SABANA -->
-            <div class="table-container">
-                <table>
-                    <thead>
+            <!-- SÁBANA DE AVANCES -->
+            <div class="overflow-x-auto rounded-xl border border-slate-700 mb-6">
+                <table class="w-full text-left text-xs text-slate-300">
+                    <thead class="bg-slate-900 text-slate-400 uppercase font-mono border-b border-slate-700">
                         <tr>
-                            <th>#</th>
-                            <th>Intervalo (m)</th>
-                            <th>Diám</th>
-                            <th>Recup (m)</th>
-                            <th>% Rec.</th>
-                            <th>Meteorización</th>
-                            <th>Pago (m)</th>
-                            <th>Acción</th>
+                            <th class="p-2.5">#</th>
+                            <th class="p-2.5">Tramo (m)</th>
+                            <th class="p-2.5">Diám</th>
+                            <th class="p-2.5">Rec (m)</th>
+                            <th class="p-2.5">% Rec</th>
+                            <th class="p-2.5">Meteorización</th>
+                            <th class="p-2.5">Pago (m)</th>
+                            <th class="p-2.5">Acción</th>
                         </tr>
                     </thead>
-                    <tbody id="tablaAvances"></tbody>
+                    <tbody id="tablaAvances" class="divide-y divide-slate-700/60 bg-slate-800/80 font-mono">
+                        <!-- Filas dinámicas -->
+                    </tbody>
                 </table>
             </div>
 
-            <!-- DASHBOARD Y KPIS -->
-            <div style="margin-top:18px;">
-                <div style="font-size:15px; font-weight:800; color:#fbbf24;">📈 Dashboard Operativo en Vivo</div>
-                
-                <div class="kpi-grid">
-                    <div class="kpi-card" style="border-left-color:#38bdf8;">
-                        <div class="kpi-label">Metros Totales</div>
-                        <div id="kpiMetros" class="kpi-val">0.00 m</div>
-                    </div>
-                    <div class="kpi-card" style="border-left-color:#10b981;">
-                        <div class="kpi-label">Metros Turno</div>
-                        <div id="kpiMetrosTurno" class="kpi-val" style="color:#10b981;">0.00 m</div>
-                    </div>
-                    <div class="kpi-card" style="border-left-color:#f59e0b;">
-                        <div class="kpi-label">% Rec. Turno</div>
-                        <div id="kpiRecupTurno" class="kpi-val" style="color:#f59e0b;">0.0%</div>
-                    </div>
-                    <div class="kpi-card" style="border-left-color:#a855f7;">
-                        <div class="kpi-label">% Rec. Global</div>
-                        <div id="kpiRecupGlobal" class="kpi-val" style="color:#a855f7;">0.0%</div>
-                    </div>
-                </div>
+            <!-- DASHBOARD DE KPIS Y GRÁFICOS CANVAS -->
+            <div class="space-y-4">
+                <h3 class="text-sm font-bold text-amber-400 flex items-center gap-2">
+                    <span>📈</span> Dashboard Operativo en Vivo
+                </h3>
 
-                <div class="chart-box">
-                    <h4>📊 Curva de Tendencia de Recuperación (%) Tramo a Tramo</h4>
-                    <canvas id="canvasTendencia"></canvas>
-                </div>
-
-                <div class="chart-box">
-                    <h4>📊 Bar Chart: Metros Brutos Perforados vs. Metros Pagables Reales</h4>
-                    <canvas id="canvasPagos"></canvas>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- MÓDULO 4: CIERRE FORMAL -->
-    <div id="mod4" class="card hidden">
-        <div class="card-title">🏁 Módulo 4: Cierre Formal de Sondajes</div>
-        <div class="card-desc">Cambie el estado del pozo a Culminado para congelar los registros.</div>
-        
-        <div style="background:#0f172a; padding:14px; border-radius:10px; border:1px solid #334155; margin-bottom:14px;">
-            <div id="cierrePozoNombre" style="font-size:16px; font-weight:bold; color:white;">Seleccione un sondaje</div>
-            <div id="cierrePozoEstado" style="font-size:12px; color:#94a3b8; margin-top:4px;">Estado actual: --</div>
-        </div>
-
-        <button type="button" id="btnCulminarPozo" class="btn-main" style="background:#e11d48; color:white;" onclick="cerrarPozo()">🔒 Cambiar Estado a CULMINADO</button>
-    </div>
-
-    <!-- MÓDULO 5: REPOSITORIO & REPORTES -->
-    <div id="mod5" class="card hidden">
-        <div class="card-title">📑 Módulo 5: Repositorio de Reportes & Consolidado Gerencial</div>
-        <div class="card-desc">Central de exportación documental, certificación de pagos y archivos CSV.</div>
-
-        <div class="form-grid" style="margin-bottom:16px;">
-            <div style="background:#0f172a; padding:12px; border-radius:10px; border:1px solid #334155;">
-                <div style="font-size:13px; font-weight:bold; color:#38bdf8; margin-bottom:6px;">📄 Reporte Diario de Turno (DSR)</div>
-                <div style="font-size:11px; color:#94a3b8; margin-bottom:10px;">Informe técnico ejecutivo del turno activo.</div>
-                <button type="button" class="btn-sec" style="width:100%;" onclick="imprimirDSR()">🖨️ Generar / Impr
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+               
