@@ -118,7 +118,7 @@
             <!-- FORMULARIO RECUPERACIÓN CON PIN MAESTRO -->
             <div id="boxLoginRescate" class="hidden space-y-3.5 pt-3 border-t border-slate-800">
                 <div class="bg-slate-950 p-2.5 rounded-xl border border-amber-500/30 text-amber-300 text-[11px]">
-                    🔑 <b>Restablecimiento:</b> Ingrese su PIN maestro de 4 dígitos para definir una nueva contraseña de Geólogos.
+                    🔑 <b>Restablecimiento:</b> Ingrese seu PIN maestro de 4 dígitos para definir una nueva contraseña de Geólogos.
                 </div>
                 <div>
                     <label class="block text-xs font-extrabold text-slate-300 mb-1 uppercase tracking-wider">PIN Maestro (4 dígitos)</label>
@@ -951,9 +951,8 @@
             }
         }
 
-        // --- FUNCIÓN DE SINCRONIZACIÓN SEGURA Y ROBUSTA ANTI-BORRADO ---
+        // --- FUNCIÓN DE SINCRONIZACIÓN MAESTRA Y BIDIRECCIONAL (INCLUYENDO BORRADOS) ---
         async function cargarDatosDesdeNube(mostrarAlertaExito = false) {
-            // 1. Cargar caché local primero para asegurar respaldo instantáneo
             let local = localStorage.getItem('geo_db_safe_v20');
             if (local) {
                 try { db = JSON.parse(local); } catch(e) {}
@@ -965,23 +964,28 @@
             }
 
             try {
-                // 2. Si hay datos locales pendientes y la nube está vacía o responde, aseguramos subirlos primero (Two-way Safe Sync)
+                // 1. Enviar cambios pendientes locales a Supabase
                 if (db.pozos && db.pozos.length > 0) {
                     for (let p of db.pozos) await guardarPozoNube(p);
                     for (let t of db.turnos) await guardarTurnoNube(t);
                     for (let a of db.avances) await guardarAvanceNube(a);
                 }
 
-                // 3. Traer datos actualizados desde Supabase
+                // 2. Descargar la verdad absoluta desde la nube (refleja pozos nuevos y pozos eliminados)
                 let { data: pD, error: errP } = await supabaseClient.from('pozos').select('*');
                 let { data: tD } = await supabaseClient.from('turnos').select('*');
                 let { data: aD } = await supabaseClient.from('avances').select('*');
 
-                if (!errP && pD && pD.length > 0) {
+                if (!errP && pD) {
                     db.pozos = pD.map(p => ({ id: Number(p.id), codigo: p.codigo, empresa: p.empresa, proyecto: p.proyecto, estado: p.estado, fechaInicio: p.fecha_inicio, fechaCulminacion: p.fecha_culminacion, maquina: p.maquina, este: p.este, norte: p.norte, cota: p.cota, azimut: p.azimut, dip: p.dip, target: p.target }));
                     db.turnos = (tD || []).map(t => ({ id: Number(t.id), pozoId: Number(t.pozo_id), fecha: t.fecha, tipo: t.tipo, perforador: t.perforador, geologo: t.geologo }));
                     db.avances = (aD || []).map(a => ({ id: Number(a.id), pozoId: Number(a.pozo_id), turnoId: Number(a.turno_id), longitud: Number(a.longitud), desde: Number(a.desde), hasta: Number(a.hasta), diametro: a.diametro, recuperado: Number(a.recuperado), porcentaje: Number(a.porcentaje), meteorizacion: a.meteorizacion, pagado: Number(a.pagado) }));
                 }
+
+                // 3. Limpiar huérfanos locales si fueron borrados en la nube
+                const idsPozosValidos = db.pozos.map(p => p.id);
+                db.turnos = db.turnos.filter(t => idsPozosValidos.includes(t.pozoId));
+                db.avances = db.avances.filter(a => idsPozosValidos.includes(a.pozoId));
 
                 // Guardar siempre el respaldo seguro consolidado
                 localStorage.setItem('geo_db_safe_v20', JSON.stringify(db));
@@ -992,7 +996,7 @@
             refrescarSelect(); 
             actualizarFiltrosGerencia(); 
             inicializarConfigKey();
-            if(mostrarAlertaExito) alert("✅ Sincronización con Supabase completada de forma segura.");
+            if(mostrarAlertaExito) alert("✅ Sincronización con Supabase completada (actualizado y depurado).");
         }
 
         async function sincronizarConNube() { await cargarDatosDesdeNube(true); }
@@ -1019,6 +1023,9 @@
             }
         }
         async function eliminarPozoNube(id) {
+            db.pozos = db.pozos.filter(x => x.id != id);
+            db.turnos = db.turnos.filter(x => x.pozoId != id);
+            db.avances = db.avances.filter(x => x.pozoId != id);
             localStorage.setItem('geo_db_safe_v20', JSON.stringify(db));
             if (navigator.onLine) {
                 try {
@@ -1770,8 +1777,9 @@
         }
         async function eliminarPozo(id) {
             if(confirm("¿Eliminar pozo y todos sus datos?")) {
-                await eliminarPozoNube(id); db.pozos = db.pozos.filter(x=>x.id!=id); db.turnos = db.turnos.filter(x=>x.pozoId!=id); db.avances = db.avances.filter(x=>x.pozoId!=id);
-                refrescarSelect(); alert("Pozo eliminado y sincronizado.");
+                await eliminarPozoNube(id); 
+                refrescarSelect(); 
+                alert("Pozo eliminado y sincronizado en todos los equipos.");
             }
         }
         function habilitarEdicionTopo() {
