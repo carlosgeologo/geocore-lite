@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jireth GeoCore Lite | Control Operativo Cloud</title>
+    <title>Jireth GeoCore Lite | Control Operativo & Gerencial Cloud</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- SDK Oficial de Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -20,46 +20,73 @@
 </head>
 <body class="bg-slate-900 text-slate-100 min-h-screen p-3 font-sans antialiased">
 
-    <!-- PANTALLA DE LOGIN / ACCESO CON PIN DE RESCATE -->
+    <!-- PANTALLA DE SELECCIÓN DE PERFIL Y LOGIN -->
     <div id="pantallaLogin" class="fixed inset-0 bg-slate-950 z-50 flex items-center justify-center p-4">
         <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700 w-full max-w-sm space-y-4 shadow-2xl">
             <div class="text-center">
                 <h1 class="text-xl font-black text-white">⛏️ Jireth GeoCore Lite</h1>
-                <p class="text-xs text-slate-400 mt-1">Control Operativo Cloud & Offline</p>
+                <p class="text-xs text-slate-400 mt-1">Control Operativo & Gerencial Cloud</p>
             </div>
-            <div class="bg-slate-900 p-3 rounded-xl border border-slate-700 text-center">
-                <span class="text-xs font-bold text-sky-400 uppercase tracking-wider">👷 Perfil de Acceso: GEOLOGOS</span>
+            
+            <!-- SELECTOR DE PERFIL -->
+            <div class="grid grid-cols-2 gap-2">
+                <button type="button" onclick="seleccionarPerfil('GEOLOGOS')" id="btnPerfilGeo" class="py-2.5 px-2 rounded-xl text-xs font-black border-2 border-amber-500 bg-amber-500/20 text-amber-300">
+                    👷 GEOLOGOS
+                </button>
+                <button type="button" onclick="seleccionarPerfil('GERENCIA')" id="btnPerfilGer" class="py-2.5 px-2 rounded-xl text-xs font-black border-2 border-slate-700 bg-slate-900 text-slate-400">
+                    👔 GERENCIA
+                </button>
             </div>
 
-            <!-- FORMULARIO LOGIN NORMAL -->
-            <div id="boxLoginNormal" class="space-y-3">
+            <!-- LOGIN GEOLOGOS -->
+            <div id="boxLoginGeologos" class="space-y-3">
+                <div class="bg-slate-900 p-2 rounded-lg border border-amber-500/30 text-[11px] text-amber-300 text-center font-bold">
+                    Perfil Operativo / Operaciones de Campo
+                </div>
                 <div>
-                    <label class="block text-xs font-bold text-slate-300 mb-1">Contraseña de Acceso</label>
+                    <label class="block text-xs font-bold text-slate-300 mb-1">Contraseña de Geólogos</label>
                     <div class="relative flex items-center">
-                        <input type="password" id="inputClaveLogin" value="" class="input-field w-full px-3 pr-10 bg-slate-900 text-white rounded-lg text-sm font-bold">
-                        <button type="button" onclick="togglePasswordVisibility('inputClaveLogin')" class="absolute right-3 text-slate-400 hover:text-white text-sm font-bold">👁️</button>
+                        <input type="password" id="inputClaveGeo" value="" placeholder="Ingrese clave..." class="input-field w-full px-3 pr-10 bg-slate-900 text-white rounded-lg text-sm font-bold">
+                        <button type="button" onclick="togglePasswordVisibility('inputClaveGeo')" class="absolute right-3 text-slate-400 hover:text-white text-sm font-bold">👁️</button>
                     </div>
                 </div>
-                <button type="button" onclick="intentarLogin()" class="btn-field w-full bg-amber-500 hover:bg-amber-400 text-slate-950 text-sm font-black shadow-lg">
-                    🔐 Ingresar al Sistema
+                <button type="button" onclick="intentarLoginGeo()" class="btn-field w-full bg-amber-500 hover:bg-amber-400 text-slate-950 text-sm font-black shadow-lg">
+                    🔐 Ingresar como Geólogos
                 </button>
-                <div class="text-center pt-2">
-                    <button type="button" onclick="mostrarBoxRescate()" class="text-xs text-sky-400 hover:text-sky-300 underline font-bold">🔑 ¿Olvidaste tu contraseña? (PIN de Rescate)</button>
+                <div class="text-center pt-1">
+                    <button type="button" onclick="mostrarBoxRescate()" class="text-xs text-sky-400 hover:text-sky-300 underline font-bold">🔑 ¿Olvidaste tu contraseña? (PIN)</button>
                 </div>
             </div>
 
-            <!-- FORMULARIO RECUPERACIÓN CON PIN DE RESCATE -->
-            <div id="boxLoginRescate" class="hidden space-y-3 pt-2 border-t border-slate-700">
-                <div class="bg-slate-900 p-2.5 rounded-lg border border-amber-500/30 text-amber-300 text-[11px]">
-                    🔑 <b>Restablecimiento:</b> Ingrese su PIN de 4 dígitos para definir una nueva clave.
+            <!-- LOGIN GERENCIA -->
+            <div id="boxLoginGerencia" class="hidden space-y-3">
+                <div class="bg-slate-900 p-2 rounded-lg border border-sky-500/30 text-[11px] text-sky-300 text-center font-bold">
+                    Perfil Ejecutivo / Solo Lectura y Estadísticas
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-slate-300 mb-1">PIN de Rescate (4 dígitos)</label>
+                    <label class="block text-xs font-bold text-slate-300 mb-1">Contraseña de Gerencia</label>
+                    <div class="relative flex items-center">
+                        <input type="password" id="inputClaveGer" value="" placeholder="JIRETH2026" class="input-field w-full px-3 pr-10 bg-slate-900 text-white rounded-lg text-sm font-bold">
+                        <button type="button" onclick="togglePasswordVisibility('inputClaveGer')" class="absolute right-3 text-slate-400 hover:text-white text-sm font-bold">👁️</button>
+                    </div>
+                </div>
+                <button type="button" onclick="intentarLoginGer()" class="btn-field w-full bg-sky-600 hover:bg-sky-500 text-white text-sm font-black shadow-lg">
+                    📊 Ingresar a Visión Gerencial
+                </button>
+            </div>
+
+            <!-- FORMULARIO RECUPERACIÓN CON PIN MAESTRO -->
+            <div id="boxLoginRescate" class="hidden space-y-3 pt-2 border-t border-slate-700">
+                <div class="bg-slate-900 p-2 rounded-lg border border-amber-500/30 text-amber-300 text-[11px]">
+                    🔑 <b>Restablecimiento:</b> Ingrese su PIN maestro de 4 dígitos para definir una nueva contraseña de Geólogos.
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-300 mb-1">PIN Maestro (4 dígitos)</label>
                     <input type="password" maxlength="4" id="inputPinRescate" value="" placeholder="----" class="input-field w-full px-3 bg-slate-900 text-white rounded-lg text-sm font-mono font-bold text-center">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-slate-300 mb-1">Nueva Contraseña</label>
-                    <input type="password" id="inputClaveNuevaRescate" value="" class="input-field w-full px-3 bg-slate-900 text-white rounded-lg text-sm font-bold">
+                    <label class="block text-xs font-bold text-slate-300 mb-1">Nueva Contraseña Geólogos</label>
+                    <input type="password" id="inputClaveNuevaRescate" value="" placeholder="Nueva clave" class="input-field w-full px-3 bg-slate-900 text-white rounded-lg text-sm font-bold">
                 </div>
                 <button type="button" onclick="ejecutarRescateClave()" class="btn-field w-full bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-black shadow-lg">
                     🔄 Restablecer Clave e Ingresar
@@ -68,11 +95,10 @@
                     <button type="button" onclick="ocultarBoxRescate()" class="text-xs text-slate-400 hover:text-white underline">Volver al inicio</button>
                 </div>
             </div>
-            <p class="text-[10px] text-center text-slate-500">Sistema Seguro de Perforación</p>
         </div>
     </div>
 
-    <!-- APLICACIÓN PRINCIPAL -->
+    <!-- APLICACIÓN PRINCIPAL (GEÓLOGOS) -->
     <div id="appPrincipal" class="hidden space-y-4">
         <header class="bg-slate-800 p-3 rounded-xl border border-slate-700 flex justify-between items-center flex-wrap gap-2">
             <div>
@@ -119,7 +145,7 @@
                         <option value="MINERÍA CARABOBO C.A.">MINERÍA CARABOBO C.A.</option>
                         <option value="INDUSTRIAS AUDIT">INDUSTRIAS AUDIT</option>
                         <option value="HAVILA 318">HAVILA 318</option>
-                        <option value="OTRA"> Otra (Especificar)</option>
+                        <option value="OTRA">Otra (Especificar)</option>
                     </select>
                 </div>
                 <div id="m1_otra_empresa_box" class="hidden">
@@ -358,7 +384,7 @@
             </div>
         </section>
 
-        <!-- MÓDULO 4: CIERRE FORMAL FORTALECIDO (AUDITORÍA COMPLETA Y METROS PAGABLES) -->
+        <!-- MÓDULO 4: CIERRE FORMAL FORTALECIDO -->
         <section id="mod4" class="hidden space-y-4 bg-slate-800 p-5 rounded-2xl border border-slate-700">
             <div class="flex justify-between items-center flex-wrap gap-2">
                 <h2 class="text-xl font-black text-amber-400">🏁 Módulo 4: Cierre Formal & Auditoría de Sondajes</h2>
@@ -379,7 +405,6 @@
                         </div>
                     </div>
 
-                    <!-- DATOS BÁSICOS COMPLETOS DE TOPOGRAFÍA -->
                     <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
                         <div class="bg-slate-950 p-2 rounded border border-slate-800"><span class="text-[10px] text-slate-400 block">Máquina:</span><span id="cierreInfoMaquina" class="font-bold text-white">--</span></div>
                         <div class="bg-slate-950 p-2 rounded border border-slate-800"><span class="text-[10px] text-slate-400 block">Este (m):</span><span id="cierreInfoEste" class="font-bold text-sky-400">--</span></div>
@@ -391,7 +416,6 @@
                         <div class="bg-slate-950 p-2 rounded border border-slate-800"><span class="text-[10px] text-slate-400 block">Avance Final:</span><span id="cierreInfoAvance" class="font-bold text-emerald-400">--</span></div>
                     </div>
 
-                    <!-- RESUMEN FINANCIERO Y METROS PAGABLES -->
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
                         <div class="bg-slate-950 p-3 rounded-lg border border-slate-800">
                             <span class="text-[10px] text-slate-400 uppercase font-bold">Total Metros Perforados:</span>
@@ -408,7 +432,6 @@
                     </div>
                 </div>
 
-                <!-- TABLA DETALLADA DE AVANCES TRAMO A TRAMO PARA AUDITORÍA -->
                 <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 space-y-3">
                     <h4 class="text-xs font-bold text-sky-400">🪵 Sábana Detallada de Avances (Auditoría Metro a Metro)</h4>
                     <div class="overflow-x-auto border border-slate-700 rounded-xl max-h-60">
@@ -438,7 +461,7 @@
             </div>
         </section>
 
-        <!-- MÓDULO 5: REPOSITORIO & REPORTE DIARIO DSR (ESTILO PDF OFICIAL) -->
+        <!-- MÓDULO 5: REPOSITORIO & REPORTE DIARIO DSR -->
         <section id="mod5" class="hidden space-y-4 bg-slate-800 p-5 rounded-2xl border border-slate-700">
             <h2 class="text-xl font-black text-amber-400">📑 Módulo 5: Repositorio & Reportes DSR (Estilo Oficial)</h2>
             
@@ -449,12 +472,11 @@
                 </select>
             </div>
 
-            <!-- REPORTE GERENCIAL POR PERIODO Y EMPRESA -->
             <div class="bg-slate-900 p-4 rounded-xl border border-sky-500/40 space-y-3">
-                <h3 class="text-xs font-bold text-sky-400 flex items-center gap-1">📊 Reporte Gerencial de Perforación por Periodo / Empresa</h3>
+                <h3 class="text-xs font-bold text-sky-400 flex items-center gap-1">📊 Reporte Gerencial de Perforación por Periodo / Cliente</h3>
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-300 mb-1">Filtrar Empresa Cliente</label>
+                        <label class="block text-[10px] font-bold text-slate-300 mb-1">Filtrar Cliente</label>
                         <select id="repGerencialEmpresa" class="input-field w-full px-2 bg-slate-800 text-white rounded-lg text-xs font-bold">
                             <option value="TODAS">TODAS LAS EMPRESAS</option>
                             <option value="IVM C.A.">IVM C.A.</option>
@@ -478,7 +500,6 @@
             </div>
 
             <div id="repoPanelOpciones" class="hidden space-y-4">
-                <!-- 2. GENERAR REPORTE DIARIO (DSR) ESTILO PDF OFICIAL -->
                 <div class="bg-slate-900 p-4 rounded-xl border border-emerald-500/50 space-y-3">
                     <h3 class="text-xs font-bold text-emerald-400">📄 2. Generar Reporte Diario de Geología (DSR - Estilo PDF Oficial)</h3>
                     <div>
@@ -552,6 +573,109 @@
         </section>
     </div>
 
+    <!-- VISTA PRINCIPAL EXCLUSIVA DE GERENCIA (ESTRICTO SÓLO LECTURA, ANIMADA Y COLORIDA) -->
+    <div id="appGerencia" class="hidden space-y-4 max-w-5xl mx-auto">
+        <header class="bg-slate-800 p-4 rounded-2xl border border-sky-500/50 flex justify-between items-center flex-wrap gap-3 shadow-xl">
+            <div>
+                <h1 class="text-xl font-black text-white flex items-center gap-2">📊 Jireth GeoCore | Panel Ejecutivo Gerencial</h1>
+                <p class="text-xs text-sky-400">Modo Informativo Directivo (Solo Lectura - Análisis de Resultados)</p>
+            </div>
+            <div class="flex gap-2">
+                <button type="button" onclick="imprimirReporteGerencialEjecutivo()" class="bg-sky-600 hover:bg-sky-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold shadow">🖨️ Imprimir Reporte Gerencial</button>
+                <button type="button" onclick="cerrarSesion()" class="bg-rose-900 text-rose-300 px-3 py-1.5 rounded-lg text-xs font-bold border border-rose-700">🚪 Salir</button>
+            </div>
+        </header>
+
+        <!-- FILTROS GERENCIALES JERÁRQUICOS -->
+        <div class="bg-slate-800 p-4 rounded-2xl border border-slate-700 grid grid-cols-1 sm:grid-cols-3 gap-3 shadow-lg">
+            <div>
+                <label class="block text-xs font-bold text-amber-400 mb-1">1. Estado del Pozo</label>
+                <select id="gerFiltroEstado" onchange="actualizarFiltrosGerencia()" class="input-field w-full bg-slate-900 text-white rounded-lg px-3 text-xs font-bold">
+                    <option value="TODOS">TODOS (ACTIVOS Y CULMINADOS)</option>
+                    <option value="ACTIVO">ACTIVOS</option>
+                    <option value="CULMINADO">CULMINADOS</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-xs font-bold text-amber-400 mb-1">2. Empresa Cliente</label>
+                <select id="gerFiltroCliente" onchange="actualizarFiltrosGerencia()" class="input-field w-full bg-slate-900 text-white rounded-lg px-3 text-xs font-bold">
+                    <option value="TODAS">TODAS LAS EMPRESAS</option>
+                    <option value="IVM C.A.">IVM C.A.</option>
+                    <option value="MINERÍA CARABOBO C.A.">MINERÍA CARABOBO C.A.</option>
+                    <option value="INDUSTRIAS AUDIT">INDUSTRIAS AUDIT</option>
+                    <option value="HAVILA 318">HAVILA 318</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-xs font-bold text-amber-400 mb-1">3. Seleccionar Sondaje Filtrado</label>
+                <select id="gerFiltroPozo" onchange="cargarAnalisisGerencialPozo(this.value)" class="input-field w-full bg-slate-900 text-amber-300 rounded-lg px-3 text-xs font-bold">
+                    <option value="">-- Seleccionar Sondaje para Análisis Ejecutivo --</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- PANEL DE RESULTADOS Y GRÁFICAS DE ALTO IMPACTO -->
+        <div id="gerPanelAnalisis" class="hidden space-y-4">
+            <!-- TARJETAS DESTELLANTES Y COLORIDAS -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <div class="bg-gradient-to-br from-slate-900 to-slate-950 p-4 rounded-xl border-l-4 border-l-cyan-400 shadow-xl">
+                    <p class="text-[10px] font-black text-cyan-400 uppercase">Perforación Acumulada</p>
+                    <p id="gerKpiTotalM" class="text-2xl font-black text-white mt-1">0,00 m</p>
+                    <span id="gerKpiTarget" class="text-[10px] text-slate-400">Target: 0m</span>
+                </div>
+                <div class="bg-gradient-to-br from-slate-900 to-slate-950 p-4 rounded-xl border-l-4 border-l-emerald-400 shadow-xl">
+                    <p class="text-[10px] font-black text-emerald-400 uppercase">Recuperación Global</p>
+                    <p id="gerKpiRecup" class="text-2xl font-black text-emerald-300 mt-1">0,0%</p>
+                    <span class="text-[10px] text-slate-400">Calidad de Testigo</span>
+                </div>
+                <div class="bg-gradient-to-br from-slate-900 to-slate-950 p-4 rounded-xl border-l-4 border-l-amber-400 shadow-xl">
+                    <p class="text-[10px] font-black text-amber-400 uppercase">Avance Planificado</p>
+                    <p id="gerKpiAvance" class="text-2xl font-black text-amber-300 mt-1">0,0%</p>
+                    <span class="text-[10px] text-slate-400">Progreso General</span>
+                </div>
+                <div class="bg-gradient-to-br from-slate-900 to-slate-950 p-4 rounded-xl border-l-4 border-l-purple-400 shadow-xl">
+                    <p class="text-[10px] font-black text-purple-400 uppercase">Metros a Cobrar (Pagables)</p>
+                    <p id="gerKpiPagables" class="text-2xl font-black text-purple-300 mt-1">0,00 m</p>
+                    <span class="text-[10px] text-slate-400">Valorización Real</span>
+                </div>
+            </div>
+
+            <!-- FICHA TÉCNICA RESUMIDA (ESTRUCTURA GEÓLOGOS) -->
+            <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 space-y-3">
+                <h3 class="text-xs font-bold text-sky-400 uppercase tracking-wider">📍 Ficha Técnica & Ubicación del Sondaje</h3>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+                    <div class="bg-slate-900 p-2 rounded border border-slate-800"><span class="text-[10px] text-slate-400 block">Cliente:</span><span id="gerFichaCliente" class="font-bold text-white">--</span></div>
+                    <div class="bg-slate-900 p-2 rounded border border-slate-800"><span class="text-[10px] text-slate-400 block">Proyecto:</span><span id="gerFichaProyecto" class="font-bold text-white">--</span></div>
+                    <div class="bg-slate-900 p-2 rounded border border-slate-800"><span class="text-[10px] text-slate-400 block">Máquina:</span><span id="gerFichaMaquina" class="font-bold text-white">--</span></div>
+                    <div class="bg-slate-900 p-2 rounded border border-slate-800"><span class="text-[10px] text-slate-400 block">Estado:</span><span id="gerFichaEstado" class="font-bold text-emerald-400">--</span></div>
+                    <div class="bg-slate-900 p-2 rounded border border-slate-800"><span class="text-[10px] text-slate-400 block">Este (m):</span><span id="gerFichaEste" class="font-bold text-sky-400">--</span></div>
+                    <div class="bg-slate-900 p-2 rounded border border-slate-800"><span class="text-[10px] text-slate-400 block">Norte (m):</span><span id="gerFichaNorte" class="font-bold text-sky-400">--</span></div>
+                    <div class="bg-slate-900 p-2 rounded border border-slate-800"><span class="text-[10px] text-slate-400 block">Azimut (°):</span><span id="gerFichaAzimut" class="font-bold text-amber-400">--</span></div>
+                    <div class="bg-slate-900 p-2 rounded border border-slate-800"><span class="text-[10px] text-slate-400 block">Intervalo Dip:</span><span id="gerFichaDip" class="font-bold text-amber-400">--</span></div>
+                </div>
+            </div>
+
+            <!-- SÁBANA DE AVANCES EN GERENCIA -->
+            <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 space-y-3">
+                <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider">🪵 Sábana Consolidada de Avances y Auditoría Metro a Metro</h3>
+                <div class="overflow-x-auto border border-slate-700 rounded-xl max-h-60">
+                    <table class="w-full text-left text-xs border-collapse">
+                        <thead class="bg-slate-950 text-slate-300 uppercase sticky top-0">
+                            <tr>
+                                <th class="p-2">#</th><th class="p-2">Desde</th><th class="p-2">Hasta</th><th class="p-2">Diám</th><th class="p-2">Rec (m)</th><th class="p-2">% Rec</th><th class="p-2">Meteorización</th><th class="p-2">Pagado (m)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="gerTablaAvances" class="divide-y divide-slate-800 bg-slate-950/60"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="gerMensajeVacio" class="text-center py-12 text-slate-500 text-sm bg-slate-800 rounded-2xl border border-slate-700">
+            Selecciona el estado, cliente y sondaje arriba para desplegar el análisis gerencial y las estadísticas ejecutivas.
+        </div>
+    </div>
+
     <!-- MODAL FLOTANTE DE EDICIÓN DE POZO -->
     <div id="modalEdicionPozo" class="hidden fixed inset-0 bg-slate-950/80 z-50 flex items-center justify-center p-4">
         <div class="bg-slate-800 p-5 rounded-2xl border border-slate-700 w-full max-w-md space-y-3">
@@ -579,40 +703,82 @@
         let db = { pozos: [], turnos: [], avances: [] };
         let pozoId = null, turnoId = null, editandoAvanceId = null, repoPozoId = null;
 
-        function obtenerClaveSegura() { return localStorage.getItem('geo_clave_acceso') || "Mina2628"; }
-        function obtenerPinRescate() { return localStorage.getItem('geo_pin_rescate') || "2628"; }
+        function obtenerClaveGeologos() { return localStorage.getItem('geo_clave_acceso') || "Mina2628"; }
+        function obtenerClaveGerencia() { return localStorage.getItem('ger_clave_acceso') || "JIRETH2026"; }
+        function obtenerPinMaestro() { return localStorage.getItem('geo_pin_rescate') || "2628"; }
         function togglePasswordVisibility(id) { const el = document.getElementById(id); if(el) el.type = el.type === 'password' ? 'text' : 'password'; }
 
-        async function intentarLogin() {
-            if (document.getElementById('inputClaveLogin').value === obtenerClaveSegura()) {
+        function seleccionarPerfil(perfil) {
+            if(perfil === 'GEOLOGOS') {
+                document.getElementById('btnPerfilGeo').className = "py-2.5 px-2 rounded-xl text-xs font-black border-2 border-amber-500 bg-amber-500/20 text-amber-300";
+                document.getElementById('btnPerfilGer').className = "py-2.5 px-2 rounded-xl text-xs font-black border-2 border-slate-700 bg-slate-900 text-slate-400";
+                document.getElementById('boxLoginGeologos').classList.remove('hidden');
+                document.getElementById('boxLoginGerencia').classList.add('hidden');
+                document.getElementById('boxLoginRescate').classList.add('hidden');
+            } else {
+                document.getElementById('btnPerfilGer').className = "py-2.5 px-2 rounded-xl text-xs font-black border-2 border-sky-500 bg-sky-500/20 text-sky-300";
+                document.getElementById('btnPerfilGeo').className = "py-2.5 px-2 rounded-xl text-xs font-black border-2 border-slate-700 bg-slate-900 text-slate-400";
+                document.getElementById('boxLoginGerencia').classList.remove('hidden');
+                document.getElementById('boxLoginGeologos').classList.add('hidden');
+                document.getElementById('boxLoginRescate').classList.add('hidden');
+            }
+        }
+
+        async function intentarLoginGeo() {
+            if (document.getElementById('inputClaveGeo').value === obtenerClaveGeologos()) {
                 document.getElementById('pantallaLogin').classList.add('hidden');
                 document.getElementById('appPrincipal').classList.remove('hidden');
                 await cargarDatosDesdeNube();
-            } else { alert("❌ Contraseña incorrecta."); }
+            } else { alert("❌ Contraseña de Geólogos incorrecta."); }
         }
 
-        function mostrarBoxRescate() { document.getElementById('boxLoginNormal').classList.add('hidden'); document.getElementById('boxLoginRescate').classList.remove('hidden'); }
-        function ocultarBoxRescate() { document.getElementById('boxLoginRescate').classList.add('hidden'); document.getElementById('boxLoginNormal').classList.remove('hidden'); }
+        async function intentarLoginGer() {
+            if (document.getElementById('inputClaveGer').value === obtenerClaveGerencia()) {
+                document.getElementById('pantallaLogin').classList.add('hidden');
+                document.getElementById('appGerencia').classList.remove('hidden');
+                await cargarDatosDesdeNube();
+                actualizarFiltrosGerencia();
+            } else { alert("❌ Contraseña de Gerencia incorrecta (Ej: JIRETH2026)."); }
+        }
+
+        function mostrarBoxRescate() { document.getElementById('boxLoginGeologos').classList.add('hidden'); document.getElementById('boxLoginGerencia').classList.add('hidden'); document.getElementById('boxLoginRescate').classList.remove('hidden'); }
+        function ocultarBoxRescate() { document.getElementById('boxLoginRescate').classList.add('hidden'); seleccionarPerfil('GEOLOGOS'); }
 
         async function ejecutarRescateClave() {
-            if (document.getElementById('inputPinRescate').value.trim() !== obtenerPinRescate()) { alert("⚠️ PIN incorrecto."); return; }
+            if (document.getElementById('inputPinRescate').value.trim() !== obtenerPinMaestro()) { alert("⚠️ PIN maestro incorrecto."); return; }
             const nueva = document.getElementById('inputClaveNuevaRescate').value.trim();
             if (!nueva) { alert("⚠️ Ingrese nueva contraseña."); return; }
             localStorage.setItem('geo_clave_acceso', nueva);
-            alert("🔒 ¡Contraseña restablecida!");
+            alert("🔒 ¡Contraseña de Geólogos restablecida!");
             document.getElementById('pantallaLogin').classList.add('hidden');
             document.getElementById('appPrincipal').classList.remove('hidden');
             ocultarBoxRescate();
             await cargarDatosDesdeNube();
         }
 
-        function cerrarSesion() { document.getElementById('inputClaveLogin').value = ''; document.getElementById('appPrincipal').classList.add('hidden'); document.getElementById('pantallaLogin').classList.remove('hidden'); }
+        function cerrarSesion() { 
+            document.getElementById('inputClaveGeo').value = ''; 
+            document.getElementById('inputClaveGer').value = '';
+            document.getElementById('appPrincipal').classList.add('hidden'); 
+            document.getElementById('appGerencia').classList.add('hidden');
+            document.getElementById('pantallaLogin').classList.remove('hidden'); 
+            seleccionarPerfil('GEOLOGOS');
+        }
+
         function cambiarClaveSistema() {
-            if (prompt("Contraseña actual:") !== obtenerClaveSegura()) { alert("Incorrecta."); return; }
-            const nueva = prompt("Nueva Contraseña:"); if (!nueva) return;
-            const pin = prompt("Nuevo PIN de 4 dígitos:"); if (!pin || pin.length !== 4) { alert("PIN inválido."); return; }
-            localStorage.setItem('geo_clave_acceso', nueva); localStorage.setItem('geo_pin_rescate', pin);
-            alert("🔒 Actualizado con éxito!");
+            const perfilActual = prompt("¿Qué clave desea cambiar?\n1. GEOLOGOS\n2. GERENCIA", "1");
+            if(perfilActual === "1") {
+                if (prompt("Contraseña actual de Geólogos:") !== obtenerClaveGeologos()) { alert("Incorrecta."); return; }
+                const nueva = prompt("Nueva Contraseña de Geólogos:"); if (!nueva) return;
+                const pin = prompt("Confirme PIN Maestro (4 dígitos):"); if (!pin || pin.length !== 4) { alert("PIN inválido."); return; }
+                localStorage.setItem('geo_clave_acceso', nueva); localStorage.setItem('geo_pin_rescate', pin);
+                alert("🔒 Contraseña de Geólogos actualizada con éxito!");
+            } else if(perfilActual === "2") {
+                if (prompt("Contraseña actual de Gerencia:") !== obtenerClaveGerencia()) { alert("Incorrecta."); return; }
+                const nueva = prompt("Nueva Contraseña de Gerencia (Mayúsculas):"); if (!nueva) return;
+                localStorage.setItem('ger_clave_acceso', nueva);
+                alert("🔒 Contraseña de Gerencia actualizada con éxito!");
+            }
         }
 
         async function cargarDatosDesdeNube() {
@@ -639,6 +805,7 @@
                 if (local) db = JSON.parse(local);
             }
             refrescarSelect();
+            actualizarFiltrosGerencia();
         }
 
         async function sincronizarConNube() { alert("🔄 Sincronizando..."); await cargarDatosDesdeNube(); alert("✅ Sincronizado!"); }
@@ -843,7 +1010,6 @@
                 tb.appendChild(tr);
             });
 
-            // Actualizar barra de progreso profesional en Logging y métrica de avance planificado
             const targetPozo = p && p.target ? p.target : 100.0;
             let avancePorc = targetPozo > 0 ? (totMetros / targetPozo) * 100 : 0;
             let hqAncho = Math.min(100, (hqTot / targetPozo) * 100);
@@ -889,7 +1055,85 @@
             ctx2.fillText('Pagados: ' + totalPagado.toFixed(2) + 'm', x2-10, c2.height-5);
         }
 
-        // --- MÓDULO 4: CIERRE FORTALECIDO Y DETALLADO ---
+        // --- MÓDULO GERENCIAL (SÓLO LECTURA Y ESTADÍSTICAS) ---
+        function actualizarFiltrosGerencia() {
+            const estadoFiltro = document.getElementById('gerFiltroEstado').value;
+            const clienteFiltro = document.getElementById('gerFiltroCliente').value;
+            const selPozo = document.getElementById('gerFiltroPozo');
+            if(!selPozo) return;
+
+            selPozo.innerHTML = '<option value="">-- Seleccionar Sondaje para Análisis Ejecutivo --</option>';
+            db.pozos.filter(p => {
+                let mEstado = (estadoFiltro === 'TODOS' || (p.estado || 'ACTIVO') === estadoFiltro);
+                let mCliente = (clienteFiltro === 'TODAS' || p.empresa === clienteFiltro);
+                return mEstado && mCliente;
+            }).forEach(p => {
+                const opt = document.createElement('option'); opt.value = p.id;
+                opt.textContent = `${p.codigo} - ${p.empresa} (${p.proyecto}) [${p.estado || 'ACTIVO'}]`;
+                selPozo.appendChild(opt);
+            });
+            document.getElementById('gerPanelAnalisis').classList.add('hidden');
+            document.getElementById('gerMensajeVacio').classList.remove('hidden');
+        }
+
+        function cargarAnalisisGerencialPozo(id) {
+            if(!id) {
+                document.getElementById('gerPanelAnalisis').classList.add('hidden');
+                document.getElementById('gerMensajeVacio').classList.remove('hidden');
+                return;
+            }
+            const p = db.pozos.find(x => x.id == id); if(!p) return;
+            const avs = db.avances.filter(a => a.pozoId == id);
+            let totAvance = avs.length > 0 ? Math.max(...avs.map(a => a.hasta)) : 0;
+            let totRecup = avs.reduce((acc, a) => acc + a.recuperado, 0);
+            let totPagables = avs.reduce((acc, a) => acc + a.pagado, 0);
+            let porcGlobal = totAvance > 0 ? (totRecup / totAvance) * 100 : 0;
+            let target = p.target || 100.0;
+            let avancePorc = target > 0 ? (totAvance / target) * 100 : 0;
+
+            document.getElementById('gerKpiTotalM').textContent = totAvance.toFixed(2) + " m";
+            document.getElementById('gerKpiTarget').textContent = `Target: ${target.toFixed(2)} m`;
+            document.getElementById('gerKpiRecup').textContent = porcGlobal.toFixed(1) + "%";
+            document.getElementById('gerKpiAvance').textContent = avancePorc.toFixed(1) + "%";
+            document.getElementById('gerKpiPagables').textContent = totPagables.toFixed(2) + " m";
+
+            document.getElementById('gerFichaCliente').textContent = p.empresa;
+            document.getElementById('gerFichaProyecto').textContent = p.proyecto;
+            document.getElementById('gerFichaMaquina').textContent = p.maquina || 'GEOMAX';
+            document.getElementById('gerFichaEstado').textContent = p.estado || 'ACTIVO';
+            document.getElementById('gerFichaEste').textContent = (p.este || 0).toFixed(2) + " m";
+            document.getElementById('gerFichaNorte').textContent = (p.norte || 0).toFixed(2) + " m";
+            document.getElementById('gerFichaAzimut').textContent = (p.azimut || 0).toFixed(2) + "°";
+            document.getElementById('gerFichaDip').textContent = (p.dip || -60).toFixed(2) + "°";
+
+            const tbGer = document.getElementById('gerTablaAvances'); tbGer.innerHTML = '';
+            avs.forEach((a, idx) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td class="p-2">${idx+1}</td><td class="p-2">${a.desde.toFixed(2)}</td><td class="p-2">${a.hasta.toFixed(2)}</td><td class="p-2 font-bold text-sky-400">${a.diametro}</td><td class="p-2">${a.recuperado.toFixed(2)}</td><td class="p-2 font-bold">${a.porcentaje.toFixed(1)}%</td><td class="p-2 text-[10px]">${a.meteorizacion}</td><td class="p-2 font-bold text-emerald-400">${a.pagado.toFixed(2)}</td>`;
+                tbGer.appendChild(tr);
+            });
+            if(avs.length === 0) {
+                tbGer.innerHTML = `<tr><td colspan="8" class="p-4 text-center text-slate-500 italic">No hay avances registrados en este sondaje.</td></tr>`;
+            }
+
+            document.getElementById('gerPanelAnalisis').classList.remove('hidden');
+            document.getElementById('gerMensajeVacio').classList.add('hidden');
+        }
+
+        function imprimirReporteGerencialEjecutivo() {
+            const selId = document.getElementById('gerFiltroPozo').value;
+            if(!selId) { alert("⚠️ Seleccione un sondaje para imprimir el reporte gerencial."); return; }
+            repoPozoId = selId;
+            const tList = db.turnos.filter(t => t.pozoId == selId);
+            if(tList.length > 0) {
+                document.getElementById('repoTurnoSelect').value = tList[tList.length - 1].id;
+                imprimirDSROficialEstiloPDF();
+            } else {
+                alert("⚠️ El sondaje seleccionado no tiene turnos registrados para generar el DSR.");
+            }
+        }
+
+        // --- MÓDULO 4: CIERRE FORMAL FORTALECIDO ---
         function poblarSelectCierre() {
             const sel = document.getElementById('cierrePozoSelect'); if(!sel) return;
             sel.innerHTML = '<option value="">-- Seleccionar Pozo para Cierre --</option>';
@@ -926,7 +1170,6 @@
             document.getElementById('cierrePorcRecup').textContent = porcGlobal.toFixed(1) + '%';
             document.getElementById('cierreTotPagables').textContent = totPagables.toFixed(2).replace('.', ',') + ' m';
 
-            // Rellenar tabla detallada de avances en cierre
             const tbCierre = document.getElementById('tablaCierreAvances'); tbCierre.innerHTML = '';
             avs.forEach((a, idx) => {
                 const tr = document.createElement('tr');
@@ -937,7 +1180,6 @@
                 tbCierre.innerHTML = `<tr><td colspan="8" class="p-4 text-center text-slate-500 italic">No hay avances registrados en este sondaje.</td></tr>`;
             }
 
-            // Turnos
             const tList = db.turnos.filter(t => t.pozoId == id);
             const containerT = document.getElementById('cierreListaTurnos'); containerT.innerHTML = '';
             tList.forEach((t, i) => {
@@ -1035,7 +1277,6 @@
                         </div>
                     </div>
 
-                    <!-- TARJETAS SUPERIORES KPI & ACUMULADOS -->
                     <table style="width:100%; margin-bottom:8px; text-align:center; font-size:9px; border-collapse:separate; border-spacing:4px;">
                         <tr>
                             <td style="border:1px solid #cbd5e1; background:#f8fafc; padding:4px; border-radius:3px; width:25%;">
@@ -1061,7 +1302,6 @@
                         </tr>
                     </table>
 
-                    <!-- DATOS DE PERFORACIÓN Y UBICACIÓN -->
                     <table style="width:100%; border-collapse:collapse; margin-bottom:8px; font-size:9.5px; border:1px solid #cbd5e1;">
                         <tr style="background:#f1f5f9;"><th colspan="2" style="text-align:left; padding:4px 6px; border-bottom:1px solid #cbd5e1; color:#1e3a8a;">DATOS DE PERFORACIÓN Y UBICACIÓN</th></tr>
                         <tr>
@@ -1078,7 +1318,6 @@
                         </tr>
                     </table>
 
-                    <!-- BARRA DE PROGRESO VISIBLE POR DIÁMETRO -->
                     <div style="border:1px solid #cbd5e1; background:#f8fafc; padding:6px; border-radius:3px; margin-bottom:8px;">
                         <div style="display:flex; justify-content:space-between; font-size:9px; font-weight:bold; margin-bottom:3px;">
                             <span>Progreso Acumulado vs Target Planificado</span>
@@ -1091,7 +1330,6 @@
                         </div>
                     </div>
 
-                    <!-- TABLA DETALLADA DE MANIOBRAS DEL TURNO -->
                     <h4 style="color:#1e3a8a; margin:4px 0 3px 0; font-size:10px; text-transform:uppercase;">Maniobras Registradas en el Turno</h4>
                     <table border="1" cellspacing="0" cellpadding="3" style="width:100%; border-collapse:collapse; font-size:9px; margin-bottom:8px;">
                         <tr style="background:#0f172a; color:#fff;">
@@ -1118,7 +1356,6 @@
             html += `
                     </table>
 
-                    <!-- TABLA DE ESTÁNDARES DE PAGO DE RECUPERACIÓN POR METEORIZACIÓN -->
                     <div style="border:1px solid #cbd5e1; background:#f8fafc; padding:5px; border-radius:3px; margin-bottom:8px;">
                         <b style="color:#1e3a8a; font-size:9px; display:block; margin-bottom:3px;">📋 ESTÁNDARES DE PAGO DE RECUPERACIÓN POR METEORIZACIÓN (UMBRALES):</b>
                         <table style="width:100%; font-size:8px; border-collapse:collapse;">
@@ -1131,7 +1368,6 @@
                         </table>
                     </div>
 
-                    <!-- CONTROL ACUMULADO DE CALIDAD HQ / NQ -->
                     <table style="width:100%; border-collapse:collapse; font-size:9px;">
                         <tr>
                             <td style="width:48%; border:1px solid #cbd5e1; padding:5px; vertical-align:top; background:#f8fafc; border-radius:3px;">
