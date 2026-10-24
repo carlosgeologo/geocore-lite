@@ -565,7 +565,7 @@
             </div>
         </section>
 
-        <!-- MÓDULO NUEVO: ASISTENTE IA EN VIVO CHAT (ESTILO GEMINI) -->
+        <!-- MÓDULO: ASISTENTE IA CHAT CONECTADO A POZOS Y TURNOS -->
         <section id="mod_ia" class="hidden space-y-4 bg-slate-800 p-5 rounded-2xl border border-slate-700">
             <div class="flex justify-between items-center flex-wrap gap-2 border-b border-slate-700 pb-3">
                 <div>
@@ -587,17 +587,35 @@
                 <p class="text-[10px] text-slate-400">Obtén tu API key gratuita en 1 minuto en <a href="https://aistudio.google.com/" target="_blank" class="text-cyan-400 underline">aistudio.google.com</a></p>
             </div>
 
-            <!-- CONTROLES DE ALCANCE Y CONTEXTO -->
+            <!-- CONTROLES Y SELECTORES DE POZOS / TURNOS PARA IA -->
             <div class="bg-slate-900 p-3.5 rounded-xl border border-slate-700 space-y-3">
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
                     <div>
-                        <label class="block font-bold text-amber-400 mb-1">Alcance del Análisis:</label>
-                        <select id="iaScopeSelect" class="input-field w-full px-2 bg-slate-800 text-white rounded-lg text-xs font-bold">
-                            <option value="POZO_ACTIVO">🎯 Pozo Seleccionado Activo</option>
-                            <option value="MULTIPOSO_FILTRADO">🌐 Múltiples Pozos (Filtro Abajo)</option>
+                        <label class="block font-bold text-amber-400 mb-1">1. Alcance del Análisis:</label>
+                        <select id="iaScopeSelect" onchange="actualizarModoAlcanceIA()" class="input-field w-full px-2 bg-slate-800 text-white rounded-lg text-xs font-bold">
+                            <option value="POZO_ACTIVO">🎯 Pozo Específico (Activos o Culminados)</option>
+                            <option value="MULTIPOSO_FILTRADO">🌐 Múltiples Pozos (Filtro por Cliente/Mes)</option>
                         </select>
                     </div>
-                    <div>
+
+                    <!-- SELECTOR DE POZO ESPECÍFICO -->
+                    <div id="boxIaPozoEspecifico">
+                        <label class="block font-bold text-cyan-300 mb-1">2. Seleccionar Sondaje:</label>
+                        <select id="iaPozoSelect" onchange="cargarTurnosPozoIA(this.value)" class="input-field w-full px-2 bg-slate-800 text-cyan-300 rounded-lg text-xs font-bold">
+                            <option value="">-- Seleccione Pozo --</option>
+                        </select>
+                    </div>
+
+                    <!-- SELECTOR DE TURNO ESPECÍFICO -->
+                    <div id="boxIaTurnoEspecifico">
+                        <label class="block font-bold text-slate-300 mb-1">3. Turno / Corte (Opcional):</label>
+                        <select id="iaTurnoSelect" class="input-field w-full px-2 bg-slate-800 text-white rounded-lg text-xs font-bold">
+                            <option value="TODOS">TODOS LOS TURNOS (POZO COMPLETO)</option>
+                        </select>
+                    </div>
+
+                    <!-- FILTROS MULTIPOZO (INICIALMENTE OCULTOS) -->
+                    <div id="boxIaFiltroCliente" class="hidden">
                         <label class="block font-bold text-slate-300 mb-1">Filtrar Cliente (Multipozo):</label>
                         <select id="iaFiltroCliente" class="input-field w-full px-2 bg-slate-800 text-white rounded-lg text-xs font-bold">
                             <option value="TODAS">TODAS LAS EMPRESAS</option>
@@ -607,22 +625,14 @@
                             <option value="HAVILA 318">HAVILA 318</option>
                         </select>
                     </div>
-                    <div>
+                    <div id="boxIaFiltroMes" class="hidden">
                         <label class="block font-bold text-slate-300 mb-1">Filtrar Mes (Multipozo):</label>
                         <select id="iaFiltroMes" class="input-field w-full px-2 bg-slate-800 text-white rounded-lg text-xs font-bold">
                             <option value="TODOS">TODOS LOS MESES</option>
-                            <option value="01">Enero</option>
-                            <option value="02">Febrero</option>
-                            <option value="03">Marzo</option>
-                            <option value="04">Abril</option>
-                            <option value="05">Mayo</option>
-                            <option value="06">Junio</option>
-                            <option value="07">Julio</option>
-                            <option value="08">Agosto</option>
-                            <option value="09">Septiembre</option>
-                            <option value="10">Octubre</option>
-                            <option value="11">Noviembre</option>
-                            <option value="12">Diciembre</option>
+                            <option value="01">Enero</option><option value="02">Febrero</option><option value="03">Marzo</option>
+                            <option value="04">Abril</option><option value="05">Mayo</option><option value="06">Junio</option>
+                            <option value="07">Julio</option><option value="08">Agosto</option><option value="09">Septiembre</option>
+                            <option value="10">Octubre</option><option value="11">Noviembre</option><option value="12">Diciembre</option>
                         </select>
                     </div>
                 </div>
@@ -641,7 +651,7 @@
                 <div id="chatLiveMessages" class="flex-1 p-4 overflow-y-auto space-y-3 chat-scroll text-xs">
                     <div class="chat-bubble-ia p-3 max-w-[85%] space-y-1">
                         <p class="font-bold text-cyan-400 text-[11px]">🤖 Asistente IA Geológico</p>
-                        <p>¡Hola Carlos! Estoy listo. He sincronizado la base de datos de sondajes en Supabase. Escríbeme libremente lo que necesitas (memorandos, análisis de veta, reportes explicativos para el cliente o comparativas) y te lo redactaré al instante.</p>
+                        <p>¡Hola Carlos! Estoy listo. Selecciona arriba un pozo específico o una selección multipozo. Escríbeme libremente lo que necesitas (memorandos, análisis de veta, reportes explicativos para el cliente o comparativas) y te lo redactaré al instante.</p>
                     </div>
                 </div>
 
@@ -926,6 +936,7 @@
             if(id === 'mod3_turno') poblarSelectRetomarTurnos();
             if(id === 'mod4') poblarSelectCierre();
             if(id === 'mod5') poblarSelectRepositorio();
+            if(id === 'mod_ia') poblarSelectsIA();
             if(id === 'mod6') renderTablaAdminPozos();
         }
 
@@ -965,7 +976,7 @@
                 opt.textContent = `${p.codigo} - ${p.empresa} (${p.proyecto}) [${p.estado || 'ACTIVO'}]`;
                 if (p.id == pozoId) opt.selected = true; sel.appendChild(opt);
             });
-            cargarDatosPozoSeleccionado(); renderConsolidado(); poblarSelectCierre(); poblarSelectRepositorio(); renderTablaAdminPozos();
+            cargarDatosPozoSeleccionado(); renderConsolidado(); poblarSelectCierre(); poblarSelectRepositorio(); poblarSelectsIA(); renderTablaAdminPozos();
         }
 
         function seleccionarPozoGlobal(val) { pozoId = val; cargarDatosPozoSeleccionado(); if (val) switchTab('mod3_turno'); }
@@ -1156,7 +1167,7 @@
             ctx2.fillText('Pagados: ' + totalPagado.toFixed(2) + 'm', x2-10, c2.height-5);
         }
 
-        // --- MOTOR DE ASISTENTE IA CHAT CONECTADO A GEMINI API ---
+        // --- MOTOR DE ASISTENTE IA CHAT Y POBLACIÓN DINÁMICA DE POZOS / TURNOS ---
         function toggleConfiguracionGeminiKey() {
             document.getElementById('panelConfigKey').classList.toggle('hidden');
         }
@@ -1172,27 +1183,79 @@
             document.getElementById('panelConfigKey').classList.add('hidden');
         }
 
+        function poblarSelectsIA() {
+            const selPozo = document.getElementById('iaPozoSelect');
+            if(!selPozo) return;
+            selPozo.innerHTML = '<option value="">-- Seleccione Pozo (Activos / Culminados) --</option>';
+            
+            db.pozos.forEach(p => {
+                const opt = document.createElement('option');
+                opt.value = p.id;
+                opt.textContent = `${p.codigo} - ${p.empresa} (${p.proyecto}) [${p.estado || 'ACTIVO'}]`;
+                if(p.id == pozoId) opt.selected = true;
+                selPozo.appendChild(opt);
+            });
+
+            if(selPozo.value) cargarTurnosPozoIA(selPozo.value);
+            actualizarModoAlcanceIA();
+        }
+
+        function cargarTurnosPozoIA(pId) {
+            const selTurno = document.getElementById('iaTurnoSelect');
+            if(!selTurno) return;
+            selTurno.innerHTML = '<option value="TODOS">TODOS LOS TURNOS (POZO COMPLETO)</option>';
+            if(!pId) return;
+
+            const turnosPozo = db.turnos.filter(t => t.pozoId == pId);
+            turnosPozo.forEach(t => {
+                const opt = document.createElement('option');
+                opt.value = t.id;
+                opt.textContent = `Fecha: ${t.fecha} - Jornada: ${t.tipo} (Perf: ${t.perforador} | Geo: ${t.geologo})`;
+                selTurno.appendChild(opt);
+            });
+        }
+
+        function actualizarModoAlcanceIA() {
+            const modo = document.getElementById('iaScopeSelect').value;
+            const isPozo = (modo === 'POZO_ACTIVO');
+
+            document.getElementById('boxIaPozoEspecifico').classList.toggle('hidden', !isPozo);
+            document.getElementById('boxIaTurnoEspecifico').classList.toggle('hidden', !isPozo);
+            document.getElementById('boxIaFiltroCliente').classList.toggle('hidden', isPozo);
+            document.getElementById('boxIaFiltroMes').classList.toggle('hidden', isPozo);
+        }
+
         function construirContextoDatosIA() {
-            const scope = document.getElementById('iaScopeSelect').value;
+            const modo = document.getElementById('iaScopeSelect').value;
             let contextoText = "BASE DE DATOS TÉCNICA DE SONDAJES JIRETH (SUPABASE):\n\n";
 
-            if(scope === 'POZO_ACTIVO') {
-                if(!pozoId) return "ADVERTENCIA: No hay ningún pozo seleccionado activamente.";
-                const p = db.pozos.find(x => x.id == pozoId);
-                const avs = db.avances.filter(a => a.pozoId == pozoId);
-                const turnosP = db.turnos.filter(t => t.pozoId == pozoId);
+            if(modo === 'POZO_ACTIVO') {
+                const targetPozoId = document.getElementById('iaPozoSelect').value || pozoId;
+                if(!targetPozoId) return "ADVERTENCIA: No se ha seleccionado ningún pozo específico en el desplegable.";
+                
+                const p = db.pozos.find(x => x.id == targetPozoId);
+                if(!p) return "ADVERTENCIA: Pozo no encontrado en la base de datos.";
+
+                const turnoSeleccionadoId = document.getElementById('iaTurnoSelect').value;
+                let avs = db.avances.filter(a => a.pozoId == targetPozoId);
+                let turnosP = db.turnos.filter(t => t.pozoId == targetPozoId);
+
+                if(turnoSeleccionadoId && turnoSeleccionadoId !== 'TODOS') {
+                    avs = avs.filter(a => a.turnoId == turnoSeleccionadoId);
+                    turnosP = turnosP.filter(t => t.id == turnoSeleccionadoId);
+                }
 
                 let totM = avs.length > 0 ? Math.max(...avs.map(a => a.hasta)) : 0;
                 let totR = avs.reduce((a,c) => a + c.recuperado, 0);
                 let totP = avs.reduce((a,c) => a + c.pagado, 0);
 
-                contextoText += `POZO SELECCIONADO EN PANTALLA:
-- Código: ${p.codigo} | Empresa Cliente: ${p.empresa} | Proyecto: ${p.proyecto} | Estado: ${p.estado}
+                contextoText += `POZO EVALUADO:
+- Código: ${p.codigo} | Empresa Cliente: ${p.empresa} | Proyecto: ${p.proyecto} | Estado: ${p.estado || 'ACTIVO'}
 - Máquina: ${p.maquina || 'GEOMAX'} | Target: ${p.target || 100}m
 - Ubicación Collar: Este ${p.este || 0}m | Norte ${p.norte || 0}m | Cota ${p.cota || 0}m
 - Orientación: Dip ${p.dip || -60}° | Azimut ${p.azimut || 0}°
-- Totales Acumulados: ${totM.toFixed(2)}m perforados | ${totR.toFixed(2)}m recuperados (${totM > 0 ? ((totR/totM)*100).toFixed(1) : 0}%) | ${totP.toFixed(2)}m pagables aprobados.
-- Turnos Registrados (${turnosP.length}):\n`;
+- Totales Acumulados Evaluados: ${totM.toFixed(2)}m perforados | ${totR.toFixed(2)}m recuperados (${totM > 0 ? ((totR/totM)*100).toFixed(1) : 0}%) | ${totP.toFixed(2)}m pagables aprobados.
+- Turnos / Jornadas Registradas (${turnosP.length}):\n`;
                 turnosP.forEach(t => contextoText += `  • Fecha ${t.fecha} (${t.tipo}) | Perforador: ${t.perforador} | Geo: ${t.geologo}\n`);
 
                 contextoText += `- Detalle por Tramos / Core Logging (${avs.length} corridas):\n`;
@@ -1214,7 +1277,7 @@
                     let totM = avs.length > 0 ? Math.max(...avs.map(a => a.hasta)) : 0;
                     let totR = avs.reduce((a,c) => a + c.recuperado, 0);
                     let totP = avs.reduce((a,c) => a + c.pagado, 0);
-                    contextoText += `POZO #${idx+1}: [${p.codigo}] - Cliente: ${p.empresa} | Proyecto: ${p.proyecto} | Estado: ${p.estado}
+                    contextoText += `POZO #${idx+1}: [${p.codigo}] - Cliente: ${p.empresa} | Proyecto: ${p.proyecto} | Estado: ${p.estado || 'ACTIVO'}
 - Profundidad: ${totM.toFixed(2)}m / Target: ${p.target || 100}m
 - Recuperación: ${totR.toFixed(2)}m (${totM > 0 ? ((totR/totM)*100).toFixed(1) : 0}%)
 - Metros Pagables: ${totP.toFixed(2)}m\n\n`;
@@ -1263,7 +1326,6 @@ Instrucciones de respuesta:
                 let respuestaTexto = "";
 
                 if (apiKey) {
-                    // LLAMADA DIRECTA EN VIVO A LA API DE GEMINI
                     const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -1279,17 +1341,15 @@ Instrucciones de respuesta:
                         respuestaTexto = "⚠️ Error al conectar con la API de Gemini. Verifique su API Key.";
                     }
                 } else {
-                    // RESPUESTA DE FALLBACK INTELIGENTE LOCAL (Si aún no se ha ingresado Key API)
                     respuestaTexto = `🤖 **Respuesta Generada (Motor Local Jireth):**\n\n` +
                         `Recibido Carlos. Analizando la base de datos de Supabase para su consulta sobre: *"${pregunta}"*\n\n` +
                         `📌 **RESUMEN EJECUTIVO EXTRAÍDO DE DATOS:**\n` +
                         `• ${contextoDB.substring(0, 350)}...\n\n` +
-                        `💡 *Sugerencia:* Para habilitar el procesamiento en lenguaje natural fluido estilo Gemini en vivo, configura tu API Key gratuita presionando el botón **⚙️ Configurar Gemini API Key** arriba.`;
+                        `💡 *Sugerencia:* Para habilitar la conversación libre fluida estilo Gemini en vivo, configura tu API Key gratuita presionando el botón **⚙️ Configurar Gemini API Key** arriba.`;
                 }
 
                 document.getElementById('chatTypingIndicator').classList.add('hidden');
 
-                // Agregar burbuja de respuesta IA
                 const iaDiv = document.createElement('div');
                 iaDiv.className = "chat-bubble-ia p-3 max-w-[90%] text-xs leading-relaxed space-y-1 font-mono whitespace-pre-line";
                 iaDiv.innerHTML = `<div class="flex justify-between items-center border-b border-slate-800 pb-1 mb-1"><span class="font-bold text-cyan-400 text-[11px]">🤖 Asistente IA Geológico</span><button onclick="navigator.clipboard.writeText(this.parentElement.nextElementSibling.innerText); alert('📋 Copiado!');" class="text-[9px] bg-slate-800 px-1.5 py-0.5 rounded text-slate-300">📋 Copiar</button></div><div>${respuestaTexto}</div>`;
