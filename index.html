@@ -118,7 +118,7 @@
             <!-- FORMULARIO RECUPERACIÓN CON PIN MAESTRO -->
             <div id="boxLoginRescate" class="hidden space-y-3.5 pt-3 border-t border-slate-800">
                 <div class="bg-slate-950 p-2.5 rounded-xl border border-amber-500/30 text-amber-300 text-[11px]">
-                    🔑 <b>Restablecimiento:</b> Ingrese seu PIN maestro de 4 dígitos para definir una nueva contraseña de Geólogos.
+                    🔑 <b>Restablecimiento:</b> Ingrese su PIN maestro de 4 dígitos para definir una nueva contraseña de Geólogos.
                 </div>
                 <div>
                     <label class="block text-xs font-extrabold text-slate-300 mb-1 uppercase tracking-wider">PIN Maestro (4 dígitos)</label>
@@ -951,7 +951,7 @@
             }
         }
 
-        // --- FUNCIÓN DE SINCRONIZACIÓN MAESTRA Y BIDIRECCIONAL (INCLUYENDO BORRADOS) ---
+        // --- FUNCIÓN DE SINCRONIZACIÓN MAESTRA CON CONTROL DE ELIMINACIONES ---
         async function cargarDatosDesdeNube(mostrarAlertaExito = false) {
             let local = localStorage.getItem('geo_db_safe_v20');
             if (local) {
@@ -964,30 +964,36 @@
             }
 
             try {
-                // 1. Enviar cambios pendientes locales a Supabase
-                if (db.pozos && db.pozos.length > 0) {
-                    for (let p of db.pozos) await guardarPozoNube(p);
-                    for (let t of db.turnos) await guardarTurnoNube(t);
-                    for (let a of db.avances) await guardarAvanceNube(a);
+                let delList = JSON.parse(localStorage.getItem('geo_deleted_pozos') || '[]');
+                
+                // 0. Ejecutar borrados pendientes en la nube si quedaron guardados
+                for (let idDel of delList) {
+                    try {
+                        await supabaseClient.from('avances').delete().eq('pozo_id', idDel);
+                        await supabaseClient.from('turnos').delete().eq('pozo_id', idDel);
+                        await supabaseClient.from('pozos').delete().eq('id', idDel);
+                    } catch(e){}
                 }
 
-                // 2. Descargar la verdad absoluta desde la nube (refleja pozos nuevos y pozos eliminados)
+                // 1. Descargar PRIMERO la verdad absoluta desde la nube
                 let { data: pD, error: errP } = await supabaseClient.from('pozos').select('*');
                 let { data: tD } = await supabaseClient.from('turnos').select('*');
                 let { data: aD } = await supabaseClient.from('avances').select('*');
 
                 if (!errP && pD) {
-                    db.pozos = pD.map(p => ({ id: Number(p.id), codigo: p.codigo, empresa: p.empresa, proyecto: p.proyecto, estado: p.estado, fechaInicio: p.fecha_inicio, fechaCulminacion: p.fecha_culminacion, maquina: p.maquina, este: p.este, norte: p.norte, cota: p.cota, azimut: p.azimut, dip: p.dip, target: p.target }));
-                    db.turnos = (tD || []).map(t => ({ id: Number(t.id), pozoId: Number(t.pozo_id), fecha: t.fecha, tipo: t.tipo, perforador: t.perforador, geologo: t.geologo }));
-                    db.avances = (aD || []).map(a => ({ id: Number(a.id), pozoId: Number(a.pozo_id), turnoId: Number(a.turno_id), longitud: Number(a.longitud), desde: Number(a.desde), hasta: Number(a.hasta), diametro: a.diametro, recuperado: Number(a.recuperado), porcentaje: Number(a.porcentaje), meteorizacion: a.meteorizacion, pagado: Number(a.pagado) }));
+                    // Excluimos localmente cualquier pozo que esté en la lista de eliminados
+                    db.pozos = pD.filter(p => !delList.includes(Number(p.id))).map(p => ({ id: Number(p.id), codigo: p.codigo, empresa: p.empresa, proyecto: p.proyecto, estado: p.estado, fechaInicio: p.fecha_inicio, fechaCulminacion: p.fecha_culminacion, maquina: p.maquina, este: p.este, norte: p.norte, cota: p.cota, azimut: p.azimut, dip: p.dip, target: p.target }));
+                    db.turnos = (tD || []).filter(t => !delList.includes(Number(t.pozo_id))).map(t => ({ id: Number(t.id), pozoId: Number(t.pozo_id), fecha: t.fecha, tipo: t.tipo, perforador: t.perforador, geologo: t.geologo }));
+                    db.avances = (aD || []).filter(a => !delList.includes(Number(a.pozo_id))).map(a => ({ id: Number(a.id), pozoId: Number(a.pozo_id), turnoId: Number(a.turno_id), longitud: Number(a.longitud), desde: Number(a.desde), hasta: Number(a.hasta), diametro: a.diametro, recuperado: Number(a.recuperado), porcentaje: Number(a.porcentaje), meteorizacion: a.meteorizacion, pagado: Number(a.pagado) }));
                 }
 
-                // 3. Limpiar huérfanos locales si fueron borrados en la nube
-                const idsPozosValidos = db.pozos.map(p => p.id);
-                db.turnos = db.turnos.filter(t => idsPozosValidos.includes(t.pozoId));
-                db.avances = db.avances.filter(a => idsPozosValidos.includes(a.pozoId));
+                // 2. Enviar a Supabase los cambios locales que no estén eliminados
+                if (db.pozos && db.pozos.length > 0) {
+                    for (let p of db.pozos) { if (!delList.includes(p.id)) await guardarPozoNube(p); }
+                    for (let t of db.turnos) { if (!delList.includes(t.pozoId)) await guardarTurnoNube(t); }
+                    for (let a of db.avances) { if (!delList.includes(a.pozoId)) await guardarAvanceNube(a); }
+                }
 
-                // Guardar siempre el respaldo seguro consolidado
                 localStorage.setItem('geo_db_safe_v20', JSON.stringify(db));
             } catch(e) {
                 console.warn("Aviso de red Supabase: Operando con registros locales seguros.");
@@ -996,7 +1002,7 @@
             refrescarSelect(); 
             actualizarFiltrosGerencia(); 
             inicializarConfigKey();
-            if(mostrarAlertaExito) alert("✅ Sincronización con Supabase completada (actualizado y depurado).");
+            if(mostrarAlertaExito) alert("✅ Sincronización con Supabase completada.");
         }
 
         async function sincronizarConNube() { await cargarDatosDesdeNube(true); }
@@ -1026,7 +1032,13 @@
             db.pozos = db.pozos.filter(x => x.id != id);
             db.turnos = db.turnos.filter(x => x.pozoId != id);
             db.avances = db.avances.filter(x => x.pozoId != id);
+            
+            // Guardar en la lista de eliminados locales para evitar que otros equipos lo vuelvan a subir
+            let delList = JSON.parse(localStorage.getItem('geo_deleted_pozos') || '[]');
+            if (!delList.includes(Number(id))) delList.push(Number(id));
+            localStorage.setItem('geo_deleted_pozos', JSON.stringify(delList));
             localStorage.setItem('geo_db_safe_v20', JSON.stringify(db));
+
             if (navigator.onLine) {
                 try {
                     await supabaseClient.from('avances').delete().eq('pozo_id', id);
