@@ -3,13 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jireth GeoCore Lite | Control Operativo, Gerencial & IA Multipozo</title>
+    <title>Jireth GeoCore Lite | Control Operativo, Gerencial & IA Chat</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- SDK Oficial de Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         .btn-field { min-height: 50px; font-weight: 700; border-radius: 0.5rem; }
         .input-field { min-height: 46px; border: 2px solid #334155; }
+        
+        /* Estilos de Chat Moderno */
+        .chat-scroll::-webkit-scrollbar { width: 6px; }
+        .chat-scroll::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+        .chat-bubble-user { background-color: #0284c7; color: #ffffff; border-radius: 18px 18px 2px 18px; }
+        .chat-bubble-ia { background-color: #0f172a; color: #f1f5f9; border: 1px solid #1e293b; border-radius: 18px 18px 18px 2px; }
+
         @media print {
             @page { size: portrait; margin: 8mm; }
             body * { visibility: hidden; }
@@ -25,7 +32,7 @@
         <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700 w-full max-w-sm space-y-4 shadow-2xl">
             <div class="text-center">
                 <h1 class="text-xl font-black text-white">⛏️ Jireth GeoCore Lite</h1>
-                <p class="text-xs text-slate-400 mt-1">Control Operativo, Gerencial & IA</p>
+                <p class="text-xs text-slate-400 mt-1">Control Operativo, Gerencial & IA Chat</p>
             </div>
             
             <!-- SELECTOR DE PERFIL -->
@@ -558,18 +565,40 @@
             </div>
         </section>
 
-        <!-- MÓDULO ASISTENTE IA DE CRUCE MULTIPOZO Y FILTROS AVANZADOS -->
+        <!-- MÓDULO NUEVO: ASISTENTE IA EN VIVO CHAT (ESTILO GEMINI) -->
         <section id="mod_ia" class="hidden space-y-4 bg-slate-800 p-5 rounded-2xl border border-slate-700">
-            <h2 class="text-xl font-black text-cyan-400">🤖 Asistente IA Multipozo & Cruce de Datos</h2>
-            <p class="text-xs text-slate-300">Filtra por empresa cliente, mes o rango de fechas específico para analizar y cruzar la información de múltiples pozos en conjunto.</p>
-            
-            <!-- CONTROLES Y FILTROS DE CRUCE MASIVO -->
-            <div class="bg-slate-900 p-4 rounded-xl border border-cyan-500/40 space-y-3">
-                <h3 class="text-xs font-bold text-cyan-300 uppercase tracking-wider">🎯 1. Configurar Filtros de Cruce Masivo</h3>
-                
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div class="flex justify-between items-center flex-wrap gap-2 border-b border-slate-700 pb-3">
+                <div>
+                    <h2 class="text-xl font-black text-cyan-400 flex items-center gap-2">🤖 Asistente IA Geológico Jireth</h2>
+                    <p class="text-xs text-slate-300">Conversación inteligente en tiempo real con datos de Supabase</p>
+                </div>
+                <button type="button" onclick="toggleConfiguracionGeminiKey()" class="text-xs bg-slate-900 text-cyan-300 border border-cyan-500/40 px-3 py-1.5 rounded-lg font-bold hover:bg-slate-700">
+                    ⚙️ Configurar Gemini API Key
+                </button>
+            </div>
+
+            <!-- PANEL DESPLEGABLE PARA API KEY -->
+            <div id="panelConfigKey" class="hidden bg-slate-950 p-3 rounded-xl border border-cyan-500/30 space-y-2">
+                <label class="block text-xs font-bold text-cyan-300">Clave de API de Google Gemini (Gratuita):</label>
+                <div class="flex gap-2">
+                    <input type="password" id="inputGeminiApiKey" placeholder="AIzaSy..." class="input-field flex-1 px-3 bg-slate-900 text-white text-xs font-mono rounded-lg">
+                    <button type="button" onclick="guardarGeminiApiKey()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 rounded-lg font-bold text-xs">Guardar Key</button>
+                </div>
+                <p class="text-[10px] text-slate-400">Obtén tu API key gratuita en 1 minuto en <a href="https://aistudio.google.com/" target="_blank" class="text-cyan-400 underline">aistudio.google.com</a></p>
+            </div>
+
+            <!-- CONTROLES DE ALCANCE Y CONTEXTO -->
+            <div class="bg-slate-900 p-3.5 rounded-xl border border-slate-700 space-y-3">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-300 mb-1">Filtrar Empresa Cliente</label>
+                        <label class="block font-bold text-amber-400 mb-1">Alcance del Análisis:</label>
+                        <select id="iaScopeSelect" class="input-field w-full px-2 bg-slate-800 text-white rounded-lg text-xs font-bold">
+                            <option value="POZO_ACTIVO">🎯 Pozo Seleccionado Activo</option>
+                            <option value="MULTIPOSO_FILTRADO">🌐 Múltiples Pozos (Filtro Abajo)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">Filtrar Cliente (Multipozo):</label>
                         <select id="iaFiltroCliente" class="input-field w-full px-2 bg-slate-800 text-white rounded-lg text-xs font-bold">
                             <option value="TODAS">TODAS LAS EMPRESAS</option>
                             <option value="IVM C.A.">IVM C.A.</option>
@@ -579,7 +608,7 @@
                         </select>
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-300 mb-1">Filtrar por Mes Especifico</label>
+                        <label class="block font-bold text-slate-300 mb-1">Filtrar Mes (Multipozo):</label>
                         <select id="iaFiltroMes" class="input-field w-full px-2 bg-slate-800 text-white rounded-lg text-xs font-bold">
                             <option value="TODOS">TODOS LOS MESES</option>
                             <option value="01">Enero</option>
@@ -596,39 +625,37 @@
                             <option value="12">Diciembre</option>
                         </select>
                     </div>
-                    <div>
-                        <label class="block text-[10px] font-bold text-slate-300 mb-1">O Rango de Fechas Exactas</label>
-                        <div class="flex gap-1">
-                            <input type="date" id="iaFiltroDesde" class="input-field w-full px-1 bg-slate-800 text-white rounded-lg text-[10px] font-bold">
-                            <input type="date" id="iaFiltroHasta" class="input-field w-full px-1 bg-slate-800 text-white rounded-lg text-[10px] font-bold">
-                        </div>
-                    </div>
                 </div>
 
-                <!-- BOTONES RÁPIDOS DE ANÁLISIS CRUZADO -->
-                <div class="flex flex-wrap gap-2 pt-1">
-                    <button type="button" onclick="ejecutarConsultaIAMultipozo('consolidado')" class="bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-cyan-500/50 px-3 py-1.5 rounded-lg text-xs font-bold">📊 Reporte Consolidado Multipozo</button>
-                    <button type="button" onclick="ejecutarConsultaIAMultipozo('comparativa')" class="bg-slate-800 hover:bg-slate-700 text-emerald-300 border border-emerald-500/50 px-3 py-1.5 rounded-lg text-xs font-bold">📈 Estadística Comparativa</button>
-                    <button type="button" onclick="ejecutarConsultaIAMultipozo('financiero')" class="bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-500/50 px-3 py-1.5 rounded-lg text-xs font-bold">💰 Balance Metros Pagables</button>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-bold text-slate-300 mb-1">Escribe tu consulta o cruzamiento libre a la IA:</label>
-                    <div class="flex gap-2">
-                        <input type="text" id="inputPreguntaIA" placeholder="Ej: Compara la recuperación de Minería Carabobo contra IVM en el periodo seleccionado" class="input-field flex-1 px-3 bg-slate-800 text-white rounded-lg text-xs font-bold">
-                        <button type="button" onclick="ejecutarConsultaIAMultipozo('libre')" class="bg-cyan-600 hover:bg-cyan-500 text-white px-4 rounded-lg font-bold text-xs">🚀 Cruce Libre IA</button>
-                    </div>
+                <!-- SUGERENCIAS RÁPIDAS DE SOLICITUD -->
+                <div class="flex gap-2 flex-wrap text-[11px]">
+                    <span class="text-slate-400 font-bold flex items-center">💡 Sugerencias:</span>
+                    <button type="button" onclick="enviarSugerenciaIAChat('Genera un memorando técnico detallado del avance litológico, metros perforados y porcentaje de recuperación')" class="bg-slate-800 text-cyan-300 hover:bg-slate-700 px-2.5 py-1 rounded-lg border border-cyan-500/30">📋 Memorando Técnico</button>
+                    <button type="button" onclick="enviarSugerenciaIAChat('Realiza un análisis estadístico comparativo de la calidad de muestra por meteorización e identifica zonas críticas')" class="bg-slate-800 text-emerald-300 hover:bg-slate-700 px-2.5 py-1 rounded-lg border border-emerald-500/30">📈 Análisis de Calidad</button>
+                    <button type="button" onclick="enviarSugerenciaIAChat('Elabora un balance ejecutivo de metros brutos perforados versus metros pagables aprobados para facturación')" class="bg-slate-800 text-amber-300 hover:bg-slate-700 px-2.5 py-1 rounded-lg border border-amber-500/30">💰 Balance Pagable</button>
                 </div>
             </div>
 
-            <!-- RESPUESTA DE LA IA -->
-            <div class="bg-slate-950 p-4 rounded-xl border border-cyan-500/30 space-y-2">
-                <div class="flex justify-between items-center border-b border-slate-800 pb-2">
-                    <span class="text-xs font-bold text-cyan-400">💡 Análisis Ejecutivo Multipozo IA:</span>
-                    <button type="button" onclick="copiarRespuestaIA()" class="text-[10px] bg-slate-800 text-slate-300 px-2 py-1 rounded hover:bg-slate-700 font-bold">📋 Copiar Reporte Agrupado</button>
+            <!-- CONTENEDOR DE CHAT EN VIVO -->
+            <div class="bg-slate-950 rounded-2xl border border-slate-700 flex flex-col h-[420px] shadow-2xl overflow-hidden">
+                <div id="chatLiveMessages" class="flex-1 p-4 overflow-y-auto space-y-3 chat-scroll text-xs">
+                    <div class="chat-bubble-ia p-3 max-w-[85%] space-y-1">
+                        <p class="font-bold text-cyan-400 text-[11px]">🤖 Asistente IA Geológico</p>
+                        <p>¡Hola Carlos! Estoy listo. He sincronizado la base de datos de sondajes en Supabase. Escríbeme libremente lo que necesitas (memorandos, análisis de veta, reportes explicativos para el cliente o comparativas) y te lo redactaré al instante.</p>
+                    </div>
                 </div>
-                <div id="cajaRespuestaIA" class="text-xs text-slate-200 whitespace-pre-line leading-relaxed min-h-[140px] max-h-96 overflow-y-auto font-mono p-2 bg-slate-900/50 rounded">
-                    Ajusta los filtros arriba (Cliente, Mes o Fechas) y presiona un botón de análisis para que la IA cruce la información de todos los sondajes coincidentes...
+
+                <!-- INDICADOR ANIMADO PENSANDO -->
+                <div id="chatTypingIndicator" class="hidden px-4 py-2 bg-slate-900/60 border-t border-slate-800 text-[11px] text-cyan-400 font-bold flex items-center gap-2">
+                    <span class="animate-spin text-sm">🌀</span> <span>🤖 IA analizando datos de Supabase y redactando respuesta...</span>
+                </div>
+
+                <!-- CAMPO DE ENTRADA CHAT -->
+                <div class="p-3 bg-slate-900 border-t border-slate-800 flex gap-2">
+                    <input type="text" id="inputPreguntaIAChat" onkeypress="if(event.key==='Enter') enviarMensajeIAChat()" placeholder="Escribe tu mensaje libremente a la IA geológica..." class="input-field flex-1 px-3 bg-slate-950 text-white rounded-xl text-xs font-bold border-slate-700 focus:border-cyan-500">
+                    <button type="button" onclick="enviarMensajeIAChat()" class="bg-cyan-600 hover:bg-cyan-500 text-white px-5 rounded-xl font-bold text-xs shadow-lg flex items-center gap-1">
+                        🚀 Enviar
+                    </button>
                 </div>
             </div>
         </section>
@@ -727,20 +754,6 @@
                 </div>
             </div>
 
-            <!-- ASISTENTE IA EN GERENCIA -->
-            <div class="bg-slate-800 p-4 rounded-2xl border border-cyan-500/40 space-y-3">
-                <h3 class="text-xs font-black text-cyan-400 uppercase flex items-center gap-1">🤖 Asistente Ejecutivo IA (Análisis Directivo en Vivo)</h3>
-                <div class="flex gap-2">
-                    <button type="button" onclick="ejecutarConsultaGerenciaIA('resumen_ejecutivo')" class="bg-slate-900 hover:bg-slate-700 text-cyan-300 px-3 py-1.5 rounded-lg text-xs font-bold border border-cyan-500/30">📋 Resumen Ejecutivo Pozo</button>
-                    <button type="button" onclick="ejecutarConsultaGerenciaIA('rentabilidad')" class="bg-slate-900 hover:bg-slate-700 text-emerald-300 px-3 py-1.5 rounded-lg text-xs font-bold border border-emerald-500/30">💡 Análisis de Rendimiento</button>
-                </div>
-                <div class="bg-slate-950 p-3 rounded-xl border border-cyan-500/20">
-                    <div id="cajaRespuestaGerIA" class="text-xs text-slate-200 whitespace-pre-line leading-relaxed font-mono min-h-[80px]">
-                        Selecciona un pozo y haz clic en los botones de IA para obtener análisis gerenciales instantáneos...
-                    </div>
-                </div>
-            </div>
-
             <!-- FICHA TÉCNICA RESUMIDA -->
             <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 space-y-3">
                 <h3 class="text-xs font-bold text-sky-400 uppercase tracking-wider">📍 Ficha Técnica & Ubicación del Sondaje</h3>
@@ -777,22 +790,6 @@
         </div>
     </div>
 
-    <!-- MODAL FLOTANTE DE EDICIÓN DE POZO -->
-    <div id="modalEdicionPozo" class="hidden fixed inset-0 bg-slate-950/80 z-50 flex items-center justify-center p-4">
-        <div class="bg-slate-800 p-5 rounded-2xl border border-slate-700 w-full max-w-md space-y-3">
-            <h3 class="text-base font-black text-amber-400">✏️ Editar Propiedades del Sondaje</h3>
-            <input type="hidden" id="edit_pozo_id">
-            <div><label class="block text-xs font-bold text-slate-300 mb-1">Código</label><input type="text" id="edit_pozo_codigo" class="input-field w-full px-3 bg-slate-900 text-white rounded-lg text-sm uppercase font-bold"></div>
-            <div><label class="block text-xs font-bold text-slate-300 mb-1">Cliente</label><input type="text" id="edit_pozo_empresa" class="input-field w-full px-3 bg-slate-900 text-white rounded-lg text-sm uppercase font-bold"></div>
-            <div><label class="block text-xs font-bold text-slate-300 mb-1">Proyecto</label><input type="text" id="edit_pozo_proyecto" class="input-field w-full px-3 bg-slate-900 text-white rounded-lg text-sm uppercase font-bold"></div>
-            <div><label class="block text-xs font-bold text-slate-300 mb-1">Estado</label><select id="edit_pozo_estado" class="input-field w-full px-3 bg-slate-900 text-white rounded-lg text-sm font-bold"><option value="ACTIVO">ACTIVO</option><option value="CULMINADO">CULMINADO</option></select></div>
-            <div class="flex gap-2 pt-2">
-                <button type="button" onclick="guardarEdicionPozo()" class="btn-field flex-1 bg-emerald-600 text-white text-xs font-bold">💾 Guardar Cambios</button>
-                <button type="button" onclick="cerrarModalEdicion()" class="bg-slate-700 text-slate-300 px-4 rounded-lg font-bold text-xs">❌ Cancelar</button>
-            </div>
-        </div>
-    </div>
-
     <!-- CONTENEDOR DE IMPRESIÓN OFICIAL -->
     <div id="printable-area" style="display:none;"></div>
 
@@ -807,6 +804,8 @@
         function obtenerClaveGeologos() { return localStorage.getItem('geo_clave_acceso') || "Mina2628"; }
         function obtenerClaveGerencia() { return localStorage.getItem('ger_clave_acceso') || "JIRETH2026"; }
         function obtenerPinMaestro() { return localStorage.getItem('geo_pin_rescate') || "2628"; }
+        function obtenerGeminiApiKey() { return localStorage.getItem('geo_gemini_api_key') || ""; }
+
         function togglePasswordVisibility(id) { const el = document.getElementById(id); if(el) el.type = el.type === 'password' ? 'text' : 'password'; }
 
         function seleccionarPerfil(perfil) {
@@ -907,6 +906,7 @@
             }
             refrescarSelect();
             actualizarFiltrosGerencia();
+            inicializarConfigKey();
         }
 
         async function sincronizarConNube() { alert("🔄 Sincronizando..."); await cargarDatosDesdeNube(); alert("✅ Sincronizado!"); }
@@ -1156,137 +1156,158 @@
             ctx2.fillText('Pagados: ' + totalPagado.toFixed(2) + 'm', x2-10, c2.height-5);
         }
 
-        // --- MOTOR DE INTELIGENCIA ARTIFICIAL MULTIPOZO Y CRUCE DE DATOS ---
-        function obtenerPozosFiltradosIA() {
-            const cliente = document.getElementById('iaFiltroCliente').value;
-            const mes = document.getElementById('iaFiltroMes').value;
-            const fDesde = document.getElementById('iaFiltroDesde').value;
-            const fHasta = document.getElementById('iaFiltroHasta').value;
+        // --- MOTOR DE ASISTENTE IA CHAT CONECTADO A GEMINI API ---
+        function toggleConfiguracionGeminiKey() {
+            document.getElementById('panelConfigKey').classList.toggle('hidden');
+        }
+        function inicializarConfigKey() {
+            const key = obtenerGeminiApiKey();
+            if(key) document.getElementById('inputGeminiApiKey').value = key;
+        }
+        function guardarGeminiApiKey() {
+            const val = document.getElementById('inputGeminiApiKey').value.trim();
+            if(!val) { alert("⚠️ Ingrese una API key válida."); return; }
+            localStorage.setItem('geo_gemini_api_key', val);
+            alert("🔑 Clave API de Gemini guardada correctamente en el navegador.");
+            document.getElementById('panelConfigKey').classList.add('hidden');
+        }
 
-            return db.pozos.filter(p => {
-                let matchCliente = (cliente === 'TODAS' || p.empresa === cliente);
-                let fechaRef = p.fechaCulminacion || p.fechaInicio || '2026-01-01';
-                
-                let matchMes = true;
-                if(mes !== 'TODOS') {
-                    let mesPozo = fechaRef.split('-')[1];
-                    matchMes = (mesPozo === mes);
+        function construirContextoDatosIA() {
+            const scope = document.getElementById('iaScopeSelect').value;
+            let contextoText = "BASE DE DATOS TÉCNICA DE SONDAJES JIRETH (SUPABASE):\n\n";
+
+            if(scope === 'POZO_ACTIVO') {
+                if(!pozoId) return "ADVERTENCIA: No hay ningún pozo seleccionado activamente.";
+                const p = db.pozos.find(x => x.id == pozoId);
+                const avs = db.avances.filter(a => a.pozoId == pozoId);
+                const turnosP = db.turnos.filter(t => t.pozoId == pozoId);
+
+                let totM = avs.length > 0 ? Math.max(...avs.map(a => a.hasta)) : 0;
+                let totR = avs.reduce((a,c) => a + c.recuperado, 0);
+                let totP = avs.reduce((a,c) => a + c.pagado, 0);
+
+                contextoText += `POZO SELECCIONADO EN PANTALLA:
+- Código: ${p.codigo} | Empresa Cliente: ${p.empresa} | Proyecto: ${p.proyecto} | Estado: ${p.estado}
+- Máquina: ${p.maquina || 'GEOMAX'} | Target: ${p.target || 100}m
+- Ubicación Collar: Este ${p.este || 0}m | Norte ${p.norte || 0}m | Cota ${p.cota || 0}m
+- Orientación: Dip ${p.dip || -60}° | Azimut ${p.azimut || 0}°
+- Totales Acumulados: ${totM.toFixed(2)}m perforados | ${totR.toFixed(2)}m recuperados (${totM > 0 ? ((totR/totM)*100).toFixed(1) : 0}%) | ${totP.toFixed(2)}m pagables aprobados.
+- Turnos Registrados (${turnosP.length}):\n`;
+                turnosP.forEach(t => contextoText += `  • Fecha ${t.fecha} (${t.tipo}) | Perforador: ${t.perforador} | Geo: ${t.geologo}\n`);
+
+                contextoText += `- Detalle por Tramos / Core Logging (${avs.length} corridas):\n`;
+                avs.forEach((a, i) => contextoText += `  • Tramo #${i+1}: ${a.desde.toFixed(2)}m-${a.hasta.toFixed(2)}m (${a.diametro}) | Recup: ${a.recuperado.toFixed(2)}m (${a.porcentaje.toFixed(1)}%) | Met: ${a.meteorizacion} | Pago: ${a.pagado.toFixed(2)}m\n`);
+            } else {
+                const cliente = document.getElementById('iaFiltroCliente').value;
+                const mes = document.getElementById('iaFiltroMes').value;
+
+                let pozosFiltrados = db.pozos.filter(p => {
+                    let mCliente = (cliente === 'TODAS' || p.empresa === cliente);
+                    let fechaRef = p.fechaCulminacion || p.fechaInicio || '2026-01-01';
+                    let mMes = true; if(mes !== 'TODOS') mMes = (fechaRef.split('-')[1] === mes);
+                    return mCliente && mMes;
+                });
+
+                contextoText += `CONSOLIDADO MULTIPOZO FILTRADO (${pozosFiltrados.length} pozos encontrados - Cliente: ${cliente}, Mes: ${mes}):\n\n`;
+                pozosFiltrados.forEach((p, idx) => {
+                    const avs = db.avances.filter(a => a.pozoId == p.id);
+                    let totM = avs.length > 0 ? Math.max(...avs.map(a => a.hasta)) : 0;
+                    let totR = avs.reduce((a,c) => a + c.recuperado, 0);
+                    let totP = avs.reduce((a,c) => a + c.pagado, 0);
+                    contextoText += `POZO #${idx+1}: [${p.codigo}] - Cliente: ${p.empresa} | Proyecto: ${p.proyecto} | Estado: ${p.estado}
+- Profundidad: ${totM.toFixed(2)}m / Target: ${p.target || 100}m
+- Recuperación: ${totR.toFixed(2)}m (${totM > 0 ? ((totR/totM)*100).toFixed(1) : 0}%)
+- Metros Pagables: ${totP.toFixed(2)}m\n\n`;
+                });
+            }
+
+            return contextoText;
+        }
+
+        async function enviarMensajeIAChat() {
+            const input = document.getElementById('inputPreguntaIAChat');
+            const pregunta = input.value.trim();
+            if(!pregunta) return;
+
+            const chatContainer = document.getElementById('chatLiveMessages');
+            
+            // Agregar burbuja de usuario
+            const userDiv = document.createElement('div');
+            userDiv.className = "chat-bubble-user p-3 max-w-[85%] ml-auto text-xs font-medium space-y-1";
+            userDiv.innerHTML = `<p class="font-bold text-sky-200 text-[10px]">👷 Carlos / Supervisor</p><p>${pregunta}</p>`;
+            chatContainer.appendChild(userDiv);
+
+            input.value = '';
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+
+            document.getElementById('chatTypingIndicator').classList.remove('hidden');
+
+            const apiKey = obtenerGeminiApiKey();
+            const contextoDB = construirContextoDatosIA();
+
+            const promptSystem = `Eres el Asistente IA Geológico y Gerencial de la empresa minera Complejo Jireth / Industria Venezolana de Minería (IVM) C.A. en Estado Bolívar, Venezuela.
+Trabajas directamente como colaborador técnico para Carlos Rodríguez (Coordinador de Geología).
+Tu objetivo es redactar memorandos técnicos, reportes ejecutivos explicativos, balances de metros pagables por umbrales y análisis litológicos en lenguaje profesional, claro, fluido y natural.
+
+A continuación tienes los datos actualizados extraídos directamente en tiempo real de Supabase:
+--------------------------------------------------
+${contextoDB}
+--------------------------------------------------
+
+Instrucciones de respuesta:
+1. Responde directamente a la consulta del usuario utilizando un tono técnico geológico profesional pero conversacional.
+2. Si el usuario pide un informe, memorando o reporte, utiliza un formato bien estructurado con títulos (emojis), secciones descriptivas e interpretación geológica de los datos.
+3. Justifica siempre los metros pagables frente a los metros brutos según los umbrales contractuales por meteorización (Suelo/Saprolita ≥70%, Roca Oxidada ≥80%, Roca Fresca/Veta ≥90%).`;
+
+            try {
+                let respuestaTexto = "";
+
+                if (apiKey) {
+                    // LLAMADA DIRECTA EN VIVO A LA API DE GEMINI
+                    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            contents: [{ parts: [{ text: `${promptSystem}\n\nConsulta del usuario: ${pregunta}` }] }]
+                        })
+                    });
+
+                    const data = await response.json();
+                    if(data.candidates && data.candidates[0].content.parts[0].text) {
+                        respuestaTexto = data.candidates[0].content.parts[0].text;
+                    } else {
+                        respuestaTexto = "⚠️ Error al conectar con la API de Gemini. Verifique su API Key.";
+                    }
+                } else {
+                    // RESPUESTA DE FALLBACK INTELIGENTE LOCAL (Si aún no se ha ingresado Key API)
+                    respuestaTexto = `🤖 **Respuesta Generada (Motor Local Jireth):**\n\n` +
+                        `Recibido Carlos. Analizando la base de datos de Supabase para su consulta sobre: *"${pregunta}"*\n\n` +
+                        `📌 **RESUMEN EJECUTIVO EXTRAÍDO DE DATOS:**\n` +
+                        `• ${contextoDB.substring(0, 350)}...\n\n` +
+                        `💡 *Sugerencia:* Para habilitar el procesamiento en lenguaje natural fluido estilo Gemini en vivo, configura tu API Key gratuita presionando el botón **⚙️ Configurar Gemini API Key** arriba.`;
                 }
 
-                let matchRango = true;
-                if(fDesde && fechaRef < fDesde) matchRango = false;
-                if(fHasta && fechaRef > fHasta) matchRango = false;
+                document.getElementById('chatTypingIndicator').classList.add('hidden');
 
-                return matchCliente && matchMes && matchRango;
-            });
-        }
+                // Agregar burbuja de respuesta IA
+                const iaDiv = document.createElement('div');
+                iaDiv.className = "chat-bubble-ia p-3 max-w-[90%] text-xs leading-relaxed space-y-1 font-mono whitespace-pre-line";
+                iaDiv.innerHTML = `<div class="flex justify-between items-center border-b border-slate-800 pb-1 mb-1"><span class="font-bold text-cyan-400 text-[11px]">🤖 Asistente IA Geológico</span><button onclick="navigator.clipboard.writeText(this.parentElement.nextElementSibling.innerText); alert('📋 Copiado!');" class="text-[9px] bg-slate-800 px-1.5 py-0.5 rounded text-slate-300">📋 Copiar</button></div><div>${respuestaTexto}</div>`;
+                chatContainer.appendChild(iaDiv);
+                chatContainer.scrollTop = chatContainer.scrollHeight;
 
-        function ejecutarConsultaIAMultipozo(tipo) {
-            const pozosSel = obtenerPozosFiltradosIA();
-            if(pozosSel.length === 0) {
-                document.getElementById('cajaRespuestaIA').textContent = "⚠️ No hay sondajes que coincidan con los filtros seleccionados (Cliente, Mes o Fechas). Modifique los filtros e intente de nuevo.";
-                return;
+            } catch (err) {
+                document.getElementById('chatTypingIndicator').classList.add('hidden');
+                const errDiv = document.createElement('div');
+                errDiv.className = "chat-bubble-ia p-3 max-w-[85%] text-xs text-rose-300";
+                errDiv.textContent = "❌ Ocurrió un error al procesar la respuesta. Verifique su conexión o API Key.";
+                chatContainer.appendChild(errDiv);
             }
-
-            let totalMetrosGral = 0, totalRecupGral = 0, totalPagableGral = 0;
-            let desglosePozos = "";
-
-            pozosSel.forEach((p, idx) => {
-                const avs = db.avances.filter(a => a.pozoId == p.id);
-                let totM = avs.length > 0 ? Math.max(...avs.map(a => a.hasta)) : 0;
-                let totR = avs.reduce((acc, a) => acc + a.recuperado, 0);
-                let totP = avs.reduce((acc, a) => acc + a.pagado, 0);
-                let porcR = totM > 0 ? (totR / totM) * 100 : 0;
-
-                totalMetrosGral += totM;
-                totalRecupGral += totR;
-                totalPagableGral += totP;
-
-                desglosePozos += `   ${idx+1}. [${p.codigo}] (${p.empresa} - ${p.proyecto}): ${totM.toFixed(2)}m perforados | Recup: ${porcR.toFixed(1)}% | Pagables: ${totP.toFixed(2)}m\n`;
-            });
-
-            let porcGralRecup = totalMetrosGral > 0 ? (totalRecupGral / totalMetrosGral) * 100 : 0;
-            let clienteFiltroText = document.getElementById('iaFiltroCliente').value;
-            let mesFiltroText = document.getElementById('iaFiltroMes').selectedOptions[0].text;
-            let preguntaCustom = document.getElementById('inputPreguntaIA').value;
-
-            let respuesta = "";
-
-            if(tipo === 'consolidado') {
-                respuesta = `📌 REPORTE IA CONSOLIDADO MULTIPOZO
---------------------------------------------------
-🎯 Filtros Aplicados: Cliente: ${clienteFiltroText} | Mes: ${mesFiltroText}
-📊 Sondajes Analizados: ${pozosSel.length} pozos coincidentes.
-
-📈 MACRO RESUMEN EJECUTIVO:
-• Total Metros Perforados Acumulados: ${totalMetrosGral.toFixed(2)} m
-• Recuperación Promedio Ponderada: ${porcGralRecup.toFixed(2)}%
-• Total Metros Pagables Aproximados: ${totalPagableGral.toFixed(2)} m
-
-📋 DETALLE POR SONDAJE INTEGRADO:
-${desglosePozos}
-💡 EVALUACIÓN GENERAL: Se observa un avance consistente en los frentes evaluados. La calidad media de muestra se mantiene dentro del umbral operativo exigido.`;
-            } else if(tipo === 'comparativa') {
-                respuesta = `📈 ANÁLISIS ESTADÍSTICO COMPARATIVO Y TENDENCIAS
---------------------------------------------------
-🎯 Grupo Evaluado: ${pozosSel.length} sondajes (${clienteFiltroText})
-
-📊 COMPARATIVA RÁPIDA:
-• Volumen Total Muestreado: ${totalMetrosGral.toFixed(2)} m
-• Muestra Efectiva Recuperada: ${totalRecupGral.toFixed(2)} m
-• Índice Global de Recuperación: ${porcGralRecup.toFixed(2)}%
-• Pozo de Mayor Calidad: ${pozosSel.length > 0 ? pozosSel[0].codigo : 'N/A'}
-
-🔍 DESGLOSE INDIVIDUAL:
-${desglosePozos}`;
-            } else if(tipo === 'financiero') {
-                let descuentGral = totalMetrosGral - totalPagableGral;
-                respuesta = `💰 BALANCE FINANCIERO Y AUDITORÍA DE METROS PAGABLES
---------------------------------------------------
-🎯 Filtro: ${clienteFiltroText} | ${mesFiltroText}
-• Total Metros Brutos Perforados: ${totalMetrosGral.toFixed(2)} m
-• Total Metros Aprobados a Cobro: ${totalPagableGral.toFixed(2)} m
-• Retención / Descuento por Umbral: ${descuentGral.toFixed(2)} m
-• Efectividad Comercial de Pago: ${totalMetrosGral > 0 ? ((totalPagableGral/totalMetrosGral)*100).toFixed(1) : 0}%
-
-📋 VALORIZACIÓN POR SONDAJE:
-${desglosePozos}`;
-            } else {
-                respuesta = `🤖 RESPUESTA IA A CRUCE LIBRE: "${preguntaCustom || 'Análisis masivo multivariable'}"
---------------------------------------------------
-Cruzando los ${pozosSel.length} sondajes filtrados (${clienteFiltroText} - ${mesFiltroText}):
-Se registra un consolidado total de ${totalMetrosGral.toFixed(2)}m perforados con ${porcGralRecup.toFixed(1)}% de recuperación promedio.
-
-DETALLE CRUZADO DE FRENTES:
-${desglosePozos}`;
-            }
-
-            document.getElementById('cajaRespuestaIA').textContent = respuesta;
         }
 
-        function copiarRespuestaIA() {
-            const texto = document.getElementById('cajaRespuestaIA').textContent;
-            navigator.clipboard.writeText(texto);
-            alert("📋 ¡Informe multipozo copiado al portapapeles!");
-        }
-
-        function ejecutarConsultaGerenciaIA(tipo) {
-            const selId = document.getElementById('gerFiltroPozo').value;
-            if(!selId) { alert("⚠️ Seleccione un sondaje primero."); return; }
-            const p = db.pozos.find(x => x.id == selId);
-            const avs = db.avances.filter(a => a.pozoId == selId);
-            let totM = avs.length > 0 ? Math.max(...avs.map(a => a.hasta)) : 0;
-            let totR = avs.reduce((acc, a) => acc + a.recuperado, 0);
-            let totP = avs.reduce((acc, a) => acc + a.pagado, 0);
-            let porcR = totM > 0 ? (totR / totM) * 100 : 0;
-
-            let respuesta = `📋 ANÁLISIS DIRECTIVO IA - [${p.codigo}]
-• Cliente: ${p.empresa} | Proyecto: ${p.proyecto}
-• Profundidad Final: ${totM.toFixed(2)} m / Target: ${(p.target || 100).toFixed(2)} m
-• Recuperación Global: ${porcR.toFixed(1)}%
-• Metros Valorizables: ${totP.toFixed(2)} m`;
-
-            document.getElementById('cajaRespuestaGerIA').textContent = respuesta;
+        function enviarSugerenciaIAChat(texto) {
+            document.getElementById('inputPreguntaIAChat').value = texto;
+            enviarMensajeIAChat();
         }
 
         // --- MÓDULO GERENCIAL (SÓLO LECTURA Y ESTADÍSTICAS) ---
