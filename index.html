@@ -13,7 +13,7 @@
         @media print {
             body * { visibility: hidden; }
             #printable-area, #printable-area * { visibility: visible; }
-            #printable-area { position: absolute; left: 0; top: 0; width: 100%; color: #000; background: #fff; padding: 20px; }
+            #printable-area { position: absolute; left: 0; top: 0; width: 100%; color: #000; background: #fff; padding: 15px; }
         }
     </style>
 </head>
@@ -23,11 +23,11 @@
     <div id="pantallaLogin" class="fixed inset-0 bg-slate-950 z-50 flex items-center justify-center p-4">
         <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700 w-full max-w-sm space-y-4 shadow-2xl">
             <div class="text-center">
-                <h1 class="text-xl font-black text-white">Jireth GeoCore Lite</h1>
+                <h1 class="text-xl font-black text-white">⛏️ Jireth GeoCore Lite</h1>
                 <p class="text-xs text-slate-400 mt-1">Control Operativo Cloud & Offline</p>
             </div>
             <div class="bg-slate-900 p-3 rounded-xl border border-slate-700 text-center">
-                <span class="text-xs font-bold text-sky-400 uppercase tracking-wider">Perfil de Acceso: GEOLOGOS</span>
+                <span class="text-xs font-bold text-sky-400 uppercase tracking-wider">👷 Perfil de Acceso: GEOLOGOS</span>
             </div>
 
             <!-- FORMULARIO LOGIN NORMAL -->
@@ -36,18 +36,14 @@
                     <label class="block text-xs font-bold text-slate-300 mb-1">Contraseña de Acceso</label>
                     <div class="relative flex items-center">
                         <input type="password" id="inputClaveLogin" class="input-field w-full px-3 pr-10 bg-slate-900 text-white rounded-lg text-sm font-bold">
-                        <button type="button" onclick="togglePasswordVisibility('inputClaveLogin')" class="absolute right-3 text-slate-400 hover:text-white text-sm font-bold">
-                            👁️
-                        </button>
+                        <button type="button" onclick="togglePasswordVisibility('inputClaveLogin')" class="absolute right-3 text-slate-400 hover:text-white text-sm font-bold">👁️</button>
                     </div>
                 </div>
                 <button type="button" onclick="intentarLogin()" class="btn-field w-full bg-amber-500 hover:bg-amber-400 text-slate-950 text-sm font-black shadow-lg">
                     🔐 Ingresar al Sistema
                 </button>
                 <div class="text-center pt-2">
-                    <button type="button" onclick="mostrarBoxRescate()" class="text-xs text-sky-400 hover:text-sky-300 underline font-bold">
-                        ¿Olvidaste tu contraseña? (Usa PIN de Rescate)
-                    </button>
+                    <button type="button" onclick="mostrarBoxRescate()" class="text-xs text-sky-400 hover:text-sky-300 underline font-bold">🔑 ¿Olvidaste tu contraseña? (PIN de Rescate)</button>
                 </div>
             </div>
 
@@ -68,13 +64,10 @@
                     🔄 Restablecer Clave e Ingresar
                 </button>
                 <div class="text-center pt-1">
-                    <button type="button" onclick="ocultarBoxRescate()" class="text-xs text-slate-400 hover:text-white underline">
-                        Volver al inicio de sesión
-                    </button>
+                    <button type="button" onclick="ocultarBoxRescate()" class="text-xs text-slate-400 hover:text-white underline">Volver al inicio</button>
                 </div>
             </div>
-
-            <p class="text-[10px] text-center text-slate-500">Clave inicial: Mina2628 | PIN inicial: 2628</p>
+            <p class="text-[10px] text-center text-slate-500">Clave inicial: Mina2628 | PIN: 2628</p>
         </div>
     </div>
 
@@ -82,32 +75,32 @@
     <div id="appPrincipal" class="hidden space-y-4">
         <header class="bg-slate-800 p-3 rounded-xl border border-slate-700 flex justify-between items-center flex-wrap gap-2">
             <div>
-                <h1 class="text-lg font-black text-white">JGL | Jireth GeoCore Lite</h1>
+                <h1 class="text-lg font-black text-white">⚡ JGL | Jireth GeoCore Lite</h1>
                 <p class="text-xs text-slate-400">Perfil GEOLOGOS | Conectado a Supabase ☁️</p>
             </div>
             <div class="flex gap-2">
                 <button type="button" onclick="sincronizarConNube()" class="text-xs bg-emerald-900 text-emerald-300 px-3 py-1 rounded-lg font-bold border border-emerald-700">🔄 Sincronizar Nube</button>
                 <button type="button" onclick="cambiarClaveSistema()" class="text-xs bg-sky-900 text-sky-300 px-3 py-1 rounded-lg font-bold border border-sky-700">🔑 Clave / PIN</button>
-                <button type="button" onclick="cerrarSesion()" class="text-xs bg-rose-900 text-rose-300 px-3 py-1 rounded-lg font-bold border border-rose-700">Cerrar Sesión</button>
+                <button type="button" onclick="cerrarSesion()" class="text-xs bg-rose-900 text-rose-300 px-3 py-1 rounded-lg font-bold border border-rose-700">🚪 Cerrar Sesión</button>
             </div>
         </header>
 
         <!-- SELECTOR GLOBAL DE POZOS -->
         <div class="bg-slate-800 p-3 rounded-xl border border-slate-700">
-            <label class="block text-xs font-bold text-amber-400 mb-1">Pozo Seleccionado (Frente Activo o Culminado):</label>
+            <label class="block text-xs font-bold text-amber-400 mb-1">🎯 Pozo Seleccionado (Frente Activo o Culminado):</label>
             <select id="globalWellSelect" onchange="seleccionarPozoGlobal(this.value)" class="input-field w-full bg-slate-900 text-white rounded-lg px-3 text-sm font-bold">
                 <option value="">-- Seleccione un Sondaje --</option>
             </select>
         </div>
 
         <nav class="flex gap-1.5 overflow-x-auto pb-1">
-            <button type="button" onclick="switchTab('mod1')" id="tab-mod1" class="flex-1 min-w-[85px] py-2.5 px-2 rounded-lg font-bold text-xs bg-slate-700 text-slate-300">1. Apertura</button>
-            <button type="button" onclick="switchTab('mod2')" id="tab-mod2" class="flex-1 min-w-[85px] py-2.5 px-2 rounded-lg font-bold text-xs bg-slate-700 text-slate-300">2. Topografía</button>
-            <button type="button" onclick="switchTab('mod3_turno')" id="tab-mod3_turno" class="flex-1 min-w-[85px] py-2.5 px-2 rounded-lg font-bold text-xs bg-sky-600 text-white shadow">3A. Turno / Frentes</button>
-            <button type="button" onclick="switchTab('mod3_logging')" id="tab-mod3_logging" class="flex-1 min-w-[85px] py-2.5 px-2 rounded-lg font-bold text-xs bg-slate-700 text-slate-300">3B. Logging</button>
-            <button type="button" onclick="switchTab('mod4')" id="tab-mod4" class="flex-1 min-w-[85px] py-2.5 px-2 rounded-lg font-bold text-xs bg-slate-700 text-slate-300">4. Cierre</button>
-            <button type="button" onclick="switchTab('mod5')" id="tab-mod5" class="flex-1 min-w-[85px] py-2.5 px-2 rounded-lg font-bold text-xs bg-slate-700 text-slate-300">5. Repositorio</button>
-            <button type="button" onclick="switchTab('mod6')" id="tab-mod6" class="flex-1 min-w-[85px] py-2.5 px-2 rounded-lg font-bold text-xs bg-slate-700 text-slate-300">6. Administración</button>
+            <button type="button" onclick="switchTab('mod1')" id="tab-mod1" class="flex-1 min-w-[85px] py-2.5 px-2 rounded-lg font-bold text-xs bg-slate-700 text-slate-300">🛠️ 1. Apertura</button>
+            <button type="button" onclick="switchTab('mod2')" id="tab-mod2" class="flex-1 min-w-[85px] py-2.5 px-2 rounded-lg font-bold text-xs bg-slate-700 text-slate-300">📍 2. Topografía</button>
+            <button type="button" onclick="switchTab('mod3_turno')" id="tab-mod3_turno" class="flex-1 min-w-[85px] py-2.5 px-2 rounded-lg font-bold text-xs bg-sky-600 text-white shadow">⏱️ 3A. Turnos</button>
+            <button type="button" onclick="switchTab('mod3_logging')" id="tab-mod3_logging" class="flex-1 min-w-[85px] py-2.5 px-2 rounded-lg font-bold text-xs bg-slate-700 text-slate-300">🪵 3B. Logging</button>
+            <button type="button" onclick="switchTab('mod4')" id="tab-mod4" class="flex-1 min-w-[85px] py-2.5 px-2 rounded-lg font-bold text-xs bg-slate-700 text-slate-300">🏁 4. Cierre</button>
+            <button type="button" onclick="switchTab('mod5')" id="tab-mod5" class="flex-1 min-w-[85px] py-2.5 px-2 rounded-lg font-bold text-xs bg-slate-700 text-slate-300">📑 5. Repositorio</button>
+            <button type="button" onclick="switchTab('mod6')" id="tab-mod6" class="flex-1 min-w-[85px] py-2.5 px-2 rounded-lg font-bold text-xs bg-slate-700 text-slate-300">⚙️ 6. Admin</button>
         </nav>
 
         <!-- MODULO 1: APERTURA -->
@@ -146,7 +139,7 @@
         <section id="mod2" class="hidden space-y-4 bg-slate-800 p-5 rounded-2xl border border-slate-700">
             <div class="flex justify-between items-center flex-wrap gap-2">
                 <h2 class="text-xl font-black text-amber-400">📍 Módulo 2: Ficha Topográfica</h2>
-                <button type="button" onclick="habilitarEdicionTopo()" class="bg-sky-600 text-white font-bold px-3 py-1.5 rounded-lg text-xs">✏️ Actualizar Datos Topográficos</button>
+                <button type="button" onclick="habilitarEdicionTopo()" class="bg-sky-600 text-white font-bold px-3 py-1.5 rounded-lg text-xs">✏️ Actualizar Topografía</button>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div>
@@ -195,7 +188,7 @@
         <!-- MÓDULO 3A: GESTIÓN DE TURNOS Y FRENTES MÚLTIPLES -->
         <section id="mod3_turno" class="space-y-4 bg-slate-800 p-5 rounded-2xl border border-slate-700">
             <h2 class="text-xl font-black text-amber-400">⏱️ Módulo 3A: Gestión de Turnos y Frentes Múltiples</h2>
-            <p class="text-xs text-slate-300">Aquí puedes abrir un turno nuevo, pausarlo para cambiar de máquina/sondaje, o retomar un turno anterior para cargar datos cargados desde planillas físicas.</p>
+            <p class="text-xs text-slate-300">Abre un turno nuevo, páusalo para cambiar de máquina/sondaje, o retoma un turno anterior para carga retroactiva desde planillas.</p>
 
             <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 space-y-3">
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -206,8 +199,8 @@
                     <div>
                         <label class="block text-xs font-bold text-slate-300 mb-1">Jornada *</label>
                         <select id="m3_turno" class="input-field w-full px-3 bg-slate-800 text-white rounded-lg text-xs font-bold">
-                            <option value="DIURNO">DIURNO</option>
-                            <option value="NOCTURNO">NOCTURNO</option>
+                            <option value="DIURNO">☀️ DIURNO</option>
+                            <option value="NOCTURNO">🌙 NOCTURNO</option>
                         </select>
                     </div>
                 </div>
@@ -231,8 +224,7 @@
             <!-- LISTADO DE TURNOS GUARDADOS / HISTORIAL PARA RETOMAR -->
             <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 space-y-3">
                 <h3 class="text-xs font-bold text-sky-400">📂 Retomar Turnos Anteriores / Carga Retroactiva (Planillas)</h3>
-                <p class="text-[11px] text-slate-400">Selecciona un turno ya registrado de este sondaje para volver a cargarlo y agregar o editar avances correspondientes a esa fecha.</p>
-                
+                <p class="text-[11px] text-slate-400">Selecciona un turno ya registrado de este sondaje para volver a cargarlo y agregar o editar avances de esa fecha.</p>
                 <div class="space-y-2">
                     <select id="selectRetomarTurno" class="input-field w-full px-3 bg-slate-800 text-white rounded-lg text-xs font-bold">
                         <option value="">-- Seleccionar Turno Guardado para Retomar --</option>
@@ -244,7 +236,7 @@
             </div>
         </section>
 
-        <!-- MÓDULO 3B: CORE LOGGING Y AVANCES -->
+        <!-- MÓDULO 3B: CORE LOGGING Y AVANCES (CON BARRA DE PROGRESO PROFESIONAL) -->
         <section id="mod3_logging" class="hidden space-y-4 bg-slate-800 p-5 rounded-2xl border border-slate-700">
             <h2 class="text-xl font-black text-amber-400">🪵 Módulo 3B: Core Logging & Avances</h2>
             
@@ -257,6 +249,24 @@
                 <div class="space-x-1">
                     <button type="button" onclick="finalizarTurnoActivo()" class="bg-emerald-700 hover:bg-emerald-600 text-white px-2.5 py-1 rounded font-bold">💾 Finalizar Turno</button>
                     <button type="button" onclick="switchTab('mod3_turno')" class="bg-slate-800 text-sky-300 px-2.5 py-1 rounded border border-sky-700 font-bold">Cambiar / Pausar</button>
+                </div>
+            </div>
+
+            <!-- NUEVA BARRA DE PROGRESO PROFESIONAL EN LOGGING -->
+            <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 space-y-2">
+                <div class="flex justify-between items-center text-xs font-bold">
+                    <span class="text-amber-400">📈 Progreso General del Pozo frente al Target</span>
+                    <span id="lblProgresoTexto" class="text-sky-300">0.00 m / 100.00 m (0.0%)</span>
+                </div>
+                <div class="w-full bg-slate-950 h-4 rounded-lg overflow-hidden flex border border-slate-800">
+                    <div id="barHQ" class="bg-blue-600 h-full transition-all duration-300" title="Tramo HQ"></div>
+                    <div id="barNQ" class="bg-amber-600 h-full transition-all duration-300" title="Tramo NQ"></div>
+                    <div id="barPendiente" class="bg-slate-800 h-full transition-all duration-300" title="Pendiente por perforar"></div>
+                </div>
+                <div class="flex gap-4 text-[11px] text-slate-400 pt-1">
+                    <span><b class="text-blue-500">■</b> HQ (<span id="txtMetrosHQ">0.00</span>m)</span>
+                    <span><b class="text-amber-500">■</b> NQ (<span id="txtMetrosNQ">0.00</span>m)</span>
+                    <span><b class="text-slate-600">■</b> Pendiente (<span id="txtMetrosPend">100.00</span>m)</span>
                 </div>
             </div>
 
@@ -289,7 +299,7 @@
                         <input type="text" id="m3_recuperado" class="input-field w-full px-3 bg-slate-800 text-white rounded-lg text-xs font-bold">
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-slate-300 mb-1">Meteorización *</label>
+                        <label class="block text-xs font-bold text-slate-300 mb-1">Meteorización / Litología *</label>
                         <select id="m3_meteorizacion" class="input-field w-full px-3 bg-slate-800 text-white rounded-lg text-xs font-bold">
                             <option value="SUELO / RELLENO">a. Suelo / Relleno (Umbral ≥ 70%)</option>
                             <option value="SAPROLITA">b. Saprolita (Umbral ≥ 70%)</option>
@@ -337,23 +347,22 @@
                 </div>
 
                 <div class="bg-slate-900 p-3 rounded-xl border border-slate-700">
-                    <h4 class="text-xs font-bold text-cyan-400 mb-2 flex items-center gap-1">✨ Curva de Tendencia de Recuperación (%) - Estilo Neón</h4>
+                    <h4 class="text-xs font-bold text-cyan-400 mb-2">✨ Curva de Tendencia de Recuperación (%)</h4>
                     <canvas id="canvasTendencia" class="w-full h-40 bg-slate-950 rounded border border-slate-800"></canvas>
                 </div>
-
                 <div class="bg-slate-900 p-3 rounded-xl border border-slate-700">
-                    <h4 class="text-xs font-bold text-emerald-400 mb-2 flex items-center gap-1">📊 Metros Brutos vs. Metros Pagables Reales - Neón Glow</h4>
+                    <h4 class="text-xs font-bold text-emerald-400 mb-2">📊 Metros Brutos vs. Metros Pagables Reales</h4>
                     <canvas id="canvasPagos" class="w-full h-40 bg-slate-950 rounded border border-slate-800"></canvas>
                 </div>
             </div>
         </section>
 
-        <!-- MÓDULO 4: CIERRE FORMAL DE SONDAJES -->
+        <!-- MÓDULO 4: CIERRE FORMAL FORTALECIDO (AUDITORÍA COMPLETA Y METROS PAGABLES) -->
         <section id="mod4" class="hidden space-y-4 bg-slate-800 p-5 rounded-2xl border border-slate-700">
             <div class="flex justify-between items-center flex-wrap gap-2">
-                <h2 class="text-xl font-black text-amber-400">🏁 Módulo 4: Cierre Formal de Sondajes</h2>
+                <h2 class="text-xl font-black text-amber-400">🏁 Módulo 4: Cierre Formal & Auditoría de Sondajes</h2>
                 <select id="cierrePozoSelect" onchange="cargarDatosCierre(this.value)" class="bg-slate-900 text-amber-400 font-bold px-3 py-1.5 rounded-lg text-xs border border-slate-700">
-                    <option value="">-- Seleccionar Pozo Activo para Cierre --</option>
+                    <option value="">-- Seleccionar Pozo para Cierre --</option>
                 </select>
             </div>
 
@@ -369,44 +378,52 @@
                         </div>
                     </div>
 
+                    <!-- DATOS BÁSICOS COMPLETOS DE TOPOGRAFÍA -->
                     <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
-                        <div class="bg-slate-950 p-2 rounded border border-slate-800">
-                            <span class="text-[10px] text-slate-400 block">Máquina:</span>
-                            <span id="cierreInfoMaquina" class="font-bold text-white">--</span>
+                        <div class="bg-slate-950 p-2 rounded border border-slate-800"><span class="text-[10px] text-slate-400 block">Máquina:</span><span id="cierreInfoMaquina" class="font-bold text-white">--</span></div>
+                        <div class="bg-slate-950 p-2 rounded border border-slate-800"><span class="text-[10px] text-slate-400 block">Este (m):</span><span id="cierreInfoEste" class="font-bold text-sky-400">--</span></div>
+                        <div class="bg-slate-950 p-2 rounded border border-slate-800"><span class="text-[10px] text-slate-400 block">Norte (m):</span><span id="cierreInfoNorte" class="font-bold text-sky-400">--</span></div>
+                        <div class="bg-slate-950 p-2 rounded border border-slate-800"><span class="text-[10px] text-slate-400 block">Cota Z (m):</span><span id="cierreInfoCota" class="font-bold text-sky-400">--</span></div>
+                        <div class="bg-slate-950 p-2 rounded border border-slate-800"><span class="text-[10px] text-slate-400 block">Azimut (°):</span><span id="cierreInfoAzimut" class="font-bold text-amber-400">--</span></div>
+                        <div class="bg-slate-950 p-2 rounded border border-slate-800"><span class="text-[10px] text-slate-400 block">Dip (°):</span><span id="cierreInfoDip" class="font-bold text-amber-400">--</span></div>
+                        <div class="bg-slate-950 p-2 rounded border border-slate-800"><span class="text-[10px] text-slate-400 block">Target (m):</span><span id="cierreInfoTarget" class="font-bold text-purple-400">--</span></div>
+                        <div class="bg-slate-950 p-2 rounded border border-slate-800"><span class="text-[10px] text-slate-400 block">Avance Final:</span><span id="cierreInfoAvance" class="font-bold text-emerald-400">--</span></div>
+                    </div>
+
+                    <!-- RESUMEN FINANCIERO Y METROS PAGABLES -->
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
+                        <div class="bg-slate-950 p-3 rounded-lg border border-slate-800">
+                            <span class="text-[10px] text-slate-400 uppercase font-bold">Total Metros Perforados:</span>
+                            <p id="cierreTotMetros" class="text-base font-black text-white mt-1">0,00 m</p>
                         </div>
-                        <div class="bg-slate-950 p-2 rounded border border-slate-800">
-                            <span class="text-[10px] text-slate-400 block">Este (m):</span>
-                            <span id="cierreInfoEste" class="font-bold text-sky-400">--</span>
+                        <div class="bg-slate-950 p-3 rounded-lg border border-slate-800">
+                            <span class="text-[10px] text-slate-400 uppercase font-bold">% Recuperación Global:</span>
+                            <p id="cierrePorcRecup" class="text-base font-black text-amber-400 mt-1">0,0%</p>
                         </div>
-                        <div class="bg-slate-950 p-2 rounded border border-slate-800">
-                            <span class="text-[10px] text-slate-400 block">Norte (m):</span>
-                            <span id="cierreInfoNorte" class="font-bold text-sky-400">--</span>
-                        </div>
-                        <div class="bg-slate-950 p-2 rounded border border-slate-800">
-                            <span class="text-[10px] text-slate-400 block">Cota Z (m):</span>
-                            <span id="cierreInfoCota" class="font-bold text-sky-400">--</span>
-                        </div>
-                        <div class="bg-slate-950 p-2 rounded border border-slate-800">
-                            <span class="text-[10px] text-slate-400 block">Azimut (°):</span>
-                            <span id="cierreInfoAzimut" class="font-bold text-amber-400">--</span>
-                        </div>
-                        <div class="bg-slate-950 p-2 rounded border border-slate-800">
-                            <span class="text-[10px] text-slate-400 block">Dip (°):</span>
-                            <span id="cierreInfoDip" class="font-bold text-amber-400">--</span>
-                        </div>
-                        <div class="bg-slate-950 p-2 rounded border border-slate-800">
-                            <span class="text-[10px] text-slate-400 block">Target (m):</span>
-                            <span id="cierreInfoTarget" class="font-bold text-purple-400">--</span>
-                        </div>
-                        <div class="bg-slate-950 p-2 rounded border border-slate-800">
-                            <span class="text-[10px] text-slate-400 block">Avance Final:</span>
-                            <span id="cierreInfoAvance" class="font-bold text-emerald-400">--</span>
+                        <div class="bg-slate-950 p-3 rounded-lg border border-slate-800">
+                            <span class="text-[10px] text-slate-400 uppercase font-bold">Total Metros a Cobrar (Pagables):</span>
+                            <p id="cierreTotPagables" class="text-base font-black text-emerald-400 mt-1">0,00 m</p>
                         </div>
                     </div>
                 </div>
 
+                <!-- TABLA DETALLADA DE AVANCES TRAMO A TRAMO PARA AUDITORÍA -->
+                <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 space-y-3">
+                    <h4 class="text-xs font-bold text-sky-400">🪵 Sábana Detallada de Avances (Auditoría Metro a Metro)</h4>
+                    <div class="overflow-x-auto border border-slate-700 rounded-xl max-h-60">
+                        <table class="w-full text-left text-xs border-collapse">
+                            <thead class="bg-slate-950 text-slate-300 uppercase sticky top-0">
+                                <tr>
+                                    <th class="p-2">#</th><th class="p-2">Desde</th><th class="p-2">Hasta</th><th class="p-2">Diám</th><th class="p-2">Rec (m)</th><th class="p-2">% Rec</th><th class="p-2">Meteorización</th><th class="p-2">Pagado (m)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tablaCierreAvances" class="divide-y divide-slate-800 bg-slate-950/60"></tbody>
+                        </table>
+                    </div>
+                </div>
+
                 <div class="bg-slate-900 p-3 rounded-xl border border-slate-700 space-y-2">
-                    <h4 class="text-xs font-bold text-sky-400">⏱️ Historial de Turnos y Operadores Registrados</h4>
+                    <h4 class="text-xs font-bold text-sky-400">⏱️ Historial de Turnos y Supervisores Registrados</h4>
                     <div id="cierreListaTurnos" class="space-y-1.5 text-xs"></div>
                 </div>
 
@@ -416,16 +433,16 @@
             </div>
 
             <div id="cierreMensajeVacio" class="text-center py-8 text-slate-500 text-xs">
-                Selecciona un pozo en el menú desplegable superior para ver su ficha técnica completa y proceder al cierre.
+                Selecciona un pozo en el menú desplegable superior para ver su auditoría completa y proceder al cierre.
             </div>
         </section>
 
-        <!-- MÓDULO 5: REPOSITORIO & REPORTES AVANZADOS -->
+        <!-- MÓDULO 5: REPOSITORIO & REPORTE DIARIO DSR (ESTILO PDF OFICIAL) -->
         <section id="mod5" class="hidden space-y-4 bg-slate-800 p-5 rounded-2xl border border-slate-700">
-            <h2 class="text-xl font-black text-amber-400">📑 Módulo 5: Repositorio & Reportes Avanzados</h2>
+            <h2 class="text-xl font-black text-amber-400">📑 Módulo 5: Repositorio & Reportes DSR (Estilo Oficial)</h2>
             
             <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 space-y-3">
-                <label class="block text-xs font-bold text-amber-400 mb-1">Seleccionar Sondaje Individual (Activos o Culminados):</label>
+                <label class="block text-xs font-bold text-amber-400 mb-1">1. Seleccionar Sondaje:</label>
                 <select id="repoPozoSelect" onchange="cargarRepositorioPozo(this.value)" class="input-field w-full bg-slate-800 text-white rounded-lg px-3 text-sm font-bold">
                     <option value="">-- Seleccionar Sondaje Individual --</option>
                 </select>
@@ -434,8 +451,6 @@
             <!-- REPORTE GERENCIAL POR PERIODO Y EMPRESA -->
             <div class="bg-slate-900 p-4 rounded-xl border border-sky-500/40 space-y-3">
                 <h3 class="text-xs font-bold text-sky-400 flex items-center gap-1">📊 Reporte Gerencial de Perforación por Periodo / Empresa</h3>
-                <p class="text-[11px] text-slate-400">Genera un reporte consolidado de pozos filtrados por rango de fechas y empresa para auditoría de gestión.</p>
-                
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
                     <div>
                         <label class="block text-[10px] font-bold text-slate-300 mb-1">Filtrar Empresa</label>
@@ -456,44 +471,40 @@
                         <input type="date" id="repGerencialHasta" class="input-field w-full px-2 bg-slate-800 text-white rounded-lg text-xs font-bold">
                     </div>
                 </div>
-
                 <button type="button" onclick="imprimirReporteGerencialPeriodo()" class="btn-field w-full bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold">
-                    🖨️ Generar Vista Previa e Imprimir Reporte Gerencial por Periodo
+                    🖨️ Imprimir Reporte Gerencial Consolidado
                 </button>
             </div>
 
             <div id="repoPanelOpciones" class="hidden space-y-4">
-                <div class="flex gap-2 bg-slate-900 p-2 rounded-xl border border-slate-700">
-                    <button type="button" onclick="switchRepoSubTab('turnos')" id="btnRepoTurnos" class="flex-1 py-2 px-3 rounded-lg font-bold text-xs bg-sky-600 text-white shadow">📅 Reportes por Turno (DSR)</button>
-                    <button type="button" onclick="switchRepoSubTab('final')" id="btnRepoFinal" class="flex-1 py-2 px-3 rounded-lg font-bold text-xs bg-slate-800 text-slate-300">🏆 Reporte Final / Certificado</button>
-                    <button type="button" onclick="switchRepoSubTab('software')" id="btnRepoSoftware" class="flex-1 py-2 px-3 rounded-lg font-bold text-xs bg-slate-800 text-slate-300">💾 Exportar Software (Excel/CSV)</button>
-                </div>
-
-                <div id="repoViewTurnos" class="bg-slate-900 p-4 rounded-xl border border-slate-700 space-y-3">
-                    <h3 class="text-xs font-bold text-sky-400">📄 Generación de Reporte Diario de Turno con Acumulado</h3>
+                <!-- 2. GENERAR REPORTE DIARIO (DSR) ESTILO PDF OFICIAL -->
+                <div class="bg-slate-900 p-4 rounded-xl border border-emerald-500/50 space-y-3">
+                    <h3 class="text-xs font-bold text-emerald-400">📄 2. Generar Reporte Diario de Geología (DSR - Estilo PDF Oficial)</h3>
                     <div>
-                        <label class="block text-xs font-bold text-slate-300 mb-1">Seleccionar Fecha y Turno Específico *</label>
+                        <label class="block text-xs font-bold text-slate-300 mb-1">Seleccionar Turno Específico *</label>
                         <select id="repoTurnoSelect" class="input-field w-full px-3 bg-slate-800 text-white rounded-lg text-xs font-bold">
                             <option value="">-- Seleccionar Turno --</option>
                         </select>
                     </div>
-                    <button type="button" onclick="imprimirDSRRepositorio()" class="btn-field w-full bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold">
-                        🖨️ Vista Previa e Imprimir DSR de Turno (Con Acumulado)
+                    <button type="button" onclick="imprimirDSROficialEstiloPDF()" class="btn-field w-full bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold">
+                        🖨️ Vista Previa e Imprimir DSR (Estilo Formato Oficial)
                     </button>
                 </div>
 
-                <div id="repoViewFinal" class="hidden bg-slate-900 p-4 rounded-xl border border-slate-700 space-y-3">
+                <div class="flex gap-2 bg-slate-900 p-2 rounded-xl border border-slate-700">
+                    <button type="button" onclick="switchRepoSubTab('final')" id="btnRepoFinal" class="flex-1 py-2 px-3 rounded-lg font-bold text-xs bg-sky-600 text-white shadow">🏆 Certificado Final</button>
+                    <button type="button" onclick="switchRepoSubTab('software')" id="btnRepoSoftware" class="flex-1 py-2 px-3 rounded-lg font-bold text-xs bg-slate-800 text-slate-300">💾 Exportar CSV (Software)</button>
+                </div>
+
+                <div id="repoViewFinal" class="bg-slate-900 p-4 rounded-xl border border-slate-700 space-y-3">
                     <h3 class="text-xs font-bold text-emerald-400">🏆 Certificado de Pago y Reporte Final Consolidado</h3>
-                    <p class="text-xs text-slate-400">Genera el reporte consolidado de todo el sondaje con la auditoría de metros pagables y la cláusula oficial de conformidad técnica para firmas.</p>
                     <button type="button" onclick="imprimirCertificadoRepositorio()" class="btn-field w-full bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold">
-                        ✍️ Vista Previa e Imprimir Certificado de Pago Final
+                        ✍️ Imprimir Certificado de Pago Final
                     </button>
                 </div>
 
                 <div id="repoViewSoftware" class="hidden bg-slate-900 p-4 rounded-xl border border-slate-700 space-y-3">
-                    <h3 class="text-xs font-bold text-amber-400">💾 Exportación de Logging para Software Geológico (Excel/CSV)</h3>
-                    <p class="text-xs text-slate-400">Sábana completa de intervalos de perforación sin nombres de supervisores, optimizada para importación en Leapfrog y otros softwares.</p>
-                    
+                    <h3 class="text-xs font-bold text-amber-400">💾 Sábana Completa de Logging para Leapfrog / Excel</h3>
                     <div class="overflow-x-auto border border-slate-700 rounded-xl max-h-48">
                         <table class="w-full text-left text-xs border-collapse">
                             <thead class="bg-slate-800 text-slate-300 uppercase sticky top-0">
@@ -502,15 +513,14 @@
                             <tbody id="tablaPreviewSoftware" class="divide-y divide-slate-700 bg-slate-950"></tbody>
                         </table>
                     </div>
-
                     <button type="button" onclick="exportarCSVSoftware()" class="btn-field w-full bg-amber-600 hover:bg-amber-500 text-slate-950 text-xs font-black">
-                        📥 Descargar Archivo CSV para Software
+                        📥 Descargar Archivo CSV
                     </button>
                 </div>
             </div>
 
             <div id="repoMensajeVacio" class="text-center py-6 text-slate-500 text-xs">
-                Selecciona un sondaje individual arriba para ver sus detalles específicos de turno o exportación.
+                Selecciona un sondaje individual arriba para ver sus opciones de reporte diario DSR y exportación.
             </div>
 
             <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 space-y-3 pt-4">
@@ -523,31 +533,20 @@
                         <tbody id="tablaConsolidado" class="divide-y divide-slate-700 bg-slate-900/60"></tbody>
                     </table>
                 </div>
-                <button type="button" onclick="exportarCSV()" class="btn-field w-full bg-emerald-600 text-white text-xs font-bold">📥 Exportar Consolidado General a Excel (CSV)</button>
+                <button type="button" onclick="exportarCSV()" class="btn-field w-full bg-emerald-600 text-white text-xs font-bold">📥 Exportar Consolidado General a CSV</button>
             </div>
         </section>
 
         <!-- MÓDULO 6: ADMINISTRACIÓN DE SONDAJES -->
         <section id="mod6" class="hidden space-y-4 bg-slate-800 p-5 rounded-2xl border border-slate-700">
             <h2 class="text-xl font-black text-rose-400">⚙️ Módulo 6: Administración General de Sondajes</h2>
-            <p class="text-xs text-slate-300">Panel exclusivo para la gestión, edición de metadatos y eliminación en cascada de sondajes.</p>
-
-            <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 space-y-3">
-                <h3 class="text-sm font-bold text-amber-400">📋 Listado de Sondajes Registrados</h3>
-                <div class="overflow-x-auto border border-slate-700 rounded-xl">
-                    <table class="w-full text-left text-xs border-collapse">
-                        <thead class="bg-slate-800 text-slate-300 uppercase">
-                            <tr>
-                                <th class="p-2.5">Sondaje</th>
-                                <th class="p-2.5">Empresa</th>
-                                <th class="p-2.5">Proyecto</th>
-                                <th class="p-2.5">Estado</th>
-                                <th class="p-2.5 text-center">Acciones Críticas</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tablaAdminPozos" class="divide-y divide-slate-700 bg-slate-950"></tbody>
-                    </table>
-                </div>
+            <div class="overflow-x-auto border border-slate-700 rounded-xl">
+                <table class="w-full text-left text-xs border-collapse">
+                    <thead class="bg-slate-800 text-slate-300 uppercase">
+                        <tr><th class="p-2.5">Sondaje</th><th class="p-2.5">Empresa</th><th class="p-2.5">Proyecto</th><th class="p-2.5">Estado</th><th class="p-2.5 text-center">Acciones</th></tr>
+                    </thead>
+                    <tbody id="tablaAdminPozos" class="divide-y divide-slate-700 bg-slate-950"></tbody>
+                </table>
             </div>
         </section>
     </div>
@@ -557,25 +556,10 @@
         <div class="bg-slate-800 p-5 rounded-2xl border border-slate-700 w-full max-w-md space-y-3">
             <h3 class="text-base font-black text-amber-400">✏️ Editar Propiedades del Sondaje</h3>
             <input type="hidden" id="edit_pozo_id">
-            <div>
-                <label class="block text-xs font-bold text-slate-300 mb-1">Código del Sondaje</label>
-                <input type="text" id="edit_pozo_codigo" class="input-field w-full px-3 bg-slate-900 text-white rounded-lg text-sm uppercase font-bold">
-            </div>
-            <div>
-                <label class="block text-xs font-bold text-slate-300 mb-1">Empresa / Contratista</label>
-                <input type="text" id="edit_pozo_empresa" class="input-field w-full px-3 bg-slate-900 text-white rounded-lg text-sm uppercase font-bold">
-            </div>
-            <div>
-                <label class="block text-xs font-bold text-slate-300 mb-1">Proyecto / Sector</label>
-                <input type="text" id="edit_pozo_proyecto" class="input-field w-full px-3 bg-slate-900 text-white rounded-lg text-sm uppercase font-bold">
-            </div>
-            <div>
-                <label class="block text-xs font-bold text-slate-300 mb-1">Estado Operativo</label>
-                <select id="edit_pozo_estado" class="input-field w-full px-3 bg-slate-900 text-white rounded-lg text-sm font-bold">
-                    <option value="ACTIVO">ACTIVO</option>
-                    <option value="CULMINADO">CULMINADO</option>
-                </select>
-            </div>
+            <div><label class="block text-xs font-bold text-slate-300 mb-1">Código</label><input type="text" id="edit_pozo_codigo" class="input-field w-full px-3 bg-slate-900 text-white rounded-lg text-sm uppercase font-bold"></div>
+            <div><label class="block text-xs font-bold text-slate-300 mb-1">Empresa</label><input type="text" id="edit_pozo_empresa" class="input-field w-full px-3 bg-slate-900 text-white rounded-lg text-sm uppercase font-bold"></div>
+            <div><label class="block text-xs font-bold text-slate-300 mb-1">Proyecto</label><input type="text" id="edit_pozo_proyecto" class="input-field w-full px-3 bg-slate-900 text-white rounded-lg text-sm uppercase font-bold"></div>
+            <div><label class="block text-xs font-bold text-slate-300 mb-1">Estado</label><select id="edit_pozo_estado" class="input-field w-full px-3 bg-slate-900 text-white rounded-lg text-sm font-bold"><option value="ACTIVO">ACTIVO</option><option value="CULMINADO">CULMINADO</option></select></div>
             <div class="flex gap-2 pt-2">
                 <button type="button" onclick="guardarEdicionPozo()" class="btn-field flex-1 bg-emerald-600 text-white text-xs font-bold">💾 Guardar Cambios</button>
                 <button type="button" onclick="cerrarModalEdicion()" class="bg-slate-700 text-slate-300 px-4 rounded-lg font-bold text-xs">❌ Cancelar</button>
@@ -583,11 +567,10 @@
         </div>
     </div>
 
-    <!-- CONTENEDOR DE IMPRESIÓN CORREGIDO Y VISIBLE -->
+    <!-- CONTENEDOR DE IMPRESIÓN OFICIAL -->
     <div id="printable-area" style="display:none;"></div>
 
     <script>
-        // --- CONFIGURACIÓN SUPABASE ---
         const SUPABASE_URL = "https://cjtseuctrbdvgagudyyr.supabase.co";
         const SUPABASE_ANON_KEY = "sb_publishable_4ElaI13qIakKqei9_-OiNA__PpbBBjX";
         const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -595,142 +578,51 @@
         let db = { pozos: [], turnos: [], avances: [] };
         let pozoId = null, turnoId = null, editandoAvanceId = null, repoPozoId = null;
 
-        function obtenerClaveSegura() {
-            let claveGuardada = localStorage.getItem('geo_clave_acceso');
-            if (!claveGuardada) {
-                claveGuardada = "Mina2628";
-                localStorage.setItem('geo_clave_acceso', claveGuardada);
-            }
-            return claveGuardada;
-        }
-
-        function obtenerPinRescate() {
-            let pinGuardado = localStorage.getItem('geo_pin_rescate');
-            if (!pinGuardado) {
-                pinGuardado = "2628";
-                localStorage.setItem('geo_pin_rescate', pinGuardado);
-            }
-            return pinGuardado;
-        }
-
-        function togglePasswordVisibility(inputId) {
-            const input = document.getElementById(inputId);
-            if(input) input.type = input.type === 'password' ? 'text' : 'password';
-        }
+        function obtenerClaveSegura() { return localStorage.getItem('geo_clave_acceso') || "Mina2628"; }
+        function obtenerPinRescate() { return localStorage.getItem('geo_pin_rescate') || "2628"; }
+        function togglePasswordVisibility(id) { const el = document.getElementById(id); if(el) el.type = el.type === 'password' ? 'text' : 'password'; }
 
         async function intentarLogin() {
-            const val = document.getElementById('inputClaveLogin').value;
-            if (val === obtenerClaveSegura()) {
+            if (document.getElementById('inputClaveLogin').value === obtenerClaveSegura()) {
                 document.getElementById('pantallaLogin').classList.add('hidden');
                 document.getElementById('appPrincipal').classList.remove('hidden');
                 await cargarDatosDesdeNube();
-            } else {
-                alert("❌ Contraseña incorrecta.");
-            }
+            } else { alert("❌ Contraseña incorrecta."); }
         }
 
-        function mostrarBoxRescate() {
-            document.getElementById('boxLoginNormal').classList.add('hidden');
-            document.getElementById('boxLoginRescate').classList.remove('hidden');
-        }
-
-        function ocultarBoxRescate() {
-            document.getElementById('boxLoginRescate').classList.add('hidden');
-            document.getElementById('boxLoginNormal').classList.remove('hidden');
-        }
+        function mostrarBoxRescate() { document.getElementById('boxLoginNormal').classList.add('hidden'); document.getElementById('boxLoginRescate').classList.remove('hidden'); }
+        function ocultarBoxRescate() { document.getElementById('boxLoginRescate').classList.add('hidden'); document.getElementById('boxLoginNormal').classList.remove('hidden'); }
 
         async function ejecutarRescateClave() {
-            const pinIngresado = document.getElementById('inputPinRescate').value.trim();
-            const nuevaClave = document.getElementById('inputClaveNuevaRescate').value.trim();
-
-            if (!pinIngresado || pinIngresado !== obtenerPinRescate()) {
-                alert("⚠️ PIN de Rescate incorrecto.");
-                return;
-            }
-            if (!nuevaClave) {
-                alert("⚠️ Ingrese la nueva contraseña.");
-                return;
-            }
-
-            localStorage.setItem('geo_clave_acceso', nuevaClave);
-            alert("🔒 ¡Contraseña actualizada con éxito mediante PIN de Rescate!");
-            
+            if (document.getElementById('inputPinRescate').value.trim() !== obtenerPinRescate()) { alert("⚠️ PIN incorrecto."); return; }
+            const nueva = document.getElementById('inputClaveNuevaRescate').value.trim();
+            if (!nueva) { alert("⚠️ Ingrese nueva contraseña."); return; }
+            localStorage.setItem('geo_clave_acceso', nueva);
+            alert("🔒 ¡Contraseña restablecida!");
             document.getElementById('pantallaLogin').classList.add('hidden');
             document.getElementById('appPrincipal').classList.remove('hidden');
             ocultarBoxRescate();
             await cargarDatosDesdeNube();
         }
 
-        function cerrarSesion() {
-            document.getElementById('inputClaveLogin').value = '';
-            document.getElementById('appPrincipal').classList.add('hidden');
-            document.getElementById('pantallaLogin').classList.remove('hidden');
-        }
-
+        function cerrarSesion() { document.getElementById('inputClaveLogin').value = ''; document.getElementById('appPrincipal').classList.add('hidden'); document.getElementById('pantallaLogin').classList.remove('hidden'); }
         function cambiarClaveSistema() {
-            const actual = prompt("Ingrese su contraseña actual:");
-            if (actual !== obtenerClaveSegura()) {
-                alert("⚠️ Contraseña actual incorrecta.");
-                return;
-            }
-            const nuevaClave = prompt("Ingrese la NUEVA Contraseña:");
-            if (!nuevaClave) return;
-            const nuevoPin = prompt("Ingrese su NUEVO PIN de Rescate (4 dígitos):");
-            if (!nuevoPin || nuevoPin.length !== 4 || isNaN(nuevoPin)) {
-                alert("⚠️ El PIN debe ser numérico de exactamente 4 dígitos.");
-                return;
-            }
-
-            localStorage.setItem('geo_clave_acceso', nuevaClave);
-            localStorage.setItem('geo_pin_rescate', nuevoPin);
-            alert("🔒 ¡Contraseña y PIN de Rescate actualizados exitosamente!");
+            if (prompt("Contraseña actual:") !== obtenerClaveSegura()) { alert("Incorrecta."); return; }
+            const nueva = prompt("Nueva Contraseña:"); if (!nueva) return;
+            const pin = prompt("Nuevo PIN de 4 dígitos:"); if (!pin || pin.length !== 4) { alert("PIN inválido."); return; }
+            localStorage.setItem('geo_clave_acceso', nueva); localStorage.setItem('geo_pin_rescate', pin);
+            alert("🔒 Actualizado con éxito!");
         }
 
-        // --- CARGA Y SINCRONIZACIÓN CON SUPABASE BLINDADA ---
         async function cargarDatosDesdeNube() {
             try {
-                let { data: pozosData, error: errP } = await supabaseClient.from('pozos').select('*');
-                let { data: turnosData, error: errT } = await supabaseClient.from('turnos').select('*');
-                let { data: avancesData, error: errA } = await supabaseClient.from('avances').select('*');
-
-                if (!errP && pozosData && pozosData.length > 0) {
-                    db.pozos = pozosData.map(p => ({
-                        id: Number(p.id),
-                        codigo: p.codigo,
-                        empresa: p.empresa,
-                        proyecto: p.proyecto,
-                        estado: p.estado,
-                        fechaInicio: p.fecha_inicio,
-                        fechaCulminacion: p.fecha_culminacion,
-                        maquina: p.maquina,
-                        este: p.este,
-                        norte: p.norte,
-                        cota: p.cota,
-                        azimut: p.azimut,
-                        dip: p.dip,
-                        target: p.target
-                    }));
-                    db.turnos = (turnosData || []).map(t => ({
-                        id: Number(t.id),
-                        pozoId: Number(t.pozo_id),
-                        fecha: t.fecha,
-                        tipo: t.tipo,
-                        perforador: t.perforador,
-                        geologo: t.geologo
-                    }));
-                    db.avances = (avancesData || []).map(a => ({
-                        id: Number(a.id),
-                        pozoId: Number(a.pozo_id),
-                        turnoId: Number(a.turno_id),
-                        longitud: Number(a.longitud),
-                        desde: Number(a.desde),
-                        hasta: Number(a.hasta),
-                        diametro: a.diametro,
-                        recuperado: Number(a.recuperado),
-                        porcentaje: Number(a.porcentaje),
-                        meteorizacion: a.meteorizacion,
-                        pagado: Number(a.pagado)
-                    }));
+                let { data: pD } = await supabaseClient.from('pozos').select('*');
+                let { data: tD } = await supabaseClient.from('turnos').select('*');
+                let { data: aD } = await supabaseClient.from('avances').select('*');
+                if (pD && pD.length > 0) {
+                    db.pozos = pD.map(p => ({ id: Number(p.id), codigo: p.codigo, empresa: p.empresa, proyecto: p.proyecto, estado: p.estado, fechaInicio: p.fecha_inicio, fechaCulminacion: p.fecha_culminacion, maquina: p.maquina, este: p.este, norte: p.norte, cota: p.cota, azimut: p.azimut, dip: p.dip, target: p.target }));
+                    db.turnos = (tD || []).map(t => ({ id: Number(t.id), pozoId: Number(t.pozo_id), fecha: t.fecha, tipo: t.tipo, perforador: t.perforador, geologo: t.geologo }));
+                    db.avances = (aD || []).map(a => ({ id: Number(a.id), pozoId: Number(a.pozo_id), turnoId: Number(a.turno_id), longitud: Number(a.longitud), desde: Number(a.desde), hasta: Number(a.hasta), diametro: a.diametro, recuperado: Number(a.recuperado), porcentaje: Number(a.porcentaje), meteorizacion: a.meteorizacion, pagado: Number(a.pagado) }));
                     localStorage.setItem('geo_db_safe_v20', JSON.stringify(db));
                 } else {
                     let local = localStorage.getItem('geo_db_safe_v20');
@@ -741,65 +633,26 @@
                         for(let a of db.avances) await guardarAvanceNube(a);
                     }
                 }
-            } catch (e) {
-                console.warn("Modo offline. Usando respaldo local.", e);
+            } catch(e) {
                 let local = localStorage.getItem('geo_db_safe_v20');
                 if (local) db = JSON.parse(local);
             }
             refrescarSelect();
         }
 
-        async function sincronizarConNube() {
-            alert("🔄 Sincronizando datos con Supabase...");
-            await cargarDatosDesdeNube();
-            alert("✅ ¡Sincronización completada con éxito!");
-        }
+        async function sincronizarConNube() { alert("🔄 Sincronizando..."); await cargarDatosDesdeNube(); alert("✅ Sincronizado!"); }
+        async function guardarPozoNube(p) { await supabaseClient.from('pozos').upsert({ id: p.id, codigo: p.codigo, empresa: p.empresa, proyecto: p.proyecto, estado: p.estado || 'ACTIVO', fecha_inicio: p.fechaInicio, fecha_culminacion: p.fechaCulminacion, maquina: p.maquina, este: p.este, norte: p.norte, cota: p.cota, azimut: p.azimut, dip: p.dip, target: p.target }); localStorage.setItem('geo_db_safe_v20', JSON.stringify(db)); }
+        async function guardarTurnoNube(t) { await supabaseClient.from('turnos').upsert({ id: t.id, pozo_id: t.pozoId, fecha: t.fecha, tipo: t.tipo, perforador: t.perforador, geologo: t.geologo }); localStorage.setItem('geo_db_safe_v20', JSON.stringify(db)); }
+        async function guardarAvanceNube(a) { await supabaseClient.from('avances').upsert({ id: a.id, pozo_id: a.pozoId, turno_id: a.turnoId, longitud: a.longitud, desde: a.desde, hasta: a.hasta, diametro: a.diametro, recuperado: a.recuperado, porcentaje: a.porcentaje, meteorizacion: a.meteorizacion, pagado: a.pagado }); localStorage.setItem('geo_db_safe_v20', JSON.stringify(db)); }
+        async function eliminarPozoNube(id) { await supabaseClient.from('avances').delete().eq('pozo_id', id); await supabaseClient.from('turnos').delete().eq('pozo_id', id); await supabaseClient.from('pozos').delete().eq('id', id); localStorage.setItem('geo_db_safe_v20', JSON.stringify(db)); }
 
-        async function guardarPozoNube(p) {
-            await supabaseClient.from('pozos').upsert({
-                id: p.id, codigo: p.codigo, empresa: p.empresa, proyecto: p.proyecto,
-                estado: p.estado || 'ACTIVO', fecha_inicio: p.fechaInicio, fecha_culminacion: p.fechaCulminacion,
-                maquina: p.maquina, este: p.este, norte: p.norte, cota: p.cota, azimut: p.azimut, dip: p.dip, target: p.target
-            });
-            localStorage.setItem('geo_db_safe_v20', JSON.stringify(db));
-        }
-
-        async function guardarTurnoNube(t) {
-            await supabaseClient.from('turnos').upsert({
-                id: t.id, pozo_id: t.pozoId, fecha: t.fecha, tipo: t.tipo, perforador: t.perforador, geologo: t.geologo
-            });
-            localStorage.setItem('geo_db_safe_v20', JSON.stringify(db));
-        }
-
-        async function guardarAvanceNube(a) {
-            await supabaseClient.from('avances').upsert({
-                id: a.id, pozo_id: a.pozoId, turno_id: a.turnoId, longitud: a.longitud,
-                desde: a.desde, hasta: a.hasta, diametro: a.diametro, recuperado: a.recuperado,
-                porcentaje: a.porcentaje, meteorizacion: a.meteorizacion, pagado: a.pagado
-            });
-            localStorage.setItem('geo_db_safe_v20', JSON.stringify(db));
-        }
-
-        async function eliminarPozoNube(id) {
-            await supabaseClient.from('avances').delete().eq('pozo_id', id);
-            await supabaseClient.from('turnos').delete().eq('pozo_id', id);
-            await supabaseClient.from('pozos').delete().eq('id', id);
-            localStorage.setItem('geo_db_safe_v20', JSON.stringify(db));
-        }
-
-        // --- NAVEGACIÓN Y PESTAÑAS ---
         function switchTab(id) {
             ['mod1', 'mod2', 'mod3_turno', 'mod3_logging', 'mod4', 'mod5', 'mod6'].forEach(m => {
-                const el = document.getElementById(m);
-                if(el) el.classList.add('hidden');
-                const tabEl = document.getElementById('tab-' + m);
-                if(tabEl) tabEl.className = "flex-1 min-w-[85px] py-2.5 px-2 rounded-lg font-bold text-xs bg-slate-700 text-slate-300";
+                const el = document.getElementById(m); if(el) el.classList.add('hidden');
+                const tEl = document.getElementById('tab-' + m); if(tEl) tEl.className = "flex-1 min-w-[85px] py-2.5 px-2 rounded-lg font-bold text-xs bg-slate-700 text-slate-300";
             });
-            const target = document.getElementById(id);
-            if(target) target.classList.remove('hidden');
-            const targetTab = document.getElementById('tab-' + id);
-            if(targetTab) targetTab.className = "flex-1 min-w-[85px] py-2.5 px-2 rounded-lg font-bold text-xs bg-sky-600 text-white shadow";
-
+            document.getElementById(id).classList.remove('hidden');
+            document.getElementById('tab-' + id).className = "flex-1 min-w-[85px] py-2.5 px-2 rounded-lg font-bold text-xs bg-sky-600 text-white shadow";
             if(id === 'mod3_logging') renderTabla();
             if(id === 'mod3_turno') poblarSelectRetomarTurnos();
             if(id === 'mod4') poblarSelectCierre();
@@ -808,116 +661,56 @@
         }
 
         function switchRepoSubTab(sub) {
-            ['turnos', 'final', 'software'].forEach(s => {
-                document.getElementById('repoView' + s.charAt(0).toUpperCase() + s.slice(1)).classList.add('hidden');
-                document.getElementById('btnRepo' + s.charAt(0).toUpperCase() + s.slice(1)).className = "flex-1 py-2 px-3 rounded-lg font-bold text-xs bg-slate-800 text-slate-300";
+            ['final', 'software'].forEach(s => {
+                const el = document.getElementById('repoView' + s.charAt(0).toUpperCase() + s.slice(1)); if(el) el.classList.add('hidden');
+                const btn = document.getElementById('btnRepo' + s.charAt(0).toUpperCase() + s.slice(1)); if(btn) btn.className = "flex-1 py-2 px-3 rounded-lg font-bold text-xs bg-slate-800 text-slate-300";
             });
             document.getElementById('repoView' + sub.charAt(0).toUpperCase() + sub.slice(1)).classList.remove('hidden');
             document.getElementById('btnRepo' + sub.charAt(0).toUpperCase() + sub.slice(1)).className = "flex-1 py-2 px-3 rounded-lg font-bold text-xs bg-sky-600 text-white shadow";
         }
 
-        function toggleOtraEmpresa() {
-            const val = document.getElementById('m1_empresa').value;
-            document.getElementById('m1_otra_empresa_box').classList.toggle('hidden', val !== 'OTRA');
-        }
-
-        function toggleOtraMaquina() {
-            const val = document.getElementById('m2_maquina').value;
-            document.getElementById('m2_otra_maquina_box').classList.toggle('hidden', val !== 'OTRA');
-        }
-
-        function forzarMayusculas(input) {
-            if (input && input.value) input.value = input.value.toUpperCase();
-        }
-
-        function formatearUTM(input) {
-            let val = input.value.trim().replace(',', '.');
-            if (val === '') { input.value = ''; return; }
-            let num = parseFloat(val);
-            if (isNaN(num)) { input.value = ''; return; }
-            input.value = num.toFixed(2).replace('.', ',');
-        }
-
-        function formatearDecimalesLibres(input) {
-            let val = input.value.trim().replace(',', '.');
-            if (val === '') { input.value = ''; return; }
-            let num = parseFloat(val);
-            if (isNaN(num)) { input.value = ''; return; }
-            input.value = num.toFixed(2).replace('.', ',');
-        }
-
-        function formatearDip(input) {
-            let val = input.value.trim().replace(',', '.').replace('-', '');
-            if (val === '') { input.value = ''; return; }
-            let num = parseFloat(val);
-            if (isNaN(num)) { input.value = ''; return; }
-            input.value = '-' + num.toFixed(2).replace('.', ',');
-        }
+        function toggleOtraEmpresa() { document.getElementById('m1_otra_empresa_box').classList.toggle('hidden', document.getElementById('m1_empresa').value !== 'OTRA'); }
+        function toggleOtraMaquina() { document.getElementById('m2_otra_maquina_box').classList.toggle('hidden', document.getElementById('m2_maquina').value !== 'OTRA'); }
+        function forzarMayusculas(i) { if(i && i.value) i.value = i.value.toUpperCase(); }
+        function formatearUTM(i) { let v = i.value.trim().replace(',', '.'); if(!v) return; i.value = parseFloat(v).toFixed(2).replace('.', ','); }
+        function formatearDecimalesLibres(i) { let v = i.value.trim().replace(',', '.'); if(!v) return; i.value = parseFloat(v).toFixed(2).replace('.', ','); }
+        function formatearDip(i) { let v = i.value.trim().replace(',', '.').replace('-', ''); if(!v) return; i.value = '-' + parseFloat(v).toFixed(2).replace('.', ','); }
 
         async function crearPozo() {
             const cod = document.getElementById('m1_codigo').value.trim().toUpperCase();
-            let emp = document.getElementById('m1_empresa').value;
-            if (emp === 'OTRA') emp = document.getElementById('m1_otra_empresa').value.trim().toUpperCase();
+            let emp = document.getElementById('m1_empresa').value; if (emp === 'OTRA') emp = document.getElementById('m1_otra_empresa').value.trim().toUpperCase();
             const pro = document.getElementById('m1_proyecto').value.trim().toUpperCase();
-
-            if (!cod || !pro) { alert("⚠️ Ingrese Código del Sondaje y Proyecto/Sector."); return; }
-
+            if (!cod || !pro) { alert("⚠️ Ingrese Código y Proyecto."); return; }
             const nuevo = { id: Date.now(), codigo: cod, empresa: emp, proyecto: pro, estado: 'ACTIVO', fechaInicio: new Date().toISOString().split('T')[0] };
-            db.pozos.push(nuevo);
-            pozoId = nuevo.id;
-            
-            await guardarPozoNube(nuevo);
-            refrescarSelect();
-
-            document.getElementById('m1_codigo').value = '';
-            document.getElementById('m1_proyecto').value = '';
-            alert("✅ Sondaje " + cod + " Registrado con Éxito");
-            switchTab('mod3_turno');
+            db.pozos.push(nuevo); pozoId = nuevo.id;
+            await guardarPozoNube(nuevo); refrescarSelect();
+            document.getElementById('m1_codigo').value = ''; document.getElementById('m1_proyecto').value = '';
+            alert("✅ Sondaje creado con éxito"); switchTab('mod3_turno');
         }
 
         function refrescarSelect() {
-            const sel = document.getElementById('globalWellSelect');
-            if(!sel) return;
+            const sel = document.getElementById('globalWellSelect'); if(!sel) return;
             sel.innerHTML = '<option value="">-- Seleccione un Sondaje --</option>';
-            
             db.pozos.forEach(p => {
-                const opt = document.createElement('option');
-                opt.value = p.id;
+                const opt = document.createElement('option'); opt.value = p.id;
                 opt.textContent = `${p.codigo} - ${p.empresa} (${p.proyecto}) [${p.estado || 'ACTIVO'}]`;
-                if (p.id == pozoId) opt.selected = true;
-                sel.appendChild(opt);
+                if (p.id == pozoId) opt.selected = true; sel.appendChild(opt);
             });
-
-            cargarDatosPozoSeleccionado();
-            renderConsolidado();
-            poblarSelectCierre();
-            poblarSelectRepositorio();
-            renderTablaAdminPozos();
+            cargarDatosPozoSeleccionado(); renderConsolidado(); poblarSelectCierre(); poblarSelectRepositorio(); renderTablaAdminPozos();
         }
 
-        function seleccionarPozoGlobal(val) { 
-            pozoId = val; 
-            cargarDatosPozoSeleccionado();
-            if (val) switchTab('mod3_turno'); 
-        }
+        function seleccionarPozoGlobal(val) { pozoId = val; cargarDatosPozoSeleccionado(); if (val) switchTab('mod3_turno'); }
 
         function cargarDatosPozoSeleccionado() {
             if (!pozoId) {
-                document.getElementById('m2_maquina').value = 'GEOMAX';
-                document.getElementById('m2_otra_maquina').value = '';
-                ['m2_este', 'm2_norte', 'm2_cota', 'm2_azimut', 'm2_dip', 'm2_target'].forEach(id => {
-                    document.getElementById(id).value = '';
-                });
+                document.getElementById('m2_maquina').value = 'GEOMAX'; document.getElementById('m2_otra_maquina').value = '';
+                ['m2_este', 'm2_norte', 'm2_cota', 'm2_azimut', 'm2_dip', 'm2_target'].forEach(id => document.getElementById(id).value = '');
                 return;
             }
-
-            const p = db.pozos.find(x => x.id == pozoId);
-            if (!p) return;
-
+            const p = db.pozos.find(x => x.id == pozoId); if (!p) return;
             document.getElementById('m2_maquina').value = ['GEOMAX', 'HENG WANG', 'LONGYEAR'].includes(p.maquina) ? p.maquina : (p.maquina ? 'OTRA' : 'GEOMAX');
             toggleOtraMaquina();
             document.getElementById('m2_otra_maquina').value = p.maquina && !['GEOMAX', 'HENG WANG', 'LONGYEAR'].includes(p.maquina) ? p.maquina : '';
-            
             document.getElementById('m2_este').value = (p.este !== undefined && p.este !== '') ? Number(p.este).toFixed(2).replace('.', ',') : '';
             document.getElementById('m2_norte').value = (p.norte !== undefined && p.norte !== '') ? Number(p.norte).toFixed(2).replace('.', ',') : '';
             document.getElementById('m2_cota').value = (p.cota !== undefined && p.cota !== '') ? Number(p.cota).toFixed(2).replace('.', ',') : '';
@@ -925,94 +718,49 @@
             document.getElementById('m2_dip').value = (p.dip !== undefined && p.dip !== '') ? Number(p.dip).toFixed(2).replace('.', ',') : '';
             document.getElementById('m2_target').value = (p.target !== undefined && p.target !== '') ? Number(p.target).toFixed(2).replace('.', ',') : '';
 
-            const turnosPozo = db.turnos.filter(t => t.pozoId == pozoId);
-            if (turnosPozo.length > 0 && !turnoId) {
-                const ultimoT = turnosPozo[turnosPozo.length - 1];
-                turnoId = ultimoT.id;
-                document.getElementById('lblInfoTurno').textContent = `${ultimoT.fecha} (${ultimoT.tipo})`;
-                document.getElementById('lblInfoPerf').textContent = ultimoT.perforador;
-                document.getElementById('lblInfoGeo').textContent = ultimoT.geologo;
+            const tPozo = db.turnos.filter(t => t.pozoId == pozoId);
+            if (tPozo.length > 0 && !turnoId) {
+                const uT = tPozo[tPozo.length - 1]; turnoId = uT.id;
+                document.getElementById('lblInfoTurno').textContent = `${uT.fecha} (${uT.tipo})`;
+                document.getElementById('lblInfoPerf').textContent = uT.perforador;
+                document.getElementById('lblInfoGeo').textContent = uT.geologo;
             } else if (!turnoId) {
                 document.getElementById('lblInfoTurno').textContent = "Sin turno activo";
-                document.getElementById('lblInfoPerf').textContent = "--";
-                document.getElementById('lblInfoGeo').textContent = "--";
+                document.getElementById('lblInfoPerf').textContent = "--"; document.getElementById('lblInfoGeo').textContent = "--";
             }
-
-            poblarSelectRetomarTurnos();
-            autoCalcularDesde();
-            renderTabla();
+            poblarSelectRetomarTurnos(); autoCalcularDesde(); renderTabla();
         }
 
-        // --- GESTIÓN DE TURNOS MÚLTIPLES Y FRENTES ---
         async function iniciarTurnoNuevo() {
-            if (!pozoId) { alert("⚠️ Seleccione un pozo activo primero en el menú superior."); return; }
+            if (!pozoId) { alert("⚠️ Seleccione un pozo primero."); return; }
             const perf = document.getElementById('m3_perforador').value.trim().toUpperCase();
             const geo = document.getElementById('m3_geologo').value.trim().toUpperCase();
-            const fechaVal = document.getElementById('m3_fecha').value || new Date().toISOString().split('T')[0];
-            const tipoVal = document.getElementById('m3_turno').value;
-
-            if (!perf || !geo) { alert("⚠️ Ingrese Perforador y Supervisor de GEOLOGOS."); return; }
-
-            const t = { id: Date.now(), pozoId, fecha: fechaVal, tipo: tipoVal, perforador: perf, geologo: geo };
-            db.turnos.push(t);
-            await guardarTurnoNube(t);
-            turnoId = t.id;
-
+            if (!perf || !geo) { alert("⚠️ Ingrese Perforador y Geólogo."); return; }
+            const t = { id: Date.now(), pozoId, fecha: document.getElementById('m3_fecha').value || new Date().toISOString().split('T')[0], tipo: document.getElementById('m3_turno').value, perforador: perf, geologo: geo };
+            db.turnos.push(t); await guardarTurnoNube(t); turnoId = t.id;
             document.getElementById('lblInfoTurno').textContent = `${t.fecha} (${t.tipo})`;
-            document.getElementById('lblInfoPerf').textContent = t.perforador;
-            document.getElementById('lblInfoGeo').textContent = t.geologo;
-
-            autoCalcularDesde();
-            alert("🚀 Turno iniciado correctamente. Puede proceder al Logging.");
-            switchTab('mod3_logging');
+            document.getElementById('lblInfoPerf').textContent = t.perforador; document.getElementById('lblInfoGeo').textContent = t.geologo;
+            autoCalcularDesde(); alert("🚀 Turno iniciado."); switchTab('mod3_logging');
         }
 
-        function pausarTurnoActual() {
-            if(!turnoId) { alert("⚠️ No hay ningún turno activo actualmente."); return; }
-            alert("⏸️ Turno pausado con éxito. Puede seleccionar otro pozo en el menú superior para cambiar de máquina o frente de trabajo.");
-            turnoId = null;
-            switchTab('mod3_turno');
-        }
-
+        function pausarTurnoActual() { if(!turnoId) { alert("⚠️ No hay turno activo."); return; } alert("⏸️ Turno pausado."); turnoId = null; switchTab('mod3_turno'); }
         function poblarSelectRetomarTurnos() {
-            const sel = document.getElementById('selectRetomarTurno');
-            if(!sel) return;
-            sel.innerHTML = '<option value="">-- Seleccionar Turno Guardado para Retomar --</option>';
-            if(!pozoId) return;
-
-            const turnosPozo = db.turnos.filter(t => t.pozoId == pozoId);
-            turnosPozo.forEach(t => {
-                const opt = document.createElement('option');
-                opt.value = t.id;
+            const sel = document.getElementById('selectRetomarTurno'); if(!sel) return;
+            sel.innerHTML = '<option value="">-- Seleccionar Turno Guardado para Retomar --</option>'; if(!pozoId) return;
+            db.turnos.filter(t => t.pozoId == pozoId).forEach(t => {
+                const opt = document.createElement('option'); opt.value = t.id;
                 opt.textContent = `Fecha: ${t.fecha} - Turno: ${t.tipo} (Perf: ${t.perforador} | Geo: ${t.geologo})`;
-                if(t.id == turnoId) opt.selected = true;
-                sel.appendChild(opt);
+                if(t.id == turnoId) opt.selected = true; sel.appendChild(opt);
             });
         }
-
         function retomarTurnoSeleccionado() {
-            const selId = document.getElementById('selectRetomarTurno').value;
-            if(!selId) { alert("⚠️ Seleccione un turno de la lista para retomar."); return; }
-
-            const t = db.turnos.find(x => x.id == selId);
-            if(!t) return;
-
-            turnoId = t.id;
-            document.getElementById('lblInfoTurno').textContent = `${t.fecha} (${t.tipo})`;
-            document.getElementById('lblInfoPerf').textContent = t.perforador;
-            document.getElementById('lblInfoGeo').textContent = t.geologo;
-
-            autoCalcularDesde();
-            alert(`▶️ Turno retomado con éxito (${t.fecha} - ${t.tipo}). Pasando a Logging.`);
-            switchTab('mod3_logging');
+            const selId = document.getElementById('selectRetomarTurno').value; if(!selId) { alert("⚠️ Seleccione un turno."); return; }
+            const t = db.turnos.find(x => x.id == selId); if(!t) return;
+            turnoId = t.id; document.getElementById('lblInfoTurno').textContent = `${t.fecha} (${t.tipo})`;
+            document.getElementById('lblInfoPerf').textContent = t.perforador; document.getElementById('lblInfoGeo').textContent = t.geologo;
+            autoCalcularDesde(); alert("▶️ Turno retomado."); switchTab('mod3_logging');
         }
-
-        function finalizarTurnoActivo() {
-            if(!turnoId) { alert("⚠️ No hay un turno activo."); return; }
-            alert("💾 Turno finalizado y guardado con éxito. Todos los avances registrados están consolidados.");
-            turnoId = null;
-            switchTab('mod3_turno');
-        }
+        function finalizarTurnoActivo() { if(!turnoId) return; alert("💾 Turno finalizado."); turnoId = null; switchTab('mod3_turno'); }
 
         function autoCalcularDesde() {
             if (!pozoId) return;
@@ -1021,7 +769,6 @@
             document.getElementById('m3_desde').value = desde.toFixed(2).replace('.', ',');
             autoCalcularHasta();
         }
-
         function autoCalcularHasta() {
             const desde = parseFloat(document.getElementById('m3_desde').value.replace(',', '.')) || 0;
             const len = parseFloat(document.getElementById('m3_longitud').value) || 1.5;
@@ -1030,17 +777,15 @@
 
         async function guardarAvance() {
             if (!pozoId) { alert("⚠️ Seleccione un pozo."); return; }
-            if (!turnoId) { alert("⚠️ Debe iniciar o retomar un turno primero en la sección 3A."); switchTab('mod3_turno'); return; }
-
+            if (!turnoId) { alert("⚠️ Inicie o retome un turno primero."); switchTab('mod3_turno'); return; }
             const len = parseFloat(document.getElementById('m3_longitud').value);
             const desde = parseFloat(document.getElementById('m3_desde').value.replace(',', '.'));
             const hasta = parseFloat(document.getElementById('m3_hasta').value.replace(',', '.'));
             const diam = document.getElementById('m3_diametro').value;
             const rec = parseFloat(document.getElementById('m3_recuperado').value.replace(',', '.'));
             const met = document.getElementById('m3_meteorizacion').value;
-
-            if (isNaN(rec)) { alert("⚠️ Ingrese metros recuperados."); return; }
-            if (rec > len) { alert("⚠️ Recuperación no puede superar la maniobra."); return; }
+            if (isNaN(rec)) { alert("⚠️ Ingrese recuperado."); return; }
+            if (rec > len) { alert("⚠️ Recuperado no puede ser mayor que maniobra."); return; }
 
             let umbral = 0.70;
             if (met.includes('ROCA OXIDADA')) umbral = 0.80;
@@ -1052,622 +797,464 @@
             let objAvance;
             if (editandoAvanceId) {
                 let av = db.avances.find(x => x.id == editandoAvanceId);
-                if (av) { 
-                    Object.assign(av, { longitud: len, desde, hasta, diametro: diam, recuperado: rec, meteorizacion: met, porcentaje: porc, pagado }); 
-                    objAvance = av;
-                }
-                editandoAvanceId = null;
-                document.getElementById('btnGuardarAvance').textContent = "➕ Guardar Avance Tramo";
-                document.getElementById('btnCancelarEdicion').classList.add('hidden');
+                if (av) { Object.assign(av, { longitud: len, desde, hasta, diametro: diam, recuperado: rec, meteorizacion: met, porcentaje: porc, pagado }); objAvance = av; }
+                editandoAvanceId = null; document.getElementById('btnGuardarAvance').textContent = "➕ Guardar Avance Tramo"; document.getElementById('btnCancelarEdicion').classList.add('hidden');
             } else {
                 objAvance = { id: Date.now(), pozoId, turnoId, longitud: len, desde, hasta, diametro: diam, recuperado: rec, meteorizacion: met, porcentaje: porc, pagado };
                 db.avances.push(objAvance);
             }
-
-            await guardarAvanceNube(objAvance);
-            document.getElementById('m3_recuperado').value = '';
-            autoCalcularDesde();
-            renderTabla();
-            alert("✅ Tramo Guardado con Éxito");
+            await guardarAvanceNube(objAvance); document.getElementById('m3_recuperado').value = ''; autoCalcularDesde(); renderTabla(); alert("✅ Avance guardado.");
         }
 
         function editarAvance(id) {
-            const av = db.avances.find(x => x.id == id);
-            if (!av) return;
-            editandoAvanceId = id;
-            document.getElementById('m3_longitud').value = av.longitud;
+            const av = db.avances.find(x => x.id == id); if (!av) return;
+            editandoAvanceId = id; document.getElementById('m3_longitud').value = av.longitud;
             document.getElementById('m3_desde').value = av.desde.toFixed(2).replace('.', ',');
             document.getElementById('m3_hasta').value = av.hasta.toFixed(2).replace('.', ',');
             document.getElementById('m3_diametro').value = av.diametro;
             document.getElementById('m3_recuperado').value = av.recuperado.toFixed(2).replace('.', ',');
             document.getElementById('m3_meteorizacion').value = av.meteorizacion;
-
-            document.getElementById('btnGuardarAvance').textContent = "💾 Guardar Cambios Editados";
-            document.getElementById('btnCancelarEdicion').classList.remove('hidden');
+            document.getElementById('btnGuardarAvance').textContent = "💾 Guardar Cambios"; document.getElementById('btnCancelarEdicion').classList.remove('hidden');
         }
-
         function cancelarEdicionAvance() {
-            editandoAvanceId = null;
-            document.getElementById('m3_recuperado').value = '';
-            autoCalcularDesde();
-            document.getElementById('btnGuardarAvance').textContent = "➕ Guardar Avance Tramo";
-            document.getElementById('btnCancelarEdicion').classList.add('hidden');
+            editandoAvanceId = null; document.getElementById('m3_recuperado').value = ''; autoCalcularDesde();
+            document.getElementById('btnGuardarAvance').textContent = "➕ Guardar Avance Tramo"; document.getElementById('btnCancelarEdicion').classList.add('hidden');
         }
 
         function renderTabla() {
-            const tb = document.getElementById('tablaAvances');
-            if(!tb) return;
-            tb.innerHTML = '';
-            if (!pozoId) return;
-
+            const tb = document.getElementById('tablaAvances'); if(!tb) return; tb.innerHTML = ''; if (!pozoId) return;
+            const p = db.pozos.find(x => x.id == pozoId);
             const avs = db.avances.filter(a => a.pozoId == pozoId);
-            let totMetros = 0, totPagable = 0, totRecup = 0, totLong = 0;
-            let turnoMetros = 0, turnoRecup = 0;
-            let dataTendencia = [], labelsTendencia = [];
+            let totMetros = 0, totPagable = 0, totRecup = 0, totLong = 0, turnoMetros = 0, turnoRecup = 0;
+            let dataT = [], labelsT = [];
+            let hqTot = 0, nqTot = 0;
 
             avs.forEach((a, i) => {
                 totMetros = a.hasta; totPagable += a.pagado; totRecup += a.recuperado; totLong += a.longitud;
+                if(a.diametro === 'HQ') hqTot += a.longitud;
+                if(a.diametro === 'NQ') nqTot += a.longitud;
+
                 if (a.turnoId == turnoId) { turnoMetros += a.longitud; turnoRecup += a.recuperado; }
-
-                labelsTendencia.push(`#${i+1}`); dataTendencia.push(a.porcentaje);
-                let badgeColor = a.porcentaje >= 80 ? 'color:#34d399;' : 'color:#fbbf24;';
-
+                labelsT.push(`#${i+1}`); dataT.push(a.porcentaje);
+                let col = a.porcentaje >= 80 ? 'color:#34d399;' : 'color:#fbbf24;';
                 const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td class="p-2">${i+1}</td>
-                    <td class="p-2">${a.desde.toFixed(2).replace('.', ',')}-${a.hasta.toFixed(2).replace('.', ',')}</td>
-                    <td class="p-2 font-bold text-sky-400">${a.diametro}</td>
-                    <td class="p-2">${a.recuperado.toFixed(2).replace('.', ',')}</td>
-                    <td class="p-2 font-bold" style="${badgeColor}">${a.porcentaje.toFixed(1)}%</td>
-                    <td class="p-2 text-[10px]">${a.meteorizacion}</td>
-                    <td class="p-2 font-bold text-emerald-400">${a.pagado.toFixed(2).replace('.', ',')}</td>
-                    <td class="p-2"><button type="button" class="bg-sky-600 text-white px-2 py-1 rounded text-[10px] font-bold" onclick="editarAvance(${a.id})">Editar</button></td>
-                `;
+                tr.innerHTML = `<td class="p-2">${i+1}</td><td class="p-2">${a.desde.toFixed(2).replace('.', ',')}-${a.hasta.toFixed(2).replace('.', ',')}</td><td class="p-2 font-bold text-sky-400">${a.diametro}</td><td class="p-2">${a.recuperado.toFixed(2).replace('.', ',')}</td><td class="p-2 font-bold" style="${col}">${a.porcentaje.toFixed(1)}%</td><td class="p-2 text-[10px]">${a.meteorizacion}</td><td class="p-2 font-bold text-emerald-400">${a.pagado.toFixed(2).replace('.', ',')}</td><td class="p-2"><button type="button" class="bg-sky-600 text-white px-2 py-1 rounded text-[10px]" onclick="editarAvance(${a.id})">Editar</button></td>`;
                 tb.appendChild(tr);
             });
+
+            // Actualizar barra de progreso profesional en Logging
+            const targetPozo = p && p.target ? p.target : 100.0;
+            let avancePorc = targetPozo > 0 ? (totMetros / targetPozo) * 100 : 0;
+            let hqAncho = Math.min(100, (hqTot / targetPozo) * 100);
+            let nqAncho = Math.min(100 - hqAncho, (nqTot / targetPozo) * 100);
+            let pendAncho = Math.max(0, 100 - (hqAncho + nqAncho));
+
+            document.getElementById('barHQ').style.width = hqAncho + '%';
+            document.getElementById('barNQ').style.width = nqAncho + '%';
+            document.getElementById('barPendiente').style.width = pendAncho + '%';
+            document.getElementById('lblProgresoTexto').textContent = `${totMetros.toFixed(2)} m / ${targetPozo.toFixed(2)} m (${avancePorc.toFixed(1)}%)`;
+            document.getElementById('txtMetrosHQ').textContent = hqTot.toFixed(2);
+            document.getElementById('txtMetrosNQ').textContent = nqTot.toFixed(2);
+            document.getElementById('txtMetrosPend').textContent = (targetPozo - totMetros > 0 ? targetPozo - totMetros : 0).toFixed(2);
 
             document.getElementById('kpiMetros').textContent = totMetros.toFixed(2).replace('.', ',') + " m";
             document.getElementById('kpiMetrosTurno').textContent = turnoMetros.toFixed(2).replace('.', ',') + " m";
             document.getElementById('kpiRecupTurno').textContent = (turnoMetros > 0 ? (turnoRecup / turnoMetros) * 100 : 0).toFixed(1) + "%";
             document.getElementById('kpiRecupGlobal').textContent = (totLong > 0 ? (totRecup / totLong) * 100 : 0).toFixed(1) + "%";
-
-            renderGraficosNeon(labelsTendencia, dataTendencia, totLong, totPagable);
+            renderGraficosNeon(dataT, totLong, totPagable);
         }
 
-        function renderGraficosNeon(labels, dataRec, totalBruto, totalPagado) {
-            const c1 = document.getElementById('canvasTendencia'), ctx1 = c1.getContext('2d');
-            if(!ctx1) return;
-            c1.width = c1.clientWidth; c1.height = 160;
-            ctx1.clearRect(0, 0, c1.width, c1.height);
-
-            ctx1.strokeStyle = '#1e293b'; ctx1.lineWidth = 1;
-            for(let y=20; y<c1.height; y+=35) {
-                ctx1.beginPath(); ctx1.moveTo(0, y); ctx1.lineTo(c1.width, y); ctx1.stroke();
-            }
-
+        function renderGraficosNeon(dataRec, totalBruto, totalPagado) {
+            const c1 = document.getElementById('canvasTendencia'); if(!c1) return; const ctx1 = c1.getContext('2d');
+            c1.width = c1.clientWidth; c1.height = 160; ctx1.clearRect(0,0,c1.width,c1.height);
             if (dataRec.length > 0) {
                 const step = c1.width / Math.max(1, dataRec.length - 1 || 1);
-                let grad = ctx1.createLinearGradient(0, 0, 0, c1.height);
-                grad.addColorStop(0, 'rgba(0, 245, 212, 0.35)');
-                grad.addColorStop(1, 'rgba(0, 245, 212, 0.0)');
-
                 ctx1.beginPath();
                 dataRec.forEach((val, idx) => {
-                    const x = idx * step + (dataRec.length === 1 ? c1.width/2 : 0);
-                    const y = c1.height - (val / 100 * (c1.height - 40)) - 20;
+                    const x = idx * step; const y = c1.height - (val / 100 * (c1.height - 40)) - 20;
                     if (idx === 0) ctx1.moveTo(x, y); else ctx1.lineTo(x, y);
                 });
-                ctx1.lineTo(c1.width, c1.height); ctx1.lineTo(0, c1.height);
-                ctx1.fillStyle = grad; ctx1.fill();
-
-                ctx1.shadowColor = '#00F5D4'; ctx1.shadowBlur = 12;
-                ctx1.strokeStyle = '#00F5D4'; ctx1.lineWidth = 3;
-
-                ctx1.beginPath();
-                dataRec.forEach((val, idx) => {
-                    const x = idx * step + (dataRec.length === 1 ? c1.width/2 : 0);
-                    const y = c1.height - (val / 100 * (c1.height - 40)) - 20;
-                    if (idx === 0) ctx1.moveTo(x, y); else ctx1.lineTo(x, y);
-                });
-                ctx1.stroke();
-                ctx1.shadowBlur = 0;
+                ctx1.strokeStyle = '#00F5D4'; ctx1.lineWidth = 2; ctx1.stroke();
             }
-
-            const c2 = document.getElementById('canvasPagos'), ctx2 = c2.getContext('2d');
-            if(!ctx2) return;
-            c2.width = c2.clientWidth; c2.height = 160;
-            ctx2.clearRect(0, 0, c2.width, c2.height);
-
-            const maxVal = Math.max(10, totalBruto, totalPagado);
-            const bWidth = Math.min(40, c2.width / 4);
-            const x1 = c2.width * 0.30 - bWidth/2;
-            const x2 = c2.width * 0.70 - bWidth/2;
-            const b1Height = (totalBruto / maxVal) * (c2.height - 40);
-            const b2Height = (totalPagado / maxVal) * (c2.height - 40);
-
-            ctx2.fillStyle = '#0077FF';
-            ctx2.fillRect(x1, c2.height - b1Height - 20, bWidth, b1Height);
-            ctx2.fillStyle = '#34D399';
-            ctx2.fillRect(x2, c2.height - b2Height - 20, bWidth, b2Height);
-
-            ctx2.fillStyle = '#E2E8F0'; ctx2.font = 'bold 11px sans-serif';
-            ctx2.fillText('Brutos: ' + totalBruto.toFixed(2).replace('.', ',') + ' m', x1 - 5, c2.height - 5);
-            ctx2.fillText('Pagados: ' + totalPagado.toFixed(2).replace('.', ',') + ' m', x2 - 5, c2.height - 5);
+            const c2 = document.getElementById('canvasPagos'); if(!c2) return; const ctx2 = c2.getContext('2d');
+            c2.width = c2.clientWidth; c2.height = 160; ctx2.clearRect(0,0,c2.width,c2.height);
+            const maxV = Math.max(10, totalBruto, totalPagado);
+            const bW = 35, x1 = c2.width*0.3 - bW/2, x2 = c2.width*0.7 - bW/2;
+            const h1 = (totalBruto/maxV)*(c2.height-40), h2 = (totalPagado/maxV)*(c2.height-40);
+            ctx2.fillStyle = '#0077FF'; ctx2.fillRect(x1, c2.height - h1 - 20, bW, h1);
+            ctx2.fillStyle = '#34D399'; ctx2.fillRect(x2, c2.height - h2 - 20, bW, h2);
+            ctx2.fillStyle = '#E2E8F0'; ctx2.font = '10px sans-serif';
+            ctx2.fillText('Brutos: ' + totalBruto.toFixed(2) + 'm', x1-10, c2.height-5);
+            ctx2.fillText('Pagados: ' + totalPagado.toFixed(2) + 'm', x2-10, c2.height-5);
         }
 
-        // --- MÓDULO 4: CIERRE FORMAL CORREGIDO ---
+        // --- MÓDULO 4: CIERRE FORTALECIDO Y DETALLADO ---
         function poblarSelectCierre() {
-            const selCierre = document.getElementById('cierrePozoSelect');
-            if(!selCierre) return;
-            selCierre.innerHTML = '<option value="">-- Seleccionar Pozo Activo para Cierre --</option>';
-            
-            const activos = db.pozos.filter(p => (p.estado || 'ACTIVO') === 'ACTIVO');
-            activos.forEach(p => {
-                const opt = document.createElement('option');
-                opt.value = p.id;
+            const sel = document.getElementById('cierrePozoSelect'); if(!sel) return;
+            sel.innerHTML = '<option value="">-- Seleccionar Pozo para Cierre --</option>';
+            db.pozos.filter(p => (p.estado || 'ACTIVO') === 'ACTIVO').forEach(p => {
+                const opt = document.createElement('option'); opt.value = p.id;
                 opt.textContent = `${p.codigo} - ${p.empresa} (${p.proyecto})`;
-                if(p.id == pozoId) opt.selected = true;
-                selCierre.appendChild(opt);
+                if(p.id == pozoId) opt.selected = true; sel.appendChild(opt);
             });
-
-            if(pozoId) {
-                const activoActual = activos.find(x => x.id == pozoId);
-                if(activoActual) {
-                    selCierre.value = pozoId;
-                    cargarDatosCierre(pozoId);
-                }
-            }
+            if(pozoId) cargarDatosCierre(pozoId);
         }
 
         function cargarDatosCierre(id) {
-            if(!id) {
-                document.getElementById('cierrePanelInfo').classList.add('hidden');
-                document.getElementById('cierreMensajeVacio').classList.remove('hidden');
-                return;
-            }
-            pozoId = id;
-            const p = db.pozos.find(x => x.id == id);
-            if(!p) return;
-
+            if(!id) { document.getElementById('cierrePanelInfo').classList.add('hidden'); document.getElementById('cierreMensajeVacio').classList.remove('hidden'); return; }
+            pozoId = id; const p = db.pozos.find(x => x.id == id); if(!p) return;
             document.getElementById('cierreCodigoPozo').textContent = `Sondaje: ${p.codigo}`;
             document.getElementById('cierreEmpresaProyecto').textContent = `Empresa: ${p.empresa} | Proyecto: ${p.proyecto}`;
             document.getElementById('cierreEstadoPozo').textContent = p.estado || 'ACTIVO';
-
             document.getElementById('cierreInfoMaquina').textContent = p.maquina || 'NO ASIGNADA';
-            document.getElementById('cierreInfoEste').textContent = (p.este !== undefined && p.este !== '') ? Number(p.este).toFixed(2).replace('.', ',') + ' m' : '0,00 m';
-            document.getElementById('cierreInfoNorte').textContent = (p.norte !== undefined && p.norte !== '') ? Number(p.norte).toFixed(2).replace('.', ',') + ' m' : '0,00 m';
-            document.getElementById('cierreInfoCota').textContent = (p.cota !== undefined && p.cota !== '') ? Number(p.cota).toFixed(2).replace('.', ',') + ' m' : '0,00 m';
-            document.getElementById('cierreInfoAzimut').textContent = (p.azimut !== undefined && p.azimut !== '') ? Number(p.azimut).toFixed(2).replace('.', ',') + '°' : '0,0°';
-            document.getElementById('cierreInfoDip').textContent = (p.dip !== undefined && p.dip !== '') ? Number(p.dip).toFixed(2).replace('.', ',') + '°' : '-60,0°';
-            document.getElementById('cierreInfoTarget').textContent = (p.target !== undefined && p.target !== '') ? Number(p.target).toFixed(2).replace('.', ',') + ' m' : '100,0 m';
+            document.getElementById('cierreInfoEste').textContent = (p.este || 0).toFixed(2).replace('.', ',') + ' m';
+            document.getElementById('cierreInfoNorte').textContent = (p.norte || 0).toFixed(2).replace('.', ',') + ' m';
+            document.getElementById('cierreInfoCota').textContent = (p.cota || 0).toFixed(2).replace('.', ',') + ' m';
+            document.getElementById('cierreInfoAzimut').textContent = (p.azimut || 0).toFixed(2).replace('.', ',') + '°';
+            document.getElementById('cierreInfoDip').textContent = (p.dip || -60).toFixed(2).replace('.', ',') + '°';
+            document.getElementById('cierreInfoTarget').textContent = (p.target || 100).toFixed(2).replace('.', ',') + ' m';
 
             const avs = db.avances.filter(a => a.pozoId == id);
             let totAvance = avs.length > 0 ? Math.max(...avs.map(a => a.hasta)) : 0;
-            document.getElementById('cierreInfoAvance').textContent = totAvance.toFixed(2).replace('.', ',') + ' m';
+            let totRecup = avs.reduce((acc, a) => acc + a.recuperado, 0);
+            let totPagables = avs.reduce((acc, a) => acc + a.pagado, 0);
+            let porcGlobal = totAvance > 0 ? (totRecup / totAvance) * 100 : 0;
 
-            const turnosList = db.turnos.filter(t => t.pozoId == id);
-            const containerTurnos = document.getElementById('cierreListaTurnos');
-            containerTurnos.innerHTML = '';
-            if(turnosList.length > 0) {
-                turnosList.forEach((t, idx) => {
-                    const div = document.createElement('div');
-                    div.className = "bg-slate-950 p-2 rounded border border-slate-800 flex justify-between items-center";
-                    div.innerHTML = `<span><b>#${idx+1} Fecha:</b> ${t.fecha} (${t.tipo})</span><span><b>Perf:</b> ${t.perforador} | <b>Geo:</b> ${t.geologo}</span>`;
-                    containerTurnos.appendChild(div);
-                });
-            } else {
-                containerTurnos.innerHTML = '<p class="text-slate-500 italic">No hay turnos registrados aún.</p>';
+            document.getElementById('cierreInfoAvance').textContent = totAvance.toFixed(2).replace('.', ',') + ' m';
+            document.getElementById('cierreTotMetros').textContent = totAvance.toFixed(2).replace('.', ',') + ' m';
+            document.getElementById('cierrePorcRecup').textContent = porcGlobal.toFixed(1) + '%';
+            document.getElementById('cierreTotPagables').textContent = totPagables.toFixed(2).replace('.', ',') + ' m';
+
+            // Rellenar tabla detallada de avances en cierre
+            const tbCierre = document.getElementById('tablaCierreAvances'); tbCierre.innerHTML = '';
+            avs.forEach((a, idx) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td class="p-2">${idx+1}</td><td class="p-2">${a.desde.toFixed(2)}</td><td class="p-2">${a.hasta.toFixed(2)}</td><td class="p-2 font-bold text-sky-400">${a.diametro}</td><td class="p-2">${a.recuperado.toFixed(2)}</td><td class="p-2 font-bold">${a.porcentaje.toFixed(1)}%</td><td class="p-2 text-[10px]">${a.meteorizacion}</td><td class="p-2 font-bold text-emerald-400">${a.pagado.toFixed(2)}</td>`;
+                tbCierre.appendChild(tr);
+            });
+            if(avs.length === 0) {
+                tbCierre.innerHTML = `<tr><td colspan="8" class="p-4 text-center text-slate-500 italic">No hay avances registrados en este sondaje.</td></tr>`;
             }
 
+            // Turnos
+            const tList = db.turnos.filter(t => t.pozoId == id);
+            const containerT = document.getElementById('cierreListaTurnos'); containerT.innerHTML = '';
+            tList.forEach((t, i) => {
+                const div = document.createElement('div');
+                div.className = "bg-slate-950 p-2 rounded border border-slate-800 flex justify-between items-center";
+                div.innerHTML = `<span><b>#${i+1} Fecha:</b> ${t.fecha} (${t.tipo})</span><span><b>Perf:</b> ${t.perforador} | <b>Geo:</b> ${t.geologo}</span>`;
+                containerT.appendChild(div);
+            });
             document.getElementById('cierrePanelInfo').classList.remove('hidden');
             document.getElementById('cierreMensajeVacio').classList.add('hidden');
-        }
-
-        function poblarSelectRepositorio() {
-            const selRepo = document.getElementById('repoPozoSelect');
-            if(!selRepo) return;
-            selRepo.innerHTML = '<option value="">-- Seleccionar Sondaje Individual --</option>';
-
-            db.pozos.forEach(p => {
-                const opt = document.createElement('option');
-                opt.value = p.id;
-                opt.textContent = `${p.codigo} - ${p.empresa} (${p.proyecto}) [${p.estado || 'ACTIVO'}]`;
-                if(p.id == repoPozoId) opt.selected = true;
-                selRepo.appendChild(opt);
-            });
-        }
-
-        function cargarRepositorioPozo(id) {
-            if(!id) {
-                repoPozoId = null;
-                document.getElementById('repoPanelOpciones').classList.add('hidden');
-                document.getElementById('repoMensajeVacio').classList.remove('hidden');
-                return;
-            }
-            repoPozoId = id;
-            const p = db.pozos.find(x => x.id == id);
-            if(!p) return;
-
-            const selTurno = document.getElementById('repoTurnoSelect');
-            selTurno.innerHTML = '<option value="">-- Seleccionar Turno --</option>';
-            const turnosPozo = db.turnos.filter(t => t.pozoId == id);
-            turnosPozo.forEach(t => {
-                const opt = document.createElement('option');
-                opt.value = t.id;
-                opt.textContent = `Fecha: ${t.fecha} - Turno: ${t.tipo} (Perf: ${t.perforador} | Geo: ${t.geologo})`;
-                selTurno.appendChild(opt);
-            });
-
-            const tbSoft = document.getElementById('tablaPreviewSoftware');
-            tbSoft.innerHTML = '';
-            const avsPozo = db.avances.filter(a => a.pozoId == id);
-            avsPozo.forEach((a, idx) => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td class="p-2">${idx+1}</td>
-                    <td class="p-2">${a.desde.toFixed(2).replace('.', ',')}</td>
-                    <td class="p-2">${a.hasta.toFixed(2).replace('.', ',')}</td>
-                    <td class="p-2 font-bold text-sky-400">${a.diametro}</td>
-                    <td class="p-2">${a.recuperado.toFixed(2).replace('.', ',')}</td>
-                    <td class="p-2 font-bold">${a.porcentaje.toFixed(1)}%</td>
-                    <td class="p-2 text-[10px]">${a.meteorizacion}</td>
-                    <td class="p-2 font-bold text-emerald-400">${a.pagado.toFixed(2).replace('.', ',')}</td>
-                `;
-                tbSoft.appendChild(tr);
-            });
-
-            document.getElementById('repoPanelOpciones').classList.remove('hidden');
-            document.getElementById('repoMensajeVacio').classList.add('hidden');
-        }
-
-        // --- MÓDULO 6: ADMINISTRACIÓN ---
-        function renderTablaAdminPozos() {
-            const tb = document.getElementById('tablaAdminPozos');
-            if(!tb) return;
-            tb.innerHTML = '';
-            
-            if(db.pozos.length === 0) {
-                tb.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-500 italic">No hay sondajes registrados.</td></tr>`;
-                return;
-            }
-
-            db.pozos.forEach(p => {
-                const tr = document.createElement('tr');
-                let badge = (p.estado || 'ACTIVO') === 'CULMINADO' ? '<span class="text-emerald-400 font-bold">CULMINADO</span>' : '<span class="text-sky-400 font-bold">ACTIVO</span>';
-                tr.innerHTML = `
-                    <td class="p-2.5 font-bold text-white">${p.codigo}</td>
-                    <td class="p-2.5 text-slate-300">${p.empresa}</td>
-                    <td class="p-2.5 text-slate-300">${p.proyecto}</td>
-                    <td class="p-2.5">${badge}</td>
-                    <td class="p-2.5 text-center space-x-1">
-                        <button type="button" onclick="abrirModalEdicion(${p.id})" class="bg-sky-600 hover:bg-sky-500 text-white px-2.5 py-1.5 rounded text-[10px] font-bold">✏️ Editar</button>
-                        <button type="button" onclick="eliminarPozo(${p.id})" class="bg-rose-600 hover:bg-rose-500 text-white px-2.5 py-1.5 rounded text-[10px] font-bold">🗑️ Eliminar</button>
-                    </td>
-                `;
-                tb.appendChild(tr);
-            });
-        }
-
-        function abrirModalEdicion(id) {
-            const p = db.pozos.find(x => x.id == id);
-            if(!p) return;
-            document.getElementById('edit_pozo_id').value = p.id;
-            document.getElementById('edit_pozo_codigo').value = p.codigo;
-            document.getElementById('edit_pozo_empresa').value = p.empresa;
-            document.getElementById('edit_pozo_proyecto').value = p.proyecto;
-            document.getElementById('edit_pozo_estado').value = p.estado || 'ACTIVO';
-            document.getElementById('modalEdicionPozo').classList.remove('hidden');
-        }
-
-        function cerrarModalEdicion() {
-            document.getElementById('modalEdicionPozo').classList.add('hidden');
-        }
-
-        async function guardarEdicionPozo() {
-            const id = document.getElementById('edit_pozo_id').value;
-            const p = db.pozos.find(x => x.id == id);
-            if(!p) return;
-
-            p.codigo = document.getElementById('edit_pozo_codigo').value.trim().toUpperCase();
-            p.empresa = document.getElementById('edit_pozo_empresa').value.trim().toUpperCase();
-            p.proyecto = document.getElementById('edit_pozo_proyecto').value.trim().toUpperCase();
-            p.estado = document.getElementById('edit_pozo_estado').value;
-
-            await guardarPozoNube(p);
-            cerrarModalEdicion();
-            refrescarSelect();
-            alert("✅ Sondaje actualizado con éxito en la nube.");
-        }
-
-        async function eliminarPozo(id) {
-            const p = db.pozos.find(x => x.id == id);
-            if(!p) return;
-
-            if(confirm(`⚠️ ¿Está totalmente seguro de ELIMINAR el sondaje "${p.codigo}" de la nube?\n\nEsta acción borrará permanentemente el pozo y todo su core logging asociado.`)) {
-                await eliminarPozoNube(id);
-                db.pozos = db.pozos.filter(x => x.id != id);
-                db.turnos = db.turnos.filter(x => x.pozoId != id);
-                db.avances = db.avances.filter(x => x.pozoId != id);
-
-                if(pozoId == id) pozoId = null;
-                if(repoPozoId == id) repoPozoId = null;
-
-                refrescarSelect();
-                alert("🗑️ Sondaje y sus registros eliminados correctamente.");
-            }
-        }
-
-        // --- REPORTES Y PDF CON VISIBILIDAD RESTAURADA ---
-        function imprimirReporteGerencialPeriodo() {
-            const empresaFiltro = document.getElementById('repGerencialEmpresa').value;
-            const desdeFiltro = document.getElementById('repGerencialDesde').value;
-            const hastaFiltro = document.getElementById('repGerencialHasta').value;
-
-            if(!db.pozos || db.pozos.length === 0) {
-                alert("⚠️ Los datos aún se están sincronizando desde la nube. Haga clic en 'Sincronizar Nube' e intente de nuevo.");
-                return;
-            }
-
-            let pozosFiltrados = db.pozos.filter(p => {
-                let matchEmpresa = (empresaFiltro === 'TODAS' || p.empresa === empresaFiltro);
-                let fechaRef = p.fechaCulminacion || p.fechaInicio || '2026-01-01';
-                let matchFecha = true;
-                if(desdeFiltro && fechaRef < desdeFiltro) matchFecha = false;
-                if(hastaFiltro && fechaRef > hastaFiltro) matchFecha = false;
-                return matchEmpresa && matchFecha;
-            });
-
-            if(pozosFiltrados.length === 0) {
-                alert("⚠️ No se encontraron sondajes que coincidan con los filtros seleccionados.");
-                return;
-            }
-
-            let html = `
-                <div style="font-family:Arial; padding:20px; color:#000; background:#fff;">
-                    <h2 style="text-align:center; color:#1e3a8a; margin-bottom:5px;">REPORTE GERENCIAL DE GESTIÓN DE PERFORACIÓN</h2>
-                    <p style="text-align:center; font-size:12px; color:#555;">Jireth GeoCore Lite | Control Operativo Cloud</p><hr><br>
-                    <table style="width:100%; font-size:12px; margin-bottom:15px;">
-                        <tr><td><b>Empresa:</b> ${empresaFiltro}</td><td><b>Periodo:</b> ${desdeFiltro || 'Inicio'} al ${hastaFiltro || 'Actualidad'}</td></tr>
-                        <tr><td><b>Fecha Emisión:</b> ${new Date().toISOString().split('T')[0]}</td><td><b>Total Sondajes:</b> ${pozosFiltrados.length}</td></tr>
-                    </table>
-                    <table border="1" cellspacing="0" cellpadding="5" style="width:100%; border-collapse:collapse; font-size:11px; background:#fff;">
-                        <tr style="background:#f1f5f9;">
-                            <th>#</th><th>Empresa</th><th>Sondaje</th><th>Zona / Proyecto</th><th>Estado</th><th>Perforados (m)</th><th>Recuperados (m)</th><th>% Rec</th><th>Pagables (m)</th>
-                        </tr>
-            `;
-
-            let gTotMetros = 0, gTotRecup = 0, gTotPagado = 0;
-            pozosFiltrados.forEach((p, idx) => {
-                const avs = db.avances.filter(a => a.pozoId == p.id);
-                let totM = avs.reduce((acc, a) => acc + a.longitud, 0);
-                let totR = avs.reduce((acc, a) => acc + a.recuperado, 0);
-                let totP = avs.reduce((acc, a) => acc + a.pagado, 0);
-                let porcR = totM > 0 ? (totR / totM) * 100 : 0;
-
-                gTotMetros += totM; gTotRecup += totR; gTotPagado += totP;
-
-                html += `
-                    <tr>
-                        <td style="text-align:center;">${idx+1}</td>
-                        <td>${p.empresa}</td>
-                        <td><b>${p.codigo}</b></td>
-                        <td>${p.proyecto}</td>
-                        <td style="text-align:center;">${p.estado || 'ACTIVO'}</td>
-                        <td style="text-align:right;">${totM.toFixed(2).replace('.', ',')}</td>
-                        <td style="text-align:right;">${totR.toFixed(2).replace('.', ',')}</td>
-                        <td style="text-align:center; font-weight:bold;">${porcR.toFixed(1)}%</td>
-                        <td style="text-align:right; font-weight:bold; color:#047857;">${totP.toFixed(2).replace('.', ',')}</td>
-                    </tr>
-                `;
-            });
-
-            let gPorcGlobal = gTotMetros > 0 ? (gTotRecup / gTotMetros) * 100 : 0;
-
-            html += `
-                    <tr style="background:#e2e8f0; font-weight:bold;">
-                        <td colspan="5" style="text-align:right;">ACUMULADO TOTAL DEL PERIODO:</td>
-                        <td style="text-align:right;">${gTotMetros.toFixed(2).replace('.', ',')} m</td>
-                        <td style="text-align:right;">${gTotRecup.toFixed(2).replace('.', ',')} m</td>
-                        <td style="text-align:center;">${gPorcGlobal.toFixed(1)}%</td>
-                        <td style="text-align:right; color:#047857;">${gTotPagado.toFixed(2).replace('.', ',')} m</td>
-                    </tr>
-                </table><br><br>
-                <div style="font-size:11px; line-height:1.4; border: 1px solid #cbd5e1; padding: 10px; background:#f8fafc; margin-bottom:30px;">
-                    <b>OBSERVACIONES DE GESTIÓN:</b><br>
-                    Reporte oficial generado desde la plataforma Cloud para auditoría técnica y control de metrajes ejecutados.
-                </div>
-                <table style="width:100%; text-align:center; font-size:12px;">
-                    <tr>
-                        <td>__________________________________<br><b>Coordinación de Geología</b><br><span style="font-size:10px; color:#555;">Firma y Sello</span></td>
-                        <td>__________________________________<br><b>Gerencia de Operaciones / Mina</b><br><span style="font-size:10px; color:#555;">Firma y Sello</span></td>
-                    </tr>
-                </table>
-            </div>`;
-
-            const area = document.getElementById('printable-area');
-            area.innerHTML = html;
-            area.style.display = 'block';
-            setTimeout(() => {
-                window.print();
-                area.style.display = 'none';
-            }, 300);
-        }
-
-        function imprimirDSRRepositorio() {
-            if(!repoPozoId) { alert("⚠️ Seleccione un sondaje."); return; }
-            const selTId = document.getElementById('repoTurnoSelect').value;
-            if(!selTId) { alert("⚠️ Seleccione un turno específico."); return; }
-
-            const p = db.pozos.find(x => x.id == repoPozoId);
-            const tSel = db.turnos.find(x => x.id == selTId);
-            
-            const avsPozo = db.avances.filter(a => a.pozoId == repoPozoId);
-            const turnosValidosIds = db.turnos.filter(t => t.pozoId == repoPozoId && t.fecha <= tSel.fecha).map(t => t.id);
-            const avsAcumulados = avsPozo.filter(a => turnosValidosIds.includes(a.turnoId));
-            
-            let totAcum = avsAcumulados.length > 0 ? Math.max(...avsAcumulados.map(a => a.hasta)) : 0;
-            let totPagadoAcum = avsAcumulados.reduce((acc, a) => acc + a.pagado, 0);
-
-            let html = `
-                <div style="font-family:Arial; padding:20px; color:#000; background:#fff;">
-                    <h2 style="text-align:center; color:#1e3a8a; margin-bottom:5px;">REPORTE DIARIO DE GEOLOGÍA (DSR)</h2>
-                    <p style="text-align:center; font-size:12px; color:#555;">Control Operativo & Auditoría de Sondajes</p><hr><br>
-                    <table style="width:100%; font-size:12px; margin-bottom:10px;">
-                        <tr><td><b>Sondaje:</b> ${p.codigo}</td><td><b>Proyecto:</b> ${p.proyecto}</td></tr>
-                        <tr><td><b>Empresa:</b> ${p.empresa}</td><td><b>Perforadora:</b> ${p.maquina || 'N/A'}</td></tr>
-                        <tr><td><b>Fecha Turno:</b> ${tSel.fecha} (${tSel.tipo})</td><td><b>Profundidad Acumulada:</b> ${totAcum.toFixed(2).replace('.', ',')} m / Target: ${(p.target || 100).toFixed(2).replace('.', ',')} m</td></tr>
-                        <tr><td><b>Perforador:</b> ${tSel.perforador}</td><td><b>Supervisor GEOLOGOS:</b> ${tSel.geologo}</td></tr>
-                    </table><br>
-                    <h3 style="color:#1e3a8a; font-size:14px;">Sábana de Avances Acumulada hasta el Turno Seleccionado</h3>
-                    <table border="1" cellspacing="0" cellpadding="5" style="width:100%; border-collapse:collapse; font-size:11px; background:#fff;">
-                        <tr style="background:#f1f5f9;"><th>#</th><th>Intervalo (m)</th><th>Diam</th><th>Recup (m)</th><th>% Rec</th><th>Meteorización</th><th>Pago (m)</th></tr>
-            `;
-            avsAcumulados.forEach((a, i) => {
-                html += `<tr><td>#${i+1}</td><td>${a.desde.toFixed(2).replace('.', ',')} - ${a.hasta.toFixed(2).replace('.', ',')}</td><td>${a.diametro}</td><td>${a.recuperado.toFixed(2).replace('.', ',')}</td><td>${a.porcentaje.toFixed(1)}%</td><td>${a.meteorizacion}</td><td><b>${a.pagado.toFixed(2).replace('.', ',')}</b></td></tr>`;
-            });
-            html += `</table><br>
-                    <p style="font-size:12px;"><b>Total Metros Acumulados:</b> ${totAcum.toFixed(2).replace('.', ',')} m | <b>Total Pagable Acumulado:</b> ${totPagadoAcum.toFixed(2).replace('.', ',')} m</p><br><br>
-                    <table style="width:100%; text-align:center; font-size:12px;"><tr><td>__________________________________<br><b>Supervisor Perforación</b><br>Nombre y Apellido, Firma</td><td>__________________________________<br><b>Supervisor GEOLOGOS</b><br>Nombre y Apellido, Firma</td></tr></table></div>`;
-            
-            const area = document.getElementById('printable-area');
-            area.innerHTML = html;
-            area.style.display = 'block';
-            setTimeout(() => {
-                window.print();
-                area.style.display = 'none';
-            }, 300);
-        }
-
-        function imprimirCertificadoRepositorio() {
-            if(!repoPozoId) { alert("⚠️ Seleccione un sondaje."); return; }
-            const p = db.pozos.find(x => x.id == repoPozoId);
-            const avs = db.avances.filter(a => a.pozoId == repoPozoId);
-            let totAcum = avs.reduce((acc, a) => acc + a.longitud, 0), totPagado = avs.reduce((acc, a) => acc + a.pagado, 0);
-
-            let html = `
-                <div style="font-family:Arial; padding:25px; color:#000; background:#fff;">
-                    <h2 style="text-align:center; color:#065f46; margin-bottom:5px;">CERTIFICADO OFICIAL DE PAGO - REPORTE FINAL DE SONDAJE</h2>
-                    <p style="text-align:center; font-size:12px; color:#555;">Jireth GeoCore Lite</p><hr><br>
-                    <table style="width:100%; font-size:12px; margin-bottom:10px;">
-                        <tr><td><b>Código Sondaje:</b> ${p.codigo}</td><td><b>Proyecto:</b> ${p.proyecto}</td></tr>
-                        <tr><td><b>Empresa Contratista:</b> ${p.empresa}</td><td><b>Máquina:</b> ${p.maquina || 'N/A'}</td></tr>
-                        <tr><td><b>Fecha Inicio:</b> ${p.fechaInicio || 'N/A'}</td><td><b>Fecha Culminación:</b> ${p.fechaCulminacion || 'En Curso'}</td></tr>
-                        <tr><td><b>Coordenadas Collar:</b> Este: ${(p.este || 0).toFixed(2).replace('.', ',')} m | Norte: ${(p.norte || 0).toFixed(2).replace('.', ',')} m</td><td><b>Cota Z:</b> ${(p.cota || 0).toFixed(2).replace('.', ',')} m</td></tr>
-                        <tr><td><b>Geometría:</b> Azimut: ${(p.azimut || 0).toFixed(2).replace('.', ',')}° | Dip: ${(p.dip || -60).toFixed(2).replace('.', ',')}°</td><td><b>Profundidad Final:</b> ${totAcum.toFixed(2).replace('.', ',')} m</td></tr>
-                    </table><br>
-                    <h3 style="color:#065f46; font-size:14px;">Resumen Financiero y Auditoría de Metros Pagables</h3>
-                    <p style="font-size:12px;"><b>Total Metros Perforados:</b> ${totAcum.toFixed(2).replace('.', ',')} m</p>
-                    <p style="font-size:12px;"><b>Total Metros Autorizados para Pago:</b> <b style="color:#047857; font-size:15px;">${totPagado.toFixed(2).replace('.', ',')} m</b></p><br>
-                    
-                    <div style="border: 1px solid #ccc; padding: 12px; background: #f9fafb; font-size: 11px; line-height: 1.4; margin-bottom: 25px;">
-                        <b>DECLARACIÓN DE CONFORMIDAD TÉCNICA:</b><br>
-                        Los suscritos declaran que la información detallada en el presente reporte final de perforación y el registro litológico corresponden fielmente a los trabajos ejecutados.
-                    </div><br><br>
-
-                    <table style="width:100%; text-align:center; font-size:12px;">
-                        <tr>
-                            <td>__________________________________<br><b>Supervisor de Perforación</b><br><span style="font-size:11px; color:#555;">Nombre y Apellido, Firma</span></td>
-                            <td>__________________________________<br><b>Supervisor de GEOLOGOS</b><br><span style="font-size:11px; color:#555;">Nombre y Apellido, Firma</span></td>
-                        </tr>
-                    </table>
-                </div>`;
-            
-            const area = document.getElementById('printable-area');
-            area.innerHTML = html;
-            area.style.display = 'block';
-            setTimeout(() => {
-                window.print();
-                area.style.display = 'none';
-            }, 300);
-        }
-
-        function exportarCSVSoftware() {
-            if(!repoPozoId) { alert("⚠️ Seleccione un sondaje."); return; }
-            const p = db.pozos.find(x => x.id == repoPozoId);
-            const avs = db.avances.filter(a => a.pozoId == repoPozoId);
-
-            let csv = "Sondaje,Desde,Hasta,Diametro,Recuperado,PorcentajeRecuperacion,Meteorizacion,MetrosPagados\n";
-            avs.forEach(a => {
-                csv += `"${p.codigo}",${a.desde.toFixed(2)},${a.hasta.toFixed(2)},"${a.diametro}",${a.recuperado.toFixed(2)},${a.porcentaje.toFixed(1)},"${a.meteorizacion}",${a.pagado.toFixed(2)}\n`;
-            });
-            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a'); a.href = url; a.download = `Logging_Software_${p.codigo}_${new Date().toISOString().split('T')[0]}.csv`; a.click();
         }
 
         async function cerrarPozoActual() {
             if (!pozoId) return;
             const p = db.pozos.find(x => x.id == pozoId);
             if (p) {
-                p.estado = 'CULMINADO'; 
-                p.fechaCulminacion = new Date().toISOString().split('T')[0];
-                await guardarPozoNube(p);
-                alert("🏁 Sondaje Culminado y Archivado Exitosamente"); 
-                poblarSelectCierre();
-                poblarSelectRepositorio();
-                renderTablaAdminPozos();
+                p.estado = 'CULMINADO'; p.fechaCulminacion = new Date().toISOString().split('T')[0];
+                await guardarPozoNube(p); alert("🏁 Sondaje culminado y archivado exitosamente.");
+                poblarSelectCierre(); poblarSelectRepositorio(); renderTablaAdminPozos();
             }
         }
 
-        function habilitarEdicionTopo() {
-            if (!pozoId) { alert("⚠️ Seleccione un sondaje primero"); return; }
-            ['m2_maquina', 'm2_otra_maquina', 'm2_este', 'm2_norte', 'm2_cota', 'm2_azimut', 'm2_dip', 'm2_target'].forEach(id => {
-                document.getElementById(id).disabled = false;
+        function poblarSelectRepositorio() {
+            const sel = document.getElementById('repoPozoSelect'); if(!sel) return;
+            sel.innerHTML = '<option value="">-- Seleccionar Sondaje Individual --</option>';
+            db.pozos.forEach(p => {
+                const opt = document.createElement('option'); opt.value = p.id;
+                opt.textContent = `${p.codigo} - ${p.empresa} (${p.proyecto}) [${p.estado || 'ACTIVO'}]`;
+                if(p.id == repoPozoId) opt.selected = true; sel.appendChild(opt);
             });
-            document.getElementById('m2_btn_box').classList.remove('hidden');
         }
 
-        async function guardarTopografia() {
-            if (!pozoId) return;
-            const p = db.pozos.find(x => x.id == pozoId);
-            if (!p) return;
-
-            let maq = document.getElementById('m2_maquina').value;
-            if (maq === 'OTRA') maq = document.getElementById('m2_otra_maquina').value.trim().toUpperCase();
-
-            p.maquina = maq;
-            p.este = parseFloat(document.getElementById('m2_este').value.replace(',', '.')) || 0;
-            p.norte = parseFloat(document.getElementById('m2_norte').value.replace(',', '.')) || 0;
-            p.cota = parseFloat(document.getElementById('m2_cota').value.replace(',', '.')) || 0;
-            p.azimut = parseFloat(document.getElementById('m2_azimut').value.replace(',', '.')) || 0;
-            p.dip = parseFloat(document.getElementById('m2_dip').value.replace(',', '.')) || -60;
-            p.target = parseFloat(document.getElementById('m2_target').value.replace(',', '.')) || 100;
-
-            await guardarPozoNube(p);
-
-            ['m2_maquina', 'm2_otra_maquina', 'm2_este', 'm2_norte', 'm2_cota', 'm2_azimut', 'm2_dip', 'm2_target'].forEach(id => {
-                document.getElementById(id).disabled = true;
+        function cargarRepositorioPozo(id) {
+            if(!id) { repoPozoId = null; document.getElementById('repoPanelOpciones').classList.add('hidden'); document.getElementById('repoMensajeVacio').classList.remove('hidden'); return; }
+            repoPozoId = id; const p = db.pozos.find(x => x.id == id); if(!p) return;
+            const selT = document.getElementById('repoTurnoSelect'); selT.innerHTML = '<option value="">-- Seleccionar Turno --</option>';
+            db.turnos.filter(t => t.pozoId == id).forEach(t => {
+                const opt = document.createElement('option'); opt.value = t.id;
+                opt.textContent = `Fecha: ${t.fecha} - Turno: ${t.tipo} (Perf: ${t.perforador} | Geo: ${t.geologo})`;
+                selT.appendChild(opt);
             });
-            document.getElementById('m2_btn_box').classList.add('hidden');
-            alert("💾 Ficha Topográfica Guardada");
-            switchTab('mod3_turno');
+            const tbSoft = document.getElementById('tablaPreviewSoftware'); tbSoft.innerHTML = '';
+            db.avances.filter(a => a.pozoId == id).forEach((a, idx) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td class="p-2">${idx+1}</td><td class="p-2">${a.desde.toFixed(2)}</td><td class="p-2">${a.hasta.toFixed(2)}</td><td class="p-2 font-bold text-sky-400">${a.diametro}</td><td class="p-2">${a.recuperado.toFixed(2)}</td><td class="p-2 font-bold">${a.porcentaje.toFixed(1)}%</td><td class="p-2 text-[10px]">${a.meteorizacion}</td><td class="p-2 font-bold text-emerald-400">${a.pagado.toFixed(2)}</td>`;
+                tbSoft.appendChild(tr);
+            });
+            document.getElementById('repoPanelOpciones').classList.remove('hidden'); document.getElementById('repoMensajeVacio').classList.add('hidden');
+        }
+
+        // --- REPORTE DSR ESTILO PDF OFICIAL ---
+        function imprimirDSROficialEstiloPDF() {
+            if(!repoPozoId) { alert("⚠️ Seleccione un sondaje."); return; }
+            const selTId = document.getElementById('repoTurnoSelect').value;
+            if(!selTId) { alert("⚠️ Seleccione un turno específico."); return; }
+
+            const p = db.pozos.find(x => x.id == repoPozoId);
+            const tSel = db.turnos.find(x => x.id == selTId);
+            const avsPozo = db.avances.filter(a => a.pozoId == repoPozoId);
+            const turnosValidosIds = db.turnos.filter(t => t.pozoId == repoPozoId && t.fecha <= tSel.fecha).map(t => t.id);
+            const avsAcumulados = avsPozo.filter(a => turnosValidosIds.includes(a.turnoId));
+            const avsTurnoActual = avsPozo.filter(a => a.turnoId == tSel.id);
+
+            let totAcum = avsAcumulados.length > 0 ? Math.max(...avsAcumulados.map(a => a.hasta)) : 0;
+            let totRecupAcum = avsAcumulados.reduce((acc, a) => acc + a.recuperado, 0);
+            let porcGlobal = totAcum > 0 ? (totRecupAcum / totAcum) * 100 : 0;
+            const targetPozo = p.target || 100.0;
+            let avanceGralPorc = (totAcum / targetPozo) * 100;
+
+            let hqAvs = avsAcumulados.filter(a => a.diametro === 'HQ');
+            let nqAvs = avsAcumulados.filter(a => a.diametro === 'NQ');
+            let hqTot = hqAvs.reduce((acc, a) => acc + a.longitud, 0);
+            let hqRec = hqAvs.reduce((acc, a) => acc + a.recuperado, 0);
+            let hqPorc = hqTot > 0 ? (hqRec / hqTot) * 100 : 0;
+            
+            let nqTot = nqAvs.reduce((acc, a) => acc + a.longitud, 0);
+            let nqRec = nqAvs.reduce((acc, a) => acc + a.recuperado, 0);
+            let nqPorc = nqTot > 0 ? (nqRec / nqTot) * 100 : 0;
+
+            let hqAnchoPorc = Math.min(100, (hqTot / targetPozo) * 100);
+            let nqAnchoPorc = Math.min(100 - hqAnchoPorc, (nqTot / targetPozo) * 100);
+            let pendientePorc = Math.max(0, 100 - (hqAnchoPorc + nqAnchoPorc));
+
+            let html = `
+                <div style="font-family:Arial, sans-serif; padding:15px; color:#000; background:#fff; font-size:11px; -webkit-print-color-adjust: exact; print-color-adjust: exact;">
+                    <div style="background:#0f172a; color:#fff; padding:10px 15px; border-radius:6px; display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                        <div>
+                            <h2 style="margin:0; font-size:15px; letter-spacing:0.5px;">REPORTE DIARIO DE GEOLOGÍA (DSR)</h2>
+                            <p style="margin:2px 0 0 0; font-size:9px; color:#94a3b8; text-transform:uppercase;">Coordinación de Geología & Control de Sondeos</p>
+                        </div>
+                        <div style="text-align:right;">
+                            <span style="font-size:13px; font-weight:bold; background:#1e3a8a; padding:3px 8px; border-radius:4px; color:#fff;">${p.codigo}</span>
+                            <p style="margin:3px 0 0 0; font-size:10px; color:#cbd5e1;"><b>Fecha:</b> ${tSel.fecha} | <b>Turno:</b> ${tSel.tipo}</p>
+                        </div>
+                    </div>
+
+                    <table style="width:100%; margin-bottom:12px; text-align:center; font-size:10px; border-collapse:separate; border-spacing:6px;">
+                        <tr>
+                            <td style="border:1px solid #cbd5e1; background:#f8fafc; padding:6px; border-radius:4px; width:25%;">
+                                <span style="font-size:9px; color:#64748b; font-weight:bold;">PROF. ACUMULADA</span><br>
+                                <span style="font-size:14px; color:#0f172a; font-weight:900;">${totAcum.toFixed(2)} m</span><br>
+                                <span style="font-size:9px; color:#475569;">Target: ${targetPozo.toFixed(2)} m</span>
+                            </td>
+                            <td style="border:1px solid #cbd5e1; background:#f8fafc; padding:6px; border-radius:4px; width:25%;">
+                                <span style="font-size:9px; color:#64748b; font-weight:bold;">RECUPERACIÓN GLOBAL</span><br>
+                                <span style="font-size:14px; color:#047857; font-weight:900;">${porcGlobal.toFixed(2)}%</span><br>
+                                <span style="font-size:9px; color:#475569;">Muestra en Testigo</span>
+                            </td>
+                            <td style="border:1px solid #cbd5e1; background:#f8fafc; padding:6px; border-radius:4px; width:25%;">
+                                <span style="font-size:9px; color:#64748b; font-weight:bold;">AVANCE GENERAL</span><br>
+                                <span style="font-size:14px; color:#b45309; font-weight:900;">${avanceGralPorc.toFixed(1)}%</span><br>
+                                <span style="font-size:9px; color:#475569;">Progreso del Pozo</span>
+                            </td>
+                            <td style="border:1px solid #cbd5e1; background:#f8fafc; padding:6px; border-radius:4px; width:25%;">
+                                <span style="font-size:9px; color:#64748b; font-weight:bold;">TRAMO ACTUAL</span><br>
+                                <span style="font-size:13px; color:#0f172a; font-weight:900;">${avsTurnoActual.length > 0 ? avsTurnoActual[avsTurnoActual.length-1].diametro : 'N/A'}</span><br>
+                                <span style="font-size:9px; color:#475569;">(${avsTurnoActual.reduce((a,c)=>a+c.longitud,0).toFixed(1)}m en turno)</span>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <table style="width:100%; border-collapse:collapse; margin-bottom:12px; font-size:10px; border:1px solid #cbd5e1;">
+                        <tr style="background:#f1f5f9;"><th colspan="2" style="text-align:left; padding:5px 8px; border-bottom:1px solid #cbd5e1; color:#1e3a8a;">DATOS DE PERFORACIÓN Y UBICACIÓN</th></tr>
+                        <tr>
+                            <td style="padding:5px 8px; width:50%; border-right:1px solid #cbd5e1;"><b>Zona / Proyecto:</b> ${p.proyecto}</td>
+                            <td style="padding:5px 8px; width:50%;"><b>Empresa Perforadora:</b> ${p.empresa}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding:5px 8px; border-top:1px solid #cbd5e1; border-right:1px solid #cbd5e1;"><b>Operador Perforadora:</b> ${tSel.perforador}</td>
+                            <td style="padding:5px 8px; border-top:1px solid #cbd5e1;"><b>Inclinación (Dip):</b> ${(p.dip || -60).toFixed(1)}° | <b>Azimut:</b> ${(p.azimut || 0).toFixed(1)}°</td>
+                        </tr>
+                        <tr>
+                            <td style="padding:5px 8px; border-top:1px solid #cbd5e1; border-right:1px solid #cbd5e1;"><b>Geólogo Responsable:</b> ${tSel.geologo}</td>
+                            <td style="padding:5px 8px; border-top:1px solid #cbd5e1;"><b>Coordenadas Collar:</b> Este: ${(p.este || 0).toFixed(2)} | Norte: ${(p.norte || 0).toFixed(2)}</td>
+                        </tr>
+                    </table>
+
+                    <div style="border:1px solid #cbd5e1; background:#f8fafc; padding:8px; border-radius:4px; margin-bottom:12px;">
+                        <div style="display:flex; justify-content:space-between; font-size:10px; font-weight:bold; margin-bottom:4px;">
+                            <span>Progreso de Perforación por Diámetro</span>
+                            <span style="color:#1e3a8a;">${totAcum.toFixed(1)} m / ${targetPozo.toFixed(1)} m (${avanceGralPorc.toFixed(1)}%)</span>
+                        </div>
+                        <div style="width:100%; background:#e2e8f0; height:12px; border-radius:3px; display:flex; overflow:hidden;">
+                            <div style="width:${hqAnchoPorc}%; background:#2563eb; height:100%;"></div>
+                            <div style="width:${nqAnchoPorc}%; background:#d97706; height:100%;"></div>
+                            <div style="width:${pendientePorc}%; background:#cbd5e1; height:100%;"></div>
+                        </div>
+                        <div style="font-size:9px; color:#475569; margin-top:4px; display:flex; gap:15px;">
+                            <span><b style="color:#2563eb;">■</b> Tramo HQ (${hqTot.toFixed(2)}m)</span>
+                            <span><b style="color:#d97706;">■</b> Tramo NQ (${nqTot.toFixed(2)}m)</span>
+                            <span><b style="color:#94a3b8;">■</b> Pendiente (${(targetPozo - totAcum > 0 ? targetPozo - totAcum : 0).toFixed(2)}m)</span>
+                        </div>
+                    </div>
+
+                    <h4 style="color:#1e3a8a; margin:5px 0 4px 0; font-size:11px; text-transform:uppercase;">Últimas Maniobras Registradas en Turno</h4>
+                    <table border="1" cellspacing="0" cellpadding="4" style="width:100%; border-collapse:collapse; font-size:9.5px; margin-bottom:12px;">
+                        <tr style="background:#0f172a; color:#fff;">
+                            <th style="padding:5px;">Corrida</th><th style="padding:5px;">Desde (m)</th><th style="padding:5px;">Hasta (m)</th><th style="padding:5px;">Avance (m)</th><th style="padding:5px;">Diámetro</th><th style="padding:5px;">Recup (m)</th><th style="padding:5px;">% Rec</th><th style="padding:5px;">Litología / Meteorización</th>
+                        </tr>
+            `;
+            avsTurnoActual.forEach((a, i) => {
+                let badgeColor = a.porcentaje >= 80 ? '#047857' : '#b45309';
+                html += `<tr>
+                    <td style="text-align:center;">#${i+1}</td>
+                    <td style="text-align:right;">${a.desde.toFixed(2)}</td>
+                    <td style="text-align:right;">${a.hasta.toFixed(2)}</td>
+                    <td style="text-align:right;">${a.longitud.toFixed(2)}</td>
+                    <td style="text-align:center; font-weight:bold; color:#1e3a8a;">${a.diametro}</td>
+                    <td style="text-align:right;">${a.recuperado.toFixed(2)}</td>
+                    <td style="text-align:center; font-weight:bold; color:${badgeColor};">${a.porcentaje.toFixed(1)}%</td>
+                    <td>${a.meteorizacion}</td>
+                </tr>`;
+            });
+            if(avsTurnoActual.length === 0) {
+                html += `<tr><td colspan="8" style="text-align:center; color:#777; padding:8px;">No se registraron maniobras para este turno específico.</td></tr>`;
+            }
+
+            html += `
+                    </table>
+
+                    <table style="width:100%; border-collapse:collapse; margin-bottom:15px; font-size:10px;">
+                        <tr>
+                            <td style="width:48%; border:1px solid #cbd5e1; padding:8px; vertical-align:top; background:#f8fafc; border-radius:4px;">
+                                <b style="color:#1e3a8a; font-size:10.5px;">RESUMEN TRAMO HQ</b><br>
+                                • Total Metros Perforados: <b>${hqTot.toFixed(2)} m</b><br>
+                                • Total Metros Recuperados: <b>${hqRec.toFixed(2)} m</b><br>
+                                • % Recuperación Promedio: <b style="color:#047857;">${hqPorc.toFixed(1)}%</b>
+                            </td>
+                            <td style="width:4%;"></td>
+                            <td style="width:48%; border:1px solid #cbd5e1; padding:8px; vertical-align:top; background:#f8fafc; border-radius:4px;">
+                                <b style="color:#1e3a8a; font-size:10.5px;">RESUMEN TRAMO NQ</b><br>
+                                • Total Metros Perforados: <b>${nqTot.toFixed(2)} m</b><br>
+                                • Total Metros Recuperados: <b>${nqRec.toFixed(2)} m</b><br>
+                                • % Recuperación Promedio: <b style="color:#047857;">${nqPorc.toFixed(1)}%</b>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <table style="width:100%; text-align:center; font-size:10px; margin-top:25px;">
+                        <tr>
+                            <td style="width:50%;">
+                                ________________________________________<br>
+                                <b style="font-size:11px;">${tSel.geologo}</b><br>
+                                <span style="font-size:9px; color:#555;">Geólogo Responsable de Campo</span>
+                            </td>
+                            <td style="width:50%;">
+                                ________________________________________<br>
+                                <b style="font-size:11px;">${tSel.perforador}</b><br>
+                                <span style="font-size:9px; color:#555;">Operador Perforadora (${p.empresa})</span>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            `;
+
+            const area = document.getElementById('printable-area');
+            area.innerHTML = html;
+            area.style.display = 'block';
+            setTimeout(() => {
+                window.print();
+                area.style.display = 'none';
+            }, 300);
+        }
+
+        function imprimirReporteGerencialPeriodo() {
+            const empresaFiltro = document.getElementById('repGerencialEmpresa').value;
+            const desdeFiltro = document.getElementById('repGerencialDesde').value;
+            const hastaFiltro = document.getElementById('repGerencialHasta').value;
+            let pozosFiltrados = db.pozos.filter(p => {
+                let mE = (empresaFiltro === 'TODAS' || p.empresa === empresaFiltro);
+                let fR = p.fechaCulminacion || p.fechaInicio || '2026-01-01';
+                let mF = true; if(desdeFiltro && fR < desdeFiltro) mF = false; if(hastaFiltro && fR > hastaFiltro) mF = false;
+                return mE && mF;
+            });
+            if(pozosFiltrados.length === 0) { alert("⚠️ Sin resultados."); return; }
+            let html = `<div style="font-family:Arial; padding:20px; color:#000; background:#fff;"><h2 style="text-align:center; color:#1e3a8a;">REPORTE GERENCIAL DE PERFORACIÓN</h2><hr><br><table border="1" cellspacing="0" cellpadding="5" style="width:100%; border-collapse:collapse; font-size:11px;"><tr style="background:#f1f5f9;"><th>#</th><th>Empresa</th><th>Sondaje</th><th>Proyecto</th><th>Estado</th><th>Perf (m)</th><th>Recup (m)</th><th>% Rec</th><th>Pagables (m)</th></tr>`;
+            let gTotM = 0, gTotR = 0, gTotP = 0;
+            pozosFiltrados.forEach((p, idx) => {
+                const avs = db.avances.filter(a => a.pozoId == p.id);
+                let tM = avs.reduce((a,c)=>a+c.longitud,0), tR = avs.reduce((a,c)=>a+c.recuperado,0), tP = avs.reduce((a,c)=>a+c.pagado,0);
+                gTotM += tM; gTotR += tR; gTotP += tP;
+                html += `<tr><td style="text-align:center;">${idx+1}</td><td>${p.empresa}</td><td><b>${p.codigo}</b></td><td>${p.proyecto}</td><td style="text-align:center;">${p.estado}</td><td style="text-align:right;">${tM.toFixed(2)}</td><td style="text-align:right;">${tR.toFixed(2)}</td><td style="text-align:center;">${tM>0?((tR/tM)*100).toFixed(1):0}%</td><td style="text-align:right; font-weight:bold; color:#047857;">${tP.toFixed(2)}</td></tr>`;
+            });
+            html += `<tr style="background:#e2e8f0; font-weight:bold;"><td colspan="5" style="text-align:right;">TOTALES:</td><td style="text-align:right;">${gTotM.toFixed(2)}m</td><td style="text-align:right;">${gTotR.toFixed(2)}m</td><td style="text-align:center;">${gTotM>0?((gTotR/gTotM)*100).toFixed(1):0}%</td><td style="text-align:right; color:#047857;">${gTotP.toFixed(2)}m</td></tr></table></div>`;
+            const area = document.getElementById('printable-area'); area.innerHTML = html; area.style.display = 'block';
+            setTimeout(() => { window.print(); area.style.display = 'none'; }, 300);
+        }
+
+        function imprimirCertificadoRepositorio() {
+            if(!repoPozoId) { alert("⚠️ Seleccione un sondaje."); return; }
+            const p = db.pozos.find(x => x.id == repoPozoId);
+            const avs = db.avances.filter(a => a.pozoId == repoPozoId);
+            let totM = avs.reduce((a,c)=>a+c.longitud,0), totP = avs.reduce((a,c)=>a+c.pagado,0);
+            let html = `<div style="font-family:Arial; padding:25px; color:#000; background:#fff;"><h2 style="text-align:center; color:#065f46;">CERTIFICADO OFICIAL DE PAGO - REPORTE FINAL</h2><hr><br><p><b>Sondaje:</b> ${p.codigo} | <b>Empresa:</b> ${p.empresa} | <b>Proyecto:</b> ${p.proyecto}</p><p><b>Total Metros Perforados:</b> ${totM.toFixed(2)} m</p><p><b>Total Metros Pagables:</b> <b style="color:#047857; font-size:16px;">${totP.toFixed(2)} m</b></p><br><br><table style="width:100%; text-align:center; font-size:12px;"><tr><td>____________________________<br><b>Geología</b></td><td>____________________________<br><b>Perforación</b></td></tr></table></div>`;
+            const area = document.getElementById('printable-area'); area.innerHTML = html; area.style.display = 'block';
+            setTimeout(() => { window.print(); area.style.display = 'none'; }, 300);
+        }
+
+        function exportarCSVSoftware() {
+            if(!repoPozoId) return; const p = db.pozos.find(x => x.id == repoPozoId);
+            let csv = "Sondaje,Desde,Hasta,Diametro,Recuperado,%Rec,Meteorizacion,Pagado\n";
+            db.avances.filter(a => a.pozoId == repoPozoId).forEach(a => { csv += `"${p.codigo}",${a.desde.toFixed(2)},${a.hasta.toFixed(2)},"${a.diametro}",${a.recuperado.toFixed(2)},${a.porcentaje.toFixed(1)}%,"${a.meteorizacion}",${a.pagado.toFixed(2)}\n`; });
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `Logging_${p.codigo}.csv`; a.click();
         }
 
         function renderConsolidado() {
-            const tb = document.getElementById('tablaConsolidado');
-            if(!tb) return;
-            tb.innerHTML = '';
+            const tb = document.getElementById('tablaConsolidado'); if(!tb) return; tb.innerHTML = '';
             db.pozos.forEach(p => {
                 const avs = db.avances.filter(a => a.pozoId == p.id);
-                let tot = avs.reduce((acc, a) => acc + a.longitud, 0), rec = avs.reduce((acc, a) => acc + a.recuperado, 0), pag = avs.reduce((acc, a) => acc + a.pagado, 0);
+                let tot = avs.reduce((a,c)=>a+c.longitud,0), rec = avs.reduce((a,c)=>a+c.recuperado,0), pag = avs.reduce((a,c)=>a+c.pagado,0);
                 const tr = document.createElement('tr');
-                let badgeEstado = (p.estado || 'ACTIVO') === 'CULMINADO' ? '<span class="text-emerald-400 font-bold">CULMINADO</span>' : '<span class="text-sky-400 font-bold">ACTIVO</span>';
-                tr.innerHTML = `<td class="p-2">${badgeEstado}</td><td class="p-2">${p.empresa}</td><td class="p-2 font-bold text-sky-400">${p.codigo}</td><td class="p-2">${p.proyecto}</td><td class="p-2">${tot.toFixed(2).replace('.', ',')} m</td><td class="p-2">${rec.toFixed(2).replace('.', ',')} m</td><td class="p-2">${(tot > 0 ? (rec / tot) * 100 : 0).toFixed(1)}%</td><td class="p-2 font-bold text-emerald-400">${pag.toFixed(2).replace('.', ',')} m</td>`;
+                tr.innerHTML = `<td class="p-2">${p.estado||'ACTIVO'}</td><td class="p-2">${p.empresa}</td><td class="p-2 font-bold text-sky-400">${p.codigo}</td><td class="p-2">${p.proyecto}</td><td class="p-2">${tot.toFixed(2)}m</td><td class="p-2">${rec.toFixed(2)}m</td><td class="p-2">${tot>0?((rec/tot)*100).toFixed(1):0}%</td><td class="p-2 font-bold text-emerald-400">${pag.toFixed(2)}m</td>`;
                 tb.appendChild(tr);
             });
         }
-
         function exportarCSV() {
-            let csv = "Estado,Empresa,FechaInicio,Sondaje,Proyecto,MetrosTotales,MetrosRecuperados,%Recuperacion,MetrosPagados\n";
+            let csv = "Estado,Empresa,Sondaje,Proyecto,TotM,RecM,%Rec,PagM\n";
             db.pozos.forEach(p => {
                 const avs = db.avances.filter(a => a.pozoId == p.id);
-                let tot = avs.reduce((acc, a) => acc + a.longitud, 0), rec = avs.reduce((acc, a) => acc + a.recuperado, 0), pag = avs.reduce((acc, a) => acc + a.pagado, 0);
-                csv += `"${p.estado || 'ACTIVO'}","${p.empresa}","${p.fechaInicio || ''}","${p.codigo}","${p.proyecto}",${tot.toFixed(2)},${rec.toFixed(2)},${(tot > 0 ? (rec / tot) * 100 : 0).toFixed(1)}%,${pag.toFixed(2)}\n`;
+                let tot = avs.reduce((a,c)=>a+c.longitud,0), rec = avs.reduce((a,c)=>a+c.recuperado,0), pag = avs.reduce((a,c)=>a+c.pagado,0);
+                csv += `"${p.estado}","${p.empresa}","${p.codigo}","${p.proyecto}",${tot.toFixed(2)},${rec.toFixed(2)},${tot>0?((rec/tot)*100).toFixed(1):0}%,${pag.toFixed(2)}\n`;
             });
             const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-            const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `Consolidado_General_Mina_${new Date().toISOString().split('T')[0]}.csv`; a.click();
+            const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `Consolidado.csv`; a.click();
         }
-
+        function renderTablaAdminPozos() {
+            const tb = document.getElementById('tablaAdminPozos'); if(!tb) return; tb.innerHTML = '';
+            db.pozos.forEach(p => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td class="p-2.5 font-bold">${p.codigo}</td><td class="p-2.5">${p.empresa}</td><td class="p-2.5">${p.proyecto}</td><td class="p-2.5">${p.estado||'ACTIVO'}</td><td class="p-2.5 text-center"><button class="bg-rose-600 text-white px-2 py-1 rounded text-[10px]" onclick="eliminarPozo(${p.id})">🗑️ Eliminar</button></td>`;
+                tb.appendChild(tr);
+            });
+        }
+        async function eliminarPozo(id) {
+            if(confirm("¿Eliminar pozo y todos sus datos?")) {
+                await eliminarPozoNube(id); db.pozos = db.pozos.filter(x=>x.id!=id); db.turnos = db.turnos.filter(x=>x.pozoId!=id); db.avances = db.avances.filter(x=>x.pozoId!=id);
+                refrescarSelect(); alert("Pozo eliminado.");
+            }
+        }
+        function habilitarEdicionTopo() {
+            if(!pozoId) { alert("Seleccione pozo"); return; }
+            ['m2_maquina', 'm2_otra_maquina', 'm2_este', 'm2_norte', 'm2_cota', 'm2_azimut', 'm2_dip', 'm2_target'].forEach(id => document.getElementById(id).disabled = false);
+            document.getElementById('m2_btn_box').classList.remove('hidden');
+        }
+        async function guardarTopografia() {
+            if(!pozoId) return; const p = db.pozos.find(x=>x.id==pozoId); if(!p) return;
+            let maq = document.getElementById('m2_maquina').value; if(maq==='OTRA') maq = document.getElementById('m2_otra_maquina').value.toUpperCase();
+            p.maquina = maq; p.este = parseFloat(document.getElementById('m2_este').value.replace(',','.'))||0;
+            p.norte = parseFloat(document.getElementById('m2_norte').value.replace(',','.'))||0;
+            p.cota = parseFloat(document.getElementById('m2_cota').value.replace(',','.'))||0;
+            p.azimut = parseFloat(document.getElementById('m2_azimut').value.replace(',','.'))||0;
+            p.dip = parseFloat(document.getElementById('m2_dip').value.replace(',','.'))||-60;
+            p.target = parseFloat(document.getElementById('m2_target').value.replace(',','.'))||100;
+            await guardarPozoNube(p);
+            ['m2_maquina', 'm2_otra_maquina', 'm2_este', 'm2_norte', 'm2_cota', 'm2_azimut', 'm2_dip', 'm2_target'].forEach(id => document.getElementById(id).disabled = true);
+            document.getElementById('m2_btn_box').classList.add('hidden'); alert("Topografía guardada."); switchTab('mod3_turno');
+        }
         document.getElementById('m3_fecha').value = new Date().toISOString().split('T')[0];
     </script>
 </body>
