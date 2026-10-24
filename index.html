@@ -11,9 +11,10 @@
         .btn-field { min-height: 50px; font-weight: 700; border-radius: 0.5rem; }
         .input-field { min-height: 46px; border: 2px solid #334155; }
         @media print {
+            @page { size: portrait; margin: 8mm; }
             body * { visibility: hidden; }
             #printable-area, #printable-area * { visibility: visible; }
-            #printable-area { position: absolute; left: 0; top: 0; width: 100%; color: #000; background: #fff; padding: 15px; }
+            #printable-area { position: absolute; left: 0; top: 0; width: 100%; color: #000; background: #fff; padding: 5px; font-size: 10px; }
         }
     </style>
 </head>
@@ -35,7 +36,7 @@
                 <div>
                     <label class="block text-xs font-bold text-slate-300 mb-1">Contraseña de Acceso</label>
                     <div class="relative flex items-center">
-                        <input type="password" id="inputClaveLogin" class="input-field w-full px-3 pr-10 bg-slate-900 text-white rounded-lg text-sm font-bold">
+                        <input type="password" id="inputClaveLogin" value="" class="input-field w-full px-3 pr-10 bg-slate-900 text-white rounded-lg text-sm font-bold">
                         <button type="button" onclick="togglePasswordVisibility('inputClaveLogin')" class="absolute right-3 text-slate-400 hover:text-white text-sm font-bold">👁️</button>
                     </div>
                 </div>
@@ -54,11 +55,11 @@
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-slate-300 mb-1">PIN de Rescate (4 dígitos)</label>
-                    <input type="password" maxlength="4" id="inputPinRescate" placeholder="Ej: 2628" class="input-field w-full px-3 bg-slate-900 text-white rounded-lg text-sm font-mono font-bold text-center">
+                    <input type="password" maxlength="4" id="inputPinRescate" value="" placeholder="----" class="input-field w-full px-3 bg-slate-900 text-white rounded-lg text-sm font-mono font-bold text-center">
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-slate-300 mb-1">Nueva Contraseña</label>
-                    <input type="password" id="inputClaveNuevaRescate" class="input-field w-full px-3 bg-slate-900 text-white rounded-lg text-sm font-bold">
+                    <input type="password" id="inputClaveNuevaRescate" value="" class="input-field w-full px-3 bg-slate-900 text-white rounded-lg text-sm font-bold">
                 </div>
                 <button type="button" onclick="ejecutarRescateClave()" class="btn-field w-full bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-black shadow-lg">
                     🔄 Restablecer Clave e Ingresar
@@ -67,7 +68,7 @@
                     <button type="button" onclick="ocultarBoxRescate()" class="text-xs text-slate-400 hover:text-white underline">Volver al inicio</button>
                 </div>
             </div>
-            <p class="text-[10px] text-center text-slate-500">Clave inicial: Mina2628 | PIN: 2628</p>
+            <p class="text-[10px] text-center text-slate-500">Sistema Seguro de Perforación</p>
         </div>
     </div>
 
@@ -112,17 +113,17 @@
                     <input type="text" id="m1_codigo" onblur="forzarMayusculas(this)" class="input-field w-full px-3 bg-slate-900 text-white rounded-lg uppercase font-bold text-sm">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-slate-300 mb-1">Empresa Titular / Contratista *</label>
+                    <label class="block text-xs font-bold text-slate-300 mb-1">Empresa Titular / Cliente (Pagadora) *</label>
                     <select id="m1_empresa" onchange="toggleOtraEmpresa()" class="input-field w-full px-3 bg-slate-900 text-white rounded-lg text-sm font-bold">
                         <option value="IVM C.A.">IVM C.A.</option>
                         <option value="MINERÍA CARABOBO C.A.">MINERÍA CARABOBO C.A.</option>
                         <option value="INDUSTRIAS AUDIT">INDUSTRIAS AUDIT</option>
                         <option value="HAVILA 318">HAVILA 318</option>
-                        <option value="OTRA">Otra (Especificar)</option>
+                        <option value="OTRA"> Otra (Especificar)</option>
                     </select>
                 </div>
                 <div id="m1_otra_empresa_box" class="hidden">
-                    <label class="block text-xs font-bold text-amber-300 mb-1">Especifique Empresa *</label>
+                    <label class="block text-xs font-bold text-amber-300 mb-1">Especifique Empresa Cliente *</label>
                     <input type="text" id="m1_otra_empresa" onblur="forzarMayusculas(this)" class="input-field w-full px-3 bg-slate-900 text-white rounded-lg text-sm uppercase">
                 </div>
                 <div>
@@ -236,7 +237,7 @@
             </div>
         </section>
 
-        <!-- MÓDULO 3B: CORE LOGGING Y AVANCES (CON BARRA DE PROGRESO PROFESIONAL) -->
+        <!-- MÓDULO 3B: CORE LOGGING Y AVANCES -->
         <section id="mod3_logging" class="hidden space-y-4 bg-slate-800 p-5 rounded-2xl border border-slate-700">
             <h2 class="text-xl font-black text-amber-400">🪵 Módulo 3B: Core Logging & Avances</h2>
             
@@ -252,10 +253,10 @@
                 </div>
             </div>
 
-            <!-- NUEVA BARRA DE PROGRESO PROFESIONAL EN LOGGING -->
+            <!-- BARRA DE PROGRESO PROFESIONAL EN LOGGING -->
             <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 space-y-2">
                 <div class="flex justify-between items-center text-xs font-bold">
-                    <span class="text-amber-400">📈 Progreso General del Pozo frente al Target</span>
+                    <span class="text-amber-400">📈 Progreso General del Pozo frente al Target Planificado</span>
                     <span id="lblProgresoTexto" class="text-sky-300">0.00 m / 100.00 m (0.0%)</span>
                 </div>
                 <div class="w-full bg-slate-950 h-4 rounded-lg overflow-hidden flex border border-slate-800">
@@ -266,7 +267,7 @@
                 <div class="flex gap-4 text-[11px] text-slate-400 pt-1">
                     <span><b class="text-blue-500">■</b> HQ (<span id="txtMetrosHQ">0.00</span>m)</span>
                     <span><b class="text-amber-500">■</b> NQ (<span id="txtMetrosNQ">0.00</span>m)</span>
-                    <span><b class="text-slate-600">■</b> Pendiente (<span id="txtMetrosPend">100.00</span>m)</span>
+                    <span><b class="text-slate-600">■</b> Pendiente Planificado (<span id="txtMetrosPend">100.00</span>m)</span>
                 </div>
             </div>
 
@@ -341,8 +342,8 @@
                         <p id="kpiRecupTurno" class="text-lg font-black text-amber-400 mt-1">0,0%</p>
                     </div>
                     <div class="bg-slate-900 p-3 rounded-lg border-l-4 border-l-purple-500">
-                        <p class="text-[10px] font-bold text-slate-400 uppercase">% Rec. Global</p>
-                        <p id="kpiRecupGlobal" class="text-lg font-black text-purple-400 mt-1">0,0%</p>
+                        <p class="text-[10px] font-bold text-slate-400 uppercase">% Avance Planificado</p>
+                        <p id="kpiAvancePlan" class="text-lg font-black text-purple-400 mt-1">0,0%</p>
                     </div>
                 </div>
 
@@ -453,7 +454,7 @@
                 <h3 class="text-xs font-bold text-sky-400 flex items-center gap-1">📊 Reporte Gerencial de Perforación por Periodo / Empresa</h3>
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-300 mb-1">Filtrar Empresa</label>
+                        <label class="block text-[10px] font-bold text-slate-300 mb-1">Filtrar Empresa Cliente</label>
                         <select id="repGerencialEmpresa" class="input-field w-full px-2 bg-slate-800 text-white rounded-lg text-xs font-bold">
                             <option value="TODAS">TODAS LAS EMPRESAS</option>
                             <option value="IVM C.A.">IVM C.A.</option>
@@ -487,7 +488,7 @@
                         </select>
                     </div>
                     <button type="button" onclick="imprimirDSROficialEstiloPDF()" class="btn-field w-full bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold">
-                        🖨️ Vista Previa e Imprimir DSR (Estilo Formato Oficial)
+                        🖨️ Vista Previa e Imprimir DSR (Estilo 1 Hoja)
                     </button>
                 </div>
 
@@ -497,9 +498,9 @@
                 </div>
 
                 <div id="repoViewFinal" class="bg-slate-900 p-4 rounded-xl border border-slate-700 space-y-3">
-                    <h3 class="text-xs font-bold text-emerald-400">🏆 Certificado de Pago y Reporte Final Consolidado</h3>
+                    <h3 class="text-xs font-bold text-emerald-400">🏆 Certificado de Pago y Reporte Final Consolidado (Con Firmas)</h3>
                     <button type="button" onclick="imprimirCertificadoRepositorio()" class="btn-field w-full bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold">
-                        ✍️ Imprimir Certificado de Pago Final
+                        ✍️ Imprimir Certificado de Pago Final con Firmas
                     </button>
                 </div>
 
@@ -528,7 +529,7 @@
                 <div class="overflow-x-auto border border-slate-700 rounded-xl">
                     <table class="w-full text-left text-xs border-collapse">
                         <thead class="bg-slate-800 text-slate-300 uppercase">
-                            <tr><th class="p-2">Estado</th><th class="p-2">Empresa</th><th class="p-2">Sondaje</th><th class="p-2">Proyecto</th><th class="p-2">Total (m)</th><th class="p-2">Recup (m)</th><th class="p-2">% Rec</th><th class="p-2">Pagado (m)</th></tr>
+                            <tr><th class="p-2">Estado</th><th class="p-2">Cliente</th><th class="p-2">Sondaje</th><th class="p-2">Proyecto</th><th class="p-2">Total (m)</th><th class="p-2">Recup (m)</th><th class="p-2">% Rec</th><th class="p-2">Pagado (m)</th></tr>
                         </thead>
                         <tbody id="tablaConsolidado" class="divide-y divide-slate-700 bg-slate-900/60"></tbody>
                     </table>
@@ -543,7 +544,7 @@
             <div class="overflow-x-auto border border-slate-700 rounded-xl">
                 <table class="w-full text-left text-xs border-collapse">
                     <thead class="bg-slate-800 text-slate-300 uppercase">
-                        <tr><th class="p-2.5">Sondaje</th><th class="p-2.5">Empresa</th><th class="p-2.5">Proyecto</th><th class="p-2.5">Estado</th><th class="p-2.5 text-center">Acciones</th></tr>
+                        <tr><th class="p-2.5">Sondaje</th><th class="p-2.5">Cliente</th><th class="p-2.5">Proyecto</th><th class="p-2.5">Estado</th><th class="p-2.5 text-center">Acciones</th></tr>
                     </thead>
                     <tbody id="tablaAdminPozos" class="divide-y divide-slate-700 bg-slate-950"></tbody>
                 </table>
@@ -557,7 +558,7 @@
             <h3 class="text-base font-black text-amber-400">✏️ Editar Propiedades del Sondaje</h3>
             <input type="hidden" id="edit_pozo_id">
             <div><label class="block text-xs font-bold text-slate-300 mb-1">Código</label><input type="text" id="edit_pozo_codigo" class="input-field w-full px-3 bg-slate-900 text-white rounded-lg text-sm uppercase font-bold"></div>
-            <div><label class="block text-xs font-bold text-slate-300 mb-1">Empresa</label><input type="text" id="edit_pozo_empresa" class="input-field w-full px-3 bg-slate-900 text-white rounded-lg text-sm uppercase font-bold"></div>
+            <div><label class="block text-xs font-bold text-slate-300 mb-1">Cliente</label><input type="text" id="edit_pozo_empresa" class="input-field w-full px-3 bg-slate-900 text-white rounded-lg text-sm uppercase font-bold"></div>
             <div><label class="block text-xs font-bold text-slate-300 mb-1">Proyecto</label><input type="text" id="edit_pozo_proyecto" class="input-field w-full px-3 bg-slate-900 text-white rounded-lg text-sm uppercase font-bold"></div>
             <div><label class="block text-xs font-bold text-slate-300 mb-1">Estado</label><select id="edit_pozo_estado" class="input-field w-full px-3 bg-slate-900 text-white rounded-lg text-sm font-bold"><option value="ACTIVO">ACTIVO</option><option value="CULMINADO">CULMINADO</option></select></div>
             <div class="flex gap-2 pt-2">
@@ -838,11 +839,11 @@
                 labelsT.push(`#${i+1}`); dataT.push(a.porcentaje);
                 let col = a.porcentaje >= 80 ? 'color:#34d399;' : 'color:#fbbf24;';
                 const tr = document.createElement('tr');
-                tr.innerHTML = `<td class="p-2">${i+1}</td><td class="p-2">${a.desde.toFixed(2).replace('.', ',')}-${a.hasta.toFixed(2).replace('.', ',')}</td><td class="p-2 font-bold text-sky-400">${a.diametro}</td><td class="p-2">${a.recuperado.toFixed(2).replace('.', ',')}</td><td class="p-2 font-bold" style="${col}">${a.porcentaje.toFixed(1)}%</td><td class="p-2 text-[10px]">${a.meteorizacion}</td><td class="p-2 font-bold text-emerald-400">${a.pagado.toFixed(2).replace('.', ',')}</td><td class="p-2"><button type="button" class="bg-sky-600 text-white px-2 py-1 rounded text-[10px]" onclick="editarAvance(${a.id})">Editar</button></td>`;
+                tr.innerHTML = `<td class="p-2">${i+1}</td><td class="p-2">${a.desde.toFixed(2).replace('.', ',')}-${a.hasta.toFixed(2).replace('.', ',')}</td><td class="p-2 font-bold text-sky-400">${a.diametro}</td><td class="p-2">${a.recuperado.toFixed(2).replace('.', ',')}</td><td class="p-2 font-bold" style="${col}">${a.porcentaje.toFixed(1)}%</td><td class="p-2 text-[10px]">${a.meteorizacion}</td><td class="p-2 font-bold text-emerald-400">${a.pagado.toFixed(2).replace('.', ',')}</td><td class="p-2"><button type="button" class="bg-sky-600 text-white px-2 py-1 rounded text-[10px]" onclick="editarAvance(${a.id})">✏️ Editar</button></td>`;
                 tb.appendChild(tr);
             });
 
-            // Actualizar barra de progreso profesional en Logging
+            // Actualizar barra de progreso profesional en Logging y métrica de avance planificado
             const targetPozo = p && p.target ? p.target : 100.0;
             let avancePorc = targetPozo > 0 ? (totMetros / targetPozo) * 100 : 0;
             let hqAncho = Math.min(100, (hqTot / targetPozo) * 100);
@@ -852,7 +853,7 @@
             document.getElementById('barHQ').style.width = hqAncho + '%';
             document.getElementById('barNQ').style.width = nqAncho + '%';
             document.getElementById('barPendiente').style.width = pendAncho + '%';
-            document.getElementById('lblProgresoTexto').textContent = `${totMetros.toFixed(2)} m / ${targetPozo.toFixed(2)} m (${avancePorc.toFixed(1)}%)`;
+            document.getElementById('lblProgresoTexto').textContent = `${totMetros.toFixed(2)} m / ${targetPozo.toFixed(2)} m (${avancePorc.toFixed(1) + '%'})`;
             document.getElementById('txtMetrosHQ').textContent = hqTot.toFixed(2);
             document.getElementById('txtMetrosNQ').textContent = nqTot.toFixed(2);
             document.getElementById('txtMetrosPend').textContent = (targetPozo - totMetros > 0 ? targetPozo - totMetros : 0).toFixed(2);
@@ -860,7 +861,7 @@
             document.getElementById('kpiMetros').textContent = totMetros.toFixed(2).replace('.', ',') + " m";
             document.getElementById('kpiMetrosTurno').textContent = turnoMetros.toFixed(2).replace('.', ',') + " m";
             document.getElementById('kpiRecupTurno').textContent = (turnoMetros > 0 ? (turnoRecup / turnoMetros) * 100 : 0).toFixed(1) + "%";
-            document.getElementById('kpiRecupGlobal').textContent = (totLong > 0 ? (totRecup / totLong) * 100 : 0).toFixed(1) + "%";
+            document.getElementById('kpiAvancePlan').textContent = avancePorc.toFixed(1) + "%";
             renderGraficosNeon(dataT, totLong, totPagable);
         }
 
@@ -904,7 +905,7 @@
             if(!id) { document.getElementById('cierrePanelInfo').classList.add('hidden'); document.getElementById('cierreMensajeVacio').classList.remove('hidden'); return; }
             pozoId = id; const p = db.pozos.find(x => x.id == id); if(!p) return;
             document.getElementById('cierreCodigoPozo').textContent = `Sondaje: ${p.codigo}`;
-            document.getElementById('cierreEmpresaProyecto').textContent = `Empresa: ${p.empresa} | Proyecto: ${p.proyecto}`;
+            document.getElementById('cierreEmpresaProyecto').textContent = `Cliente: ${p.empresa} | Proyecto: ${p.proyecto}`;
             document.getElementById('cierreEstadoPozo').textContent = p.estado || 'ACTIVO';
             document.getElementById('cierreInfoMaquina').textContent = p.maquina || 'NO ASIGNADA';
             document.getElementById('cierreInfoEste').textContent = (p.este || 0).toFixed(2).replace('.', ',') + ' m';
@@ -987,7 +988,7 @@
             document.getElementById('repoPanelOpciones').classList.remove('hidden'); document.getElementById('repoMensajeVacio').classList.add('hidden');
         }
 
-        // --- REPORTE DSR ESTILO PDF OFICIAL ---
+        // --- REPORTE DSR ESTILO PDF OFICIAL (SIN FIRMAS, 1 SOLA HOJA Y CON ESTÁNDARES DE PAGO) ---
         function imprimirDSROficialEstiloPDF() {
             if(!repoPozoId) { alert("⚠️ Seleccione un sondaje."); return; }
             const selTId = document.getElementById('repoTurnoSelect').value;
@@ -1021,80 +1022,80 @@
             let pendientePorc = Math.max(0, 100 - (hqAnchoPorc + nqAnchoPorc));
 
             let html = `
-                <div style="font-family:Arial, sans-serif; padding:15px; color:#000; background:#fff; font-size:11px; -webkit-print-color-adjust: exact; print-color-adjust: exact;">
-                    <div style="background:#0f172a; color:#fff; padding:10px 15px; border-radius:6px; display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                <div style="font-family:Arial, sans-serif; padding:10px; color:#000; background:#fff; font-size:10px; -webkit-print-color-adjust: exact; print-color-adjust: exact; max-width: 100%;">
+                    
+                    <div style="background:#0f172a; color:#fff; padding:8px 12px; border-radius:4px; display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
                         <div>
-                            <h2 style="margin:0; font-size:15px; letter-spacing:0.5px;">REPORTE DIARIO DE GEOLOGÍA (DSR)</h2>
-                            <p style="margin:2px 0 0 0; font-size:9px; color:#94a3b8; text-transform:uppercase;">Coordinación de Geología & Control de Sondeos</p>
+                            <h2 style="margin:0; font-size:13px; letter-spacing:0.5px;">REPORTE DIARIO DE GEOLOGÍA (DSR)</h2>
+                            <p style="margin:2px 0 0 0; font-size:8px; color:#94a3b8; text-transform:uppercase;">Coordinación de Geología & Control de Sondeos</p>
                         </div>
                         <div style="text-align:right;">
-                            <span style="font-size:13px; font-weight:bold; background:#1e3a8a; padding:3px 8px; border-radius:4px; color:#fff;">${p.codigo}</span>
-                            <p style="margin:3px 0 0 0; font-size:10px; color:#cbd5e1;"><b>Fecha:</b> ${tSel.fecha} | <b>Turno:</b> ${tSel.tipo}</p>
+                            <span style="font-size:11px; font-weight:bold; background:#1e3a8a; padding:2px 6px; border-radius:3px; color:#fff;">${p.codigo}</span>
+                            <p style="margin:2px 0 0 0; font-size:9px; color:#cbd5e1;"><b>Fecha:</b> ${tSel.fecha} | <b>Turno:</b> ${tSel.tipo}</p>
                         </div>
                     </div>
 
-                    <table style="width:100%; margin-bottom:12px; text-align:center; font-size:10px; border-collapse:separate; border-spacing:6px;">
+                    <!-- TARJETAS SUPERIORES KPI & ACUMULADOS -->
+                    <table style="width:100%; margin-bottom:8px; text-align:center; font-size:9px; border-collapse:separate; border-spacing:4px;">
                         <tr>
-                            <td style="border:1px solid #cbd5e1; background:#f8fafc; padding:6px; border-radius:4px; width:25%;">
-                                <span style="font-size:9px; color:#64748b; font-weight:bold;">PROF. ACUMULADA</span><br>
-                                <span style="font-size:14px; color:#0f172a; font-weight:900;">${totAcum.toFixed(2)} m</span><br>
-                                <span style="font-size:9px; color:#475569;">Target: ${targetPozo.toFixed(2)} m</span>
+                            <td style="border:1px solid #cbd5e1; background:#f8fafc; padding:4px; border-radius:3px; width:25%;">
+                                <span style="font-size:8px; color:#64748b; font-weight:bold;">PROF. ACUMULADA</span><br>
+                                <span style="font-size:12px; color:#0f172a; font-weight:900;">${totAcum.toFixed(2)} m</span><br>
+                                <span style="font-size:8px; color:#475569;">Target: ${targetPozo.toFixed(2)} m</span>
                             </td>
-                            <td style="border:1px solid #cbd5e1; background:#f8fafc; padding:6px; border-radius:4px; width:25%;">
-                                <span style="font-size:9px; color:#64748b; font-weight:bold;">RECUPERACIÓN GLOBAL</span><br>
-                                <span style="font-size:14px; color:#047857; font-weight:900;">${porcGlobal.toFixed(2)}%</span><br>
-                                <span style="font-size:9px; color:#475569;">Muestra en Testigo</span>
+                            <td style="border:1px solid #cbd5e1; background:#f8fafc; padding:4px; border-radius:3px; width:25%;">
+                                <span style="font-size:8px; color:#64748b; font-weight:bold;">RECUPERACIÓN GLOBAL</span><br>
+                                <span style="font-size:12px; color:#047857; font-weight:900;">${porcGlobal.toFixed(2)}%</span><br>
+                                <span style="font-size:8px; color:#475569;">Muestra en Testigo</span>
                             </td>
-                            <td style="border:1px solid #cbd5e1; background:#f8fafc; padding:6px; border-radius:4px; width:25%;">
-                                <span style="font-size:9px; color:#64748b; font-weight:bold;">AVANCE GENERAL</span><br>
-                                <span style="font-size:14px; color:#b45309; font-weight:900;">${avanceGralPorc.toFixed(1)}%</span><br>
-                                <span style="font-size:9px; color:#475569;">Progreso del Pozo</span>
+                            <td style="border:1px solid #cbd5e1; background:#f8fafc; padding:4px; border-radius:3px; width:25%;">
+                                <span style="font-size:8px; color:#64748b; font-weight:bold;">AVANCE GENERAL</span><br>
+                                <span style="font-size:12px; color:#b45309; font-weight:900;">${avanceGralPorc.toFixed(1)}%</span><br>
+                                <span style="font-size:8px; color:#475569;">Progreso del Pozo</span>
                             </td>
-                            <td style="border:1px solid #cbd5e1; background:#f8fafc; padding:6px; border-radius:4px; width:25%;">
-                                <span style="font-size:9px; color:#64748b; font-weight:bold;">TRAMO ACTUAL</span><br>
-                                <span style="font-size:13px; color:#0f172a; font-weight:900;">${avsTurnoActual.length > 0 ? avsTurnoActual[avsTurnoActual.length-1].diametro : 'N/A'}</span><br>
-                                <span style="font-size:9px; color:#475569;">(${avsTurnoActual.reduce((a,c)=>a+c.longitud,0).toFixed(1)}m en turno)</span>
+                            <td style="border:1px solid #cbd5e1; background:#f8fafc; padding:4px; border-radius:3px; width:25%;">
+                                <span style="font-size:8px; color:#64748b; font-weight:bold;">TRAMO TURNO</span><br>
+                                <span style="font-size:11px; color:#0f172a; font-weight:900;">${avsTurnoActual.length > 0 ? avsTurnoActual[avsTurnoActual.length-1].diametro : 'N/A'}</span><br>
+                                <span style="font-size:8px; color:#475569;">(${avsTurnoActual.reduce((a,c)=>a+c.longitud,0).toFixed(1)}m perforados)</span>
                             </td>
                         </tr>
                     </table>
 
-                    <table style="width:100%; border-collapse:collapse; margin-bottom:12px; font-size:10px; border:1px solid #cbd5e1;">
-                        <tr style="background:#f1f5f9;"><th colspan="2" style="text-align:left; padding:5px 8px; border-bottom:1px solid #cbd5e1; color:#1e3a8a;">DATOS DE PERFORACIÓN Y UBICACIÓN</th></tr>
+                    <!-- DATOS DE PERFORACIÓN Y UBICACIÓN -->
+                    <table style="width:100%; border-collapse:collapse; margin-bottom:8px; font-size:9.5px; border:1px solid #cbd5e1;">
+                        <tr style="background:#f1f5f9;"><th colspan="2" style="text-align:left; padding:4px 6px; border-bottom:1px solid #cbd5e1; color:#1e3a8a;">DATOS DE PERFORACIÓN Y UBICACIÓN</th></tr>
                         <tr>
-                            <td style="padding:5px 8px; width:50%; border-right:1px solid #cbd5e1;"><b>Zona / Proyecto:</b> ${p.proyecto}</td>
-                            <td style="padding:5px 8px; width:50%;"><b>Empresa Perforadora:</b> ${p.empresa}</td>
+                            <td style="padding:4px 6px; width:50%; border-right:1px solid #cbd5e1;"><b>Zona / Proyecto:</b> ${p.proyecto}</td>
+                            <td style="padding:4px 6px; width:50%;"><b>Empresa Cliente (Pagadora):</b> ${p.empresa}</td>
                         </tr>
                         <tr>
-                            <td style="padding:5px 8px; border-top:1px solid #cbd5e1; border-right:1px solid #cbd5e1;"><b>Operador Perforadora:</b> ${tSel.perforador}</td>
-                            <td style="padding:5px 8px; border-top:1px solid #cbd5e1;"><b>Inclinación (Dip):</b> ${(p.dip || -60).toFixed(1)}° | <b>Azimut:</b> ${(p.azimut || 0).toFixed(1)}°</td>
+                            <td style="padding:4px 6px; border-top:1px solid #cbd5e1; border-right:1px solid #cbd5e1;"><b>Operador Perforadora:</b> ${tSel.perforador}</td>
+                            <td style="padding:4px 6px; border-top:1px solid #cbd5e1;"><b>Inclinación (Dip):</b> ${(p.dip || -60).toFixed(1)}° | <b>Azimut:</b> ${(p.azimut || 0).toFixed(1)}°</td>
                         </tr>
                         <tr>
-                            <td style="padding:5px 8px; border-top:1px solid #cbd5e1; border-right:1px solid #cbd5e1;"><b>Geólogo Responsable:</b> ${tSel.geologo}</td>
-                            <td style="padding:5px 8px; border-top:1px solid #cbd5e1;"><b>Coordenadas Collar:</b> Este: ${(p.este || 0).toFixed(2)} | Norte: ${(p.norte || 0).toFixed(2)}</td>
+                            <td style="padding:4px 6px; border-top:1px solid #cbd5e1; border-right:1px solid #cbd5e1;"><b>Geólogo Supervisor:</b> ${tSel.geologo}</td>
+                            <td style="padding:4px 6px; border-top:1px solid #cbd5e1;"><b>Coordenadas Collar:</b> Este: ${(p.este || 0).toFixed(2)} | Norte: ${(p.norte || 0).toFixed(2)}</td>
                         </tr>
                     </table>
 
-                    <div style="border:1px solid #cbd5e1; background:#f8fafc; padding:8px; border-radius:4px; margin-bottom:12px;">
-                        <div style="display:flex; justify-content:space-between; font-size:10px; font-weight:bold; margin-bottom:4px;">
-                            <span>Progreso de Perforación por Diámetro</span>
+                    <!-- BARRA DE PROGRESO VISIBLE POR DIÁMETRO -->
+                    <div style="border:1px solid #cbd5e1; background:#f8fafc; padding:6px; border-radius:3px; margin-bottom:8px;">
+                        <div style="display:flex; justify-content:space-between; font-size:9px; font-weight:bold; margin-bottom:3px;">
+                            <span>Progreso Acumulado vs Target Planificado</span>
                             <span style="color:#1e3a8a;">${totAcum.toFixed(1)} m / ${targetPozo.toFixed(1)} m (${avanceGralPorc.toFixed(1)}%)</span>
                         </div>
-                        <div style="width:100%; background:#e2e8f0; height:12px; border-radius:3px; display:flex; overflow:hidden;">
+                        <div style="width:100%; background:#e2e8f0; height:10px; border-radius:2px; display:flex; overflow:hidden;">
                             <div style="width:${hqAnchoPorc}%; background:#2563eb; height:100%;"></div>
                             <div style="width:${nqAnchoPorc}%; background:#d97706; height:100%;"></div>
                             <div style="width:${pendientePorc}%; background:#cbd5e1; height:100%;"></div>
                         </div>
-                        <div style="font-size:9px; color:#475569; margin-top:4px; display:flex; gap:15px;">
-                            <span><b style="color:#2563eb;">■</b> Tramo HQ (${hqTot.toFixed(2)}m)</span>
-                            <span><b style="color:#d97706;">■</b> Tramo NQ (${nqTot.toFixed(2)}m)</span>
-                            <span><b style="color:#94a3b8;">■</b> Pendiente (${(targetPozo - totAcum > 0 ? targetPozo - totAcum : 0).toFixed(2)}m)</span>
-                        </div>
                     </div>
 
-                    <h4 style="color:#1e3a8a; margin:5px 0 4px 0; font-size:11px; text-transform:uppercase;">Últimas Maniobras Registradas en Turno</h4>
-                    <table border="1" cellspacing="0" cellpadding="4" style="width:100%; border-collapse:collapse; font-size:9.5px; margin-bottom:12px;">
+                    <!-- TABLA DETALLADA DE MANIOBRAS DEL TURNO -->
+                    <h4 style="color:#1e3a8a; margin:4px 0 3px 0; font-size:10px; text-transform:uppercase;">Maniobras Registradas en el Turno</h4>
+                    <table border="1" cellspacing="0" cellpadding="3" style="width:100%; border-collapse:collapse; font-size:9px; margin-bottom:8px;">
                         <tr style="background:#0f172a; color:#fff;">
-                            <th style="padding:5px;">Corrida</th><th style="padding:5px;">Desde (m)</th><th style="padding:5px;">Hasta (m)</th><th style="padding:5px;">Avance (m)</th><th style="padding:5px;">Diámetro</th><th style="padding:5px;">Recup (m)</th><th style="padding:5px;">% Rec</th><th style="padding:5px;">Litología / Meteorización</th>
+                            <th style="padding:3px;">Corrida</th><th style="padding:3px;">Desde (m)</th><th style="padding:3px;">Hasta (m)</th><th style="padding:3px;">Avance (m)</th><th style="padding:3px;">Diám</th><th style="padding:3px;">Recup (m)</th><th style="padding:3px;">% Rec</th><th style="padding:3px;">Litología / Meteorización</th>
                         </tr>
             `;
             avsTurnoActual.forEach((a, i) => {
@@ -1111,41 +1112,36 @@
                 </tr>`;
             });
             if(avsTurnoActual.length === 0) {
-                html += `<tr><td colspan="8" style="text-align:center; color:#777; padding:8px;">No se registraron maniobras para este turno específico.</td></tr>`;
+                html += `<tr><td colspan="8" style="text-align:center; color:#777; padding:5px;">No se registraron maniobras para este turno específico.</td></tr>`;
             }
 
             html += `
                     </table>
 
-                    <table style="width:100%; border-collapse:collapse; margin-bottom:15px; font-size:10px;">
+                    <!-- TABLA DE ESTÁNDARES DE PAGO DE RECUPERACIÓN POR METEORIZACIÓN -->
+                    <div style="border:1px solid #cbd5e1; background:#f8fafc; padding:5px; border-radius:3px; margin-bottom:8px;">
+                        <b style="color:#1e3a8a; font-size:9px; display:block; margin-bottom:3px;">📋 ESTÁNDARES DE PAGO DE RECUPERACIÓN POR METEORIZACIÓN (UMBRALES):</b>
+                        <table style="width:100%; font-size:8px; border-collapse:collapse;">
+                            <tr style="background:#e2e8f0; font-weight:bold;">
+                                <td style="padding:2px; border:1px solid #cbd5e1;">Suelo / Relleno (≥70%)</td>
+                                <td style="padding:2px; border:1px solid #cbd5e1;">Saprolita / Saprock (≥70%)</td>
+                                <td style="padding:2px; border:1px solid #cbd5e1;">Roca Oxidada (≥80%)</td>
+                                <td style="padding:2px; border:1px solid #cbd5e1;">Roca Fresca / Veta (≥90%)</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <!-- CONTROL ACUMULADO DE CALIDAD HQ / NQ -->
+                    <table style="width:100%; border-collapse:collapse; font-size:9px;">
                         <tr>
-                            <td style="width:48%; border:1px solid #cbd5e1; padding:8px; vertical-align:top; background:#f8fafc; border-radius:4px;">
-                                <b style="color:#1e3a8a; font-size:10.5px;">RESUMEN TRAMO HQ</b><br>
-                                • Total Metros Perforados: <b>${hqTot.toFixed(2)} m</b><br>
-                                • Total Metros Recuperados: <b>${hqRec.toFixed(2)} m</b><br>
-                                • % Recuperación Promedio: <b style="color:#047857;">${hqPorc.toFixed(1)}%</b>
+                            <td style="width:48%; border:1px solid #cbd5e1; padding:5px; vertical-align:top; background:#f8fafc; border-radius:3px;">
+                                <b style="color:#1e3a8a; font-size:9.5px;">RESUMEN TRAMO HQ</b><br>
+                                • Total Metros Perforados: <b>${hqTot.toFixed(2)} m</b> | • Recuperados: <b>${hqRec.toFixed(2)} m</b> (${hqPorc.toFixed(1)}%)
                             </td>
                             <td style="width:4%;"></td>
-                            <td style="width:48%; border:1px solid #cbd5e1; padding:8px; vertical-align:top; background:#f8fafc; border-radius:4px;">
-                                <b style="color:#1e3a8a; font-size:10.5px;">RESUMEN TRAMO NQ</b><br>
-                                • Total Metros Perforados: <b>${nqTot.toFixed(2)} m</b><br>
-                                • Total Metros Recuperados: <b>${nqRec.toFixed(2)} m</b><br>
-                                • % Recuperación Promedio: <b style="color:#047857;">${nqPorc.toFixed(1)}%</b>
-                            </td>
-                        </tr>
-                    </table>
-
-                    <table style="width:100%; text-align:center; font-size:10px; margin-top:25px;">
-                        <tr>
-                            <td style="width:50%;">
-                                ________________________________________<br>
-                                <b style="font-size:11px;">${tSel.geologo}</b><br>
-                                <span style="font-size:9px; color:#555;">Geólogo Responsable de Campo</span>
-                            </td>
-                            <td style="width:50%;">
-                                ________________________________________<br>
-                                <b style="font-size:11px;">${tSel.perforador}</b><br>
-                                <span style="font-size:9px; color:#555;">Operador Perforadora (${p.empresa})</span>
+                            <td style="width:48%; border:1px solid #cbd5e1; padding:5px; vertical-align:top; background:#f8fafc; border-radius:3px;">
+                                <b style="color:#1e3a8a; font-size:9.5px;">RESUMEN TRAMO NQ</b><br>
+                                • Total Metros Perforados: <b>${nqTot.toFixed(2)} m</b> | • Recuperados: <b>${nqRec.toFixed(2)} m</b> (${nqPorc.toFixed(1)}%)
                             </td>
                         </tr>
                     </table>
@@ -1172,7 +1168,7 @@
                 return mE && mF;
             });
             if(pozosFiltrados.length === 0) { alert("⚠️ Sin resultados."); return; }
-            let html = `<div style="font-family:Arial; padding:20px; color:#000; background:#fff;"><h2 style="text-align:center; color:#1e3a8a;">REPORTE GERENCIAL DE PERFORACIÓN</h2><hr><br><table border="1" cellspacing="0" cellpadding="5" style="width:100%; border-collapse:collapse; font-size:11px;"><tr style="background:#f1f5f9;"><th>#</th><th>Empresa</th><th>Sondaje</th><th>Proyecto</th><th>Estado</th><th>Perf (m)</th><th>Recup (m)</th><th>% Rec</th><th>Pagables (m)</th></tr>`;
+            let html = `<div style="font-family:Arial; padding:15px; color:#000; background:#fff;"><h2 style="text-align:center; color:#1e3a8a; font-size:14px;">REPORTE GERENCIAL DE PERFORACIÓN</h2><hr><br><table border="1" cellspacing="0" cellpadding="4" style="width:100%; border-collapse:collapse; font-size:10px;"><tr style="background:#f1f5f9;"><th>#</th><th>Cliente</th><th>Sondaje</th><th>Proyecto</th><th>Estado</th><th>Perf (m)</th><th>Recup (m)</th><th>% Rec</th><th>Pagables (m)</th></tr>`;
             let gTotM = 0, gTotR = 0, gTotP = 0;
             pozosFiltrados.forEach((p, idx) => {
                 const avs = db.avances.filter(a => a.pozoId == p.id);
@@ -1190,7 +1186,7 @@
             const p = db.pozos.find(x => x.id == repoPozoId);
             const avs = db.avances.filter(a => a.pozoId == repoPozoId);
             let totM = avs.reduce((a,c)=>a+c.longitud,0), totP = avs.reduce((a,c)=>a+c.pagado,0);
-            let html = `<div style="font-family:Arial; padding:25px; color:#000; background:#fff;"><h2 style="text-align:center; color:#065f46;">CERTIFICADO OFICIAL DE PAGO - REPORTE FINAL</h2><hr><br><p><b>Sondaje:</b> ${p.codigo} | <b>Empresa:</b> ${p.empresa} | <b>Proyecto:</b> ${p.proyecto}</p><p><b>Total Metros Perforados:</b> ${totM.toFixed(2)} m</p><p><b>Total Metros Pagables:</b> <b style="color:#047857; font-size:16px;">${totP.toFixed(2)} m</b></p><br><br><table style="width:100%; text-align:center; font-size:12px;"><tr><td>____________________________<br><b>Geología</b></td><td>____________________________<br><b>Perforación</b></td></tr></table></div>`;
+            let html = `<div style="font-family:Arial; padding:25px; color:#000; background:#fff;"><h2 style="text-align:center; color:#065f46;">CERTIFICADO OFICIAL DE PAGO - REPORTE FINAL</h2><hr><br><p><b>Sondaje:</b> ${p.codigo} | <b>Cliente Pagador:</b> ${p.empresa} | <b>Proyecto:</b> ${p.proyecto}</p><p><b>Total Metros Perforados:</b> ${totM.toFixed(2)} m</p><p><b>Total Metros Pagables:</b> <b style="color:#047857; font-size:16px;">${totP.toFixed(2)} m</b></p><br><br><table style="width:100%; text-align:center; font-size:12px;"><tr><td>____________________________<br><b>Geología</b></td><td>____________________________<br><b>Perforación</b></td></tr></table></div>`;
             const area = document.getElementById('printable-area'); area.innerHTML = html; area.style.display = 'block';
             setTimeout(() => { window.print(); area.style.display = 'none'; }, 300);
         }
@@ -1214,7 +1210,7 @@
             });
         }
         function exportarCSV() {
-            let csv = "Estado,Empresa,Sondaje,Proyecto,TotM,RecM,%Rec,PagM\n";
+            let csv = "Estado,Cliente,Sondaje,Proyecto,TotM,RecM,%Rec,PagM\n";
             db.pozos.forEach(p => {
                 const avs = db.avances.filter(a => a.pozoId == p.id);
                 let tot = avs.reduce((a,c)=>a+c.longitud,0), rec = avs.reduce((a,c)=>a+c.recuperado,0), pag = avs.reduce((a,c)=>a+c.pagado,0);
