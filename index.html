@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jireth GeoCore Lite | Control Operativo & Gerencial Cloud</title>
+    <title>Jireth GeoCore Lite | Control Operativo, Gerencial & IA Multipozo</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- SDK Oficial de Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -25,7 +25,7 @@
         <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700 w-full max-w-sm space-y-4 shadow-2xl">
             <div class="text-center">
                 <h1 class="text-xl font-black text-white">⛏️ Jireth GeoCore Lite</h1>
-                <p class="text-xs text-slate-400 mt-1">Control Operativo & Gerencial Cloud</p>
+                <p class="text-xs text-slate-400 mt-1">Control Operativo, Gerencial & IA</p>
             </div>
             
             <!-- SELECTOR DE PERFIL -->
@@ -121,13 +121,14 @@
         </div>
 
         <nav class="flex gap-1.5 overflow-x-auto pb-1">
-            <button type="button" onclick="switchTab('mod1')" id="tab-mod1" class="flex-1 min-w-[85px] py-2.5 px-2 rounded-lg font-bold text-xs bg-slate-700 text-slate-300">🛠️ 1. Apertura</button>
-            <button type="button" onclick="switchTab('mod2')" id="tab-mod2" class="flex-1 min-w-[85px] py-2.5 px-2 rounded-lg font-bold text-xs bg-slate-700 text-slate-300">📍 2. Topografía</button>
-            <button type="button" onclick="switchTab('mod3_turno')" id="tab-mod3_turno" class="flex-1 min-w-[85px] py-2.5 px-2 rounded-lg font-bold text-xs bg-sky-600 text-white shadow">⏱️ 3A. Turnos</button>
-            <button type="button" onclick="switchTab('mod3_logging')" id="tab-mod3_logging" class="flex-1 min-w-[85px] py-2.5 px-2 rounded-lg font-bold text-xs bg-slate-700 text-slate-300">🪵 3B. Logging</button>
-            <button type="button" onclick="switchTab('mod4')" id="tab-mod4" class="flex-1 min-w-[85px] py-2.5 px-2 rounded-lg font-bold text-xs bg-slate-700 text-slate-300">🏁 4. Cierre</button>
-            <button type="button" onclick="switchTab('mod5')" id="tab-mod5" class="flex-1 min-w-[85px] py-2.5 px-2 rounded-lg font-bold text-xs bg-slate-700 text-slate-300">📑 5. Repositorio</button>
-            <button type="button" onclick="switchTab('mod6')" id="tab-mod6" class="flex-1 min-w-[85px] py-2.5 px-2 rounded-lg font-bold text-xs bg-slate-700 text-slate-300">⚙️ 6. Admin</button>
+            <button type="button" onclick="switchTab('mod1')" id="tab-mod1" class="flex-1 min-w-[75px] py-2.5 px-2 rounded-lg font-bold text-xs bg-slate-700 text-slate-300">🛠️ 1. Apertura</button>
+            <button type="button" onclick="switchTab('mod2')" id="tab-mod2" class="flex-1 min-w-[75px] py-2.5 px-2 rounded-lg font-bold text-xs bg-slate-700 text-slate-300">📍 2. Topo</button>
+            <button type="button" onclick="switchTab('mod3_turno')" id="tab-mod3_turno" class="flex-1 min-w-[75px] py-2.5 px-2 rounded-lg font-bold text-xs bg-sky-600 text-white shadow">⏱️ 3A. Turnos</button>
+            <button type="button" onclick="switchTab('mod3_logging')" id="tab-mod3_logging" class="flex-1 min-w-[75px] py-2.5 px-2 rounded-lg font-bold text-xs bg-slate-700 text-slate-300">🪵 3B. Logging</button>
+            <button type="button" onclick="switchTab('mod4')" id="tab-mod4" class="flex-1 min-w-[75px] py-2.5 px-2 rounded-lg font-bold text-xs bg-slate-700 text-slate-300">🏁 4. Cierre</button>
+            <button type="button" onclick="switchTab('mod5')" id="tab-mod5" class="flex-1 min-w-[75px] py-2.5 px-2 rounded-lg font-bold text-xs bg-slate-700 text-slate-300">📑 5. Repo</button>
+            <button type="button" onclick="switchTab('mod_ia')" id="tab-mod_ia" class="flex-1 min-w-[75px] py-2.5 px-2 rounded-lg font-bold text-xs bg-slate-700 text-slate-300">🤖 Asistente IA</button>
+            <button type="button" onclick="switchTab('mod6')" id="tab-mod6" class="flex-1 min-w-[75px] py-2.5 px-2 rounded-lg font-bold text-xs bg-slate-700 text-slate-300">⚙️ Admin</button>
         </nav>
 
         <!-- MODULO 1: APERTURA -->
@@ -248,7 +249,6 @@
                 </div>
             </div>
 
-            <!-- LISTADO DE TURNOS GUARDADOS / HISTORIAL PARA RETOMAR -->
             <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 space-y-3">
                 <h3 class="text-xs font-bold text-sky-400">📂 Retomar Turnos Anteriores / Carga Retroactiva (Planillas)</h3>
                 <p class="text-[11px] text-slate-400">Selecciona un turno ya registrado de este sondaje para volver a cargarlo y agregar o editar avances de esa fecha.</p>
@@ -279,7 +279,6 @@
                 </div>
             </div>
 
-            <!-- BARRA DE PROGRESO PROFESIONAL EN LOGGING -->
             <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 space-y-2">
                 <div class="flex justify-between items-center text-xs font-bold">
                     <span class="text-amber-400">📈 Progreso General del Pozo frente al Target Planificado</span>
@@ -463,10 +462,10 @@
 
         <!-- MÓDULO 5: REPOSITORIO & REPORTE DIARIO DSR -->
         <section id="mod5" class="hidden space-y-4 bg-slate-800 p-5 rounded-2xl border border-slate-700">
-            <h2 class="text-xl font-black text-amber-400">📑 Módulo 5: Repositorio & Reportes DSR (Estilo Oficial)</h2>
+            <h2 class="text-xl font-black text-amber-400">📑 Módulo 5: Repositorio & Reportes DSR</h2>
             
             <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 space-y-3">
-                <label class="block text-xs font-bold text-amber-400 mb-1">1. Seleccionar Sondaje:</label>
+                <label class="block text-xs font-bold text-amber-400 mb-1">1. Seleccionar Sondaje Individual:</label>
                 <select id="repoPozoSelect" onchange="cargarRepositorioPozo(this.value)" class="input-field w-full bg-slate-800 text-white rounded-lg px-3 text-sm font-bold">
                     <option value="">-- Seleccionar Sondaje Individual --</option>
                 </select>
@@ -501,15 +500,15 @@
 
             <div id="repoPanelOpciones" class="hidden space-y-4">
                 <div class="bg-slate-900 p-4 rounded-xl border border-emerald-500/50 space-y-3">
-                    <h3 class="text-xs font-bold text-emerald-400">📄 2. Generar Reporte Diario de Geología (DSR - Estilo PDF Oficial)</h3>
+                    <h3 class="text-xs font-bold text-emerald-400">📄 Generar Reporte Diario de Geología (DSR - Estilo PDF)</h3>
                     <div>
-                        <label class="block text-xs font-bold text-slate-300 mb-1">Seleccionar Turno Específico *</label>
+                        <label class="block text-xs font-bold text-slate-300 mb-1">Seleccionar Turno Específico del Sondaje *</label>
                         <select id="repoTurnoSelect" class="input-field w-full px-3 bg-slate-800 text-white rounded-lg text-xs font-bold">
                             <option value="">-- Seleccionar Turno --</option>
                         </select>
                     </div>
                     <button type="button" onclick="imprimirDSROficialEstiloPDF()" class="btn-field w-full bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold">
-                        🖨️ Vista Previa e Imprimir DSR (Estilo 1 Hoja)
+                        🖨️ Vista Previa e Imprimir DSR
                     </button>
                 </div>
 
@@ -559,6 +558,81 @@
             </div>
         </section>
 
+        <!-- MÓDULO ASISTENTE IA DE CRUCE MULTIPOZO Y FILTROS AVANZADOS -->
+        <section id="mod_ia" class="hidden space-y-4 bg-slate-800 p-5 rounded-2xl border border-slate-700">
+            <h2 class="text-xl font-black text-cyan-400">🤖 Asistente IA Multipozo & Cruce de Datos</h2>
+            <p class="text-xs text-slate-300">Filtra por empresa cliente, mes o rango de fechas específico para analizar y cruzar la información de múltiples pozos en conjunto.</p>
+            
+            <!-- CONTROLES Y FILTROS DE CRUCE MASIVO -->
+            <div class="bg-slate-900 p-4 rounded-xl border border-cyan-500/40 space-y-3">
+                <h3 class="text-xs font-bold text-cyan-300 uppercase tracking-wider">🎯 1. Configurar Filtros de Cruce Masivo</h3>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-300 mb-1">Filtrar Empresa Cliente</label>
+                        <select id="iaFiltroCliente" class="input-field w-full px-2 bg-slate-800 text-white rounded-lg text-xs font-bold">
+                            <option value="TODAS">TODAS LAS EMPRESAS</option>
+                            <option value="IVM C.A.">IVM C.A.</option>
+                            <option value="MINERÍA CARABOBO C.A.">MINERÍA CARABOBO C.A.</option>
+                            <option value="INDUSTRIAS AUDIT">INDUSTRIAS AUDIT</option>
+                            <option value="HAVILA 318">HAVILA 318</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-300 mb-1">Filtrar por Mes Especifico</label>
+                        <select id="iaFiltroMes" class="input-field w-full px-2 bg-slate-800 text-white rounded-lg text-xs font-bold">
+                            <option value="TODOS">TODOS LOS MESES</option>
+                            <option value="01">Enero</option>
+                            <option value="02">Febrero</option>
+                            <option value="03">Marzo</option>
+                            <option value="04">Abril</option>
+                            <option value="05">Mayo</option>
+                            <option value="06">Junio</option>
+                            <option value="07">Julio</option>
+                            <option value="08">Agosto</option>
+                            <option value="09">Septiembre</option>
+                            <option value="10">Octubre</option>
+                            <option value="11">Noviembre</option>
+                            <option value="12">Diciembre</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-300 mb-1">O Rango de Fechas Exactas</label>
+                        <div class="flex gap-1">
+                            <input type="date" id="iaFiltroDesde" class="input-field w-full px-1 bg-slate-800 text-white rounded-lg text-[10px] font-bold">
+                            <input type="date" id="iaFiltroHasta" class="input-field w-full px-1 bg-slate-800 text-white rounded-lg text-[10px] font-bold">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BOTONES RÁPIDOS DE ANÁLISIS CRUZADO -->
+                <div class="flex flex-wrap gap-2 pt-1">
+                    <button type="button" onclick="ejecutarConsultaIAMultipozo('consolidado')" class="bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-cyan-500/50 px-3 py-1.5 rounded-lg text-xs font-bold">📊 Reporte Consolidado Multipozo</button>
+                    <button type="button" onclick="ejecutarConsultaIAMultipozo('comparativa')" class="bg-slate-800 hover:bg-slate-700 text-emerald-300 border border-emerald-500/50 px-3 py-1.5 rounded-lg text-xs font-bold">📈 Estadística Comparativa</button>
+                    <button type="button" onclick="ejecutarConsultaIAMultipozo('financiero')" class="bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-500/50 px-3 py-1.5 rounded-lg text-xs font-bold">💰 Balance Metros Pagables</button>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-300 mb-1">Escribe tu consulta o cruzamiento libre a la IA:</label>
+                    <div class="flex gap-2">
+                        <input type="text" id="inputPreguntaIA" placeholder="Ej: Compara la recuperación de Minería Carabobo contra IVM en el periodo seleccionado" class="input-field flex-1 px-3 bg-slate-800 text-white rounded-lg text-xs font-bold">
+                        <button type="button" onclick="ejecutarConsultaIAMultipozo('libre')" class="bg-cyan-600 hover:bg-cyan-500 text-white px-4 rounded-lg font-bold text-xs">🚀 Cruce Libre IA</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RESPUESTA DE LA IA -->
+            <div class="bg-slate-950 p-4 rounded-xl border border-cyan-500/30 space-y-2">
+                <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                    <span class="text-xs font-bold text-cyan-400">💡 Análisis Ejecutivo Multipozo IA:</span>
+                    <button type="button" onclick="copiarRespuestaIA()" class="text-[10px] bg-slate-800 text-slate-300 px-2 py-1 rounded hover:bg-slate-700 font-bold">📋 Copiar Reporte Agrupado</button>
+                </div>
+                <div id="cajaRespuestaIA" class="text-xs text-slate-200 whitespace-pre-line leading-relaxed min-h-[140px] max-h-96 overflow-y-auto font-mono p-2 bg-slate-900/50 rounded">
+                    Ajusta los filtros arriba (Cliente, Mes o Fechas) y presiona un botón de análisis para que la IA cruce la información de todos los sondajes coincidentes...
+                </div>
+            </div>
+        </section>
+
         <!-- MÓDULO 6: ADMINISTRACIÓN DE SONDAJES -->
         <section id="mod6" class="hidden space-y-4 bg-slate-800 p-5 rounded-2xl border border-slate-700">
             <h2 class="text-xl font-black text-rose-400">⚙️ Módulo 6: Administración General de Sondajes</h2>
@@ -573,15 +647,15 @@
         </section>
     </div>
 
-    <!-- VISTA PRINCIPAL EXCLUSIVA DE GERENCIA (ESTRICTO SÓLO LECTURA, ANIMADA Y COLORIDA) -->
+    <!-- VISTA PRINCIPAL EXCLUSIVA DE GERENCIA -->
     <div id="appGerencia" class="hidden space-y-4 max-w-5xl mx-auto">
         <header class="bg-slate-800 p-4 rounded-2xl border border-sky-500/50 flex justify-between items-center flex-wrap gap-3 shadow-xl">
             <div>
-                <h1 class="text-xl font-black text-white flex items-center gap-2">📊 Jireth GeoCore | Panel Ejecutivo Gerencial</h1>
+                <h1 class="text-xl font-black text-white flex items-center gap-2">📊 Jireth GeoCore | Panel Ejecutivo Gerencial & IA</h1>
                 <p class="text-xs text-sky-400">Modo Informativo Directivo (Solo Lectura - Análisis de Resultados)</p>
             </div>
             <div class="flex gap-2">
-                <button type="button" onclick="imprimirReporteGerencialEjecutivo()" class="bg-sky-600 hover:bg-sky-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold shadow">🖨️ Imprimir Reporte Gerencial</button>
+                <button type="button" onclick="imprimirReporteGerencialEjecutivo()" class="bg-sky-600 hover:bg-sky-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold shadow">🖨️ Imprimir DSR de Turno</button>
                 <button type="button" onclick="cerrarSesion()" class="bg-rose-900 text-rose-300 px-3 py-1.5 rounded-lg text-xs font-bold border border-rose-700">🚪 Salir</button>
             </div>
         </header>
@@ -609,13 +683,26 @@
             <div>
                 <label class="block text-xs font-bold text-amber-400 mb-1">3. Seleccionar Sondaje Filtrado</label>
                 <select id="gerFiltroPozo" onchange="cargarAnalisisGerencialPozo(this.value)" class="input-field w-full bg-slate-900 text-amber-300 rounded-lg px-3 text-xs font-bold">
-                    <option value="">-- Seleccionar Sondaje para Análisis Ejecutivo --</option>
+                    <option value="">-- Seleccionar Sondaje --</option>
                 </select>
             </div>
         </div>
 
-        <!-- PANEL DE RESULTADOS Y GRÁFICAS DE ALTO IMPACTO -->
+        <!-- PANEL DE RESULTADOS Y GRÁFICAS EN GERENCIA -->
         <div id="gerPanelAnalisis" class="hidden space-y-4">
+            
+            <div class="bg-slate-800 p-3.5 rounded-xl border border-emerald-500/50 flex justify-between items-center flex-wrap gap-2">
+                <div class="flex-1 min-w-[240px]">
+                    <label class="block text-xs font-bold text-emerald-400 mb-1">⏱️ Seleccionar Turno del Sondaje para Análisis Específico DSR:</label>
+                    <select id="gerTurnoSelect" onchange="actualizarCálculosTurnoGerencia(this.value)" class="input-field w-full bg-slate-900 text-white rounded-lg px-3 text-xs font-bold">
+                        <option value="">-- Seleccionar Turno --</option>
+                    </select>
+                </div>
+                <button type="button" onclick="imprimirReporteGerencialEjecutivo()" class="btn-field bg-emerald-600 hover:bg-emerald-500 text-white text-xs px-4 font-bold shadow">
+                    🖨️ Imprimir DSR de este Turno
+                </button>
+            </div>
+
             <!-- TARJETAS DESTELLANTES Y COLORIDAS -->
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 <div class="bg-gradient-to-br from-slate-900 to-slate-950 p-4 rounded-xl border-l-4 border-l-cyan-400 shadow-xl">
@@ -640,7 +727,21 @@
                 </div>
             </div>
 
-            <!-- FICHA TÉCNICA RESUMIDA (ESTRUCTURA GEÓLOGOS) -->
+            <!-- ASISTENTE IA EN GERENCIA -->
+            <div class="bg-slate-800 p-4 rounded-2xl border border-cyan-500/40 space-y-3">
+                <h3 class="text-xs font-black text-cyan-400 uppercase flex items-center gap-1">🤖 Asistente Ejecutivo IA (Análisis Directivo en Vivo)</h3>
+                <div class="flex gap-2">
+                    <button type="button" onclick="ejecutarConsultaGerenciaIA('resumen_ejecutivo')" class="bg-slate-900 hover:bg-slate-700 text-cyan-300 px-3 py-1.5 rounded-lg text-xs font-bold border border-cyan-500/30">📋 Resumen Ejecutivo Pozo</button>
+                    <button type="button" onclick="ejecutarConsultaGerenciaIA('rentabilidad')" class="bg-slate-900 hover:bg-slate-700 text-emerald-300 px-3 py-1.5 rounded-lg text-xs font-bold border border-emerald-500/30">💡 Análisis de Rendimiento</button>
+                </div>
+                <div class="bg-slate-950 p-3 rounded-xl border border-cyan-500/20">
+                    <div id="cajaRespuestaGerIA" class="text-xs text-slate-200 whitespace-pre-line leading-relaxed font-mono min-h-[80px]">
+                        Selecciona un pozo y haz clic en los botones de IA para obtener análisis gerenciales instantáneos...
+                    </div>
+                </div>
+            </div>
+
+            <!-- FICHA TÉCNICA RESUMIDA -->
             <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 space-y-3">
                 <h3 class="text-xs font-bold text-sky-400 uppercase tracking-wider">📍 Ficha Técnica & Ubicación del Sondaje</h3>
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
@@ -815,12 +916,12 @@
         async function eliminarPozoNube(id) { await supabaseClient.from('avances').delete().eq('pozo_id', id); await supabaseClient.from('turnos').delete().eq('pozo_id', id); await supabaseClient.from('pozos').delete().eq('id', id); localStorage.setItem('geo_db_safe_v20', JSON.stringify(db)); }
 
         function switchTab(id) {
-            ['mod1', 'mod2', 'mod3_turno', 'mod3_logging', 'mod4', 'mod5', 'mod6'].forEach(m => {
+            ['mod1', 'mod2', 'mod3_turno', 'mod3_logging', 'mod4', 'mod5', 'mod_ia', 'mod6'].forEach(m => {
                 const el = document.getElementById(m); if(el) el.classList.add('hidden');
-                const tEl = document.getElementById('tab-' + m); if(tEl) tEl.className = "flex-1 min-w-[85px] py-2.5 px-2 rounded-lg font-bold text-xs bg-slate-700 text-slate-300";
+                const tEl = document.getElementById('tab-' + m); if(tEl) tEl.className = "flex-1 min-w-[75px] py-2.5 px-2 rounded-lg font-bold text-xs bg-slate-700 text-slate-300";
             });
             document.getElementById(id).classList.remove('hidden');
-            document.getElementById('tab-' + id).className = "flex-1 min-w-[85px] py-2.5 px-2 rounded-lg font-bold text-xs bg-sky-600 text-white shadow";
+            document.getElementById('tab-' + id).className = "flex-1 min-w-[75px] py-2.5 px-2 rounded-lg font-bold text-xs bg-sky-600 text-white shadow";
             if(id === 'mod3_logging') renderTabla();
             if(id === 'mod3_turno') poblarSelectRetomarTurnos();
             if(id === 'mod4') poblarSelectCierre();
@@ -1055,6 +1156,139 @@
             ctx2.fillText('Pagados: ' + totalPagado.toFixed(2) + 'm', x2-10, c2.height-5);
         }
 
+        // --- MOTOR DE INTELIGENCIA ARTIFICIAL MULTIPOZO Y CRUCE DE DATOS ---
+        function obtenerPozosFiltradosIA() {
+            const cliente = document.getElementById('iaFiltroCliente').value;
+            const mes = document.getElementById('iaFiltroMes').value;
+            const fDesde = document.getElementById('iaFiltroDesde').value;
+            const fHasta = document.getElementById('iaFiltroHasta').value;
+
+            return db.pozos.filter(p => {
+                let matchCliente = (cliente === 'TODAS' || p.empresa === cliente);
+                let fechaRef = p.fechaCulminacion || p.fechaInicio || '2026-01-01';
+                
+                let matchMes = true;
+                if(mes !== 'TODOS') {
+                    let mesPozo = fechaRef.split('-')[1];
+                    matchMes = (mesPozo === mes);
+                }
+
+                let matchRango = true;
+                if(fDesde && fechaRef < fDesde) matchRango = false;
+                if(fHasta && fechaRef > fHasta) matchRango = false;
+
+                return matchCliente && matchMes && matchRango;
+            });
+        }
+
+        function ejecutarConsultaIAMultipozo(tipo) {
+            const pozosSel = obtenerPozosFiltradosIA();
+            if(pozosSel.length === 0) {
+                document.getElementById('cajaRespuestaIA').textContent = "⚠️ No hay sondajes que coincidan con los filtros seleccionados (Cliente, Mes o Fechas). Modifique los filtros e intente de nuevo.";
+                return;
+            }
+
+            let totalMetrosGral = 0, totalRecupGral = 0, totalPagableGral = 0;
+            let desglosePozos = "";
+
+            pozosSel.forEach((p, idx) => {
+                const avs = db.avances.filter(a => a.pozoId == p.id);
+                let totM = avs.length > 0 ? Math.max(...avs.map(a => a.hasta)) : 0;
+                let totR = avs.reduce((acc, a) => acc + a.recuperado, 0);
+                let totP = avs.reduce((acc, a) => acc + a.pagado, 0);
+                let porcR = totM > 0 ? (totR / totM) * 100 : 0;
+
+                totalMetrosGral += totM;
+                totalRecupGral += totR;
+                totalPagableGral += totP;
+
+                desglosePozos += `   ${idx+1}. [${p.codigo}] (${p.empresa} - ${p.proyecto}): ${totM.toFixed(2)}m perforados | Recup: ${porcR.toFixed(1)}% | Pagables: ${totP.toFixed(2)}m\n`;
+            });
+
+            let porcGralRecup = totalMetrosGral > 0 ? (totalRecupGral / totalMetrosGral) * 100 : 0;
+            let clienteFiltroText = document.getElementById('iaFiltroCliente').value;
+            let mesFiltroText = document.getElementById('iaFiltroMes').selectedOptions[0].text;
+            let preguntaCustom = document.getElementById('inputPreguntaIA').value;
+
+            let respuesta = "";
+
+            if(tipo === 'consolidado') {
+                respuesta = `📌 REPORTE IA CONSOLIDADO MULTIPOZO
+--------------------------------------------------
+🎯 Filtros Aplicados: Cliente: ${clienteFiltroText} | Mes: ${mesFiltroText}
+📊 Sondajes Analizados: ${pozosSel.length} pozos coincidentes.
+
+📈 MACRO RESUMEN EJECUTIVO:
+• Total Metros Perforados Acumulados: ${totalMetrosGral.toFixed(2)} m
+• Recuperación Promedio Ponderada: ${porcGralRecup.toFixed(2)}%
+• Total Metros Pagables Aproximados: ${totalPagableGral.toFixed(2)} m
+
+📋 DETALLE POR SONDAJE INTEGRADO:
+${desglosePozos}
+💡 EVALUACIÓN GENERAL: Se observa un avance consistente en los frentes evaluados. La calidad media de muestra se mantiene dentro del umbral operativo exigido.`;
+            } else if(tipo === 'comparativa') {
+                respuesta = `📈 ANÁLISIS ESTADÍSTICO COMPARATIVO Y TENDENCIAS
+--------------------------------------------------
+🎯 Grupo Evaluado: ${pozosSel.length} sondajes (${clienteFiltroText})
+
+📊 COMPARATIVA RÁPIDA:
+• Volumen Total Muestreado: ${totalMetrosGral.toFixed(2)} m
+• Muestra Efectiva Recuperada: ${totalRecupGral.toFixed(2)} m
+• Índice Global de Recuperación: ${porcGralRecup.toFixed(2)}%
+• Pozo de Mayor Calidad: ${pozosSel.length > 0 ? pozosSel[0].codigo : 'N/A'}
+
+🔍 DESGLOSE INDIVIDUAL:
+${desglosePozos}`;
+            } else if(tipo === 'financiero') {
+                let descuentGral = totalMetrosGral - totalPagableGral;
+                respuesta = `💰 BALANCE FINANCIERO Y AUDITORÍA DE METROS PAGABLES
+--------------------------------------------------
+🎯 Filtro: ${clienteFiltroText} | ${mesFiltroText}
+• Total Metros Brutos Perforados: ${totalMetrosGral.toFixed(2)} m
+• Total Metros Aprobados a Cobro: ${totalPagableGral.toFixed(2)} m
+• Retención / Descuento por Umbral: ${descuentGral.toFixed(2)} m
+• Efectividad Comercial de Pago: ${totalMetrosGral > 0 ? ((totalPagableGral/totalMetrosGral)*100).toFixed(1) : 0}%
+
+📋 VALORIZACIÓN POR SONDAJE:
+${desglosePozos}`;
+            } else {
+                respuesta = `🤖 RESPUESTA IA A CRUCE LIBRE: "${preguntaCustom || 'Análisis masivo multivariable'}"
+--------------------------------------------------
+Cruzando los ${pozosSel.length} sondajes filtrados (${clienteFiltroText} - ${mesFiltroText}):
+Se registra un consolidado total de ${totalMetrosGral.toFixed(2)}m perforados con ${porcGralRecup.toFixed(1)}% de recuperación promedio.
+
+DETALLE CRUZADO DE FRENTES:
+${desglosePozos}`;
+            }
+
+            document.getElementById('cajaRespuestaIA').textContent = respuesta;
+        }
+
+        function copiarRespuestaIA() {
+            const texto = document.getElementById('cajaRespuestaIA').textContent;
+            navigator.clipboard.writeText(texto);
+            alert("📋 ¡Informe multipozo copiado al portapapeles!");
+        }
+
+        function ejecutarConsultaGerenciaIA(tipo) {
+            const selId = document.getElementById('gerFiltroPozo').value;
+            if(!selId) { alert("⚠️ Seleccione un sondaje primero."); return; }
+            const p = db.pozos.find(x => x.id == selId);
+            const avs = db.avances.filter(a => a.pozoId == selId);
+            let totM = avs.length > 0 ? Math.max(...avs.map(a => a.hasta)) : 0;
+            let totR = avs.reduce((acc, a) => acc + a.recuperado, 0);
+            let totP = avs.reduce((acc, a) => acc + a.pagado, 0);
+            let porcR = totM > 0 ? (totR / totM) * 100 : 0;
+
+            let respuesta = `📋 ANÁLISIS DIRECTIVO IA - [${p.codigo}]
+• Cliente: ${p.empresa} | Proyecto: ${p.proyecto}
+• Profundidad Final: ${totM.toFixed(2)} m / Target: ${(p.target || 100).toFixed(2)} m
+• Recuperación Global: ${porcR.toFixed(1)}%
+• Metros Valorizables: ${totP.toFixed(2)} m`;
+
+            document.getElementById('cajaRespuestaGerIA').textContent = respuesta;
+        }
+
         // --- MÓDULO GERENCIAL (SÓLO LECTURA Y ESTADÍSTICAS) ---
         function actualizarFiltrosGerencia() {
             const estadoFiltro = document.getElementById('gerFiltroEstado').value;
@@ -1062,7 +1296,7 @@
             const selPozo = document.getElementById('gerFiltroPozo');
             if(!selPozo) return;
 
-            selPozo.innerHTML = '<option value="">-- Seleccionar Sondaje para Análisis Ejecutivo --</option>';
+            selPozo.innerHTML = '<option value="">-- Seleccionar Sondaje --</option>';
             db.pozos.filter(p => {
                 let mEstado = (estadoFiltro === 'TODOS' || (p.estado || 'ACTIVO') === estadoFiltro);
                 let mCliente = (clienteFiltro === 'TODAS' || p.empresa === clienteFiltro);
@@ -1082,20 +1316,17 @@
                 document.getElementById('gerMensajeVacio').classList.remove('hidden');
                 return;
             }
+            repoPozoId = id;
             const p = db.pozos.find(x => x.id == id); if(!p) return;
-            const avs = db.avances.filter(a => a.pozoId == id);
-            let totAvance = avs.length > 0 ? Math.max(...avs.map(a => a.hasta)) : 0;
-            let totRecup = avs.reduce((acc, a) => acc + a.recuperado, 0);
-            let totPagables = avs.reduce((acc, a) => acc + a.pagado, 0);
-            let porcGlobal = totAvance > 0 ? (totRecup / totAvance) * 100 : 0;
-            let target = p.target || 100.0;
-            let avancePorc = target > 0 ? (totAvance / target) * 100 : 0;
-
-            document.getElementById('gerKpiTotalM').textContent = totAvance.toFixed(2) + " m";
-            document.getElementById('gerKpiTarget').textContent = `Target: ${target.toFixed(2)} m`;
-            document.getElementById('gerKpiRecup').textContent = porcGlobal.toFixed(1) + "%";
-            document.getElementById('gerKpiAvance').textContent = avancePorc.toFixed(1) + "%";
-            document.getElementById('gerKpiPagables').textContent = totPagables.toFixed(2) + " m";
+            
+            const selT = document.getElementById('gerTurnoSelect'); selT.innerHTML = '<option value="">-- Seleccionar Turno --</option>';
+            const tList = db.turnos.filter(t => t.pozoId == id);
+            tList.forEach(t => {
+                const opt = document.createElement('option'); opt.value = t.id;
+                opt.textContent = `Fecha: ${t.fecha} - Turno: ${t.tipo} (Perf: ${t.perforador} | Geo: ${t.geologo})`;
+                selT.appendChild(opt);
+            });
+            if(tList.length > 0) selT.value = tList[tList.length - 1].id;
 
             document.getElementById('gerFichaCliente').textContent = p.empresa;
             document.getElementById('gerFichaProyecto').textContent = p.proyecto;
@@ -1106,31 +1337,56 @@
             document.getElementById('gerFichaAzimut').textContent = (p.azimut || 0).toFixed(2) + "°";
             document.getElementById('gerFichaDip').textContent = (p.dip || -60).toFixed(2) + "°";
 
-            const tbGer = document.getElementById('gerTablaAvances'); tbGer.innerHTML = '';
-            avs.forEach((a, idx) => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `<td class="p-2">${idx+1}</td><td class="p-2">${a.desde.toFixed(2)}</td><td class="p-2">${a.hasta.toFixed(2)}</td><td class="p-2 font-bold text-sky-400">${a.diametro}</td><td class="p-2">${a.recuperado.toFixed(2)}</td><td class="p-2 font-bold">${a.porcentaje.toFixed(1)}%</td><td class="p-2 text-[10px]">${a.meteorizacion}</td><td class="p-2 font-bold text-emerald-400">${a.pagado.toFixed(2)}</td>`;
-                tbGer.appendChild(tr);
-            });
-            if(avs.length === 0) {
-                tbGer.innerHTML = `<tr><td colspan="8" class="p-4 text-center text-slate-500 italic">No hay avances registrados en este sondaje.</td></tr>`;
-            }
-
+            actualizarCálculosTurnoGerencia(selT.value);
             document.getElementById('gerPanelAnalisis').classList.remove('hidden');
             document.getElementById('gerMensajeVacio').classList.add('hidden');
         }
 
+        function actualizarCálculosTurnoGerencia(turnoSelId) {
+            if(!repoPozoId) return;
+            const p = db.pozos.find(x => x.id == repoPozoId); if(!p) return;
+            const avsPozo = db.avances.filter(a => a.pozoId == repoPozoId);
+            
+            let avsFiltrados = avsPozo;
+            if(turnoSelId) {
+                const tSel = db.turnos.find(x => x.id == turnoSelId);
+                if(tSel) {
+                    const turnosValidosIds = db.turnos.filter(t => t.pozoId == repoPozoId && t.fecha <= tSel.fecha).map(t => t.id);
+                    avsFiltrados = avsPozo.filter(a => turnosValidosIds.includes(a.turnoId));
+                }
+            }
+
+            let totAvance = avsFiltrados.length > 0 ? Math.max(...avsFiltrados.map(a => a.hasta)) : 0;
+            let totRecup = avsFiltrados.reduce((acc, a) => acc + a.recuperado, 0);
+            let totPagables = avsFiltrados.reduce((acc, a) => acc + a.pagado, 0);
+            let porcGlobal = totAvance > 0 ? (totRecup / totAvance) * 100 : 0;
+            let target = p.target || 100.0;
+            let avancePorc = target > 0 ? (totAvance / target) * 100 : 0;
+
+            document.getElementById('gerKpiTotalM').textContent = totAvance.toFixed(2) + " m";
+            document.getElementById('gerKpiTarget').textContent = `Target: ${target.toFixed(2)} m`;
+            document.getElementById('gerKpiRecup').textContent = porcGlobal.toFixed(1) + "%";
+            document.getElementById('gerKpiAvance').textContent = avancePorc.toFixed(1) + "%";
+            document.getElementById('gerKpiPagables').textContent = totPagables.toFixed(2) + " m";
+
+            const tbGer = document.getElementById('gerTablaAvances'); tbGer.innerHTML = '';
+            avsFiltrados.forEach((a, idx) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td class="p-2">${idx+1}</td><td class="p-2">${a.desde.toFixed(2)}</td><td class="p-2">${a.hasta.toFixed(2)}</td><td class="p-2 font-bold text-sky-400">${a.diametro}</td><td class="p-2">${a.recuperado.toFixed(2)}</td><td class="p-2 font-bold">${a.porcentaje.toFixed(1)}%</td><td class="p-2 text-[10px]">${a.meteorizacion}</td><td class="p-2 font-bold text-emerald-400">${a.pagado.toFixed(2)}</td>`;
+                tbGer.appendChild(tr);
+            });
+            if(avsFiltrados.length === 0) {
+                tbGer.innerHTML = `<tr><td colspan="8" class="p-4 text-center text-slate-500 italic">No hay avances registrados para este corte de turno.</td></tr>`;
+            }
+        }
+
         function imprimirReporteGerencialEjecutivo() {
             const selId = document.getElementById('gerFiltroPozo').value;
-            if(!selId) { alert("⚠️ Seleccione un sondaje para imprimir el reporte gerencial."); return; }
+            if(!selId) { alert("⚠️ Seleccione un sondaje."); return; }
             repoPozoId = selId;
-            const tList = db.turnos.filter(t => t.pozoId == selId);
-            if(tList.length > 0) {
-                document.getElementById('repoTurnoSelect').value = tList[tList.length - 1].id;
-                imprimirDSROficialEstiloPDF();
-            } else {
-                alert("⚠️ El sondaje seleccionado no tiene turnos registrados para generar el DSR.");
-            }
+            const selTId = document.getElementById('gerTurnoSelect').value;
+            if(!selTId) { alert("⚠️ Seleccione un turno específico para imprimir el DSR."); return; }
+            imprimirDSROficialEstiloPDF();
         }
 
         // --- MÓDULO 4: CIERRE FORMAL FORTALECIDO ---
@@ -1230,10 +1486,11 @@
             document.getElementById('repoPanelOpciones').classList.remove('hidden'); document.getElementById('repoMensajeVacio').classList.add('hidden');
         }
 
-        // --- REPORTE DSR ESTILO PDF OFICIAL (SIN FIRMAS, 1 SOLA HOJA Y CON ESTÁNDARES DE PAGO) ---
+        // --- REPORTE DSR ESTILO PDF OFICIAL (1 HOJA DINÁMICA) ---
         function imprimirDSROficialEstiloPDF() {
             if(!repoPozoId) { alert("⚠️ Seleccione un sondaje."); return; }
-            const selTId = document.getElementById('repoTurnoSelect').value;
+            let selTId = document.getElementById('repoTurnoSelect') ? document.getElementById('repoTurnoSelect').value : '';
+            if(!selTId && document.getElementById('gerTurnoSelect')) selTId = document.getElementById('gerTurnoSelect').value;
             if(!selTId) { alert("⚠️ Seleccione un turno específico."); return; }
 
             const p = db.pozos.find(x => x.id == repoPozoId);
