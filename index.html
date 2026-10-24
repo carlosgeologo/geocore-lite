@@ -94,7 +94,7 @@
 
         <!-- SELECTOR GLOBAL DE POZOS -->
         <div class="bg-slate-800 p-3 rounded-xl border border-slate-700">
-            <label class="block text-xs font-bold text-amber-400 mb-1">Pozo Seleccionado (Activo o Culminado):</label>
+            <label class="block text-xs font-bold text-amber-400 mb-1">Pozo Seleccionado (Frente Activo o Culminado):</label>
             <select id="globalWellSelect" onchange="seleccionarPozoGlobal(this.value)" class="input-field w-full bg-slate-900 text-white rounded-lg px-3 text-sm font-bold">
                 <option value="">-- Seleccione un Sondaje --</option>
             </select>
@@ -103,7 +103,7 @@
         <nav class="flex gap-1.5 overflow-x-auto pb-1">
             <button type="button" onclick="switchTab('mod1')" id="tab-mod1" class="flex-1 min-w-[85px] py-2.5 px-2 rounded-lg font-bold text-xs bg-slate-700 text-slate-300">1. Apertura</button>
             <button type="button" onclick="switchTab('mod2')" id="tab-mod2" class="flex-1 min-w-[85px] py-2.5 px-2 rounded-lg font-bold text-xs bg-slate-700 text-slate-300">2. Topografía</button>
-            <button type="button" onclick="switchTab('mod3_turno')" id="tab-mod3_turno" class="flex-1 min-w-[85px] py-2.5 px-2 rounded-lg font-bold text-xs bg-sky-600 text-white shadow">3A. Turno</button>
+            <button type="button" onclick="switchTab('mod3_turno')" id="tab-mod3_turno" class="flex-1 min-w-[85px] py-2.5 px-2 rounded-lg font-bold text-xs bg-sky-600 text-white shadow">3A. Turno / Frentes</button>
             <button type="button" onclick="switchTab('mod3_logging')" id="tab-mod3_logging" class="flex-1 min-w-[85px] py-2.5 px-2 rounded-lg font-bold text-xs bg-slate-700 text-slate-300">3B. Logging</button>
             <button type="button" onclick="switchTab('mod4')" id="tab-mod4" class="flex-1 min-w-[85px] py-2.5 px-2 rounded-lg font-bold text-xs bg-slate-700 text-slate-300">4. Cierre</button>
             <button type="button" onclick="switchTab('mod5')" id="tab-mod5" class="flex-1 min-w-[85px] py-2.5 px-2 rounded-lg font-bold text-xs bg-slate-700 text-slate-300">5. Repositorio</button>
@@ -192,30 +192,55 @@
             </div>
         </section>
 
-        <!-- MÓDULO 3A: APERTURA DE TURNO -->
+        <!-- MÓDULO 3A: APERTURA, PAUSA Y RETORNO DE TURNOS (MULTIFRENTE) -->
         <section id="mod3_turno" class="space-y-4 bg-slate-800 p-5 rounded-2xl border border-slate-700">
-            <h2 class="text-xl font-black text-amber-400">⏱️ Módulo 3A: Registro de Turno Operativo</h2>
+            <h2 class="text-xl font-black text-amber-400">⏱️ Módulo 3A: Gestión de Turnos y Frentes Múltiples</h2>
+            <p class="text-xs text-slate-300">Aquí puedes abrir un turno nuevo, pausarlo para cambiar de máquina/sondaje, o retomar un turno anterior para cargar datos cargados desde planillas físicas.</p>
+
             <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 space-y-3">
-                <div>
-                    <label class="block text-xs font-bold text-slate-300 mb-1">Fecha *</label>
-                    <input type="date" id="m3_fecha" class="input-field w-full px-3 bg-slate-800 text-white rounded-lg text-xs font-bold">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 mb-1">Fecha del Turno *</label>
+                        <input type="date" id="m3_fecha" class="input-field w-full px-3 bg-slate-800 text-white rounded-lg text-xs font-bold">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 mb-1">Jornada *</label>
+                        <select id="m3_turno" class="input-field w-full px-3 bg-slate-800 text-white rounded-lg text-xs font-bold">
+                            <option value="DIURNO">DIURNO</option>
+                            <option value="NOCTURNO">NOCTURNO</option>
+                        </select>
+                    </div>
                 </div>
-                <div>
-                    <label class="block text-xs font-bold text-slate-300 mb-1">Turno *</label>
-                    <select id="m3_turno" class="input-field w-full px-3 bg-slate-800 text-white rounded-lg text-xs font-bold">
-                        <option value="DIURNO">DIURNO</option>
-                        <option value="NOCTURNO">NOCTURNO</option>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 mb-1">Perforador *</label>
+                        <input type="text" id="m3_perforador" onblur="forzarMayusculas(this)" class="input-field w-full px-3 bg-slate-800 text-white rounded-lg text-xs font-bold uppercase" placeholder="Ej: JUAN PÉREZ">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 mb-1">Supervisor GEOLOGOS *</label>
+                        <input type="text" id="m3_geologo" onblur="forzarMayusculas(this)" class="input-field w-full px-3 bg-slate-800 text-white rounded-lg text-xs font-bold uppercase" placeholder="Ej: CARLOS RODRÍGUEZ">
+                    </div>
+                </div>
+
+                <div class="flex gap-2 pt-2 flex-wrap">
+                    <button type="button" onclick="iniciarTurnoNuevo()" class="btn-field flex-1 bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold">🚀 Abrir / Iniciar Turno Nuevo</button>
+                    <button type="button" onclick="pausarTurnoActual()" class="bg-amber-600 hover:bg-amber-500 text-white px-4 py-2 rounded-lg text-xs font-bold">⏸️ Pausar Turno (Cambiar de Frente)</button>
+                </div>
+            </div>
+
+            <!-- LISTADO DE TURNOS GUARDADOS / HISTORIAL PARA RETOMAR -->
+            <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 space-y-3">
+                <h3 class="text-xs font-bold text-sky-400">📂 Retomar Turnos Anteriores / Carga Retroactiva (Planillas)</h3>
+                <p class="text-[11px] text-slate-400">Selecciona un turno ya registrado de este sondaje para volver a cargarlo y agregar o editar avances correspondientes a esa fecha.</p>
+                
+                <div class="space-y-2">
+                    <select id="selectRetomarTurno" class="input-field w-full px-3 bg-slate-800 text-white rounded-lg text-xs font-bold">
+                        <option value="">-- Seleccionar Turno Guardado para Retomar --</option>
                     </select>
+                    <button type="button" onclick="retomarTurnoSeleccionado()" class="btn-field w-full bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold">
+                        ▶️ Retomar Turno y Cargar Logging
+                    </button>
                 </div>
-                <div>
-                    <label class="block text-xs font-bold text-slate-300 mb-1">Perforador *</label>
-                    <input type="text" id="m3_perforador" onblur="forzarMayusculas(this)" class="input-field w-full px-3 bg-slate-800 text-white rounded-lg text-xs font-bold uppercase">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-slate-300 mb-1">Supervisor GEOLOGOS *</label>
-                    <input type="text" id="m3_geologo" onblur="forzarMayusculas(this)" class="input-field w-full px-3 bg-slate-800 text-white rounded-lg text-xs font-bold uppercase">
-                </div>
-                <button type="button" onclick="iniciarTurno()" class="btn-field w-full bg-sky-600 text-white text-xs font-bold mt-2">🚀 Activar Turno y Pasar a Logging</button>
             </div>
         </section>
 
@@ -229,7 +254,10 @@
                     <span class="text-sky-300 font-bold">Perforador:</span> <span id="lblInfoPerf" class="text-white font-bold">--</span> | 
                     <span class="text-sky-300 font-bold">GEOLOGOS:</span> <span id="lblInfoGeo" class="text-white font-bold">--</span>
                 </div>
-                <button type="button" onclick="switchTab('mod3_turno')" class="bg-slate-800 text-sky-300 px-2.5 py-1 rounded border border-sky-700 font-bold">Cambiar Turno</button>
+                <div class="space-x-1">
+                    <button type="button" onclick="finalizarTurnoActivo()" class="bg-emerald-700 hover:bg-emerald-600 text-white px-2.5 py-1 rounded font-bold">💾 Finalizar Turno</button>
+                    <button type="button" onclick="switchTab('mod3_turno')" class="bg-slate-800 text-sky-300 px-2.5 py-1 rounded border border-sky-700 font-bold">Cambiar / Pausar</button>
+                </div>
             </div>
 
             <div class="space-y-4">
@@ -320,7 +348,7 @@
             </div>
         </section>
 
-        <!-- MODULO 4: CIERRE FORMAL DE SONDAJES -->
+        <!-- MÓDULO 4: CIERRE FORMAL DE SONDAJES -->
         <section id="mod4" class="hidden space-y-4 bg-slate-800 p-5 rounded-2xl border border-slate-700">
             <div class="flex justify-between items-center flex-wrap gap-2">
                 <h2 class="text-xl font-black text-amber-400">🏁 Módulo 4: Cierre Formal de Sondajes</h2>
@@ -403,7 +431,7 @@
                 </select>
             </div>
 
-            <!-- SECCIÓN: REPORTE GERENCIAL POR PERIODO Y EMPRESA -->
+            <!-- REPORTE GERENCIAL POR PERIODO Y EMPRESA -->
             <div class="bg-slate-900 p-4 rounded-xl border border-sky-500/40 space-y-3">
                 <h3 class="text-xs font-bold text-sky-400 flex items-center gap-1">📊 Reporte Gerencial de Perforación por Periodo / Empresa</h3>
                 <p class="text-[11px] text-slate-400">Genera un reporte consolidado de pozos filtrados por rango de fechas y empresa para auditoría de gestión.</p>
@@ -499,13 +527,13 @@
             </div>
         </section>
 
-        <!-- MÓDULO 6: ADMINISTRACIÓN DE SONDAJES (EDITAR / ELIMINAR INDEPENDIENTE) -->
+        <!-- MÓDULO 6: ADMINISTRACIÓN DE SONDAJES -->
         <section id="mod6" class="hidden space-y-4 bg-slate-800 p-5 rounded-2xl border border-slate-700">
             <h2 class="text-xl font-black text-rose-400">⚙️ Módulo 6: Administración General de Sondajes</h2>
-            <p class="text-xs text-slate-300">Panel exclusivo para la gestión, edición de metadatos y eliminación en cascada de sondajes (activos o culminados). Use estas herramientas con precaución.</p>
+            <p class="text-xs text-slate-300">Panel exclusivo para la gestión, edición de metadatos y eliminación en cascada de sondajes (activos o culminados).</p>
 
             <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 space-y-3">
-                <h3 class="text-sm font-bold text-amber-400">📋 Listado de Sondajes Registrados en la Base de Datos</h3>
+                <h3 class="text-sm font-bold text-amber-400">📋 Listado de Sondajes Registrados</h3>
                 <div class="overflow-x-auto border border-slate-700 rounded-xl">
                     <table class="w-full text-left text-xs border-collapse">
                         <thead class="bg-slate-800 text-slate-300 uppercase">
@@ -517,9 +545,7 @@
                                 <th class="p-2.5 text-center">Acciones Críticas</th>
                             </tr>
                         </thead>
-                        <tbody id="tablaAdminPozos" class="divide-y divide-slate-700 bg-slate-950">
-                            <!-- Inyectado por JS -->
-                        </tbody>
+                        <tbody id="tablaAdminPozos" class="divide-y divide-slate-700 bg-slate-950"></tbody>
                     </table>
                 </div>
             </div>
@@ -662,12 +688,11 @@
         // --- CARGA Y SINCRONIZACIÓN CON SUPABASE ---
         async function cargarDatosDesdeNube() {
             try {
-                // Intentar leer de Supabase
-                let { data: pozosData, errP } = await supabaseClient.from('pozos').select('*');
-                let { data: turnosData, errT } = await supabaseClient.from('turnos').select('*');
-                let { data: avancesData, errA } = await supabaseClient.from('avances').select('*');
+                let { data: pozosData } = await supabaseClient.from('pozos').select('*');
+                let { data: turnosData } = await supabaseClient.from('turnos').select('*');
+                let { data: avancesData } = await supabaseClient.from('avances').select('*');
 
-                if (!errP && !errT && !errA && pozosData) {
+                if (pozosData) {
                     db.pozos = pozosData.map(p => ({
                         id: Number(p.id),
                         codigo: p.codigo,
@@ -684,7 +709,7 @@
                         dip: p.dip,
                         target: p.target
                     }));
-                    db.turnos = turnosData.map(t => ({
+                    db.turnos = (turnosData || []).map(t => ({
                         id: Number(t.id),
                         pozoId: Number(t.pozo_id),
                         fecha: t.fecha,
@@ -692,7 +717,7 @@
                         perforador: t.perforador,
                         geologo: t.geologo
                     }));
-                    db.avances = avancesData.map(a => ({
+                    db.avances = (avancesData || []).map(a => ({
                         id: Number(a.id),
                         pozoId: Number(a.pozo_id),
                         turnoId: Number(a.turno_id),
@@ -705,13 +730,10 @@
                         meteorizacion: a.meteorizacion,
                         pagado: Number(a.pagado)
                     }));
-                    // Guardar copia local de respaldo
                     localStorage.setItem('geo_db_safe_v20', JSON.stringify(db));
-                } else {
-                    throw new Error("Sin conexión a la nube o tablas no creadas");
                 }
             } catch (e) {
-                console.warn("Modo offline o error al conectar con Supabase. Usando respaldo local.", e);
+                console.warn("Modo offline. Usando respaldo local.", e);
                 let local = localStorage.getItem('geo_db_safe_v20');
                 if (local) db = JSON.parse(local);
             }
@@ -726,49 +748,25 @@
 
         async function guardarPozoNube(p) {
             await supabaseClient.from('pozos').upsert({
-                id: p.id,
-                codigo: p.codigo,
-                empresa: p.empresa,
-                proyecto: p.proyecto,
-                estado: p.estado || 'ACTIVO',
-                fecha_inicio: p.fechaInicio,
-                fecha_culminacion: p.fechaCulminacion,
-                maquina: p.maquina,
-                este: p.este,
-                norte: p.norte,
-                cota: p.cota,
-                azimut: p.azimut,
-                dip: p.dip,
-                target: p.target
+                id: p.id, codigo: p.codigo, empresa: p.empresa, proyecto: p.proyecto,
+                estado: p.estado || 'ACTIVO', fecha_inicio: p.fechaInicio, fecha_culminacion: p.fechaCulminacion,
+                maquina: p.maquina, este: p.este, norte: p.norte, cota: p.cota, azimut: p.azimut, dip: p.dip, target: p.target
             });
             localStorage.setItem('geo_db_safe_v20', JSON.stringify(db));
         }
 
         async function guardarTurnoNube(t) {
             await supabaseClient.from('turnos').upsert({
-                id: t.id,
-                pozo_id: t.pozoId,
-                fecha: t.fecha,
-                tipo: t.tipo,
-                perforador: t.perforador,
-                geologo: t.geologo
+                id: t.id, pozo_id: t.pozoId, fecha: t.fecha, tipo: t.tipo, perforador: t.perforador, geologo: t.geologo
             });
             localStorage.setItem('geo_db_safe_v20', JSON.stringify(db));
         }
 
         async function guardarAvanceNube(a) {
             await supabaseClient.from('avances').upsert({
-                id: a.id,
-                pozo_id: a.pozoId,
-                turno_id: a.turnoId,
-                longitud: a.longitud,
-                desde: a.desde,
-                hasta: a.hasta,
-                diametro: a.diametro,
-                recuperado: a.recuperado,
-                porcentaje: a.porcentaje,
-                meteorizacion: a.meteorizacion,
-                pagado: a.pagado
+                id: a.id, pozo_id: a.pozoId, turno_id: a.turnoId, longitud: a.longitud,
+                desde: a.desde, hasta: a.hasta, diametro: a.diametro, recuperado: a.recuperado,
+                porcentaje: a.porcentaje, meteorizacion: a.meteorizacion, pagado: a.pagado
             });
             localStorage.setItem('geo_db_safe_v20', JSON.stringify(db));
         }
@@ -794,6 +792,7 @@
             if(targetTab) targetTab.className = "flex-1 min-w-[85px] py-2.5 px-2 rounded-lg font-bold text-xs bg-sky-600 text-white shadow";
 
             if(id === 'mod3_logging') renderTabla();
+            if(id === 'mod3_turno') poblarSelectRetomarTurnos();
             if(id === 'mod4') poblarSelectCierre();
             if(id === 'mod5') poblarSelectRepositorio();
             if(id === 'mod6') renderTablaAdminPozos();
@@ -863,7 +862,7 @@
 
             document.getElementById('m1_codigo').value = '';
             document.getElementById('m1_proyecto').value = '';
-            alert("✅ Sondaje " + cod + " Registrado con Éxito en la Nube");
+            alert("✅ Sondaje " + cod + " Registrado con Éxito");
             switchTab('mod3_turno');
         }
 
@@ -918,21 +917,273 @@
             document.getElementById('m2_target').value = (p.target !== undefined && p.target !== '') ? Number(p.target).toFixed(2).replace('.', ',') : '';
 
             const turnosPozo = db.turnos.filter(t => t.pozoId == pozoId);
-            if (turnosPozo.length > 0) {
+            if (turnosPozo.length > 0 && !turnoId) {
                 const ultimoT = turnosPozo[turnosPozo.length - 1];
                 turnoId = ultimoT.id;
                 document.getElementById('lblInfoTurno').textContent = `${ultimoT.fecha} (${ultimoT.tipo})`;
                 document.getElementById('lblInfoPerf').textContent = ultimoT.perforador;
                 document.getElementById('lblInfoGeo').textContent = ultimoT.geologo;
-            } else {
-                turnoId = null;
+            } else if (!turnoId) {
                 document.getElementById('lblInfoTurno').textContent = "Sin turno activo";
                 document.getElementById('lblInfoPerf').textContent = "--";
                 document.getElementById('lblInfoGeo').textContent = "--";
             }
 
+            poblarSelectRetomarTurnos();
             autoCalcularDesde();
             renderTabla();
+        }
+
+        // --- GESTIÓN DE TURNOS MÚLTIPLES Y FRENTES ---
+        async function iniciarTurnoNuevo() {
+            if (!pozoId) { alert("⚠️ Seleccione un pozo activo primero en el menú superior."); return; }
+            const perf = document.getElementById('m3_perforador').value.trim().toUpperCase();
+            const geo = document.getElementById('m3_geologo').value.trim().toUpperCase();
+            const fechaVal = document.getElementById('m3_fecha').value || new Date().toISOString().split('T')[0];
+            const tipoVal = document.getElementById('m3_turno').value;
+
+            if (!perf || !geo) { alert("⚠️ Ingrese Perforador y Supervisor de GEOLOGOS."); return; }
+
+            const t = { id: Date.now(), pozoId, fecha: fechaVal, tipo: tipoVal, perforador: perf, geologo: geo };
+            db.turnos.push(t);
+            await guardarTurnoNube(t);
+            turnoId = t.id;
+
+            document.getElementById('lblInfoTurno').textContent = `${t.fecha} (${t.tipo})`;
+            document.getElementById('lblInfoPerf').textContent = t.perforador;
+            document.getElementById('lblInfoGeo').textContent = t.geologo;
+
+            autoCalcularDesde();
+            alert("🚀 Turno iniciado correctamente. Puede proceder al Logging.");
+            switchTab('mod3_logging');
+        }
+
+        function pausarTurnoActual() {
+            if(!turnoId) { alert("⚠️ No hay ningún turno activo actualmente."); return; }
+            alert("⏸️ Turno pausado con éxito. Puede seleccionar otro pozo en el menú superior para cambiar de máquina o frente de trabajo.");
+            turnoId = null;
+            switchTab('mod3_turno');
+        }
+
+        function poblarSelectRetomarTurnos() {
+            const sel = document.getElementById('selectRetomarTurno');
+            if(!sel) return;
+            sel.innerHTML = '<option value="">-- Seleccionar Turno Guardado para Retomar --</option>';
+            if(!pozoId) return;
+
+            const turnosPozo = db.turnos.filter(t => t.pozoId == pozoId);
+            turnosPozo.forEach(t => {
+                const opt = document.createElement('option');
+                opt.value = t.id;
+                opt.textContent = `Fecha: ${t.fecha} - Turno: ${t.tipo} (Perf: ${t.perforador} | Geo: ${t.geologo})`;
+                if(t.id == turnoId) opt.selected = true;
+                sel.appendChild(opt);
+            });
+        }
+
+        function retomarTurnoSeleccionado() {
+            const selId = document.getElementById('selectRetomarTurno').value;
+            if(!selId) { alert("⚠️ Seleccione un turno de la lista para retomar."); return; }
+
+            const t = db.turnos.find(x => x.id == selId);
+            if(!t) return;
+
+            turnoId = t.id;
+            document.getElementById('lblInfoTurno').textContent = `${t.fecha} (${t.tipo})`;
+            document.getElementById('lblInfoPerf').textContent = t.perforador;
+            document.getElementById('lblInfoGeo').textContent = t.geologo;
+
+            autoCalcularDesde();
+            alert(`▶️ Turno retomado con éxito (${t.fecha} - ${t.tipo}). Pasando a Logging.`);
+            switchTab('mod3_logging');
+        }
+
+        function finalizarTurnoActivo() {
+            if(!turnoId) { alert("⚠️ No hay un turno activo."); return; }
+            alert("💾 Turno finalizado y guardado con éxito. Todos los avances registrados están consolidados.");
+            turnoId = null;
+            switchTab('mod3_turno');
+        }
+
+        function autoCalcularDesde() {
+            if (!pozoId) return;
+            const avs = db.avances.filter(a => a.pozoId == pozoId);
+            let desde = avs.length > 0 ? Math.max(...avs.map(a => a.hasta)) : 0;
+            document.getElementById('m3_desde').value = desde.toFixed(2).replace('.', ',');
+            autoCalcularHasta();
+        }
+
+        function autoCalcularHasta() {
+            const desde = parseFloat(document.getElementById('m3_desde').value.replace(',', '.')) || 0;
+            const len = parseFloat(document.getElementById('m3_longitud').value) || 1.5;
+            document.getElementById('m3_hasta').value = (desde + len).toFixed(2).replace('.', ',');
+        }
+
+        async function guardarAvance() {
+            if (!pozoId) { alert("⚠️ Seleccione un pozo."); return; }
+            if (!turnoId) { alert("⚠️ Debe iniciar o retomar un turno primero en la sección 3A."); switchTab('mod3_turno'); return; }
+
+            const len = parseFloat(document.getElementById('m3_longitud').value);
+            const desde = parseFloat(document.getElementById('m3_desde').value.replace(',', '.'));
+            const hasta = parseFloat(document.getElementById('m3_hasta').value.replace(',', '.'));
+            const diam = document.getElementById('m3_diametro').value;
+            const rec = parseFloat(document.getElementById('m3_recuperado').value.replace(',', '.'));
+            const met = document.getElementById('m3_meteorizacion').value;
+
+            if (isNaN(rec)) { alert("⚠️ Ingrese metros recuperados."); return; }
+            if (rec > len) { alert("⚠️ Recuperación no puede superar la maniobra."); return; }
+
+            let umbral = 0.70;
+            if (met.includes('ROCA OXIDADA')) umbral = 0.80;
+            if (met.includes('ROCA FRESCA') || met.includes('ZONA DE VETA')) umbral = 0.90;
+
+            const porc = (rec / len) * 100;
+            let pagado = porc >= (umbral * 100) ? len : rec;
+
+            let objAvance;
+            if (editandoAvanceId) {
+                let av = db.avances.find(x => x.id == editandoAvanceId);
+                if (av) { 
+                    Object.assign(av, { longitud: len, desde, hasta, diametro: diam, recuperado: rec, meteorizacion: met, porcentaje: porc, pagado }); 
+                    objAvance = av;
+                }
+                editandoAvanceId = null;
+                document.getElementById('btnGuardarAvance').textContent = "➕ Guardar Avance Tramo";
+                document.getElementById('btnCancelarEdicion').classList.add('hidden');
+            } else {
+                objAvance = { id: Date.now(), pozoId, turnoId, longitud: len, desde, hasta, diametro: diam, recuperado: rec, meteorizacion: met, porcentaje: porc, pagado };
+                db.avances.push(objAvance);
+            }
+
+            await guardarAvanceNube(objAvance);
+            document.getElementById('m3_recuperado').value = '';
+            autoCalcularDesde();
+            renderTabla();
+            alert("✅ Tramo Guardado con Éxito");
+        }
+
+        function editarAvance(id) {
+            const av = db.avances.find(x => x.id == id);
+            if (!av) return;
+            editandoAvanceId = id;
+            document.getElementById('m3_longitud').value = av.longitud;
+            document.getElementById('m3_desde').value = av.desde.toFixed(2).replace('.', ',');
+            document.getElementById('m3_hasta').value = av.hasta.toFixed(2).replace('.', ',');
+            document.getElementById('m3_diametro').value = av.diametro;
+            document.getElementById('m3_recuperado').value = av.recuperado.toFixed(2).replace('.', ',');
+            document.getElementById('m3_meteorizacion').value = av.meteorizacion;
+
+            document.getElementById('btnGuardarAvance').textContent = "💾 Guardar Cambios Editados";
+            document.getElementById('btnCancelarEdicion').classList.remove('hidden');
+        }
+
+        function cancelarEdicionAvance() {
+            editandoAvanceId = null;
+            document.getElementById('m3_recuperado').value = '';
+            autoCalcularDesde();
+            document.getElementById('btnGuardarAvance').textContent = "➕ Guardar Avance Tramo";
+            document.getElementById('btnCancelarEdicion').classList.add('hidden');
+        }
+
+        function renderTabla() {
+            const tb = document.getElementById('tablaAvances');
+            if(!tb) return;
+            tb.innerHTML = '';
+            if (!pozoId) return;
+
+            const avs = db.avances.filter(a => a.pozoId == pozoId);
+            let totMetros = 0, totPagable = 0, totRecup = 0, totLong = 0;
+            let turnoMetros = 0, turnoRecup = 0;
+            let dataTendencia = [], labelsTendencia = [];
+
+            avs.forEach((a, i) => {
+                totMetros = a.hasta; totPagable += a.pagado; totRecup += a.recuperado; totLong += a.longitud;
+                if (a.turnoId == turnoId) { turnoMetros += a.longitud; turnoRecup += a.recuperado; }
+
+                labelsTendencia.push(`#${i+1}`); dataTendencia.push(a.porcentaje);
+                let badgeColor = a.porcentaje >= 80 ? 'color:#34d399;' : 'color:#fbbf24;';
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="p-2">${i+1}</td>
+                    <td class="p-2">${a.desde.toFixed(2).replace('.', ',')}-${a.hasta.toFixed(2).replace('.', ',')}</td>
+                    <td class="p-2 font-bold text-sky-400">${a.diametro}</td>
+                    <td class="p-2">${a.recuperado.toFixed(2).replace('.', ',')}</td>
+                    <td class="p-2 font-bold" style="${badgeColor}">${a.porcentaje.toFixed(1)}%</td>
+                    <td class="p-2 text-[10px]">${a.meteorizacion}</td>
+                    <td class="p-2 font-bold text-emerald-400">${a.pagado.toFixed(2).replace('.', ',')}</td>
+                    <td class="p-2"><button type="button" class="bg-sky-600 text-white px-2 py-1 rounded text-[10px] font-bold" onclick="editarAvance(${a.id})">Editar</button></td>
+                `;
+                tb.appendChild(tr);
+            });
+
+            document.getElementById('kpiMetros').textContent = totMetros.toFixed(2).replace('.', ',') + " m";
+            document.getElementById('kpiMetrosTurno').textContent = turnoMetros.toFixed(2).replace('.', ',') + " m";
+            document.getElementById('kpiRecupTurno').textContent = (turnoMetros > 0 ? (turnoRecup / turnoMetros) * 100 : 0).toFixed(1) + "%";
+            document.getElementById('kpiRecupGlobal').textContent = (totLong > 0 ? (totRecup / totLong) * 100 : 0).toFixed(1) + "%";
+
+            renderGraficosNeon(labelsTendencia, dataTendencia, totLong, totPagable);
+        }
+
+        function renderGraficosNeon(labels, dataRec, totalBruto, totalPagado) {
+            const c1 = document.getElementById('canvasTendencia'), ctx1 = c1.getContext('2d');
+            if(!ctx1) return;
+            c1.width = c1.clientWidth; c1.height = 160;
+            ctx1.clearRect(0, 0, c1.width, c1.height);
+
+            ctx1.strokeStyle = '#1e293b'; ctx1.lineWidth = 1;
+            for(let y=20; y<c1.height; y+=35) {
+                ctx1.beginPath(); ctx1.moveTo(0, y); ctx1.lineTo(c1.width, y); ctx1.stroke();
+            }
+
+            if (dataRec.length > 0) {
+                const step = c1.width / Math.max(1, dataRec.length - 1 || 1);
+                let grad = ctx1.createLinearGradient(0, 0, 0, c1.height);
+                grad.addColorStop(0, 'rgba(0, 245, 212, 0.35)');
+                grad.addColorStop(1, 'rgba(0, 245, 212, 0.0)');
+
+                ctx1.beginPath();
+                dataRec.forEach((val, idx) => {
+                    const x = idx * step + (dataRec.length === 1 ? c1.width/2 : 0);
+                    const y = c1.height - (val / 100 * (c1.height - 40)) - 20;
+                    if (idx === 0) ctx1.moveTo(x, y); else ctx1.lineTo(x, y);
+                });
+                ctx1.lineTo(c1.width, c1.height); ctx1.lineTo(0, c1.height);
+                ctx1.fillStyle = grad; ctx1.fill();
+
+                ctx1.shadowColor = '#00F5D4'; ctx1.shadowBlur = 12;
+                ctx1.strokeStyle = '#00F5D4'; ctx1.lineWidth = 3;
+
+                ctx1.beginPath();
+                dataRec.forEach((val, idx) => {
+                    const x = idx * step + (dataRec.length === 1 ? c1.width/2 : 0);
+                    const y = c1.height - (val / 100 * (c1.height - 40)) - 20;
+                    if (idx === 0) ctx1.moveTo(x, y); else ctx1.lineTo(x, y);
+                });
+                ctx1.stroke();
+                ctx1.shadowBlur = 0;
+            }
+
+            const c2 = document.getElementById('canvasPagos'), ctx2 = c2.getContext('2d');
+            if(!ctx2) return;
+            c2.width = c2.clientWidth; c2.height = 160;
+            ctx2.clearRect(0, 0, c2.width, c2.height);
+
+            const maxVal = Math.max(10, totalBruto, totalPagado);
+            const bWidth = Math.min(40, c2.width / 4);
+            const x1 = c2.width * 0.30 - bWidth/2;
+            const x2 = c2.width * 0.70 - bWidth/2;
+            const b1Height = (totalBruto / maxVal) * (c2.height - 40);
+            const b2Height = (totalPagado / maxVal) * (c2.height - 40);
+
+            ctx2.fillStyle = '#0077FF';
+            ctx2.fillRect(x1, c2.height - b1Height - 20, bWidth, b1Height);
+            ctx2.fillStyle = '#34D399';
+            ctx2.fillRect(x2, c2.height - b2Height - 20, bWidth, b2Height);
+
+            ctx2.fillStyle = '#E2E8F0'; ctx2.font = 'bold 11px sans-serif';
+            ctx2.fillText('Brutos: ' + totalBruto.toFixed(2).replace('.', ',') + ' m', x1 - 5, c2.height - 5);
+            ctx2.fillText('Pagados: ' + totalPagado.toFixed(2).replace('.', ',') + ' m', x2 - 5, c2.height - 5);
         }
 
         function poblarSelectCierre() {
@@ -948,17 +1199,6 @@
                 if(p.id == pozoId) opt.selected = true;
                 selCierre.appendChild(opt);
             });
-
-            if(pozoId) {
-                const activoActual = activos.find(x => x.id == pozoId);
-                if(activoActual) {
-                    selCierre.value = pozoId;
-                    cargarDatosCierre(pozoId);
-                } else {
-                    document.getElementById('cierrePanelInfo').classList.add('hidden');
-                    document.getElementById('cierreMensajeVacio').classList.remove('hidden');
-                }
-            }
         }
 
         function cargarDatosCierre(id) {
@@ -1139,11 +1379,16 @@
             }
         }
 
-        // --- REPORTES Y PDF ---
+        // --- REPORTES Y PDF (CON RETARDO DE RENDERIZADO CORREGIDO) ---
         function imprimirReporteGerencialPeriodo() {
             const empresaFiltro = document.getElementById('repGerencialEmpresa').value;
             const desdeFiltro = document.getElementById('repGerencialDesde').value;
             const hastaFiltro = document.getElementById('repGerencialHasta').value;
+
+            if(!db.pozos || db.pozos.length === 0) {
+                alert("⚠️ Los datos aún se están sincronizando desde la nube. Haga clic en 'Sincronizar Nube' e intente de nuevo.");
+                return;
+            }
 
             let pozosFiltrados = db.pozos.filter(p => {
                 let matchEmpresa = (empresaFiltro === 'TODAS' || p.empresa === empresaFiltro);
@@ -1211,7 +1456,7 @@
                 </table><br><br>
                 <div style="font-size:11px; line-height:1.4; border: 1px solid #cbd5e1; padding: 10px; background:#f8fafc; margin-bottom:30px;">
                     <b>OBSERVACIONES DE GESTIÓN:</b><br>
-                    Reporte oficial generado desde la plataforma Cloud para auditoría técnica, control de metrajes ejecutados y estimación de pagos a contratistas.
+                    Reporte oficial generado desde la plataforma Cloud para auditoría técnica y control de metrajes ejecutados.
                 </div>
                 <table style="width:100%; text-align:center; font-size:12px;">
                     <tr>
@@ -1222,7 +1467,7 @@
             </div>`;
 
             document.getElementById('printable-area').innerHTML = html;
-            window.print();
+            setTimeout(() => { window.print(); }, 300);
         }
 
         function imprimirDSRRepositorio() {
@@ -1260,7 +1505,9 @@
             html += `</table><br>
                     <p style="font-size:12px;"><b>Total Metros Acumulados:</b> ${totAcum.toFixed(2).replace('.', ',')} m | <b>Total Pagable Acumulado:</b> ${totPagadoAcum.toFixed(2).replace('.', ',')} m</p><br><br>
                     <table style="width:100%; text-align:center; font-size:12px;"><tr><td>__________________________________<br><b>Supervisor Perforación</b><br>Nombre y Apellido, Firma</td><td>__________________________________<br><b>Supervisor GEOLOGOS</b><br>Nombre y Apellido, Firma</td></tr></table></div>`;
-            document.getElementById('printable-area').innerHTML = html; window.print();
+            
+            document.getElementById('printable-area').innerHTML = html;
+            setTimeout(() => { window.print(); }, 300);
         }
 
         function imprimirCertificadoRepositorio() {
@@ -1286,7 +1533,7 @@
                     
                     <div style="border: 1px solid #ccc; padding: 12px; background: #f9fafb; font-size: 11px; line-height: 1.4; margin-bottom: 25px;">
                         <b>DECLARACIÓN DE CONFORMIDAD TÉCNICA:</b><br>
-                        Los suscritos declaran que la información detallada en el presente reporte final de perforación y el registro litológico corresponden fielmente a los trabajos ejecutados en el tajo.
+                        Los suscritos declaran que la información detallada en el presente reporte final de perforación y el registro litológico corresponden fielmente a los trabajos ejecutados.
                     </div><br><br>
 
                     <table style="width:100%; text-align:center; font-size:12px;">
@@ -1296,7 +1543,9 @@
                         </tr>
                     </table>
                 </div>`;
-            document.getElementById('printable-area').innerHTML = html; window.print();
+            
+            document.getElementById('printable-area').innerHTML = html;
+            setTimeout(() => { window.print(); }, 300);
         }
 
         function exportarCSVSoftware() {
@@ -1320,7 +1569,7 @@
                 p.estado = 'CULMINADO'; 
                 p.fechaCulminacion = new Date().toISOString().split('T')[0];
                 await guardarPozoNube(p);
-                alert("🏁 Sondaje Culminado y Archivado Exitosamente en la Nube"); 
+                alert("🏁 Sondaje Culminado y Archivado Exitosamente"); 
                 poblarSelectCierre();
                 poblarSelectRepositorio();
                 renderTablaAdminPozos();
@@ -1357,207 +1606,8 @@
                 document.getElementById(id).disabled = true;
             });
             document.getElementById('m2_btn_box').classList.add('hidden');
-            alert("💾 Ficha Topográfica Guardada en la Nube");
+            alert("💾 Ficha Topográfica Guardada");
             switchTab('mod3_turno');
-        }
-
-        async function iniciarTurno() {
-            if (!pozoId) { alert("⚠️ Seleccione un pozo activo primero"); return; }
-            const perf = document.getElementById('m3_perforador').value.trim().toUpperCase();
-            const geo = document.getElementById('m3_geologo').value.trim().toUpperCase();
-
-            if (!perf || !geo) { alert("⚠️ Ingrese Perforador y Supervisor de GEOLOGOS."); return; }
-
-            const t = { id: Date.now(), pozoId, fecha: document.getElementById('m3_fecha').value || new Date().toISOString().split('T')[0], tipo: document.getElementById('m3_turno').value, perforador: perf, geologo: geo };
-            db.turnos.push(t);
-            await guardarTurnoNube(t);
-            turnoId = t.id;
-
-            document.getElementById('lblInfoTurno').textContent = `${t.fecha} (${t.tipo})`;
-            document.getElementById('lblInfoPerf').textContent = t.perforador;
-            document.getElementById('lblInfoGeo').textContent = t.geologo;
-
-            autoCalcularDesde();
-            alert("⏱️ Turno Registrado en la Nube");
-            switchTab('mod3_logging');
-        }
-
-        function autoCalcularDesde() {
-            if (!pozoId) return;
-            const avs = db.avances.filter(a => a.pozoId == pozoId);
-            let desde = avs.length > 0 ? Math.max(...avs.map(a => a.hasta)) : 0;
-            document.getElementById('m3_desde').value = desde.toFixed(2).replace('.', ',');
-            autoCalcularHasta();
-        }
-
-        function autoCalcularHasta() {
-            const desde = parseFloat(document.getElementById('m3_desde').value.replace(',', '.')) || 0;
-            const len = parseFloat(document.getElementById('m3_longitud').value) || 1.5;
-            document.getElementById('m3_hasta').value = (desde + len).toFixed(2).replace('.', ',');
-        }
-
-        async function guardarAvance() {
-            if (!pozoId) { alert("⚠️ Seleccione un pozo."); return; }
-            if (!turnoId) { alert("⚠️ Debe registrar o activar un turno primero."); switchTab('mod3_turno'); return; }
-
-            const len = parseFloat(document.getElementById('m3_longitud').value);
-            const desde = parseFloat(document.getElementById('m3_desde').value.replace(',', '.'));
-            const hasta = parseFloat(document.getElementById('m3_hasta').value.replace(',', '.'));
-            const diam = document.getElementById('m3_diametro').value;
-            const rec = parseFloat(document.getElementById('m3_recuperado').value.replace(',', '.'));
-            const met = document.getElementById('m3_meteorizacion').value;
-
-            if (isNaN(rec)) { alert("⚠️ Ingrese metros recuperados."); return; }
-            if (rec > len) { alert("⚠️ Recuperación no puede superar la maniobra."); return; }
-
-            let umbral = 0.70;
-            if (met.includes('ROCA OXIDADA')) umbral = 0.80;
-            if (met.includes('ROCA FRESCA') || met.includes('ZONA DE VETA')) umbral = 0.90;
-
-            const porc = (rec / len) * 100;
-            let pagado = porc >= (umbral * 100) ? len : rec;
-
-            let objAvance;
-            if (editandoAvanceId) {
-                let av = db.avances.find(x => x.id == editandoAvanceId);
-                if (av) { 
-                    Object.assign(av, { longitud: len, desde, hasta, diametro: diam, recuperado: rec, meteorizacion: met, porcentaje: porc, pagado }); 
-                    objAvance = av;
-                }
-                editandoAvanceId = null;
-                document.getElementById('btnGuardarAvance').textContent = "➕ Guardar Avance Tramo";
-                document.getElementById('btnCancelarEdicion').classList.add('hidden');
-            } else {
-                objAvance = { id: Date.now(), pozoId, turnoId, longitud: len, desde, hasta, diametro: diam, recuperado: rec, meteorizacion: met, porcentaje: porc, pagado };
-                db.avances.push(objAvance);
-            }
-
-            await guardarAvanceNube(objAvance);
-            document.getElementById('m3_recuperado').value = '';
-            autoCalcularDesde();
-            renderTabla();
-            alert("✅ Tramo Guardado en la Nube con Éxito");
-        }
-
-        function editarAvance(id) {
-            const av = db.avances.find(x => x.id == id);
-            if (!av) return;
-            editandoAvanceId = id;
-            document.getElementById('m3_longitud').value = av.longitud;
-            document.getElementById('m3_desde').value = av.desde.toFixed(2).replace('.', ',');
-            document.getElementById('m3_hasta').value = av.hasta.toFixed(2).replace('.', ',');
-            document.getElementById('m3_diametro').value = av.diametro;
-            document.getElementById('m3_recuperado').value = av.recuperado.toFixed(2).replace('.', ',');
-            document.getElementById('m3_meteorizacion').value = av.meteorizacion;
-
-            document.getElementById('btnGuardarAvance').textContent = "💾 Guardar Cambios Editados";
-            document.getElementById('btnCancelarEdicion').classList.remove('hidden');
-        }
-
-        function cancelarEdicionAvance() {
-            editandoAvanceId = null;
-            document.getElementById('m3_recuperado').value = '';
-            autoCalcularDesde();
-            document.getElementById('btnGuardarAvance').textContent = "➕ Guardar Avance Tramo";
-            document.getElementById('btnCancelarEdicion').classList.add('hidden');
-        }
-
-        function renderTabla() {
-            const tb = document.getElementById('tablaAvances');
-            tb.innerHTML = '';
-            if (!pozoId) return;
-
-            const avs = db.avances.filter(a => a.pozoId == pozoId);
-            let totMetros = 0, totPagable = 0, totRecup = 0, totLong = 0;
-            let turnoMetros = 0, turnoRecup = 0;
-            let dataTendencia = [], labelsTendencia = [];
-
-            avs.forEach((a, i) => {
-                totMetros = a.hasta; totPagable += a.pagado; totRecup += a.recuperado; totLong += a.longitud;
-                if (a.turnoId == turnoId) { turnoMetros += a.longitud; turnoRecup += a.recuperado; }
-
-                labelsTendencia.push(`#${i+1}`); dataTendencia.push(a.porcentaje);
-                let badgeColor = a.porcentaje >= 80 ? 'color:#34d399;' : 'color:#fbbf24;';
-
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td class="p-2">${i+1}</td>
-                    <td class="p-2">${a.desde.toFixed(2).replace('.', ',')}-${a.hasta.toFixed(2).replace('.', ',')}</td>
-                    <td class="p-2 font-bold text-sky-400">${a.diametro}</td>
-                    <td class="p-2">${a.recuperado.toFixed(2).replace('.', ',')}</td>
-                    <td class="p-2 font-bold" style="${badgeColor}">${a.porcentaje.toFixed(1)}%</td>
-                    <td class="p-2 text-[10px]">${a.meteorizacion}</td>
-                    <td class="p-2 font-bold text-emerald-400">${a.pagado.toFixed(2).replace('.', ',')}</td>
-                    <td class="p-2"><button type="button" class="bg-sky-600 text-white px-2 py-1 rounded text-[10px] font-bold" onclick="editarAvance(${a.id})">Editar</button></td>
-                `;
-                tb.appendChild(tr);
-            });
-
-            document.getElementById('kpiMetros').textContent = totMetros.toFixed(2).replace('.', ',') + " m";
-            document.getElementById('kpiMetrosTurno').textContent = turnoMetros.toFixed(2).replace('.', ',') + " m";
-            document.getElementById('kpiRecupTurno').textContent = (turnoMetros > 0 ? (turnoRecup / turnoMetros) * 100 : 0).toFixed(1) + "%";
-            document.getElementById('kpiRecupGlobal').textContent = (totLong > 0 ? (totRecup / totLong) * 100 : 0).toFixed(1) + "%";
-
-            renderGraficosNeon(labelsTendencia, dataTendencia, totLong, totPagable);
-        }
-
-        function renderGraficosNeon(labels, dataRec, totalBruto, totalPagado) {
-            const c1 = document.getElementById('canvasTendencia'), ctx1 = c1.getContext('2d');
-            c1.width = c1.clientWidth; c1.height = 160;
-            ctx1.clearRect(0, 0, c1.width, c1.height);
-
-            ctx1.strokeStyle = '#1e293b'; ctx1.lineWidth = 1;
-            for(let y=20; y<c1.height; y+=35) {
-                ctx1.beginPath(); ctx1.moveTo(0, y); ctx1.lineTo(c1.width, y); ctx1.stroke();
-            }
-
-            if (dataRec.length > 0) {
-                const step = c1.width / Math.max(1, dataRec.length - 1 || 1);
-                let grad = ctx1.createLinearGradient(0, 0, 0, c1.height);
-                grad.addColorStop(0, 'rgba(0, 245, 212, 0.35)');
-                grad.addColorStop(1, 'rgba(0, 245, 212, 0.0)');
-
-                ctx1.beginPath();
-                dataRec.forEach((val, idx) => {
-                    const x = idx * step + (dataRec.length === 1 ? c1.width/2 : 0);
-                    const y = c1.height - (val / 100 * (c1.height - 40)) - 20;
-                    if (idx === 0) ctx1.moveTo(x, y); else ctx1.lineTo(x, y);
-                });
-                ctx1.lineTo(c1.width, c1.height); ctx1.lineTo(0, c1.height);
-                ctx1.fillStyle = grad; ctx1.fill();
-
-                ctx1.shadowColor = '#00F5D4'; ctx1.shadowBlur = 12;
-                ctx1.strokeStyle = '#00F5D4'; ctx1.lineWidth = 3;
-
-                ctx1.beginPath();
-                dataRec.forEach((val, idx) => {
-                    const x = idx * step + (dataRec.length === 1 ? c1.width/2 : 0);
-                    const y = c1.height - (val / 100 * (c1.height - 40)) - 20;
-                    if (idx === 0) ctx1.moveTo(x, y); else ctx1.lineTo(x, y);
-                });
-                ctx1.stroke();
-                ctx1.shadowBlur = 0;
-            }
-
-            const c2 = document.getElementById('canvasPagos'), ctx2 = c2.getContext('2d');
-            c2.width = c2.clientWidth; c2.height = 160;
-            ctx2.clearRect(0, 0, c2.width, c2.height);
-
-            const maxVal = Math.max(10, totalBruto, totalPagado);
-            const bWidth = Math.min(40, c2.width / 4);
-            const x1 = c2.width * 0.30 - bWidth/2;
-            const x2 = c2.width * 0.70 - bWidth/2;
-            const b1Height = (totalBruto / maxVal) * (c2.height - 40);
-            const b2Height = (totalPagado / maxVal) * (c2.height - 40);
-
-            ctx2.fillStyle = '#0077FF';
-            ctx2.fillRect(x1, c2.height - b1Height - 20, bWidth, b1Height);
-            ctx2.fillStyle = '#34D399';
-            ctx2.fillRect(x2, c2.height - b2Height - 20, bWidth, b2Height);
-
-            ctx2.fillStyle = '#E2E8F0'; ctx2.font = 'bold 11px sans-serif';
-            ctx2.fillText('Brutos: ' + totalBruto.toFixed(2).replace('.', ',') + ' m', x1 - 5, c2.height - 5);
-            ctx2.fillText('Pagados: ' + totalPagado.toFixed(2).replace('.', ',') + ' m', x2 - 5, c2.height - 5);
         }
 
         function renderConsolidado() {
