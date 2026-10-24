@@ -192,7 +192,7 @@
             </div>
         </section>
 
-        <!-- MÓDULO 3A: APERTURA, PAUSA Y RETORNO DE TURNOS (MULTIFRENTE) -->
+        <!-- MÓDULO 3A: GESTIÓN DE TURNOS Y FRENTES MÚLTIPLES -->
         <section id="mod3_turno" class="space-y-4 bg-slate-800 p-5 rounded-2xl border border-slate-700">
             <h2 class="text-xl font-black text-amber-400">⏱️ Módulo 3A: Gestión de Turnos y Frentes Múltiples</h2>
             <p class="text-xs text-slate-300">Aquí puedes abrir un turno nuevo, pausarlo para cambiar de máquina/sondaje, o retomar un turno anterior para cargar datos cargados desde planillas físicas.</p>
@@ -416,7 +416,7 @@
             </div>
 
             <div id="cierreMensajeVacio" class="text-center py-8 text-slate-500 text-xs">
-                Selecciona un pozo activo en el menú superior para ver su ficha técnica completa y proceder al cierre.
+                Selecciona un pozo en el menú desplegable superior para ver su ficha técnica completa y proceder al cierre.
             </div>
         </section>
 
@@ -530,7 +530,7 @@
         <!-- MÓDULO 6: ADMINISTRACIÓN DE SONDAJES -->
         <section id="mod6" class="hidden space-y-4 bg-slate-800 p-5 rounded-2xl border border-slate-700">
             <h2 class="text-xl font-black text-rose-400">⚙️ Módulo 6: Administración General de Sondajes</h2>
-            <p class="text-xs text-slate-300">Panel exclusivo para la gestión, edición de metadatos y eliminación en cascada de sondajes (activos o culminados).</p>
+            <p class="text-xs text-slate-300">Panel exclusivo para la gestión, edición de metadatos y eliminación en cascada de sondajes.</p>
 
             <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 space-y-3">
                 <h3 class="text-sm font-bold text-amber-400">📋 Listado de Sondajes Registrados</h3>
@@ -583,7 +583,8 @@
         </div>
     </div>
 
-    <div id="printable-area" class="hidden"></div>
+    <!-- CONTENEDOR DE IMPRESIÓN CORREGIDO Y VISIBLE -->
+    <div id="printable-area" style="display:none;"></div>
 
     <script>
         // --- CONFIGURACIÓN SUPABASE ---
@@ -685,14 +686,14 @@
             alert("🔒 ¡Contraseña y PIN de Rescate actualizados exitosamente!");
         }
 
-        // --- CARGA Y SINCRONIZACIÓN CON SUPABASE ---
+        // --- CARGA Y SINCRONIZACIÓN CON SUPABASE BLINDADA ---
         async function cargarDatosDesdeNube() {
             try {
-                let { data: pozosData } = await supabaseClient.from('pozos').select('*');
-                let { data: turnosData } = await supabaseClient.from('turnos').select('*');
-                let { data: avancesData } = await supabaseClient.from('avances').select('*');
+                let { data: pozosData, error: errP } = await supabaseClient.from('pozos').select('*');
+                let { data: turnosData, error: errT } = await supabaseClient.from('turnos').select('*');
+                let { data: avancesData, error: errA } = await supabaseClient.from('avances').select('*');
 
-                if (pozosData) {
+                if (!errP && pozosData && pozosData.length > 0) {
                     db.pozos = pozosData.map(p => ({
                         id: Number(p.id),
                         codigo: p.codigo,
@@ -731,6 +732,14 @@
                         pagado: Number(a.pagado)
                     }));
                     localStorage.setItem('geo_db_safe_v20', JSON.stringify(db));
+                } else {
+                    let local = localStorage.getItem('geo_db_safe_v20');
+                    if (local) {
+                        db = JSON.parse(local);
+                        for(let p of db.pozos) await guardarPozoNube(p);
+                        for(let t of db.turnos) await guardarTurnoNube(t);
+                        for(let a of db.avances) await guardarAvanceNube(a);
+                    }
                 }
             } catch (e) {
                 console.warn("Modo offline. Usando respaldo local.", e);
@@ -1186,6 +1195,7 @@
             ctx2.fillText('Pagados: ' + totalPagado.toFixed(2).replace('.', ',') + ' m', x2 - 5, c2.height - 5);
         }
 
+        // --- MÓDULO 4: CIERRE FORMAL CORREGIDO ---
         function poblarSelectCierre() {
             const selCierre = document.getElementById('cierrePozoSelect');
             if(!selCierre) return;
@@ -1199,6 +1209,14 @@
                 if(p.id == pozoId) opt.selected = true;
                 selCierre.appendChild(opt);
             });
+
+            if(pozoId) {
+                const activoActual = activos.find(x => x.id == pozoId);
+                if(activoActual) {
+                    selCierre.value = pozoId;
+                    cargarDatosCierre(pozoId);
+                }
+            }
         }
 
         function cargarDatosCierre(id) {
@@ -1216,12 +1234,12 @@
             document.getElementById('cierreEstadoPozo').textContent = p.estado || 'ACTIVO';
 
             document.getElementById('cierreInfoMaquina').textContent = p.maquina || 'NO ASIGNADA';
-            document.getElementById('cierreInfoEste').textContent = p.este ? Number(p.este).toFixed(2).replace('.', ',') + ' m' : '0,00 m';
-            document.getElementById('cierreInfoNorte').textContent = p.norte ? Number(p.norte).toFixed(2).replace('.', ',') + ' m' : '0,00 m';
-            document.getElementById('cierreInfoCota').textContent = p.cota ? Number(p.cota).toFixed(2).replace('.', ',') + ' m' : '0,00 m';
-            document.getElementById('cierreInfoAzimut').textContent = p.azimut ? Number(p.azimut).toFixed(2).replace('.', ',') + '°' : '0,0°';
-            document.getElementById('cierreInfoDip').textContent = p.dip ? Number(p.dip).toFixed(2).replace('.', ',') + '°' : '-60,0°';
-            document.getElementById('cierreInfoTarget').textContent = p.target ? Number(p.target).toFixed(2).replace('.', ',') + ' m' : '100,0 m';
+            document.getElementById('cierreInfoEste').textContent = (p.este !== undefined && p.este !== '') ? Number(p.este).toFixed(2).replace('.', ',') + ' m' : '0,00 m';
+            document.getElementById('cierreInfoNorte').textContent = (p.norte !== undefined && p.norte !== '') ? Number(p.norte).toFixed(2).replace('.', ',') + ' m' : '0,00 m';
+            document.getElementById('cierreInfoCota').textContent = (p.cota !== undefined && p.cota !== '') ? Number(p.cota).toFixed(2).replace('.', ',') + ' m' : '0,00 m';
+            document.getElementById('cierreInfoAzimut').textContent = (p.azimut !== undefined && p.azimut !== '') ? Number(p.azimut).toFixed(2).replace('.', ',') + '°' : '0,0°';
+            document.getElementById('cierreInfoDip').textContent = (p.dip !== undefined && p.dip !== '') ? Number(p.dip).toFixed(2).replace('.', ',') + '°' : '-60,0°';
+            document.getElementById('cierreInfoTarget').textContent = (p.target !== undefined && p.target !== '') ? Number(p.target).toFixed(2).replace('.', ',') + ' m' : '100,0 m';
 
             const avs = db.avances.filter(a => a.pozoId == id);
             let totAvance = avs.length > 0 ? Math.max(...avs.map(a => a.hasta)) : 0;
@@ -1379,7 +1397,7 @@
             }
         }
 
-        // --- REPORTES Y PDF (CON RETARDO DE RENDERIZADO CORREGIDO) ---
+        // --- REPORTES Y PDF CON VISIBILIDAD RESTAURADA ---
         function imprimirReporteGerencialPeriodo() {
             const empresaFiltro = document.getElementById('repGerencialEmpresa').value;
             const desdeFiltro = document.getElementById('repGerencialDesde').value;
@@ -1405,14 +1423,14 @@
             }
 
             let html = `
-                <div style="font-family:Arial; padding:20px; color:#000;">
+                <div style="font-family:Arial; padding:20px; color:#000; background:#fff;">
                     <h2 style="text-align:center; color:#1e3a8a; margin-bottom:5px;">REPORTE GERENCIAL DE GESTIÓN DE PERFORACIÓN</h2>
                     <p style="text-align:center; font-size:12px; color:#555;">Jireth GeoCore Lite | Control Operativo Cloud</p><hr><br>
                     <table style="width:100%; font-size:12px; margin-bottom:15px;">
                         <tr><td><b>Empresa:</b> ${empresaFiltro}</td><td><b>Periodo:</b> ${desdeFiltro || 'Inicio'} al ${hastaFiltro || 'Actualidad'}</td></tr>
                         <tr><td><b>Fecha Emisión:</b> ${new Date().toISOString().split('T')[0]}</td><td><b>Total Sondajes:</b> ${pozosFiltrados.length}</td></tr>
                     </table>
-                    <table border="1" cellspacing="0" cellpadding="5" style="width:100%; border-collapse:collapse; font-size:11px;">
+                    <table border="1" cellspacing="0" cellpadding="5" style="width:100%; border-collapse:collapse; font-size:11px; background:#fff;">
                         <tr style="background:#f1f5f9;">
                             <th>#</th><th>Empresa</th><th>Sondaje</th><th>Zona / Proyecto</th><th>Estado</th><th>Perforados (m)</th><th>Recuperados (m)</th><th>% Rec</th><th>Pagables (m)</th>
                         </tr>
@@ -1466,8 +1484,13 @@
                 </table>
             </div>`;
 
-            document.getElementById('printable-area').innerHTML = html;
-            setTimeout(() => { window.print(); }, 300);
+            const area = document.getElementById('printable-area');
+            area.innerHTML = html;
+            area.style.display = 'block';
+            setTimeout(() => {
+                window.print();
+                area.style.display = 'none';
+            }, 300);
         }
 
         function imprimirDSRRepositorio() {
@@ -1486,7 +1509,7 @@
             let totPagadoAcum = avsAcumulados.reduce((acc, a) => acc + a.pagado, 0);
 
             let html = `
-                <div style="font-family:Arial; padding:20px; color:#000;">
+                <div style="font-family:Arial; padding:20px; color:#000; background:#fff;">
                     <h2 style="text-align:center; color:#1e3a8a; margin-bottom:5px;">REPORTE DIARIO DE GEOLOGÍA (DSR)</h2>
                     <p style="text-align:center; font-size:12px; color:#555;">Control Operativo & Auditoría de Sondajes</p><hr><br>
                     <table style="width:100%; font-size:12px; margin-bottom:10px;">
@@ -1496,7 +1519,7 @@
                         <tr><td><b>Perforador:</b> ${tSel.perforador}</td><td><b>Supervisor GEOLOGOS:</b> ${tSel.geologo}</td></tr>
                     </table><br>
                     <h3 style="color:#1e3a8a; font-size:14px;">Sábana de Avances Acumulada hasta el Turno Seleccionado</h3>
-                    <table border="1" cellspacing="0" cellpadding="5" style="width:100%; border-collapse:collapse; font-size:11px;">
+                    <table border="1" cellspacing="0" cellpadding="5" style="width:100%; border-collapse:collapse; font-size:11px; background:#fff;">
                         <tr style="background:#f1f5f9;"><th>#</th><th>Intervalo (m)</th><th>Diam</th><th>Recup (m)</th><th>% Rec</th><th>Meteorización</th><th>Pago (m)</th></tr>
             `;
             avsAcumulados.forEach((a, i) => {
@@ -1506,8 +1529,13 @@
                     <p style="font-size:12px;"><b>Total Metros Acumulados:</b> ${totAcum.toFixed(2).replace('.', ',')} m | <b>Total Pagable Acumulado:</b> ${totPagadoAcum.toFixed(2).replace('.', ',')} m</p><br><br>
                     <table style="width:100%; text-align:center; font-size:12px;"><tr><td>__________________________________<br><b>Supervisor Perforación</b><br>Nombre y Apellido, Firma</td><td>__________________________________<br><b>Supervisor GEOLOGOS</b><br>Nombre y Apellido, Firma</td></tr></table></div>`;
             
-            document.getElementById('printable-area').innerHTML = html;
-            setTimeout(() => { window.print(); }, 300);
+            const area = document.getElementById('printable-area');
+            area.innerHTML = html;
+            area.style.display = 'block';
+            setTimeout(() => {
+                window.print();
+                area.style.display = 'none';
+            }, 300);
         }
 
         function imprimirCertificadoRepositorio() {
@@ -1517,7 +1545,7 @@
             let totAcum = avs.reduce((acc, a) => acc + a.longitud, 0), totPagado = avs.reduce((acc, a) => acc + a.pagado, 0);
 
             let html = `
-                <div style="font-family:Arial; padding:25px; color:#000;">
+                <div style="font-family:Arial; padding:25px; color:#000; background:#fff;">
                     <h2 style="text-align:center; color:#065f46; margin-bottom:5px;">CERTIFICADO OFICIAL DE PAGO - REPORTE FINAL DE SONDAJE</h2>
                     <p style="text-align:center; font-size:12px; color:#555;">Jireth GeoCore Lite</p><hr><br>
                     <table style="width:100%; font-size:12px; margin-bottom:10px;">
@@ -1544,8 +1572,13 @@
                     </table>
                 </div>`;
             
-            document.getElementById('printable-area').innerHTML = html;
-            setTimeout(() => { window.print(); }, 300);
+            const area = document.getElementById('printable-area');
+            area.innerHTML = html;
+            area.style.display = 'block';
+            setTimeout(() => {
+                window.print();
+                area.style.display = 'none';
+            }, 300);
         }
 
         function exportarCSVSoftware() {
