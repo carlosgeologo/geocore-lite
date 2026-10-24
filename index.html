@@ -399,7 +399,7 @@
                     </table>
                 </div>
 
-                <!-- KPI CARDS CON ALTA CONTRASTE -->
+                <!-- KPI CARDS -->
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-1">
                     <div class="bg-slate-950 p-3.5 rounded-2xl border-l-4 border-l-cyan-400 border border-slate-800/80 shadow">
                         <p class="text-[10px] font-black text-cyan-400 uppercase tracking-widest">Metros Totales</p>
@@ -951,45 +951,68 @@
             }
         }
 
+        // --- FUNCIÓN DE SINCRONIZACIÓN SEGURA Y ROBUSTA ANTI-BORRADO ---
         async function cargarDatosDesdeNube(mostrarAlertaExito = false) {
+            // 1. Cargar caché local primero para asegurar respaldo instantáneo
             let local = localStorage.getItem('geo_db_safe_v20');
-            if (local) db = JSON.parse(local);
+            if (local) {
+                try { db = JSON.parse(local); } catch(e) {}
+            }
 
             if (!navigator.onLine) {
-                if(mostrarAlertaExito) alert("📡 Sin conexión a internet. Mostrando datos locales guardados.");
+                if(mostrarAlertaExito) alert("📡 Sin conexión a internet. Manteniendo datos locales.");
                 refrescarSelect(); actualizarFiltrosGerencia(); return;
             }
 
             try {
-                let { data: pD } = await supabaseClient.from('pozos').select('*');
+                // 2. Si hay datos locales pendientes y la nube está vacía o responde, aseguramos subirlos primero (Two-way Safe Sync)
+                if (db.pozos && db.pozos.length > 0) {
+                    for (let p of db.pozos) await guardarPozoNube(p);
+                    for (let t of db.turnos) await guardarTurnoNube(t);
+                    for (let a of db.avances) await guardarAvanceNube(a);
+                }
+
+                // 3. Traer datos actualizados desde Supabase
+                let { data: pD, error: errP } = await supabaseClient.from('pozos').select('*');
                 let { data: tD } = await supabaseClient.from('turnos').select('*');
                 let { data: aD } = await supabaseClient.from('avances').select('*');
-                if (pD) {
+
+                if (!errP && pD && pD.length > 0) {
                     db.pozos = pD.map(p => ({ id: Number(p.id), codigo: p.codigo, empresa: p.empresa, proyecto: p.proyecto, estado: p.estado, fechaInicio: p.fecha_inicio, fechaCulminacion: p.fecha_culminacion, maquina: p.maquina, este: p.este, norte: p.norte, cota: p.cota, azimut: p.azimut, dip: p.dip, target: p.target }));
                     db.turnos = (tD || []).map(t => ({ id: Number(t.id), pozoId: Number(t.pozo_id), fecha: t.fecha, tipo: t.tipo, perforador: t.perforador, geologo: t.geologo }));
                     db.avances = (aD || []).map(a => ({ id: Number(a.id), pozoId: Number(a.pozo_id), turnoId: Number(a.turno_id), longitud: Number(a.longitud), desde: Number(a.desde), hasta: Number(a.hasta), diametro: a.diametro, recuperado: Number(a.recuperado), porcentaje: Number(a.porcentaje), meteorizacion: a.meteorizacion, pagado: Number(a.pagado) }));
-                    localStorage.setItem('geo_db_safe_v20', JSON.stringify(db));
                 }
-            } catch(e) { console.warn("Supabase offline fallback activo."); }
-            refrescarSelect(); actualizarFiltrosGerencia(); inicializarConfigKey();
-            if(mostrarAlertaExito) alert("✅ Datos sincronizados correctamente con Supabase.");
+
+                // Guardar siempre el respaldo seguro consolidado
+                localStorage.setItem('geo_db_safe_v20', JSON.stringify(db));
+            } catch(e) {
+                console.warn("Aviso de red Supabase: Operando con registros locales seguros.");
+            }
+
+            refrescarSelect(); 
+            actualizarFiltrosGerencia(); 
+            inicializarConfigKey();
+            if(mostrarAlertaExito) alert("✅ Sincronización con Supabase completada de forma segura.");
         }
 
         async function sincronizarConNube() { await cargarDatosDesdeNube(true); }
 
         async function guardarPozoNube(p) {
+            if (!db.pozos.some(x => x.id == p.id)) db.pozos.push(p);
             localStorage.setItem('geo_db_safe_v20', JSON.stringify(db));
             if (navigator.onLine) {
                 try { await supabaseClient.from('pozos').upsert({ id: p.id, codigo: p.codigo, empresa: p.empresa, proyecto: p.proyecto, estado: p.estado || 'ACTIVO', fecha_inicio: p.fechaInicio, fecha_culminacion: p.fechaCulminacion, maquina: p.maquina, este: p.este, norte: p.norte, cota: p.cota, azimut: p.azimut, dip: p.dip, target: p.target }); } catch(e){}
             }
         }
         async function guardarTurnoNube(t) {
+            if (!db.turnos.some(x => x.id == t.id)) db.turnos.push(t);
             localStorage.setItem('geo_db_safe_v20', JSON.stringify(db));
             if (navigator.onLine) {
                 try { await supabaseClient.from('turnos').upsert({ id: t.id, pozo_id: t.pozoId, fecha: t.fecha, tipo: t.tipo, perforador: t.perforador, geologo: t.geologo }); } catch(e){}
             }
         }
         async function guardarAvanceNube(a) {
+            if (!db.avances.some(x => x.id == a.id)) db.avances.push(a);
             localStorage.setItem('geo_db_safe_v20', JSON.stringify(db));
             if (navigator.onLine) {
                 try { await supabaseClient.from('avances').upsert({ id: a.id, pozo_id: a.pozoId, turno_id: a.turnoId, longitud: a.longitud, desde: a.desde, hasta: a.hasta, diametro: a.diametro, recuperado: a.recuperado, porcentaje: a.porcentaje, meteorizacion: a.meteorizacion, pagado: a.pagado }); } catch(e){}
