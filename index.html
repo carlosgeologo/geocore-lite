@@ -41,9 +41,10 @@
         }
 
         .bg-bienvenida-oficial {
-            background: linear-gradient(to bottom, rgba(2, 6, 23, 0.78), rgba(2, 6, 23, 0.92)), url('1001007083.jpg');
+            background: linear-gradient(to bottom, rgba(2, 6, 23, 0.75), rgba(2, 6, 23, 0.95)), url('1001007083.jpg');
             background-size: cover;
             background-position: center;
+            background-color: #020617;
         }
 
         @keyframes laserMove {
@@ -78,7 +79,6 @@
         <div class="bg-slate-900/95 p-5 sm:p-7 rounded-3xl border border-slate-800 w-full max-w-lg space-y-4 shadow-2xl relative overflow-hidden backdrop-blur-md my-auto">
             <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-sky-600 via-cyan-400 to-sky-600 laser-line"></div>
             
-            <!-- CABECERA INSTITUCIONAL CON LOGO Y TÍTULO BIENVENIDOS -->
             <div class="text-center pt-2 space-y-2">
                 <div class="mx-auto flex items-center justify-center gap-3 bg-slate-950/90 p-3 rounded-2xl border border-slate-800 shadow-lg">
                     <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-900 via-blue-950 to-slate-950 border border-blue-500/40 flex items-center justify-center shadow-inner shrink-0">
@@ -101,11 +101,10 @@
                     </div>
                 </div>
 
-                <!-- CONTENEDOR MULTIMEDIA BIENVENIDA -->
-                <div class="py-1">
+                <div class="py-1 space-y-1">
                     <span class="text-[10px] uppercase tracking-widest font-extrabold text-amber-400 bg-amber-950/80 px-3 py-1 rounded-full border border-amber-800/60">Módulo Operativo & Gerencial</span>
                     <h2 class="text-3xl sm:text-4xl font-black text-white tracking-widest mt-2 uppercase drop-shadow-md">BIENVENIDOS</h2>
-                    <p class="text-xs text-slate-300 font-semibold mt-0.5">Sistema Integrado de Sondajes y Perforación Diamantina</p>
+                    <p class="text-xs text-slate-300 font-semibold">Sistema Integrado de Sondajes y Perforación Diamantina</p>
                 </div>
             </div>
             
@@ -118,7 +117,6 @@
                 </button>
             </div>
 
-            <!-- LOGIN GEÓLOGOS -->
             <div id="boxLoginGeologos" class="space-y-3.5">
                 <div>
                     <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Contraseña de Geólogos</label>
@@ -135,7 +133,6 @@
                 </div>
             </div>
 
-            <!-- LOGIN GERENCIA -->
             <div id="boxLoginGerencia" class="hidden space-y-3.5">
                 <div>
                     <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Contraseña de Gerencia</label>
@@ -149,7 +146,6 @@
                 </button>
             </div>
 
-            <!-- RECUPERACIÓN PIN MAESTRO -->
             <div id="boxLoginRescate" class="hidden space-y-3 pt-2 border-t border-slate-800">
                 <div class="bg-slate-950 p-2.5 rounded-xl border border-amber-500/30 text-amber-300 text-[11px]">
                     🔑 <b>Restablecimiento:</b> Ingrese el PIN maestro para asignar nueva clave.
@@ -506,7 +502,7 @@
             </div>
         </section>
 
-        <!-- MÓDULO 5: REPOSITORIO Y REPORTE DSR (FORMATO OFICIAL COMPLETO) -->
+        <!-- MÓDULO 5: REPOSITORIO Y REPORTE DSR (NOMBRES EN BLANCO Y GRÁFICOS ACTIVOS) -->
         <section id="mod5" class="hidden space-y-4 bg-slate-900 p-5 sm:p-6 rounded-3xl border border-slate-800 shadow-xl">
             <div class="flex justify-between items-center flex-wrap gap-2">
                 <h2 class="text-xl font-black text-amber-400 tracking-tight">📑 Módulo 5: Repositorio de Sondajes & Reporte DSR</h2>
@@ -535,7 +531,7 @@
                     </div>
                     <div class="text-right">
                         <p class="text-xs text-amber-400 font-extrabold" id="repFechaEmision">Fecha: --/--/----</p>
-                        <p class="text-[11px] text-slate-400 font-medium">Jireth GeoCore Lite Cloud</p>
+                        <p class="text-[11px] text-slate-400 font-medium" id="repCodigoHeader">Sondaje: --</p>
                     </div>
                 </div>
 
@@ -573,8 +569,8 @@
                     </div>
                     <div class="space-y-1.5">
                         <p class="text-amber-400 font-bold uppercase text-[10px]">Supervisión y Diámetros</p>
-                        <div><b>Geólogo Responsable:</b> <span id="repGeoResp" class="text-white">Ing. Carlos Rodríguez</span></div>
-                        <div><b>Geólogo de Campo:</b> <span id="repGeoCampo" class="text-white">Joaquín Núñez</span></div>
+                        <div><b>Geólogo Responsable:</b> <span id="repGeoResp" class="text-white">--</span></div>
+                        <div><b>Geólogo de Campo:</b> <span id="repGeoCampo" class="text-white">--</span></div>
                         <div><b>Metros Perforados HQ:</b> <span id="repMetrosHQRep" class="font-mono-code text-blue-400">0.00 m</span></div>
                         <div><b>Metros Perforados NQ:</b> <span id="repMetrosNQRep" class="font-mono-code text-amber-400">0.00 m</span></div>
                         <div><b>Estado Sondaje:</b> <span id="repEstadoPozo" class="font-bold text-emerald-400">--</span></div>
@@ -587,9 +583,9 @@
                         <span id="repBarraTexto" class="font-mono-code text-cyan-300">0.0 m / 100.0 m (0.0%)</span>
                     </div>
                     <div class="w-full bg-slate-900 h-3 rounded-lg overflow-hidden flex border border-slate-800 p-0.5">
-                        <div id="repBarHQ" class="bg-blue-600 h-full rounded-l" style="width: 0%"></div>
-                        <div id="repBarNQ" class="bg-amber-600 h-full" style="width: 0%"></div>
-                        <div id="repBarPend" class="bg-slate-800 h-full rounded-r" style="width: 100%"></div>
+                        <div id="repBarHQ" class="bg-blue-600 h-full rounded-l transition-all duration-300" style="width: 0%"></div>
+                        <div id="repBarNQ" class="bg-amber-600 h-full transition-all duration-300" style="width: 0%"></div>
+                        <div id="repBarPend" class="bg-slate-800 h-full rounded-r transition-all duration-300" style="width: 100%"></div>
                     </div>
                 </div>
 
@@ -628,16 +624,17 @@
                     <p class="text-slate-400 text-[10px] mt-1" id="repMotivoCierreBox"></p>
                 </div>
 
+                <!-- LÍNEAS DE FIRMA A MANO (LIBRES DE SUGERENCIAS) -->
                 <div class="pt-6 border-t border-slate-800 grid grid-cols-2 gap-4 text-center text-[10px] text-slate-300">
                     <div>
                         <p class="font-bold uppercase text-cyan-400 mb-6">Supervisión Geología</p>
                         <p>_____________________________________</p>
-                        <p class="mt-1 font-bold">Carlos Rodríguez / Joaquín Núñez</p>
+                        <p class="mt-1 font-semibold text-slate-400">(Firma y Sello / Llenar a Mano)</p>
                     </div>
                     <div>
                         <p class="font-bold uppercase text-amber-400 mb-6">Supervisión Perforación</p>
                         <p>_____________________________________</p>
-                        <p class="mt-1 font-bold">Jhonatan López</p>
+                        <p class="mt-1 font-semibold text-slate-400">(Firma y Sello / Llenar a Mano)</p>
                     </div>
                 </div>
             </div>
@@ -664,9 +661,8 @@
         </section>
     </div>
 
-    <!-- SCRIPT DE CONTROL CON SUS CREDENCIALES SUPABASE REALES INTEGRADAS -->
+    <!-- SCRIPT DE CONTROL TÉCNICO Y SUPABASE -->
     <script>
-        // CREDENCIALES CONFIGURADAS DE SUPABASE
         const SUPABASE_URL = "https://cjtseuctrbdvgagudyyr.supabase.co";
         const SUPABASE_KEY = "Sb_publishable_4ElaI13qIakKqei9_-OiNA__PpbBBjX";
         
@@ -933,6 +929,7 @@
 
         function refrescarSelectorPozos() {
             const sel = document.getElementById('globalWellSelect');
+            if (!sel) return;
             sel.innerHTML = '<option value="">-- Seleccione un Sondaje --</option>';
             Object.keys(pozosData).forEach(k => {
                 let opt = document.createElement('option');
@@ -977,6 +974,14 @@
             actualizarTablaAvances();
             actualizarProgresoGrafico();
             autoCalcularHasta();
+            
+            // Refrescar vistas activas si se encuentran abiertas
+            if (!document.getElementById('mod4').classList.contains('hidden')) {
+                cargarResumenCierrePozo();
+            }
+            if (!document.getElementById('mod5').classList.contains('hidden')) {
+                generarReporteDSR();
+            }
         }
 
         async function iniciarTurnoNuevo() {
@@ -1223,6 +1228,7 @@
 
         function cargarResumenCierrePozo() {
             let container = document.getElementById('cierreResumenPozo');
+            if (!container) return;
             if (!pozoActivoId || !pozosData[pozoActivoId]) {
                 container.innerHTML = '<p class="text-rose-400 font-bold">No hay ningún sondaje seleccionado o activo en el sistema.</p>';
                 return;
@@ -1275,7 +1281,7 @@
             }
             let p = pozosData[pozoActivoId];
             document.getElementById('repFechaEmision').innerText = "Fecha: " + new Date().toLocaleDateString();
-            document.getElementById('repCodigo').innerText = p.codigo;
+            document.getElementById('repCodigoHeader').innerText = "Sondaje: " + p.codigo;
             document.getElementById('repEmpresa').innerText = p.empresa;
             document.getElementById('repProyecto').innerText = p.proyecto;
             document.getElementById('repMaquina').innerText = p.maquina;
@@ -1358,11 +1364,13 @@
         }
 
         function copiarReportePortapapeles() {
+            if (!pozoActivoId || !pozosData[pozoActivoId]) { alert("⚠️ Seleccione un sondaje."); return; }
+            let p = pozosData[pozoActivoId];
             let texto = "=== COMPLEJO JIRETH C.A. — REPORTE DIARIO DE SONDAJE (DSR) ===\n";
-            texto += "Sondaje: " + pozoActivoId + " | Proyecto: " + pozosData[pozoActivoId].proyecto + "\n";
-            texto += "Empresa: " + pozosData[pozoActivoId].empresa + " | Máquina: " + pozosData[pozoActivoId].maquina + "\n";
+            texto += "Sondaje: " + p.codigo + " | Proyecto: " + p.proyecto + "\n";
+            texto += "Empresa: " + p.empresa + " | Máquina: " + p.maquina + "\n";
             texto += "===========================================================\n";
-            pozosData[pozoActivoId].avances.forEach((t, i) => {
+            p.avances.forEach((t, i) => {
                 texto += `Tramo #${i+1}: ${t.desde}-${t.hasta}m | ${t.diametro} | Rec: ${t.recuperado}m (${t.porcentaje}%) | ${t.meteorizacion}\n`;
             });
             navigator.clipboard.writeText(texto).then(() => { alert("📋 Reporte copiado al portapapeles."); });
@@ -1418,7 +1426,10 @@
             if (supabaseClient) {
                 try {
                     const payloadData = { pozos: pozosData, turnos: turnosData, actualizado: new Date().toISOString() };
-                    await supabaseClient.from('jireth_geocore').upsert({ id: 'db_principal', payload: payloadData });
+                    const { error } = await supabaseClient.from('jireth_geocore').upsert({ id: 'db_principal', payload: payloadData });
+                    if (error) {
+                        console.error("Supabase Error:", error);
+                    }
                 } catch(ex) {
                     console.warn("Excepción al sincronizar Supabase:", ex);
                 }
@@ -1426,13 +1437,22 @@
         }
 
         async function sincronizarDesdeSupabaseCloud(mostrarAlerta = true) {
-            if (!supabaseClient) return;
+            if (!supabaseClient) {
+                if (mostrarAlerta) alert("⚠️ El cliente de Supabase no está inicializado.");
+                return;
+            }
             try {
                 const { data, error } = await supabaseClient
                     .from('jireth_geocore')
                     .select('payload')
                     .eq('id', 'db_principal')
                     .single();
+
+                if (error) {
+                    console.warn("Nota Supabase (puede ser primera vez):", error.message);
+                    if (mostrarAlerta) alert("⚠️ No se encontraron datos previos en la tabla 'jireth_geocore' de Supabase.");
+                    return;
+                }
 
                 if (data && data.payload) {
                     if (data.payload.pozos && Object.keys(data.payload.pozos).length > 0) {
@@ -1444,10 +1464,13 @@
                         localStorage.setItem('jireth_turnos', JSON.stringify(turnosData));
                     }
                     refrescarSelectorPozos();
-                    if (mostrarAlerta) alert("🔄 ¡Sincronización con Supabase Cloud exitosa!");
+                    if (pozoActivoId && pozosData[pozoActivoId]) {
+                        cargarDatosPozoEnFormularios(pozoActivoId);
+                    }
+                    if (mostrarAlerta) alert("🔄 ¡Sincronización con Supabase Cloud exitosa y descargada!");
                 }
             } catch(e) {
-                if (mostrarAlerta) alert("❌ Error de conexión con Supabase Cloud.");
+                if (mostrarAlerta) alert("❌ Error al conectar con Supabase: Verifique su conexión o políticas SQL.");
             }
         }
 
