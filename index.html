@@ -74,7 +74,7 @@
 </head>
 <body class="min-h-screen p-2.5 sm:p-4 antialiased selection:bg-cyan-500 selection:text-slate-950">
 
-    <!-- PANTALLA DE ACCESO Y BIENVENIDA INSTITUCIONAL -->
+    <!-- PANTALLA DE ACCESO Y BIENVENIDA -->
     <div id="pantallaLogin" class="fixed inset-0 bg-bienvenida-oficial z-50 flex items-center justify-center p-4 backdrop-blur-sm overflow-y-auto">
         <div class="bg-slate-900/95 p-5 sm:p-7 rounded-3xl border border-slate-800 w-full max-w-lg space-y-4 shadow-2xl relative overflow-hidden backdrop-blur-md my-auto">
             <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-sky-600 via-cyan-400 to-sky-600 laser-line"></div>
@@ -221,7 +221,7 @@
             <button type="button" onclick="switchTab('mod6')" id="tab-mod6" class="py-3 px-2 rounded-xl font-extrabold text-xs bg-slate-900 text-slate-300 border border-slate-800 hover:border-slate-700 transition">⚙️ Admin</button>
         </nav>
 
-        <!-- MÓDULO 1: APERTURA DE POZO -->
+        <!-- MÓDULO 1: APERTURA -->
         <section id="mod1" class="hidden space-y-4 bg-slate-900 p-5 sm:p-6 rounded-3xl border border-slate-800 shadow-xl">
             <h2 class="text-xl font-black text-amber-400 tracking-tight flex items-center gap-2">🛠️ Módulo 1: Apertura de Nuevo Sondaje</h2>
             <div class="space-y-4">
@@ -485,6 +485,19 @@
                 <!-- Se llena dinámicamente -->
             </div>
 
+            <!-- GRÁFICO RESUMEN EN CIERRE -->
+            <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-2">
+                <div class="flex justify-between items-center text-xs font-extrabold">
+                    <span class="text-amber-400 uppercase">📈 Gráfico Resumen de Avance del Sondaje</span>
+                    <span id="cierreBarraTexto" class="text-cyan-300 font-mono-code">0.0%</span>
+                </div>
+                <div class="w-full bg-slate-900 h-3 rounded-lg overflow-hidden flex border border-slate-800 p-0.5">
+                    <div id="cierreBarHQ" class="bg-blue-600 h-full rounded-l" style="width: 0%"></div>
+                    <div id="cierreBarNQ" class="bg-amber-600 h-full" style="width: 0%"></div>
+                    <div id="cierreBarPend" class="bg-slate-800 h-full rounded-r" style="width: 100%"></div>
+                </div>
+            </div>
+
             <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-4">
                 <div>
                     <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Motivo de Cierre *</label>
@@ -502,13 +515,29 @@
             </div>
         </section>
 
-        <!-- MÓDULO 5: REPOSITORIO Y REPORTE DSR (NOMBRES EN BLANCO Y GRÁFICOS ACTIVOS) -->
+        <!-- MÓDULO 5: REPOSITORIO Y REPORTE DSR -->
         <section id="mod5" class="hidden space-y-4 bg-slate-900 p-5 sm:p-6 rounded-3xl border border-slate-800 shadow-xl">
             <div class="flex justify-between items-center flex-wrap gap-2">
                 <h2 class="text-xl font-black text-amber-400 tracking-tight">📑 Módulo 5: Repositorio de Sondajes & Reporte DSR</h2>
                 <div class="space-x-2">
                     <button type="button" onclick="window.print()" class="bg-sky-600 hover:bg-sky-500 text-white font-black px-4 py-2 rounded-xl text-xs shadow transition">🖨️ Imprimir / PDF</button>
                     <button type="button" onclick="copiarReportePortapapeles()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-black px-4 py-2 rounded-xl text-xs shadow transition">📋 Copiar Reporte</button>
+                </div>
+            </div>
+
+            <div class="bg-slate-950 p-3.5 rounded-2xl border border-slate-800 flex items-center justify-between flex-wrap gap-3">
+                <div class="w-full sm:w-auto">
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Modo de Reporte en Repositorio:</label>
+                    <select id="repModoVista" onchange="generarReporteDSR()" class="input-field px-3 py-1.5 rounded-xl text-xs font-bold text-amber-300">
+                        <option value="ACUMULADO">📈 Acumulado Global del Pozo</option>
+                        <option value="TURNO">⏱️ Filtrado por Turno Específico</option>
+                    </select>
+                </div>
+                <div id="boxSelectTurnoRepo" class="hidden w-full sm:w-auto">
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Seleccionar Turno:</label>
+                    <select id="repTurnoSelect" onchange="generarReporteDSR()" class="input-field px-3 py-1.5 rounded-xl text-xs font-bold text-cyan-300">
+                        <!-- Dinámico -->
+                    </select>
                 </div>
             </div>
 
@@ -537,19 +566,19 @@
 
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
                     <div class="bg-slate-900 p-2.5 rounded-xl border border-slate-800">
-                        <p class="text-[9px] text-slate-400 uppercase font-bold">Prof. Acumulada</p>
+                        <p class="text-[9px] text-slate-400 uppercase font-bold">Prof. Perforada</p>
                         <p class="text-sm font-black text-emerald-400 font-mono-code" id="repMetrajeTotal">0.00 m</p>
                         <p class="text-[9px] text-slate-500" id="repTargetSub">Target: 0.00 m</p>
                     </div>
                     <div class="bg-slate-900 p-2.5 rounded-xl border border-slate-800">
-                        <p class="text-[9px] text-slate-400 uppercase font-bold">Recuperación Global</p>
+                        <p class="text-[9px] text-slate-400 uppercase font-bold">Recuperación</p>
                         <p class="text-sm font-black text-cyan-400 font-mono-code" id="repRecPromedio">0.0%</p>
-                        <p class="text-[9px] text-slate-500">Muestra en Testigo</p>
+                        <p class="text-[9px] text-slate-500">Testigo</p>
                     </div>
                     <div class="bg-slate-900 p-2.5 rounded-xl border border-slate-800">
                         <p class="text-[9px] text-slate-400 uppercase font-bold">Avance General</p>
                         <p class="text-sm font-black text-amber-400 font-mono-code" id="repAvanceGen">0.0%</p>
-                        <p class="text-[9px] text-slate-500">Progreso del Pozo</p>
+                        <p class="text-[9px] text-slate-500">Progreso</p>
                     </div>
                     <div class="bg-slate-900 p-2.5 rounded-xl border border-slate-800">
                         <p class="text-[9px] text-slate-400 uppercase font-bold">Metros Pagables</p>
@@ -568,11 +597,10 @@
                         <div><b>Azimut:</b> <span id="repAzimut" class="font-mono-code text-slate-300">--</span></div>
                     </div>
                     <div class="space-y-1.5">
-                        <p class="text-amber-400 font-bold uppercase text-[10px]">Supervisión y Diámetros</p>
-                        <div><b>Geólogo Responsable:</b> <span id="repGeoResp" class="text-white">--</span></div>
-                        <div><b>Geólogo de Campo:</b> <span id="repGeoCampo" class="text-white">--</span></div>
-                        <div><b>Metros Perforados HQ:</b> <span id="repMetrosHQRep" class="font-mono-code text-blue-400">0.00 m</span></div>
-                        <div><b>Metros Perforados NQ:</b> <span id="repMetrosNQRep" class="font-mono-code text-amber-400">0.00 m</span></div>
+                        <p class="text-amber-400 font-bold uppercase text-[10px]">Supervisión y Turno</p>
+                        <div><b>Operador / Perforador:</b> <span id="repPerforadorTurno" class="text-amber-300 font-bold">--</span></div>
+                        <div><b>Geólogo de Turno:</b> <span id="repGeologoTurno" class="text-cyan-300 font-bold">--</span></div>
+                        <div><b>Metros HQ / NQ:</b> <span id="repMetrosHQRep" class="font-mono-code text-blue-400">0.00m</span> / <span id="repMetrosNQRep" class="font-mono-code text-amber-400">0.00m</span></div>
                         <div><b>Estado Sondaje:</b> <span id="repEstadoPozo" class="font-bold text-emerald-400">--</span></div>
                     </div>
                 </div>
@@ -605,26 +633,12 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-[11px]">
-                    <div class="bg-slate-900 p-3 rounded-xl border border-slate-800 space-y-1">
-                        <p class="text-amber-400 font-bold uppercase text-[10px]">Resumen Tramo HQ (Factor Pago: 1.0)</p>
-                        <p class="text-slate-300">Total Metros Perforados: <span id="sumHQMet" class="font-mono-code text-white">0.00 m</span></p>
-                        <p class="text-slate-300">Total Metros Recuperados: <span id="sumHQRec" class="font-mono-code text-white">0.00 m</span></p>
-                    </div>
-                    <div class="bg-slate-900 p-3 rounded-xl border border-slate-800 space-y-1">
-                        <p class="text-amber-400 font-bold uppercase text-[10px]">Resumen Tramo NQ (Factor Pago: 0.85)</p>
-                        <p class="text-slate-300">Total Metros Perforados: <span id="sumNQMet" class="font-mono-code text-white">0.00 m</span></p>
-                        <p class="text-slate-300">Total Metros Recuperados: <span id="sumNQRec" class="font-mono-code text-white">0.00 m</span></p>
-                    </div>
-                </div>
-
                 <div class="bg-slate-900 p-3 rounded-xl border border-slate-800 space-y-1">
                     <p class="text-[11px] font-extrabold text-amber-400 uppercase tracking-wider">📝 Observaciones Geotécnicas y Novedades Operativas:</p>
                     <p class="text-slate-300 text-[11px] uppercase font-medium leading-relaxed" id="repObservacionesTexto">SIN NOVEDADES REGISTRADAS.</p>
                     <p class="text-slate-400 text-[10px] mt-1" id="repMotivoCierreBox"></p>
                 </div>
 
-                <!-- LÍNEAS DE FIRMA A MANO (LIBRES DE SUGERENCIAS) -->
                 <div class="pt-6 border-t border-slate-800 grid grid-cols-2 gap-4 text-center text-[10px] text-slate-300">
                     <div>
                         <p class="font-bold uppercase text-cyan-400 mb-6">Supervisión Geología</p>
@@ -643,6 +657,18 @@
         <!-- MÓDULO 6: ADMIN -->
         <section id="mod6" class="hidden space-y-4 bg-slate-900 p-5 sm:p-6 rounded-3xl border border-slate-800 shadow-xl">
             <h2 class="text-xl font-black text-amber-400 tracking-tight">⚙️ Módulo 6: Administración, Respaldos & Seguridad</h2>
+            
+            <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-3">
+                <h3 class="text-xs font-black text-rose-400 uppercase tracking-wider">🗑️ Gestión y Eliminación Individual de Pozos</h3>
+                <p class="text-xs text-slate-300">Seleccione un sondaje registrado en el sistema para borrarlo permanentemente si es necesario.</p>
+                <div class="flex gap-2 flex-wrap items-center">
+                    <select id="adminSelectPozoBorrar" class="input-field flex-1 px-3.5 rounded-xl text-xs font-bold text-rose-300">
+                        <option value="">-- Seleccionar Sondaje a Eliminar --</option>
+                    </select>
+                    <button type="button" onclick="eliminarPozoEspecifico()" class="bg-rose-950 hover:bg-rose-900 text-rose-300 border border-rose-800 px-4 py-2.5 rounded-xl text-xs font-black shadow">❌ Eliminar Sondaje Seleccionado</button>
+                </div>
+            </div>
+
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-3">
                     <h3 class="text-xs font-black text-cyan-400 uppercase tracking-wider">☁️ Respaldos JSON Local / Nube</h3>
@@ -654,8 +680,8 @@
                     </div>
                 </div>
                 <div id="boxZonaPeligroAdmin" class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-3">
-                    <h3 class="text-xs font-black text-rose-400 uppercase tracking-wider">⚠️ Zona de Peligro / Borrado</h3>
-                    <button type="button" onclick="borrarTodoLocal()" class="bg-rose-950 hover:bg-rose-900 text-rose-300 border border-rose-800 px-4 py-2.5 rounded-xl text-xs font-black shadow">🗑️ Resetear Base de Datos Local</button>
+                    <h3 class="text-xs font-black text-rose-400 uppercase tracking-wider">⚠️ Zona de Peligro Total</h3>
+                    <button type="button" onclick="borrarTodoLocal()" class="bg-rose-950 hover:bg-rose-900 text-rose-300 border border-rose-800 px-4 py-2.5 rounded-xl text-xs font-black shadow">⚠️ Resetear Toda la Base de Datos</button>
                 </div>
             </div>
         </section>
@@ -819,7 +845,11 @@
                 cargarResumenCierrePozo();
             }
             if (tabId === 'mod5') {
+                poblarSelectTurnosRepo();
                 generarReporteDSR();
+            }
+            if (tabId === 'mod6') {
+                poblarSelectAdminBorrar();
             }
         }
 
@@ -975,11 +1005,11 @@
             actualizarProgresoGrafico();
             autoCalcularHasta();
             
-            // Refrescar vistas activas si se encuentran abiertas
             if (!document.getElementById('mod4').classList.contains('hidden')) {
                 cargarResumenCierrePozo();
             }
             if (!document.getElementById('mod5').classList.contains('hidden')) {
+                poblarSelectTurnosRepo();
                 generarReporteDSR();
             }
         }
@@ -1095,7 +1125,10 @@
             let objTramo = {
                 desde: desde.toFixed(2), hasta: hasta.toFixed(2), diametro: diametro,
                 recuperado: recuperado.toFixed(2), porcentaje: (((recuperado / (hasta - desde)) * 100)).toFixed(1),
-                meteorizacion: meteorizacion, pago: (recuperado * (diametro === 'HQ' ? 1.0 : 0.85)).toFixed(2)
+                meteorizacion: meteorizacion, pago: (recuperado * (diametro === 'HQ' ? 1.0 : 0.85)).toFixed(2),
+                turnoId: turnoActivoObj ? turnoActivoObj.id : null,
+                perforador: turnoActivoObj ? turnoActivoObj.perforador : 'SIN REGISTRO',
+                geologoTurno: turnoActivoObj ? turnoActivoObj.geologo : 'SIN REGISTRO'
             };
 
             if (indexEditandoAvance !== null) {
@@ -1235,11 +1268,16 @@
             }
             let p = pozosData[pozoActivoId];
             let totalMetros = 0, totalRec = 0;
+            let totalHQ = 0, totalNQ = 0;
             p.avances.forEach(t => {
-                totalMetros += (parseFloat(t.hasta) - parseFloat(t.desde));
+                let met = (parseFloat(t.hasta) - parseFloat(t.desde));
+                totalMetros += met;
                 totalRec += parseFloat(t.recuperado);
+                if (t.diametro === 'HQ') totalHQ += met; else totalNQ += met;
             });
             let recProm = totalMetros > 0 ? ((totalRec / totalMetros) * 100).toFixed(1) : '0.0';
+            let target = parseFloat(p.target) || 100.0;
+            let pct = target > 0 ? Math.min(100, (totalMetros / target) * 100) : 0;
 
             container.innerHTML = `
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pb-3 border-b border-slate-800">
@@ -1250,7 +1288,7 @@
                     <div><b>Este:</b> <span class="font-mono-code">${p.este || '0.00'}</span></div>
                     <div><b>Norte:</b> <span class="font-mono-code">${p.norte || '0.00'}</span></div>
                     <div><b>Azimut / Dip:</b> <span class="font-mono-code text-amber-300">${p.azimut || '0'}° / ${p.dip || '-'}°</span></div>
-                    <div><b>Target:</b> <span class="font-mono-code text-purple-400">${p.target || '100'} m</span></div>
+                    <div><b>Target:</b> <span class="font-mono-code text-purple-400">${target} m</span></div>
                 </div>
                 <div class="flex justify-between items-center text-xs pt-1">
                     <span><b>Total Perforado:</b> <span class="text-emerald-400 font-mono-code">${totalMetros.toFixed(2)} m</span></span>
@@ -1258,6 +1296,15 @@
                     <span><b>Tramos Registrados:</b> <span class="text-amber-400 font-mono-code">${p.avances.length} maniobras</span></span>
                 </div>
             `;
+
+            let pHQ = target > 0 ? (totalHQ / target) * 100 : 0;
+            let pNQ = target > 0 ? (totalNQ / target) * 100 : 0;
+            let pPend = target > 0 ? (Math.max(0, target - totalMetros) / target) * 100 : 100;
+
+            document.getElementById('cierreBarHQ').style.width = pHQ + '%';
+            document.getElementById('cierreBarNQ').style.width = pNQ + '%';
+            document.getElementById('cierreBarPend').style.width = pPend + '%';
+            document.getElementById('cierreBarraTexto').innerText = totalMetros.toFixed(2) + " m / " + target.toFixed(2) + " m (" + pct.toFixed(1) + "%)";
         }
 
         async function ejecutarCierrePozo() {
@@ -1274,12 +1321,36 @@
             switchTab('mod5');
         }
 
+        function poblarSelectTurnosRepo() {
+            const sel = document.getElementById('repTurnoSelect');
+            if (!sel) return;
+            sel.innerHTML = '<option value="TODOS">-- Todos los Turnos (Acumulado) --</option>';
+            Object.keys(turnosData).forEach(k => {
+                let t = turnosData[k];
+                if (t.pozo === pozoActivoId) {
+                    let opt = document.createElement('option');
+                    opt.value = k;
+                    opt.text = "[" + t.fecha + " - " + t.jornada + "] Perf: " + t.perforador;
+                    sel.appendChild(opt);
+                }
+            });
+        }
+
         function generarReporteDSR() {
             if (!pozoActivoId || !pozosData[pozoActivoId]) {
                 alert("⚠️ Seleccione un sondaje activo o culminado en el selector superior.");
                 return;
             }
             let p = pozosData[pozoActivoId];
+            let modo = document.getElementById('repModoVista').value;
+            let boxTurno = document.getElementById('boxSelectTurnoRepo');
+            
+            if (modo === 'TURNO') {
+                boxTurno.classList.remove('hidden');
+            } else {
+                boxTurno.classList.add('hidden');
+            }
+
             document.getElementById('repFechaEmision').innerText = "Fecha: " + new Date().toLocaleDateString();
             document.getElementById('repCodigoHeader').innerText = "Sondaje: " + p.codigo;
             document.getElementById('repEmpresa').innerText = p.empresa;
@@ -1290,12 +1361,35 @@
             document.getElementById('repEstadoPozo').innerText = p.estado;
             document.getElementById('repTargetSub').innerText = "Target: " + (p.target || '100.00') + " m";
 
+            let listaAvancesFiltrada = p.avances;
+            let operadorTurnoTexto = "---";
+            let geologoTurnoTexto = "---";
+
+            if (modo === 'TURNO') {
+                let turnoSelId = document.getElementById('repTurnoSelect').value;
+                if (turnoSelId && turnoSelId !== 'TODOS' && turnosData[turnoSelId]) {
+                    let tObj = turnosData[turnoSelId];
+                    operadorTurnoTexto = tObj.perforador;
+                    geologoTurnoTexto = tObj.geologo;
+                    listaAvancesFiltrada = p.avances.filter(item => item.turnoId === turnoSelId);
+                } else {
+                    operadorTurnoTexto = "TODOS / MÚLTIPLES";
+                    geologoTurnoTexto = "TODOS / MÚLTIPLES";
+                }
+            } else {
+                operadorTurnoTexto = "ACUMULADO GENERAL";
+                geologoTurnoTexto = "ACUMULADO GENERAL";
+            }
+
+            document.getElementById('repPerforadorTurno').innerText = operadorTurnoTexto;
+            document.getElementById('repGeologoTurno').innerText = geologoTurnoTexto;
+
             let totalMetros = 0, totalRecuperado = 0, totalPago = 0;
             let totalHQMet = 0, totalHQRec = 0, totalNQMet = 0, totalNQRec = 0;
             let tbody = document.getElementById('repTablaBody');
             tbody.innerHTML = '';
 
-            p.avances.forEach((t, idx) => {
+            listaAvancesFiltrada.forEach((t, idx) => {
                 let met = parseFloat(t.hasta) - parseFloat(t.desde);
                 let rec = parseFloat(t.recuperado);
                 totalMetros += met; 
@@ -1334,11 +1428,6 @@
             document.getElementById('repMetrosHQRep').innerText = totalHQMet.toFixed(2) + " m";
             document.getElementById('repMetrosNQRep').innerText = totalNQMet.toFixed(2) + " m";
 
-            document.getElementById('sumHQMet').innerText = totalHQMet.toFixed(2) + " m";
-            document.getElementById('sumHQRec').innerText = totalHQRec.toFixed(2) + " m";
-            document.getElementById('sumNQMet').innerText = totalNQMet.toFixed(2) + " m";
-            document.getElementById('sumNQRec').innerText = totalNQRec.toFixed(2) + " m";
-
             let pHQ = targetNum > 0 ? (totalHQMet / targetNum) * 100 : 0;
             let pNQ = targetNum > 0 ? (totalNQMet / targetNum) * 100 : 0;
             let pPend = targetNum > 0 ? (Math.max(0, targetNum - totalMetros) / targetNum) * 100 : 100;
@@ -1348,18 +1437,46 @@
             document.getElementById('repBarPend').style.width = pPend + '%';
             document.getElementById('repBarraTexto').innerText = totalMetros.toFixed(2) + " m / " + targetNum.toFixed(2) + " m (" + avGen.toFixed(1) + "%)";
 
-            if (turnoActivoObj && turnoActivoObj.observaciones) {
-                document.getElementById('repObservacionesTexto').innerText = turnoActivoObj.observaciones;
-            } else if (p.obsCierre) {
+            if (p.obsCierre) {
                 document.getElementById('repObservacionesTexto').innerText = p.obsCierre;
             } else {
-                document.getElementById('repObservacionesTexto').innerText = "SIN NOVEDADES REGISTRADAS.";
+                document.getElementById('repObservacionesTexto').innerText = "SIN NOVEDADES REGISTRADAS EN TURNO.";
             }
 
             if (p.estado === 'CULMINADO') {
                 document.getElementById('repMotivoCierreBox').innerHTML = `<b>Motivo de Cierre:</b> ${p.motivoCierre || 'CULMINADO'}`;
             } else {
                 document.getElementById('repMotivoCierreBox').innerHTML = `<b>Estado:</b> Sondaje Activo en Operación`;
+            }
+        }
+
+        function poblarSelectAdminBorrar() {
+            const sel = document.getElementById('adminSelectPozoBorrar');
+            if (!sel) return;
+            sel.innerHTML = '<option value="">-- Seleccionar Sondaje a Eliminar --</option>';
+            Object.keys(pozosData).forEach(k => {
+                let opt = document.createElement('option');
+                opt.value = k;
+                opt.text = "Sondaje: " + k + " (" + pozosData[k].proyecto + ")";
+                sel.appendChild(opt);
+            });
+        }
+
+        async function eliminarPozoEspecifico() {
+            if (perfilActual === 'GERENCIA') { alert("⚠️ Perfil de Gerencia: Solo lectura."); return; }
+            let codigo = document.getElementById('adminSelectPozoBorrar').value;
+            if (!codigo) { alert("⚠️ Seleccione un sondaje de la lista para eliminar."); return; }
+            if (confirm("⚠️ ¿Está completamente seguro de eliminar el sondaje " + codigo + " y todos sus avances? Esta acción no se puede deshacer.")) {
+                delete pozosData[codigo];
+                if (pozoActivoId === codigo) {
+                    pozoActivoId = '';
+                    localStorage.removeItem('jireth_pozo_activo');
+                }
+                await guardarYPersistirTodo();
+                refrescarSelectorPozos();
+                poblarSelectAdminBorrar();
+                alert("✅ Sondaje " + codigo + " eliminado correctamente.");
+                location.reload();
             }
         }
 
@@ -1438,7 +1555,7 @@
 
         async function sincronizarDesdeSupabaseCloud(mostrarAlerta = true) {
             if (!supabaseClient) {
-                if (mostrarAlerta) alert("⚠️ El cliente de Supabase no está inicializado.");
+                if (mostrarAlerta) alert("⚠️ El cliente de Supabase não está inicializado.");
                 return;
             }
             try {
@@ -1449,8 +1566,7 @@
                     .single();
 
                 if (error) {
-                    console.warn("Nota Supabase (puede ser primera vez):", error.message);
-                    if (mostrarAlerta) alert("⚠️ No se encontraron datos previos en la tabla 'jireth_geocore' de Supabase.");
+                    console.warn("Nota Supabase (primera vez o tabla vacía):", error.message);
                     return;
                 }
 
@@ -1467,10 +1583,10 @@
                     if (pozoActivoId && pozosData[pozoActivoId]) {
                         cargarDatosPozoEnFormularios(pozoActivoId);
                     }
-                    if (mostrarAlerta) alert("🔄 ¡Sincronización con Supabase Cloud exitosa y descargada!");
+                    if (mostrarAlerta) alert("🔄 ¡Sincronización con Supabase Cloud exitosa!");
                 }
             } catch(e) {
-                if (mostrarAlerta) alert("❌ Error al conectar con Supabase: Verifique su conexión o políticas SQL.");
+                if (mostrarAlerta) alert("❌ Error al conectar con Supabase.");
             }
         }
 
