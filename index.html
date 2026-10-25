@@ -640,7 +640,7 @@
         </section>
     </div>
 
-    <!-- VISTA PRINCIPAL EXCLUSIVA DE GERENCIA (INCLUYE IA CON ACCESO A TODA LA DATA) -->
+    <!-- VISTA PRINCIPAL EXCLUSIVA DE GERENCIA (INCLUYE IA CON ACCESO A TODA LA DATA Y NUEVA CONVERSACIÓN) -->
     <div id="appGerencia" class="hidden space-y-4 max-w-6xl mx-auto">
         <header class="bg-slate-900 p-4 sm:p-5 rounded-3xl border border-sky-500/40 flex justify-between items-center flex-wrap gap-3 shadow-xl">
             <div class="flex items-center gap-3">
@@ -767,16 +767,21 @@
             </div>
         </div>
 
-        <!-- VISTA 2: ASISTENTE IA GEOLÓGICO CON ACCESO TOTAL A TODA LA DATA -->
+        <!-- VISTA 2: ASISTENTE IA GEOLÓGICO CON ACCESO TOTAL Y BOTÓN NUEVA CONVERSACIÓN -->
         <div id="gerenciaViewIA" class="hidden space-y-4 bg-slate-900 p-5 sm:p-6 rounded-3xl border border-slate-800 shadow-xl">
             <div class="flex justify-between items-center flex-wrap gap-2 border-b border-slate-800 pb-3.5">
                 <div>
                     <h2 class="text-xl font-black text-cyan-400 tracking-tight flex items-center gap-2">🤖 Asistente IA Geológico Gerencial (Acceso Total)</h2>
                     <p class="text-xs text-slate-300 font-medium mt-0.5">La IA analiza toda la base de datos sincronizada de la mina en tiempo real para preguntas abiertas</p>
                 </div>
-                <button type="button" onclick="toggleConfiguracionGeminiKey()" class="text-xs bg-slate-950 text-cyan-300 border border-cyan-500/40 px-3.5 py-2 rounded-xl font-extrabold hover:bg-slate-800 transition">
-                    ⚙️ Configurar Gemini API Key
-                </button>
+                <div class="flex gap-2 flex-wrap">
+                    <button type="button" onclick="nuevaConversacionIA()" class="text-xs bg-emerald-600 hover:bg-emerald-500 text-white px-3.5 py-2 rounded-xl font-extrabold shadow transition flex items-center gap-1.5">
+                        ✨ Nueva Conversación
+                    </button>
+                    <button type="button" onclick="toggleConfiguracionGeminiKey()" class="text-xs bg-slate-950 text-cyan-300 border border-cyan-500/40 px-3.5 py-2 rounded-xl font-extrabold hover:bg-slate-800 transition">
+                        ⚙️ Configurar Gemini API Key
+                    </button>
+                </div>
             </div>
 
             <!-- PANEL DESPLEGABLE PARA API KEY -->
@@ -789,17 +794,8 @@
                 <p class="text-[10px] text-slate-400 font-medium">Obtén tu API key gratuita en <a href="https://aistudio.google.com/" target="_blank" class="text-cyan-400 underline font-bold">aistudio.google.com</a></p>
             </div>
 
-            <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-3">
-                <div class="flex gap-2 flex-wrap text-[11px]">
-                    <span class="text-slate-400 font-extrabold flex items-center">💡 Preguntas sugeridas con acceso a toda la mina:</span>
-                    <button type="button" onclick="enviarSugerenciaIAChat('Compara el comportamiento de la recuperación de la perforación en la zona El Tronco con respecto a la zona de IVM Cielo Abierto')" class="bg-slate-900 text-cyan-300 hover:bg-slate-800 px-3 py-1.5 rounded-xl border border-cyan-500/30 font-bold transition">⛏️ El Tronco vs IVM</button>
-                    <button type="button" onclick="enviarSugerenciaIAChat('Haz un balance general de metros perforados, recuperación y metros pagables de todos los sondajes activos e históricos')" class="bg-slate-900 text-emerald-300 hover:bg-slate-800 px-3 py-1.5 rounded-xl border border-emerald-500/30 font-bold transition">📊 Balance Global Minero</button>
-                    <button type="button" onclick="enviarSugerenciaIAChat('Analiza la calidad litológica general y detecta qué sectores presentan mayores problemas de recuperación de testigo')" class="bg-slate-900 text-amber-300 hover:bg-slate-800 px-3 py-1.5 rounded-xl border border-amber-500/30 font-bold transition">🔍 Análisis Litológico General</button>
-                </div>
-            </div>
-
             <!-- CONTENEDOR DE CHAT EN VIVO -->
-            <div class="bg-slate-950 rounded-2xl border border-slate-800 flex flex-col h-[460px] shadow-2xl overflow-hidden">
+            <div class="bg-slate-950 rounded-2xl border border-slate-800 flex flex-col h-[500px] shadow-2xl overflow-hidden">
                 <div id="chatLiveMessages" class="flex-1 p-4 overflow-y-auto space-y-3.5 chat-scroll text-xs">
                     <div class="chat-bubble-ia p-3.5 max-w-[85%] space-y-1.5">
                         <p class="font-black text-cyan-400 text-xs tracking-wide">🤖 Asistente IA Geológico Gerencial</p>
@@ -846,7 +842,6 @@
         });
         window.addEventListener('offline', () => { actualizarIndicadorRed(); });
 
-        // Sincronización automática periódica en segundo plano cada 30 segundos si hay red
         setInterval(async () => {
             if (navigator.onLine) {
                 await cargarDatosDesdeNube(false);
@@ -1306,6 +1301,16 @@
             document.getElementById('panelConfigKey').classList.add('hidden');
         }
 
+        function nuevaConversacionIA() {
+            const chatContainer = document.getElementById('chatLiveMessages');
+            chatContainer.innerHTML = `
+                <div class="chat-bubble-ia p-3.5 max-w-[85%] space-y-1.5">
+                    <p class="font-black text-cyan-400 text-xs tracking-wide">🤖 Asistente IA Geológico Gerencial (Nueva Conversación)</p>
+                    <p class="leading-relaxed">¡Conversación anterior borrada! Tienes un lienzo limpio para preguntar cualquier aspecto técnico o comparativo de la mina.</p>
+                </div>
+            `;
+        }
+
         function construirContextoGlobalIA() {
             let texto = "BASE DE DATOS GENERAL DE SONDAJES JIRETH (ACCESO GLOBAL A TODA LA MINA):\n\n";
             texto += `Total de pozos registrados: ${db.pozos.length}\n`;
@@ -1317,7 +1322,6 @@
                 let totPag = avs.reduce((a,c) => a + c.pagado, 0);
                 texto += `🔹 Pozo: ${p.codigo} | Cliente: ${p.empresa} | Proyecto/Sector: ${p.proyecto} | Estado: ${p.estado || 'ACTIVO'} | Metros: ${totM.toFixed(2)}m | Recuperación: ${porcRec.toFixed(1)}% | Pagables: ${totPag.toFixed(2)}m\n`;
                 
-                // Detalle de meteorización/litología y tramos para preguntas específicas como El Tronco vs IVM
                 avs.forEach(a => {
                     texto += `   - Tramo ${a.desde.toFixed(2)}m - ${a.hasta.toFixed(2)}m (${a.diametro}): Litología/Meteorización: ${a.meteorizacion}, Recup: ${a.recuperado.toFixed(2)}m (${a.porcentaje.toFixed(1)}%)\n`;
                 });
@@ -1374,7 +1378,6 @@
                 alert("❌ Error de red con la IA.");
             }
         }
-        function enviarSugerenciaIAChat(texto) { document.getElementById('inputPreguntaIAChat').value = texto; enviarMensajeIAChat(); }
 
         function actualizarFiltrosGerencia() {
             const estadoFiltro = document.getElementById('gerFiltroEstado').value;
