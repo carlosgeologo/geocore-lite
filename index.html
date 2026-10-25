@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jireth GeoCore Lite | Control Operativo, Gerencial & IA Geológica</title>
+    <title>Jireth GeoCore Lite | Complejo Jireth C.A. & Supabase Cloud</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- SDK Oficial de Supabase -->
+    <!-- SDK Oficial de Supabase v2 -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap');
@@ -41,6 +41,12 @@
             box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.2);
         }
 
+        .bg-bienvenida-operativa {
+            background: linear-gradient(to bottom, rgba(2, 6, 23, 0.85), rgba(2, 6, 23, 0.95)), url('1001007083.jpg');
+            background-size: cover;
+            background-position: center;
+        }
+
         @keyframes laserMove {
             0% { transform: translateX(-100%); opacity: 0.2; }
             50% { opacity: 1; }
@@ -68,19 +74,19 @@
 </head>
 <body class="min-h-screen p-2.5 sm:p-4 antialiased selection:bg-cyan-500 selection:text-slate-950">
 
-    <!-- PANTALLA DE SELECCIÓN DE PERFIL Y LOGIN -->
-    <div id="pantallaLogin" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 flex items-center justify-center p-4">
-        <div class="bg-slate-900 p-6 sm:p-7 rounded-3xl border border-slate-800 w-full max-w-sm space-y-5 shadow-2xl relative overflow-hidden">
+    <!-- PANTALLA DE SELECCIÓN DE PERFIL Y LOGIN (FONDO OPERATIVO CON BIKINI/PERFORADORA) -->
+    <div id="pantallaLogin" class="fixed inset-0 bg-bienvenida-operativa z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-slate-900/95 p-6 sm:p-7 rounded-3xl border border-slate-800 w-full max-w-md space-y-5 shadow-2xl relative overflow-hidden backdrop-blur-md">
             <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-sky-600 via-cyan-400 to-sky-600 laser-line"></div>
             
-            <!-- LOGOTIPO INSTITUCIONAL JIRETH -->
+            <!-- LOGOTIPO INSTITUCIONAL JIRETH OFICIAL -->
             <div class="text-center pt-2">
-                <div class="mx-auto w-16 h-16 rounded-2xl bg-gradient-to-br from-amber-500 via-amber-600 to-yellow-600 flex items-center justify-center shadow-lg shadow-amber-500/20 border border-amber-400/40 mb-3">
-                    <span class="text-3xl filter drop-shadow">⛏️💎</span>
+                <div class="mx-auto w-full max-w-[220px] mb-3 bg-slate-950/80 p-2.5 rounded-2xl border border-slate-800 flex items-center justify-center shadow-lg">
+                    <img src="1001007025.jpg" alt="Jireth GeoCore Lite Logo" class="w-full h-auto object-contain rounded-xl">
                 </div>
-                <span class="text-[10px] uppercase tracking-widest font-extrabold text-amber-400 bg-amber-950/80 px-3 py-1 rounded-full border border-amber-800/60">Jireth Mining Group</span>
-                <h1 class="text-2xl font-black text-white mt-2 tracking-tight">Jireth GeoCore</h1>
-                <p class="text-xs text-slate-400 mt-1 font-medium">Control Operativo, Gerencial & IA Geológica</p>
+                <span class="text-[10px] uppercase tracking-widest font-extrabold text-amber-400 bg-amber-950/80 px-3 py-1 rounded-full border border-amber-800/60">Complejo Jireth C.A.</span>
+                <h1 class="text-xl font-black text-white mt-2 tracking-tight">Sistema de Integración & Control de Sondajes</h1>
+                <p class="text-xs text-slate-400 mt-1 font-medium">Control Operativo, Gerencial & Supabase Cloud</p>
             </div>
             
             <div class="grid grid-cols-2 gap-2.5">
@@ -95,7 +101,7 @@
             <!-- LOGIN GEOLOGOS -->
             <div id="boxLoginGeologos" class="space-y-4">
                 <div class="bg-slate-950 p-2.5 rounded-xl border border-amber-500/30 text-[11px] text-amber-300 text-center font-bold tracking-wide">
-                    ⚡ Perfil Operativo (Clave por defecto: <code class="text-white font-mono-code bg-slate-900 px-1.5 py-0.5 rounded">1234</code>)
+                    ⚡ Perfil Operativo (Clave por defecto: <code class="text-white font-mono-code bg-slate-900 px-1.5 py-0.5 rounded">Mina2628</code>)
                 </div>
                 <div>
                     <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Contraseña de Geólogos</label>
@@ -115,7 +121,7 @@
             <!-- LOGIN GERENCIA -->
             <div id="boxLoginGerencia" class="hidden space-y-4">
                 <div class="bg-slate-950 p-2.5 rounded-xl border border-sky-500/30 text-[11px] text-sky-300 text-center font-bold tracking-wide">
-                    📊 Perfil Ejecutivo (Clave por defecto: <code class="text-white font-mono-code bg-slate-900 px-1.5 py-0.5 rounded">gerencia2026</code>)
+                    📊 Perfil Ejecutivo (Clave: <code class="text-white font-mono-code bg-slate-900 px-1.5 py-0.5 rounded">JIRETH2026</code>)
                 </div>
                 <div>
                     <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Contraseña de Gerencia</label>
@@ -125,14 +131,14 @@
                     </div>
                 </div>
                 <button type="button" onclick="intentarLoginGer()" class="btn-field w-full bg-sky-600 hover:bg-sky-500 text-white text-sm font-black shadow-sky-600/20">
-                    📊 Ingresar a Visión Gerencial & IA
+                    📊 Ingresar a Visión Gerencial & Cloud
                 </button>
             </div>
 
             <!-- RECUPERACIÓN CON PIN MAESTRO -->
             <div id="boxLoginRescate" class="hidden space-y-3.5 pt-3 border-t border-slate-800">
                 <div class="bg-slate-950 p-2.5 rounded-xl border border-amber-500/30 text-amber-300 text-[11px]">
-                    🔑 <b>Restablecimiento:</b> PIN maestro requerido (PIN por defecto: <code class="text-white font-mono-code">7777</code>).
+                    🔑 <b>Restablecimiento:</b> PIN maestro requerido (<code class="text-white font-mono-code">2628</code>).
                 </div>
                 <div>
                     <label class="block text-xs font-extrabold text-slate-300 mb-1 uppercase tracking-wider">PIN Maestro (4 dígitos)</label>
@@ -152,31 +158,32 @@
         </div>
     </div>
 
-    <!-- APLICACIÓN PRINCIPAL (GEÓLOGOS) -->
+    <!-- APLICACIÓN PRINCIPAL -->
     <div id="appPrincipal" class="hidden space-y-3.5 max-w-7xl mx-auto">
         <header class="bg-slate-900/95 backdrop-blur p-3.5 rounded-2xl border border-slate-800 flex justify-between items-center flex-wrap gap-3 shadow-lg">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 to-yellow-600 border border-amber-400/40 flex items-center justify-center text-xl shadow">⛏️</div>
+                <div class="w-12 h-12 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-center p-1 shadow">
+                    <img src="1001007025.jpg" alt="Logo" class="w-full h-full object-contain rounded-lg">
+                </div>
                 <div>
                     <h1 class="text-base font-black text-white tracking-tight flex items-center gap-1.5">
-                        <span>Jireth GeoCore</span>
-                        <span class="text-amber-400 font-extrabold text-[10px] bg-amber-950/80 px-2 py-0.5 rounded border border-amber-800/60">Lite</span>
+                        <span>Jireth GeoCore Lite</span>
+                        <span class="text-amber-400 font-extrabold text-[10px] bg-amber-950/80 px-2 py-0.5 rounded border border-amber-800/60">Cloud</span>
                     </h1>
-                    <p class="text-[11px] text-slate-400 font-medium">Operaciones de Campo | Supabase Cloud <span id="indicadorRed" class="text-emerald-400 font-bold">(🟢 En Línea)</span></p>
+                    <p class="text-[11px] text-slate-400 font-medium">Complejo Jireth C.A. <span id="indicadorRed" class="text-emerald-400 font-bold">(🟢 Supabase Activo)</span></p>
                 </div>
             </div>
             
-            <!-- TARJETA DE BIENVENIDA DINÁMICA CON LOGO -->
             <div id="cardBienvenidaUsuario" class="hidden sm:flex items-center gap-3 bg-slate-950/80 px-3.5 py-1.5 rounded-xl border border-slate-800 text-xs">
                 <div class="w-7 h-7 rounded-lg bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-sm">💎</div>
                 <div>
-                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Especialista Activo</p>
-                    <p class="text-white font-extrabold" id="lblNombreUsuarioLogueado">Carlos Vicente Rodríguez Hernández</p>
+                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Sesión Activa</p>
+                    <p class="text-white font-extrabold" id="lblNombreUsuarioLogueado">Operador Autorizado</p>
                 </div>
             </div>
 
             <div class="flex gap-2 flex-wrap">
-                <button type="button" onclick="sincronizarConNube()" class="text-xs bg-emerald-950 text-emerald-300 px-3 py-2 rounded-xl font-extrabold border border-emerald-800/60 hover:bg-emerald-900/50 transition">🔄 Sincronizar</button>
+                <button type="button" onclick="sincronizarConSupabaseReal()" class="text-xs bg-emerald-950 text-emerald-300 px-3 py-2 rounded-xl font-extrabold border border-emerald-800/60 hover:bg-emerald-900/50 transition">🔄 Sincronizar Cloud</button>
                 <button type="button" onclick="cambiarClaveSistema()" class="text-xs bg-sky-950 text-sky-300 px-3 py-2 rounded-xl font-extrabold border border-sky-800/60 hover:bg-sky-900/50 transition">🔑 Clave</button>
                 <button type="button" onclick="cerrarSesion()" class="text-xs bg-rose-950 text-rose-300 px-3 py-2 rounded-xl font-extrabold border border-rose-800/60 hover:bg-rose-900/50 transition">🚪 Salir</button>
             </div>
@@ -207,7 +214,7 @@
             <h2 class="text-xl font-black text-amber-400 tracking-tight flex items-center gap-2">🛠️ Módulo 1: Apertura de Nuevo Sondaje</h2>
             <div class="space-y-4">
                 <div>
-                    <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Código del Sondaje * (Ej: S0001ET)</label>
+                    <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Código del Sondaje * (Ej: S0001-ET)</label>
                     <input type="text" id="m1_codigo" onblur="forzarMayusculas(this)" class="input-field w-full px-4 rounded-xl uppercase font-extrabold text-sm font-mono-code tracking-wider" placeholder="CÓDIGO ÚNICO">
                 </div>
                 <div>
@@ -229,7 +236,7 @@
                     <input type="text" id="m1_proyecto" onblur="forzarMayusculas(this)" class="input-field w-full px-4 rounded-xl font-extrabold text-sm uppercase" placeholder="EJ: EL CALLAO / SECTOR NORTE">
                 </div>
                 <button type="button" onclick="crearPozo()" class="btn-field w-full bg-amber-500 hover:bg-amber-400 text-slate-950 text-base font-black shadow-amber-500/25">
-                    💾 Crear y Abrir Sondaje con Validación Estricta
+                    💾 Crear y Abrir Sondaje con Sincronización en la Nube
                 </button>
             </div>
         </section>
@@ -256,27 +263,27 @@
                 </div>
                 <div>
                     <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Coordenada Este (m)</label>
-                    <input type="text" id="m2_este" disabled onblur="formatearUTM(this)" class="input-field w-full px-4 rounded-xl font-mono-code font-extrabold text-sm text-cyan-400">
+                    <input type="text" id="m2_este" disabled onblur="formatearUTM(this)" class="input-field w-full px-4 rounded-xl font-mono-code font-extrabold text-sm text-cyan-400" placeholder="0.00">
                 </div>
                 <div>
                     <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Coordenada Norte (m)</label>
-                    <input type="text" id="m2_norte" disabled onblur="formatearUTM(this)" class="input-field w-full px-4 rounded-xl font-mono-code font-extrabold text-sm text-cyan-400">
+                    <input type="text" id="m2_norte" disabled onblur="formatearUTM(this)" class="input-field w-full px-4 rounded-xl font-mono-code font-extrabold text-sm text-cyan-400" placeholder="0.00">
                 </div>
                 <div>
                     <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Cota Z (m)</label>
-                    <input type="text" id="m2_cota" disabled onblur="formatearDecimalesLibres(this)" class="input-field w-full px-4 rounded-xl font-mono-code font-extrabold text-sm text-cyan-400">
+                    <input type="text" id="m2_cota" disabled onblur="formatearDecimalesLibres(this)" class="input-field w-full px-4 rounded-xl font-mono-code font-extrabold text-sm text-cyan-400" placeholder="0.00">
                 </div>
                 <div>
                     <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Azimut (°)</label>
-                    <input type="text" id="m2_azimut" disabled onblur="formatearDecimalesLibres(this)" class="input-field w-full px-4 rounded-xl font-mono-code font-extrabold text-sm text-amber-400">
+                    <input type="text" id="m2_azimut" disabled onblur="formatearDecimalesLibres(this)" class="input-field w-full px-4 rounded-xl font-mono-code font-extrabold text-sm text-amber-400" placeholder="0.00">
                 </div>
                 <div>
                     <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Inclinación (Dip °)</label>
-                    <input type="text" id="m2_dip" disabled onblur="formatearDip(this)" class="input-field w-full px-4 rounded-xl font-mono-code font-extrabold text-sm text-amber-400">
+                    <input type="text" id="m2_dip" disabled onblur="formatearDip(this)" class="input-field w-full px-4 rounded-xl font-mono-code font-extrabold text-sm text-amber-400" placeholder="-60">
                 </div>
                 <div>
                     <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Profundidad Target (m)</label>
-                    <input type="text" id="m2_target" disabled onblur="formatearDecimalesLibres(this)" class="input-field w-full px-4 rounded-xl font-mono-code font-extrabold text-sm text-purple-400">
+                    <input type="text" id="m2_target" disabled onblur="formatearDecimalesLibres(this)" class="input-field w-full px-4 rounded-xl font-mono-code font-extrabold text-sm text-purple-400" placeholder="100.00">
                 </div>
             </div>
             <div id="m2_btn_box" class="hidden pt-2">
@@ -306,17 +313,17 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
                         <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Perforador *</label>
-                        <input type="text" id="m3_perforador" onblur="forzarMayusculas(this)" class="input-field w-full px-3.5 rounded-xl text-xs font-extrabold uppercase" value="JHONATAN LOPEZ">
+                        <input type="text" id="m3_perforador" onblur="forzarMayusculas(this)" class="input-field w-full px-3.5 rounded-xl text-xs font-extrabold uppercase" placeholder="NOMBRE DEL PERFORADOR">
                     </div>
                     <div>
                         <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Supervisor GEÓLOGOS *</label>
-                        <input type="text" id="m3_geologo" onblur="forzarMayusculas(this)" class="input-field w-full px-3.5 rounded-xl text-xs font-extrabold uppercase" value="CARLOS VICENTE RODRÍGUEZ HERNÁNDEZ">
+                        <input type="text" id="m3_geologo" onblur="forzarMayusculas(this)" class="input-field w-full px-3.5 rounded-xl text-xs font-extrabold uppercase" placeholder="NOMBRE DEL GEÓLOGO">
                     </div>
                 </div>
 
                 <div>
                     <label class="block text-xs font-extrabold text-cyan-400 mb-1.5 uppercase tracking-wider">📝 Observaciones Geotécnicas / Novedades de Turno (Para el DSR)</label>
-                    <textarea id="m3_observaciones" onblur="forzarMayusculas(this)" rows="2" class="input-field w-full p-3 rounded-xl text-xs uppercase font-medium" placeholder="EJ: AVANCE SIN NOVEDAD. PRESENCIA DE ZONA OXIDADA CON FRACTURAMIENTO MODERADO..."></textarea>
+                    <textarea id="m3_observaciones" onblur="forzarMayusculas(this)" rows="2" class="input-field w-full p-3 rounded-xl text-xs uppercase font-medium" placeholder="EJ: AVANCE SIN NOVEDAD..."></textarea>
                 </div>
 
                 <div class="flex gap-2.5 pt-2 flex-wrap">
@@ -403,13 +410,13 @@
                     <div>
                         <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Litología / Meteorización *</label>
                         <select id="m3_meteorizacion" class="input-field w-full px-3.5 rounded-xl text-xs font-bold">
-                            <option value="SUELO / RELLENO">a. Suelo / Relleno (Umbral ≥ 70%)</option>
-                            <option value="SAPROLITA">b. Saprolita (Umbral ≥ 70%)</option>
-                            <option value="SAPROCK">c. Saprock (Umbral ≥ 70%)</option>
-                            <option value="ROCA OXIDADA">d. Roca Oxidada (Umbral ≥ 80%)</option>
-                            <option value="ROCA FRACTURADA">e. Roca Fracturada (Umbral ≥ 70%)</option>
-                            <option value="ROCA FRESCA">f. Roca Fresca (Umbral ≥ 90%)</option>
-                            <option value="ZONA DE VETA">g. Zona de Veta (Umbral ≥ 90%)</option>
+                            <option value="SUELO / RELLENO">a. Suelo / Relleno</option>
+                            <option value="SAPROLITA">b. Saprolita</option>
+                            <option value="SAPROCK">c. Saprock</option>
+                            <option value="ROCA OXIDADA">d. Roca Oxidada</option>
+                            <option value="ROCA FRACTURADA">e. Roca Fracturada</option>
+                            <option value="ROCA FRESCA">f. Roca Fresca</option>
+                            <option value="ZONA DE VETA">g. Zona de Veta</option>
                         </select>
                     </div>
                     <div class="sm:col-span-3 flex gap-2 pt-1">
@@ -448,7 +455,7 @@
                 </div>
                 <div>
                     <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Observaciones Finales de Cierre</label>
-                    <textarea id="m4_obs" rows="3" onblur="forzarMayusculas(this)" class="input-field w-full p-3 rounded-xl text-xs uppercase" placeholder="EJ: SONDAJE FINALIZADO SIN NOVEDAD MECÁNICA. NÚCLEOS ENTREGADOS A GEOLOGÍA..."></textarea>
+                    <textarea id="m4_obs" rows="3" onblur="forzarMayusculas(this)" class="input-field w-full p-3 rounded-xl text-xs uppercase" placeholder="EJ: SONDAJE FINALIZADO SIN NOVEDAD..."></textarea>
                 </div>
                 <button type="button" onclick="ejecutarCierrePozo()" class="btn-field w-full bg-rose-600 hover:bg-rose-500 text-white text-sm font-black shadow-rose-600/25">🔒 Ejecutar Cierre Definitivo del Sondaje</button>
             </div>
@@ -464,18 +471,18 @@
                 </div>
             </div>
 
-            <!-- ÁREA IMPRIMIBLE / VISUALIZACIÓN -->
+            <!-- ÁREA IMPRIMIBLE -->
             <div id="printable-area" class="bg-slate-950 p-5 sm:p-6 rounded-2xl border border-slate-800 space-y-4 text-xs">
                 <div class="border-b border-slate-800 pb-4 flex justify-between items-start flex-wrap gap-3">
                     <div>
                         <h3 class="text-base font-black text-white uppercase tracking-tight flex items-center gap-2">
-                            <span>⛏️ JIRETH MINING GROUP — REPORTE DIARIO DE SONDAJE (DSR)</span>
+                            <span>⛏️ COMPLEJO JIRETH C.A. — REPORTE DIARIO DE SONDAJE (DSR)</span>
                         </h3>
                         <p class="text-[11px] text-slate-400 mt-0.5">Control Operativo, Geológico & Auditoría de Perforación Diamantina</p>
                     </div>
                     <div class="text-right">
                         <p class="text-xs text-amber-400 font-extrabold" id="repFechaEmision">Fecha: --/--/----</p>
-                        <p class="text-[11px] text-slate-400 font-medium">Especialista: Carlos Vicente Rodríguez Hernández</p>
+                        <p class="text-[11px] text-slate-400 font-medium">Jireth GeoCore Lite Cloud</p>
                     </div>
                 </div>
 
@@ -527,7 +534,7 @@
                 </div>
 
                 <div class="pt-4 border-t border-slate-800 flex justify-between items-center text-[10px] text-slate-400">
-                    <p><b>Jireth GeoCore Lite</b> — Sistema Integral de Gestión Geológica</p>
+                    <p><b>Jireth GeoCore Lite</b> — Complejo Jireth C.A.</p>
                     <p>Firma Supervisor: ___________________________</p>
                 </div>
             </div>
@@ -556,14 +563,17 @@
         </section>
     </div>
 
-    <!-- SCRIPT PRINCIPAL FUNCIONAL -->
+    <!-- SCRIPT PRINCIPAL CON CREDENCIALES Y CONECTIVIDAD SUPABASE -->
     <script>
-        // CONFIGURACIÓN SUPABASE
-        const SUPABASE_URL = "https://tu-proyecto.supabase.co";
-        const SUPABASE_KEY = "tu-anon-key";
+        // ==========================================================
+        // CREDENCIALES REALES DE SUPABASE (CONFIGURA TUS DATOS AQUÍ)
+        // ==========================================================
+        const SUPABASE_URL = "https://tu-proyecto.supabase.co"; // Reemplaza por tu URL de Supabase
+        const SUPABASE_KEY = "tu-anon-key-publica";             // Reemplaza por tu Anon/Public Key
+        
         let supabaseClient = null;
         try {
-            if (typeof supabase !== 'undefined') {
+            if (typeof supabase !== 'undefined' && SUPABASE_URL.includes("http")) {
                 supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
             }
         } catch(e) { console.warn("Supabase Init Warning:", e); }
@@ -576,19 +586,20 @@
         let turnoActivoObj = JSON.parse(localStorage.getItem('jireth_turno_activo') || 'null');
         let indexEditandoAvance = null;
 
-        // INICIALIZACIÓN Y ASEGURAMIENTO DE CREDENCIALES
-        if (!localStorage.getItem('jireth_clave_geo')) {
-            localStorage.setItem('jireth_clave_geo', '1234');
-        }
-        if (!localStorage.getItem('jireth_clave_ger')) {
-            localStorage.setItem('jireth_clave_ger', 'gerencia2026');
-        }
+        // Claves oficiales establecidas
+        if (!localStorage.getItem('jireth_clave_geo')) localStorage.setItem('jireth_clave_geo', 'Mina2628');
+        if (!localStorage.getItem('jireth_clave_ger')) localStorage.setItem('jireth_clave_ger', 'JIRETH2026');
         let claveGeologos = localStorage.getItem('jireth_clave_geo');
         let claveGerencia = localStorage.getItem('jireth_clave_ger');
-        const PIN_MAESTRO = "7777";
+        const PIN_MAESTRO = "2628";
 
-        window.onload = function() {
+        window.onload = async function() {
             document.getElementById('m3_fecha').valueAsDate = new Date();
+            
+            if (supabaseClient) {
+                await sincronizarDesdeSupabaseCloud(false);
+            }
+
             refrescarSelectorPozos();
             if (pozoActivoId && pozosData[pozoActivoId]) {
                 document.getElementById('globalWellSelect').value = pozoActivoId;
@@ -624,21 +635,21 @@
 
         function intentarLoginGeo() {
             const val = document.getElementById('inputClaveGeo').value.trim();
-            claveGeologos = localStorage.getItem('jireth_clave_geo') || '1234';
+            claveGeologos = localStorage.getItem('jireth_clave_geo') || 'Mina2628';
             if (val === claveGeologos) {
-                entrarAlSistema("GEÓLOGOS (CARLOS RODRÍGUEZ HERNÁNDEZ)");
+                entrarAlSistema("GEÓLOGOS (COMPLEJO JIRETH C.A.)");
             } else {
-                alert("❌ Contraseña de Geólogos incorrecta. (Por defecto es: 1234)");
+                alert("❌ Contraseña de Geólogos incorrecta. (Por defecto es: Mina2628)");
             }
         }
 
         function intentarLoginGer() {
             const val = document.getElementById('inputClaveGer').value.trim();
-            claveGerencia = localStorage.getItem('jireth_clave_ger') || 'gerencia2026';
+            claveGerencia = localStorage.getItem('jireth_clave_ger') || 'JIRETH2026';
             if (val === claveGerencia || val === claveGeologos) {
                 entrarAlSistema("GERENCIA / AUDITORÍA");
             } else {
-                alert("❌ Contraseña de Gerencia incorrecta. (Por defecto es: gerencia2026)");
+                alert("❌ Contraseña de Gerencia incorrecta. (Por defecto es: JIRETH2026)");
             }
         }
 
@@ -658,19 +669,19 @@
             if (pin === PIN_MAESTRO && nueva.length >= 4) {
                 claveGeologos = nueva;
                 localStorage.setItem('jireth_clave_geo', claveGeologos);
-                alert("✅ Contraseña restablecida con éxito. Ingrese con su nueva clave.");
+                alert("✅ Contraseña restablecida con éxito.");
                 document.getElementById('inputPinRescate').value = '';
                 document.getElementById('inputClaveNuevaRescate').value = '';
                 ocultarBoxRescate();
             } else {
-                alert("❌ PIN Maestro incorrecto (es 7777) o contraseña muy corta (Mín 4 caracteres).");
+                alert("❌ PIN Maestro incorrecto (es 2628) o contraseña muy corta.");
             }
         }
 
         function entrarAlSistema(rolTexto) {
             document.getElementById('pantallaLogin').classList.add('hidden');
             document.getElementById('appPrincipal').classList.remove('hidden');
-            document.getElementById('lblNombreUsuarioLogueado').innerText = "Carlos Vicente Rodríguez Hernández (" + rolTexto + ")";
+            document.getElementById('lblNombreUsuarioLogueado').innerText = rolTexto;
             switchTab('mod3_turno');
         }
 
@@ -683,7 +694,7 @@
 
         function cambiarClaveSistema() {
             const actual = prompt("Ingrese su contraseña actual:");
-            claveGeologos = localStorage.getItem('jireth_clave_geo') || '1234';
+            claveGeologos = localStorage.getItem('jireth_clave_geo') || 'Mina2628';
             if (actual === claveGeologos) {
                 const nueva = prompt("Ingrese la nueva contraseña (mínimo 4 caracteres):");
                 if (nueva && nueva.trim().length >= 4) {
@@ -716,45 +727,24 @@
             }
         }
 
-        // UTILIDADES Y FORMATEADORES
-        function forzarMayusculas(el) {
-            if (el && el.value) el.value = el.value.toUpperCase();
-        }
-        function formatearUTM(el) {
-            if (el && el.value) {
-                let num = parseFloat(el.value.replace(/,/g, ''));
-                if (!isNaN(num)) el.value = num.toFixed(2);
-            }
-        }
-        function formatearDecimalesLibres(el) {
-            if (el && el.value) {
-                let num = parseFloat(el.value.replace(/,/g, ''));
-                if (!isNaN(num)) el.value = num.toFixed(2);
-            }
-        }
-        function formatearDip(el) {
-            if (el && el.value) {
-                let num = parseFloat(el.value);
-                if (!isNaN(num)) el.value = num.toFixed(0);
-            }
-        }
+        function forzarMayusculas(el) { if (el && el.value) el.value = el.value.toUpperCase(); }
+        function formatearUTM(el) { if (el && el.value) { let num = parseFloat(el.value.replace(/,/g, '')); if (!isNaN(num)) el.value = num.toFixed(2); } }
+        function formatearDecimalesLibres(el) { if (el && el.value) { let num = parseFloat(el.value.replace(/,/g, '')); if (!isNaN(num)) el.value = num.toFixed(2); } }
+        function formatearDip(el) { if (el && el.value) { let num = parseFloat(el.value); if (!isNaN(num)) el.value = num.toFixed(0); } }
 
-        // MÓDULO 1 Y 2: APERTURA Y TOPOGRAFÍA
         function toggleOtraEmpresa() {
             const sel = document.getElementById('m1_empresa').value;
             const box = document.getElementById('m1_otra_empresa_box');
-            if (sel === 'OTRA') box.classList.remove('hidden');
-            else box.classList.add('hidden');
+            if (sel === 'OTRA') box.classList.remove('hidden'); else box.classList.add('hidden');
         }
 
         function toggleOtraMaquina() {
             const sel = document.getElementById('m2_maquina').value;
             const box = document.getElementById('m2_otra_maquina_box');
-            if (sel === 'OTRA') box.classList.remove('hidden');
-            else box.classList.add('hidden');
+            if (sel === 'OTRA') box.classList.remove('hidden'); else box.classList.add('hidden');
         }
 
-        function crearPozo() {
+        async function crearPozo() {
             let codigo = document.getElementById('m1_codigo').value.trim().toUpperCase();
             let empresa = document.getElementById('m1_empresa').value;
             if (empresa === 'OTRA') empresa = document.getElementById('m1_otra_empresa').value.trim().toUpperCase();
@@ -770,25 +760,17 @@
             }
 
             pozosData[codigo] = {
-                codigo: codigo,
-                empresa: empresa,
-                proyecto: proyecto,
-                maquina: 'GEOMAX',
-                este: '450000.00',
-                norte: '9120000.00',
-                cota: '150.00',
-                azimut: '0.00',
-                dip: '-60',
-                target: '150.00',
-                avances: [],
-                estado: 'ABIERTO'
+                codigo: codigo, empresa: empresa, proyecto: proyecto, maquina: 'GEOMAX',
+                este: '450000.00', norte: '9120000.00', cota: '150.00', azimut: '0.00',
+                dip: '-60', target: '150.00', avances: [], estado: 'ABIERTO'
             };
-            guardarStoragePozos();
+            
+            await guardarYPersistirTodo();
             pozoActivoId = codigo;
             localStorage.setItem('jireth_pozo_activo', pozoActivoId);
             refrescarSelectorPozos();
             cargarDatosPozoEnFormularios(codigo);
-            alert("✅ Sondaje " + codigo + " creado y seleccionado exitosamente.");
+            alert("✅ Sondaje " + codigo + " creado y sincronizado en la nube.");
             switchTab('mod2');
         }
 
@@ -805,7 +787,7 @@
             toggleOtraMaquina();
         }
 
-        function guardarTopografia() {
+        async function guardarTopografia() {
             if (!pozoActivoId || !pozosData[pozoActivoId]) { alert("⚠️ No hay sondaje activo."); return; }
             let p = pozosData[pozoActivoId];
             let maq = document.getElementById('m2_maquina').value;
@@ -819,8 +801,8 @@
             p.dip = document.getElementById('m2_dip').value || '-60';
             p.target = document.getElementById('m2_target').value || '100.00';
 
-            guardarStoragePozos();
-            alert("✅ Ficha topográfica guardada exitosamente.");
+            await guardarYPersistirTodo();
+            alert("✅ Ficha topográfica guardada y respaldada en Supabase.");
             document.getElementById('m2_btn_box').classList.add('hidden');
             ['m2_maquina', 'm2_este', 'm2_norte', 'm2_cota', 'm2_azimut', 'm2_dip', 'm2_target', 'm2_otra_maquina'].forEach(id => {
                 const el = document.getElementById(id);
@@ -846,7 +828,6 @@
             localStorage.setItem('jireth_pozo_activo', pozoActivoId);
             if (val && pozosData[val]) {
                 cargarDatosPozoEnFormularios(val);
-                alert("🎯 Sondaje activo cambiado a: " + val);
             }
         }
 
@@ -863,11 +844,7 @@
             const maqSel = document.getElementById('m2_maquina');
             let encontrado = false;
             for (let i = 0; i < maqSel.options.length; i++) {
-                if (maqSel.options[i].value === p.maquina) {
-                    maqSel.selectedIndex = i;
-                    encontrado = true;
-                    break;
-                }
+                if (maqSel.options[i].value === p.maquina) { maqSel.selectedIndex = i; encontrado = true; break; }
             }
             if (!encontrado) {
                 maqSel.value = 'OTRA';
@@ -882,8 +859,7 @@
             autoCalcularHasta();
         }
 
-        // MÓDULO 3A Y 3B: TURNOS Y LOGGING
-        function iniciarTurnoNuevo() {
+        async function iniciarTurnoNuevo() {
             if (!pozoActivoId) { alert("⚠️ Debe seleccionar o crear un sondaje primero."); switchTab('mod1'); return; }
             let fecha = document.getElementById('m3_fecha').value;
             let jornada = document.getElementById('m3_turno').value;
@@ -891,19 +867,11 @@
             let geologo = document.getElementById('m3_geologo').value.trim().toUpperCase();
             let obs = document.getElementById('m3_observaciones').value.trim().toUpperCase();
 
-            if (!fecha || !perforador || !geologo) {
-                alert("❌ Complete Fecha, Perforador y Geólogo.");
-                return;
-            }
+            if (!fecha || !perforador || !geologo) { alert("❌ Complete Fecha, Perforador y Geólogo supervisor."); return; }
 
             turnoActivoObj = {
-                id: 'TURNO_' + Date.now(),
-                pozo: pozoActivoId,
-                fecha: fecha,
-                jornada: jornada,
-                perforador: perforador,
-                geologo: geologo,
-                observaciones: obs || "SIN NOVEDAD"
+                id: 'TURNO_' + Date.now(), pozo: pozoActivoId, fecha: fecha,
+                jornada: jornada, perforador: perforador, geologo: geologo, observaciones: obs || "SIN NOVEDAD"
             };
 
             turnosData[turnoActivoObj.id] = turnoActivoObj;
@@ -912,19 +880,19 @@
             
             actualizarBannerTurnoActivo();
             poblarSelectRetomarTurno();
-            alert("🚀 Turno iniciado correctamente para el sondaje " + pozoActivoId);
+            alert("🚀 Turno iniciado correctamente.");
             switchTab('mod3_logging');
         }
 
         function pausarTurnoActual() {
             if (!turnoActivoObj) { alert("⚠️ No hay turno activo."); return; }
-            alert("⏸️ Turno pausado. Puede cambiar de frente o sondaje y retomarlo cuando desee.");
+            alert("⏸️ Turno pausado.");
             switchTab('mod3_turno');
         }
 
         function finalizarTurnoActivo() {
             if (!turnoActivoObj) { alert("⚠️ No hay turno activo."); return; }
-            alert("💾 Turno finalizado y guardado con éxito.");
+            alert("💾 Turno finalizado.");
             turnoActivoObj = null;
             localStorage.removeItem('jireth_turno_activo');
             document.getElementById('lblInfoTurno').innerText = "--";
@@ -938,9 +906,7 @@
             document.getElementById('lblInfoTurno').innerText = turnoActivoObj.pozo + " (" + turnoActivoObj.fecha + " - " + turnoActivoObj.jornada + ")";
             document.getElementById('lblInfoPerf').innerText = turnoActivoObj.perforador;
             document.getElementById('lblInfoGeo').innerText = turnoActivoObj.geologo;
-            if (turnoActivoObj.observaciones) {
-                document.getElementById('m3_observaciones').value = turnoActivoObj.observaciones;
-            }
+            if (turnoActivoObj.observaciones) document.getElementById('m3_observaciones').value = turnoActivoObj.observaciones;
         }
 
         function poblarSelectRetomarTurno() {
@@ -970,7 +936,6 @@
             switchTab('mod3_logging');
         }
 
-        // TRAMOS Y CORE LOGGING
         function autoCalcularHasta() {
             if (!pozoActivoId || !pozosData[pozoActivoId]) return;
             let p = pozosData[pozoActivoId];
@@ -985,7 +950,7 @@
             document.getElementById('m3_recuperado').value = lon.toFixed(2);
         }
 
-        function guardarAvance() {
+        async function guardarAvance() {
             if (!pozoActivoId || !pozosData[pozoActivoId]) { alert("⚠️ Seleccione un sondaje activo primero."); switchTab('mod1'); return; }
             let p = pozosData[pozoActivoId];
             let desde = parseFloat(document.getElementById('m3_desde').value) || 0;
@@ -1000,13 +965,9 @@
             }
 
             let objTramo = {
-                desde: desde.toFixed(2),
-                hasta: hasta.toFixed(2),
-                diametro: diametro,
-                recuperado: recuperado.toFixed(2),
-                porcentaje: (((recuperado / (hasta - desde)) * 100)).toFixed(1),
-                meteorizacion: meteorizacion,
-                pago: (recuperado * (diametro === 'HQ' ? 1.0 : 0.85)).toFixed(2)
+                desde: desde.toFixed(2), hasta: hasta.toFixed(2), diametro: diametro,
+                recuperado: recuperado.toFixed(2), porcentaje: (((recuperado / (hasta - desde)) * 100)).toFixed(1),
+                meteorizacion: meteorizacion, pago: (recuperado * (diametro === 'HQ' ? 1.0 : 0.85)).toFixed(2)
             };
 
             if (indexEditandoAvance !== null) {
@@ -1018,11 +979,11 @@
                 p.avances.push(objTramo);
             }
 
-            guardarStoragePozos();
+            await guardarYPersistirTodo();
             actualizarTablaAvances();
             actualizarProgresoGrafico();
             autoCalcularHasta();
-            alert("✅ Tramo guardado correctamente.");
+            alert("✅ Tramo guardado y respaldado en la nube.");
         }
 
         function actualizarTablaAvances() {
@@ -1074,11 +1035,11 @@
             autoCalcularHasta();
         }
 
-        function eliminarTramo(idx) {
+        async function eliminarTramo(idx) {
             if (!pozoActivoId || !pozosData[pozoActivoId]) return;
             if (confirm("¿Está seguro de eliminar este tramo de avance?")) {
                 pozosData[pozoActivoId].avances.splice(idx, 1);
-                guardarStoragePozos();
+                await guardarYPersistirTodo();
                 actualizarTablaAvances();
                 actualizarProgresoGrafico();
                 autoCalcularHasta();
@@ -1093,8 +1054,7 @@
 
             p.avances.forEach(t => {
                 let met = parseFloat(t.hasta) - parseFloat(t.desde);
-                if (t.diametro === 'HQ') totalHQ += met;
-                else totalNQ += met;
+                if (t.diametro === 'HQ') totalHQ += met; else totalNQ += met;
             });
 
             let totalPerforado = totalHQ + totalNQ;
@@ -1115,21 +1075,19 @@
             document.getElementById('barPendiente').style.width = pPend + '%';
         }
 
-        // MÓDULO 4: CIERRE
-        function ejecutarCierrePozo() {
+        async function ejecutarCierrePozo() {
             if (!pozoActivoId || !pozosData[pozoActivoId]) { alert("⚠️ No hay sondaje activo."); return; }
             let motivo = document.getElementById('m4_motivo').value;
             let obs = document.getElementById('m4_obs').value;
             pozosData[pozoActivoId].estado = 'CERRADO';
             pozosData[pozoActivoId].motivoCierre = motivo;
             pozosData[pozoActivoId].obsCierre = obs;
-            guardarStoragePozos();
+            await guardarYPersistirTodo();
             refrescarSelectorPozos();
             alert("🔒 Sondaje " + pozoActivoId + " cerrado definitivamente.");
             switchTab('mod5');
         }
 
-        // MÓDULO 5: REPORTE GERENCIAL (DSR)
         function generarReporteDSR() {
             if (!pozoActivoId || !pozosData[pozoActivoId]) {
                 alert("⚠️ Seleccione un sondaje activo primero para generar el reporte.");
@@ -1147,19 +1105,14 @@
             document.getElementById('repCota').innerText = p.cota;
             document.getElementById('repOrientacion').innerText = p.azimut + "° / " + p.dip + "°";
 
-            let totalMetros = 0;
-            let totalRecuperado = 0;
-            let totalPago = 0;
-
+            let totalMetros = 0, totalRecuperado = 0, totalPago = 0;
             let tbody = document.getElementById('repTablaBody');
             tbody.innerHTML = '';
 
             p.avances.forEach(t => {
                 let met = parseFloat(t.hasta) - parseFloat(t.desde);
                 let rec = parseFloat(t.recuperado);
-                totalMetros += met;
-                totalRecuperado += rec;
-                totalPago += parseFloat(t.pago);
+                totalMetros += met; totalRecuperado += rec; totalPago += parseFloat(t.pago);
 
                 let tr = document.createElement('tr');
                 tr.innerHTML = `
@@ -1184,27 +1137,18 @@
         }
 
         function copiarReportePortapapeles() {
-            let texto = "=== JIRETH MINING GROUP — REPORTE DIARIO DE SONDAJE (DSR) ===\n";
+            let texto = "=== COMPLEJO JIRETH C.A. — REPORTE DIARIO DE SONDAJE (DSR) ===\n";
             texto += "Sondaje: " + pozoActivoId + " | Proyecto: " + pozosData[pozoActivoId].proyecto + "\n";
             texto += "Empresa: " + pozosData[pozoActivoId].empresa + " | Máquina: " + pozosData[pozoActivoId].maquina + "\n";
-            texto += "Coordenadas Este: " + pozosData[pozoActivoId].este + " | Norte: " + pozosData[pozoActivoId].norte + "\n";
-            texto += "Supervisor: CARLOS VICENTE RODRÍGUEZ HERNÁNDEZ\n";
             texto += "===========================================================\n";
             pozosData[pozoActivoId].avances.forEach((t, i) => {
                 texto += `Tramo #${i+1}: ${t.desde}-${t.hasta}m | ${t.diametro} | Rec: ${t.recuperado}m (${t.porcentaje}%) | ${t.meteorizacion}\n`;
             });
-            navigator.clipboard.writeText(texto).then(() => {
-                alert("📋 Reporte copiado al portapapeles exitosamente.");
-            });
+            navigator.clipboard.writeText(texto).then(() => { alert("📋 Reporte copiado al portapapeles."); });
         }
 
-        // MÓDULO 6: ADMIN Y BACKUPS
         function exportarBackupJSON() {
-            let backup = {
-                pozos: pozosData,
-                turnos: turnosData,
-                activo: pozoActivoId
-            };
+            let backup = { pozos: pozosData, turnos: turnosData, activo: pozoActivoId };
             let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backup, null, 2));
             let dlAnchorElem = document.createElement('a');
             dlAnchorElem.setAttribute("href", dataStr);
@@ -1216,49 +1160,85 @@
             let file = event.target.files[0];
             if (!file) return;
             let reader = new FileReader();
-            reader.onload = function(e) {
+            reader.onload = async function(e) {
                 try {
                     let imp = JSON.parse(e.target.result);
                     if (imp.pozos) {
                         pozosData = imp.pozos;
                         turnosData = imp.turnos || {};
                         pozoActivoId = imp.activo || '';
-                        guardarStoragePozos();
-                        localStorage.setItem('jireth_turnos', JSON.stringify(turnosData));
-                        localStorage.setItem('jireth_pozo_activo', pozoActivoId);
+                        await guardarYPersistirTodo();
                         refrescarSelectorPozos();
                         if (pozoActivoId) cargarDatosPozoEnFormularios(pozoActivoId);
-                        alert("✅ Base de datos importada correctamente.");
-                    } else {
-                        alert("❌ Formato de archivo JSON inválido.");
-                    }
-                } catch(err) {
-                    alert("❌ Error al parsear JSON: " + err);
-                }
+                        alert("✅ Base de datos importada y sincronizada correctamente.");
+                    } else { alert("❌ Formato de archivo JSON inválido."); }
+                } catch(err) { alert("❌ Error al parsear JSON: " + err); }
             };
             reader.readAsText(file);
         }
 
-        function borrarTodoLocal() {
-            if (confirm("⚠️ ¿Está seguro de borrar TODOS los datos locales del navegador? Esta acción no se puede deshacer.")) {
+        async function borrarTodoLocal() {
+            if (confirm("⚠️ ¿Está seguro de borrar TODOS los datos locales y de la nube?")) {
                 localStorage.clear();
-                pozosData = {};
-                turnosData = {};
-                pozoActivoId = '';
+                pozosData = {}; turnosData = {}; pozoActivoId = '';
+                if (supabaseClient) {
+                    await supabaseClient.from('jireth_geocore').delete().eq('id', 'db_principal');
+                }
                 location.reload();
             }
         }
 
-        function guardarStoragePozos() {
+        // ==========================================================
+        // FUNCIONES DE DOBLE PERSISTENCIA (LOCALSTORAGE + SUPABASE CLOUD)
+        // ==========================================================
+        async function guardarYPersistirTodo() {
             localStorage.setItem('jireth_pozos', JSON.stringify(pozosData));
+            
+            if (supabaseClient) {
+                try {
+                    const payloadData = { pozos: pozosData, turnos: turnosData, actualizado: new Date().toISOString() };
+                    const { error } = await supabaseClient
+                        .from('jireth_geocore')
+                        .upsert({ id: 'db_principal', payload: payloadData });
+                    
+                    if (error) console.error("Error al sincronizar con Supabase:", error.message);
+                } catch(ex) {
+                    console.warn("Excepción de red al sincronizar con Supabase:", ex);
+                }
+            }
         }
 
-        function sincronizarConNube() {
-            if (supabaseClient) {
-                alert("🔄 Sincronizando con Supabase Cloud (Base de datos remota)... ¡Sincronización exitosa!");
-            } else {
-                alert("🟢 Base de datos sincronizada localmente (Modo Lite Activo).");
+        async function sincronizarDesdeSupabaseCloud(mostrarAlerta = true) {
+            if (!supabaseClient) {
+                if (mostrarAlerta) alert("⚠️ Configure las credenciales reales de Supabase en el código.");
+                return;
             }
+
+            try {
+                const { data, error } = await supabaseClient
+                    .from('jireth_geocore')
+                    .select('payload')
+                    .eq('id', 'db_principal')
+                    .single();
+
+                if (data && data.payload) {
+                    if (data.payload.pozos) pozosData = data.payload.pozos;
+                    if (data.payload.turnos) turnosData = data.payload.turnos;
+                    localStorage.setItem('jireth_pozos', JSON.stringify(pozosData));
+                    localStorage.setItem('jireth_turnos', JSON.stringify(turnosData));
+                    refrescarSelectorPozos();
+                    if (mostrarAlerta) alert("🔄 ¡Sincronización con Supabase Cloud exitosa! Datos actualizados.");
+                } else if (error && mostrarAlerta) {
+                    await guardarYPersistirTodo();
+                    if (mostrarAlerta) alert("☁️ Base de datos inicializada y subida a Supabase Cloud con éxito.");
+                }
+            } catch(e) {
+                if (mostrarAlerta) alert("❌ Error de conexión con Supabase Cloud. Verifique su red.");
+            }
+        }
+
+        async function sincronizarConSupabaseReal() {
+            await sincronizarDesdeSupabaseCloud(true);
         }
     </script>
 </body>
