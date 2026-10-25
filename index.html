@@ -1555,7 +1555,7 @@
 
         async function sincronizarDesdeSupabaseCloud(mostrarAlerta = true) {
             if (!supabaseClient) {
-                if (mostrarAlerta) alert("⚠️ El cliente de Supabase não está inicializado.");
+                if (mostrarAlerta) alert("⚠️ El cliente de Supabase no está inicializado.");
                 return;
             }
             try {
@@ -1563,10 +1563,10 @@
                     .from('jireth_geocore')
                     .select('payload')
                     .eq('id', 'db_principal')
-                    .single();
+                    .maybeSingle();
 
                 if (error) {
-                    console.warn("Nota Supabase (primera vez o tabla vacía):", error.message);
+                    console.warn("Nota Supabase:", error.message);
                     return;
                 }
 
@@ -1584,6 +1584,10 @@
                         cargarDatosPozoEnFormularios(pozoActivoId);
                     }
                     if (mostrarAlerta) alert("🔄 ¡Sincronización con Supabase Cloud exitosa!");
+                } else {
+                    // Si la tabla está vacía, subimos el estado actual automáticamente para inicializarla
+                    await guardarYPersistirTodo();
+                    if (mostrarAlerta) alert("🚀 Base de datos inicializada y sincronizada en la nube correctamente.");
                 }
             } catch(e) {
                 if (mostrarAlerta) alert("❌ Error al conectar con Supabase.");
