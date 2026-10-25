@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jireth GeoCore Lite | Complejo Jireth C.A. & Supabase Cloud</title>
+    <title>Jireth GeoCore Lite | Complejo Jireth C.A.</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- SDK Oficial de Supabase v2 -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap');
@@ -41,8 +40,8 @@
             box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.2);
         }
 
-        .bg-bienvenida-operativa {
-            background: linear-gradient(to bottom, rgba(2, 6, 23, 0.85), rgba(2, 6, 23, 0.95)), url('1001007083.jpg');
+        .bg-bienvenida-oficial {
+            background: linear-gradient(to bottom, rgba(2, 6, 23, 0.80), rgba(2, 6, 23, 0.92)), url('1001007083.jpg');
             background-size: cover;
             background-position: center;
         }
@@ -74,39 +73,56 @@
 </head>
 <body class="min-h-screen p-2.5 sm:p-4 antialiased selection:bg-cyan-500 selection:text-slate-950">
 
-    <!-- PANTALLA DE SELECCIÓN DE PERFIL Y LOGIN (FONDO OPERATIVO CON BIKINI/PERFORADORA) -->
-    <div id="pantallaLogin" class="fixed inset-0 bg-bienvenida-operativa z-50 flex items-center justify-center p-4 backdrop-blur-sm">
-        <div class="bg-slate-900/95 p-6 sm:p-7 rounded-3xl border border-slate-800 w-full max-w-md space-y-5 shadow-2xl relative overflow-hidden backdrop-blur-md">
+    <!-- PANTALLA DE ACCESO Y BIENVENIDA INSTITUCIONAL -->
+    <div id="pantallaLogin" class="fixed inset-0 bg-bienvenida-oficial z-50 flex items-center justify-center p-4 backdrop-blur-sm overflow-y-auto">
+        <div class="bg-slate-900/95 p-5 sm:p-7 rounded-3xl border border-slate-800 w-full max-w-lg space-y-4 shadow-2xl relative overflow-hidden backdrop-blur-md my-auto">
             <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-sky-600 via-cyan-400 to-sky-600 laser-line"></div>
             
-            <!-- LOGOTIPO INSTITUCIONAL JIRETH OFICIAL -->
-            <div class="text-center pt-2">
-                <div class="mx-auto w-full max-w-[220px] mb-3 bg-slate-950/80 p-2.5 rounded-2xl border border-slate-800 flex items-center justify-center shadow-lg">
-                    <img src="1001007025.jpg" alt="Jireth GeoCore Lite Logo" class="w-full h-auto object-contain rounded-xl">
+            <!-- CABECERA CON LOGOTIPO OFICIAL Y TÍTULO BIENVENIDOS -->
+            <div class="text-center pt-2 space-y-2">
+                <div class="mx-auto flex items-center justify-center gap-3 bg-slate-950/90 p-3 rounded-2xl border border-slate-800 shadow-lg">
+                    <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-900 via-blue-950 to-slate-950 border border-blue-500/40 flex items-center justify-center shadow-inner shrink-0">
+                        <svg viewBox="0 0 100 100" class="w-8 h-8 drop-shadow">
+                            <defs>
+                                <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#fbbf24"/>
+                                    <stop offset="50%" stop-color="#d97706"/>
+                                    <stop offset="100%" stop-color="#b45309"/>
+                                </linearGradient>
+                            </defs>
+                            <path d="M35 25 L65 25 L65 50 C65 68 52 82 35 82 C25 82 18 78 15 72 L26 65 C28 69 31 72 35 72 C45 72 52 64 52 50 L52 35 L35 35 Z" fill="url(#goldGrad)"/>
+                            <rect x="58" y="25" width="12" height="45" rx="3" fill="url(#goldGrad)"/>
+                        </svg>
+                    </div>
+                    <div class="text-left leading-tight">
+                        <div class="text-base font-black tracking-wider text-white">JIRETH <span class="text-amber-400 text-xs">GEOCORE LITE</span></div>
+                        <div class="text-[10px] text-cyan-400 font-extrabold uppercase">Complejo Jireth C.A.</div>
+                        <div class="text-[9px] text-slate-400 font-bold">Sistema de Integración & Control de Sondajes</div>
+                    </div>
                 </div>
-                <span class="text-[10px] uppercase tracking-widest font-extrabold text-amber-400 bg-amber-950/80 px-3 py-1 rounded-full border border-amber-800/60">Complejo Jireth C.A.</span>
-                <h1 class="text-xl font-black text-white mt-2 tracking-tight">Sistema de Integración & Control de Sondajes</h1>
-                <p class="text-xs text-slate-400 mt-1 font-medium">Control Operativo, Gerencial & Supabase Cloud</p>
+
+                <div class="py-1">
+                    <span class="text-[10px] uppercase tracking-widest font-extrabold text-amber-400 bg-amber-950/80 px-3 py-1 rounded-full border border-amber-800/60">Módulo Operativo & Gerencial</span>
+                    <h2 class="text-3xl sm:text-4xl font-black text-white tracking-wider mt-2 uppercase drop-shadow-md">BIENVENIDOS</h2>
+                    <p class="text-xs text-slate-300 font-semibold mt-0.5">Sistema Integrado de Sondajes y Perforación Diamantina</p>
+                </div>
             </div>
             
-            <div class="grid grid-cols-2 gap-2.5">
+            <div class="grid grid-cols-2 gap-2.5 pt-1">
                 <button type="button" onclick="seleccionarPerfil('GEOLOGOS')" id="btnPerfilGeo" class="py-3 px-2 rounded-2xl text-xs font-black border-2 border-amber-500 bg-amber-500/15 text-amber-300 transition-all shadow-inner">
                     👷 GEÓLOGOS
                 </button>
                 <button type="button" onclick="seleccionarPerfil('GERENCIA')" id="btnPerfilGer" class="py-3 px-2 rounded-2xl text-xs font-black border-2 border-slate-800 bg-slate-950 text-slate-400 transition-all">
-                    👔 GERENCIA
+                    👔 GERENCIA (LECTURA)
                 </button>
             </div>
 
-            <!-- LOGIN GEOLOGOS -->
-            <div id="boxLoginGeologos" class="space-y-4">
-                <div class="bg-slate-950 p-2.5 rounded-xl border border-amber-500/30 text-[11px] text-amber-300 text-center font-bold tracking-wide">
-                    ⚡ Perfil Operativo (Clave por defecto: <code class="text-white font-mono-code bg-slate-900 px-1.5 py-0.5 rounded">Mina2628</code>)
-                </div>
+            <!-- LOGIN GEÓLOGOS -->
+            <div id="boxLoginGeologos" class="space-y-3.5">
                 <div>
                     <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Contraseña de Geólogos</label>
                     <div class="relative flex items-center">
-                        <input type="password" id="inputClaveGeo" value="" placeholder="Ingrese clave..." class="input-field w-full px-3.5 pr-11 rounded-xl text-sm font-bold">
+                        <input type="password" id="inputClaveGeo" autocomplete="current-password" placeholder="Ingrese clave..." class="input-field w-full px-3.5 pr-11 rounded-xl text-sm font-bold">
                         <button type="button" onclick="togglePasswordVisibility('inputClaveGeo')" class="absolute right-3.5 text-slate-400 hover:text-white text-base">👁️</button>
                     </div>
                 </div>
@@ -119,34 +135,31 @@
             </div>
 
             <!-- LOGIN GERENCIA -->
-            <div id="boxLoginGerencia" class="hidden space-y-4">
-                <div class="bg-slate-950 p-2.5 rounded-xl border border-sky-500/30 text-[11px] text-sky-300 text-center font-bold tracking-wide">
-                    📊 Perfil Ejecutivo (Clave: <code class="text-white font-mono-code bg-slate-900 px-1.5 py-0.5 rounded">JIRETH2026</code>)
-                </div>
+            <div id="boxLoginGerencia" class="hidden space-y-3.5">
                 <div>
                     <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Contraseña de Gerencia</label>
                     <div class="relative flex items-center">
-                        <input type="password" id="inputClaveGer" value="" placeholder="Ingrese clave..." class="input-field w-full px-3.5 pr-11 rounded-xl text-sm font-bold">
+                        <input type="password" id="inputClaveGer" autocomplete="current-password" placeholder="Ingrese clave..." class="input-field w-full px-3.5 pr-11 rounded-xl text-sm font-bold">
                         <button type="button" onclick="togglePasswordVisibility('inputClaveGer')" class="absolute right-3.5 text-slate-400 hover:text-white text-base">👁️</button>
                     </div>
                 </div>
                 <button type="button" onclick="intentarLoginGer()" class="btn-field w-full bg-sky-600 hover:bg-sky-500 text-white text-sm font-black shadow-sky-600/20">
-                    📊 Ingresar a Visión Gerencial & Cloud
+                    📊 Ingresar a Visión Gerencial (Solo Lectura)
                 </button>
             </div>
 
-            <!-- RECUPERACIÓN CON PIN MAESTRO -->
-            <div id="boxLoginRescate" class="hidden space-y-3.5 pt-3 border-t border-slate-800">
+            <!-- RECUPERACIÓN PIN MAESTRO -->
+            <div id="boxLoginRescate" class="hidden space-y-3 pt-2 border-t border-slate-800">
                 <div class="bg-slate-950 p-2.5 rounded-xl border border-amber-500/30 text-amber-300 text-[11px]">
-                    🔑 <b>Restablecimiento:</b> PIN maestro requerido (<code class="text-white font-mono-code">2628</code>).
+                    🔑 <b>Restablecimiento:</b> Ingrese el PIN maestro para asignar nueva clave.
                 </div>
                 <div>
                     <label class="block text-xs font-extrabold text-slate-300 mb-1 uppercase tracking-wider">PIN Maestro (4 dígitos)</label>
-                    <input type="password" maxlength="4" id="inputPinRescate" value="" placeholder="----" class="input-field w-full px-3 bg-slate-950 text-white rounded-xl text-sm font-mono-code font-bold text-center tracking-widest">
+                    <input type="password" maxlength="4" id="inputPinRescate" placeholder="----" class="input-field w-full px-3 bg-slate-950 text-white rounded-xl text-sm font-mono-code font-bold text-center tracking-widest">
                 </div>
                 <div>
                     <label class="block text-xs font-extrabold text-slate-300 mb-1 uppercase tracking-wider">Nueva Contraseña Geólogos</label>
-                    <input type="password" id="inputClaveNuevaRescate" value="" placeholder="Nueva clave" class="input-field w-full px-3 rounded-xl text-sm font-bold">
+                    <input type="password" id="inputClaveNuevaRescate" placeholder="Nueva clave" class="input-field w-full px-3 rounded-xl text-sm font-bold">
                 </div>
                 <button type="button" onclick="ejecutarRescateClave()" class="btn-field w-full bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-black shadow-emerald-600/20">
                     🔄 Restablecer Clave e Ingresar
@@ -162,15 +175,18 @@
     <div id="appPrincipal" class="hidden space-y-3.5 max-w-7xl mx-auto">
         <header class="bg-slate-900/95 backdrop-blur p-3.5 rounded-2xl border border-slate-800 flex justify-between items-center flex-wrap gap-3 shadow-lg">
             <div class="flex items-center gap-3">
-                <div class="w-12 h-12 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-center p-1 shadow">
-                    <img src="1001007025.jpg" alt="Logo" class="w-full h-full object-contain rounded-lg">
+                <div class="w-10 h-10 rounded-xl bg-blue-950 border border-blue-500/40 flex items-center justify-center p-1 shadow">
+                    <svg viewBox="0 0 100 100" class="w-full h-full">
+                        <path d="M35 25 L65 25 L65 50 C65 68 52 82 35 82 C25 82 18 78 15 72 L26 65 C28 69 31 72 35 72 C45 72 52 64 52 50 L52 35 L35 35 Z" fill="#fbbf24"/>
+                        <rect x="58" y="25" width="12" height="45" rx="3" fill="#fbbf24"/>
+                    </svg>
                 </div>
                 <div>
                     <h1 class="text-base font-black text-white tracking-tight flex items-center gap-1.5">
                         <span>Jireth GeoCore Lite</span>
                         <span class="text-amber-400 font-extrabold text-[10px] bg-amber-950/80 px-2 py-0.5 rounded border border-amber-800/60">Cloud</span>
                     </h1>
-                    <p class="text-[11px] text-slate-400 font-medium">Complejo Jireth C.A. <span id="indicadorRed" class="text-emerald-400 font-bold">(🟢 Supabase Activo)</span></p>
+                    <p class="text-[11px] text-slate-400 font-medium">Complejo Jireth C.A. <span id="indicadorRed" class="text-emerald-400 font-bold">(🟢 Sincronizado)</span></p>
                 </div>
             </div>
             
@@ -184,7 +200,6 @@
 
             <div class="flex gap-2 flex-wrap">
                 <button type="button" onclick="sincronizarConSupabaseReal()" class="text-xs bg-emerald-950 text-emerald-300 px-3 py-2 rounded-xl font-extrabold border border-emerald-800/60 hover:bg-emerald-900/50 transition">🔄 Sincronizar Cloud</button>
-                <button type="button" onclick="cambiarClaveSistema()" class="text-xs bg-sky-950 text-sky-300 px-3 py-2 rounded-xl font-extrabold border border-sky-800/60 hover:bg-sky-900/50 transition">🔑 Clave</button>
                 <button type="button" onclick="cerrarSesion()" class="text-xs bg-rose-950 text-rose-300 px-3 py-2 rounded-xl font-extrabold border border-rose-800/60 hover:bg-rose-900/50 transition">🚪 Salir</button>
             </div>
         </header>
@@ -209,7 +224,7 @@
             <button type="button" onclick="switchTab('mod6')" id="tab-mod6" class="py-3 px-2 rounded-xl font-extrabold text-xs bg-slate-900 text-slate-300 border border-slate-800 hover:border-slate-700 transition">⚙️ Admin</button>
         </nav>
 
-        <!-- MODULO 1: APERTURA -->
+        <!-- MÓDULO 1: APERTURA -->
         <section id="mod1" class="hidden space-y-4 bg-slate-900 p-5 sm:p-6 rounded-3xl border border-slate-800 shadow-xl">
             <h2 class="text-xl font-black text-amber-400 tracking-tight flex items-center gap-2">🛠️ Módulo 1: Apertura de Nuevo Sondaje</h2>
             <div class="space-y-4">
@@ -235,17 +250,17 @@
                     <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Proyecto / Sector *</label>
                     <input type="text" id="m1_proyecto" onblur="forzarMayusculas(this)" class="input-field w-full px-4 rounded-xl font-extrabold text-sm uppercase" placeholder="EJ: EL CALLAO / SECTOR NORTE">
                 </div>
-                <button type="button" onclick="crearPozo()" class="btn-field w-full bg-amber-500 hover:bg-amber-400 text-slate-950 text-base font-black shadow-amber-500/25">
+                <button type="button" id="btnCrearPozo" onclick="crearPozo()" class="btn-field w-full bg-amber-500 hover:bg-amber-400 text-slate-950 text-base font-black shadow-amber-500/25">
                     💾 Crear y Abrir Sondaje con Sincronización en la Nube
                 </button>
             </div>
         </section>
 
-        <!-- MODULO 2: TOPOGRAFIA -->
+        <!-- MÓDULO 2: TOPOGRAFÍA -->
         <section id="mod2" class="hidden space-y-4 bg-slate-900 p-5 sm:p-6 rounded-3xl border border-slate-800 shadow-xl">
             <div class="flex justify-between items-center flex-wrap gap-2">
                 <h2 class="text-xl font-black text-amber-400 tracking-tight">📍 Módulo 2: Ficha Topográfica</h2>
-                <button type="button" onclick="habilitarEdicionTopo()" class="bg-sky-600 hover:bg-sky-500 text-white font-extrabold px-4 py-2 rounded-xl text-xs shadow transition">✏️ Habilitar Edición</button>
+                <button type="button" id="btnHabilitarTopo" onclick="habilitarEdicionTopo()" class="bg-sky-600 hover:bg-sky-500 text-white font-extrabold px-4 py-2 rounded-xl text-xs shadow transition">✏️ Habilitar Edición</button>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -291,7 +306,7 @@
             </div>
         </section>
 
-        <!-- MÓDULO 3A: GESTIÓN DE TURNOS Y FRENTES MÚLTIPLES -->
+        <!-- MÓDULO 3A: TURNOS Y FRENTES -->
         <section id="mod3_turno" class="space-y-4 bg-slate-900 p-5 sm:p-6 rounded-3xl border border-slate-800 shadow-xl">
             <h2 class="text-xl font-black text-amber-400 tracking-tight">⏱️ Módulo 3A: Gestión de Turnos y Frentes Múltiples</h2>
             <p class="text-xs text-slate-300 font-medium leading-relaxed">Abre un turno operativo nuevo, páusalo para cambiar de frente, o retoma un turno anterior para carga retroactiva desde planillas de campo.</p>
@@ -326,7 +341,7 @@
                     <textarea id="m3_observaciones" onblur="forzarMayusculas(this)" rows="2" class="input-field w-full p-3 rounded-xl text-xs uppercase font-medium" placeholder="EJ: AVANCE SIN NOVEDAD..."></textarea>
                 </div>
 
-                <div class="flex gap-2.5 pt-2 flex-wrap">
+                <div id="boxAccionesTurno" class="flex gap-2.5 pt-2 flex-wrap">
                     <button type="button" onclick="iniciarTurnoNuevo()" class="btn-field flex-1 bg-sky-600 hover:bg-sky-500 text-white text-xs font-extrabold shadow-sky-600/25">🚀 Abrir / Iniciar Turno Nuevo</button>
                     <button type="button" onclick="pausarTurnoActual()" class="bg-amber-600 hover:bg-amber-500 text-white px-5 py-3 rounded-xl text-xs font-extrabold transition shadow">⏸️ Pausar Turno</button>
                 </div>
@@ -339,14 +354,14 @@
                     <select id="selectRetomarTurno" class="input-field w-full px-3.5 rounded-xl text-xs font-bold text-cyan-300">
                         <option value="">-- Seleccionar Turno Guardado para Retomar --</option>
                     </select>
-                    <button type="button" onclick="retomarTurnoSeleccionado()" class="btn-field w-full bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-extrabold shadow-emerald-600/25">
+                    <button type="button" id="btnRetomarTurno" onclick="retomarTurnoSeleccionado()" class="btn-field w-full bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-extrabold shadow-emerald-600/25">
                         ▶️ Retomar Turno y Cargar Logging
                     </button>
                 </div>
             </div>
         </section>
 
-        <!-- MÓDULO 3B: CORE LOGGING Y AVANCES -->
+        <!-- MÓDULO 3B: CORE LOGGING -->
         <section id="mod3_logging" class="hidden space-y-4 bg-slate-900 p-5 sm:p-6 rounded-3xl border border-slate-800 shadow-xl">
             <h2 class="text-xl font-black text-amber-400 tracking-tight">🪵 Módulo 3B: Core Logging & Avances</h2>
             
@@ -356,7 +371,7 @@
                     <span class="text-sky-300 font-extrabold">Perf:</span> <span id="lblInfoPerf" class="text-white font-black">--</span> | 
                     <span class="text-sky-300 font-extrabold">Geo:</span> <span id="lblInfoGeo" class="text-white font-black">--</span>
                 </div>
-                <div class="space-x-1.5">
+                <div class="space-x-1.5" id="boxControlesTurnoActivo">
                     <button type="button" onclick="finalizarTurnoActivo()" class="bg-emerald-700 hover:bg-emerald-600 text-white px-3 py-1.5 rounded-xl font-extrabold text-xs shadow">💾 Finalizar</button>
                     <button type="button" onclick="switchTab('mod3_turno')" class="bg-slate-900 text-sky-300 px-3 py-1.5 rounded-xl border border-sky-700/60 font-extrabold text-xs hover:bg-slate-800">Cambiar / Pausar</button>
                 </div>
@@ -380,7 +395,7 @@
             </div>
 
             <div class="space-y-4">
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5 bg-slate-950 p-4 sm:p-5 rounded-2xl border border-slate-800">
+                <div id="boxFormAvance" class="grid grid-cols-1 sm:grid-cols-3 gap-3.5 bg-slate-950 p-4 sm:p-5 rounded-2xl border border-slate-800">
                     <div>
                         <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Longitud Maniobra *</label>
                         <select id="m3_longitud" onchange="autoCalcularHasta()" class="input-field w-full px-3.5 rounded-xl text-xs font-bold">
@@ -429,7 +444,7 @@
                     <table class="w-full text-left text-xs border-collapse">
                         <thead class="bg-slate-950 text-slate-300 uppercase font-extrabold tracking-wider border-b border-slate-800">
                             <tr>
-                                <th class="p-3">#</th><th class="p-3">Tramo (m)</th><th class="p-3">Diám</th><th class="p-3">Rec (m)</th><th class="p-3">% Rec</th><th class="p-3">Meteorización</th><th class="p-3">Pago (m)</th><th class="p-3 text-center">Acción</th>
+                                <th class="p-3">#</th><th class="p-3">Tramo (m)</th><th class="p-3">Diám</th><th class="p-3">Rec (m)</th><th class="p-3">% Rec</th><th class="p-3">Meteorización</th><th class="p-3">Pago (m)</th><th class="p-3 text-center" id="thAccionTabla">Acción</th>
                             </tr>
                         </thead>
                         <tbody id="tablaAvancesBody" class="divide-y divide-slate-800/60 font-mono-code">
@@ -440,7 +455,7 @@
             </div>
         </section>
 
-        <!-- MODULO 4: CIERRE -->
+        <!-- MÓDULO 4: CIERRE -->
         <section id="mod4" class="hidden space-y-4 bg-slate-900 p-5 sm:p-6 rounded-3xl border border-slate-800 shadow-xl">
             <h2 class="text-xl font-black text-amber-400 tracking-tight">🏁 Módulo 4: Cierre Definitivo de Sondaje</h2>
             <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-4">
@@ -457,11 +472,11 @@
                     <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Observaciones Finales de Cierre</label>
                     <textarea id="m4_obs" rows="3" onblur="forzarMayusculas(this)" class="input-field w-full p-3 rounded-xl text-xs uppercase" placeholder="EJ: SONDAJE FINALIZADO SIN NOVEDAD..."></textarea>
                 </div>
-                <button type="button" onclick="ejecutarCierrePozo()" class="btn-field w-full bg-rose-600 hover:bg-rose-500 text-white text-sm font-black shadow-rose-600/25">🔒 Ejecutar Cierre Definitivo del Sondaje</button>
+                <button type="button" id="btnCierrePozo" onclick="ejecutarCierrePozo()" class="btn-field w-full bg-rose-600 hover:bg-rose-500 text-white text-sm font-black shadow-rose-600/25">🔒 Ejecutar Cierre Definitivo del Sondaje</button>
             </div>
         </section>
 
-        <!-- MODULO 5: REPORTE GERENCIAL -->
+        <!-- MÓDULO 5: REPORTE GERENCIAL (DSR) -->
         <section id="mod5" class="hidden space-y-4 bg-slate-900 p-5 sm:p-6 rounded-3xl border border-slate-800 shadow-xl">
             <div class="flex justify-between items-center flex-wrap gap-2">
                 <h2 class="text-xl font-black text-amber-400 tracking-tight">📑 Módulo 5: Reporte Diario & Gerencial (DSR)</h2>
@@ -474,11 +489,19 @@
             <!-- ÁREA IMPRIMIBLE -->
             <div id="printable-area" class="bg-slate-950 p-5 sm:p-6 rounded-2xl border border-slate-800 space-y-4 text-xs">
                 <div class="border-b border-slate-800 pb-4 flex justify-between items-start flex-wrap gap-3">
-                    <div>
-                        <h3 class="text-base font-black text-white uppercase tracking-tight flex items-center gap-2">
-                            <span>⛏️ COMPLEJO JIRETH C.A. — REPORTE DIARIO DE SONDAJE (DSR)</span>
-                        </h3>
-                        <p class="text-[11px] text-slate-400 mt-0.5">Control Operativo, Geológico & Auditoría de Perforación Diamantina</p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-blue-950 border border-blue-500/40 flex items-center justify-center p-1 shadow">
+                            <svg viewBox="0 0 100 100" class="w-full h-full">
+                                <path d="M35 25 L65 25 L65 50 C65 68 52 82 35 82 C25 82 18 78 15 72 L26 65 C28 69 31 72 35 72 C45 72 52 64 52 50 L52 35 L35 35 Z" fill="#fbbf24"/>
+                                <rect x="58" y="25" width="12" height="45" rx="3" fill="#fbbf24"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="text-base font-black text-white uppercase tracking-tight">
+                                ⛏️ COMPLEJO JIRETH C.A. — REPORTE DIARIO DE SONDAJE (DSR)
+                            </h3>
+                            <p class="text-[11px] text-slate-400 mt-0.5">Control Operativo, Geológico & Auditoría de Perforación Diamantina</p>
+                        </div>
                     </div>
                     <div class="text-right">
                         <p class="text-xs text-amber-400 font-extrabold" id="repFechaEmision">Fecha: --/--/----</p>
@@ -540,7 +563,7 @@
             </div>
         </section>
 
-        <!-- MODULO 6: ADMIN & CONFIGURACION -->
+        <!-- MÓDULO 6: ADMIN & CONFIGURACIÓN -->
         <section id="mod6" class="hidden space-y-4 bg-slate-900 p-5 sm:p-6 rounded-3xl border border-slate-800 shadow-xl">
             <h2 class="text-xl font-black text-amber-400 tracking-tight">⚙️ Módulo 6: Administración, Respaldos & Seguridad</h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -554,7 +577,7 @@
                         </label>
                     </div>
                 </div>
-                <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-3">
+                <div id="boxZonaPeligroAdmin" class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-3">
                     <h3 class="text-xs font-black text-rose-400 uppercase tracking-wider">⚠️ Zona de Peligro / Borrado</h3>
                     <p class="text-[11px] text-slate-400">Elimina todos los datos locales guardados en este navegador.</p>
                     <button type="button" onclick="borrarTodoLocal()" class="bg-rose-950 hover:bg-rose-900 text-rose-300 border border-rose-800 px-4 py-2.5 rounded-xl text-xs font-black shadow">🗑️ Resetear Base de Datos Local</button>
@@ -563,13 +586,10 @@
         </section>
     </div>
 
-    <!-- SCRIPT PRINCIPAL CON CREDENCIALES Y CONECTIVIDAD SUPABASE -->
+    <!-- SCRIPT PRINCIPAL DE CONTROL -->
     <script>
-        // ==========================================================
-        // CREDENCIALES REALES DE SUPABASE (CONFIGURA TUS DATOS AQUÍ)
-        // ==========================================================
-        const SUPABASE_URL = "https://tu-proyecto.supabase.co"; // Reemplaza por tu URL de Supabase
-        const SUPABASE_KEY = "tu-anon-key-publica";             // Reemplaza por tu Anon/Public Key
+        const SUPABASE_URL = "https://tu-proyecto.supabase.co";
+        const SUPABASE_KEY = "tu-anon-key-publica";
         
         let supabaseClient = null;
         try {
@@ -578,7 +598,6 @@
             }
         } catch(e) { console.warn("Supabase Init Warning:", e); }
 
-        // ESTADO GLOBAL DE LA APLICACIÓN Y CREDENCIALES
         let perfilActual = '';
         let pozosData = JSON.parse(localStorage.getItem('jireth_pozos') || '{}');
         let pozoActivoId = localStorage.getItem('jireth_pozo_activo') || '';
@@ -596,10 +615,7 @@
         window.onload = async function() {
             document.getElementById('m3_fecha').valueAsDate = new Date();
             
-            if (supabaseClient) {
-                await sincronizarDesdeSupabaseCloud(false);
-            }
-
+            // Cargar datos locales de inmediato para preservar registros existentes
             refrescarSelectorPozos();
             if (pozoActivoId && pozosData[pozoActivoId]) {
                 document.getElementById('globalWellSelect').value = pozoActivoId;
@@ -609,6 +625,11 @@
                 actualizarBannerTurnoActivo();
             }
             poblarSelectRetomarTurno();
+
+            // Sincronización silenciosa con Supabase si está disponible
+            if (supabaseClient) {
+                await sincronizarDesdeSupabaseCloud(false);
+            }
         };
 
         function seleccionarPerfil(perfil) {
@@ -630,7 +651,11 @@
 
         function togglePasswordVisibility(idInput) {
             const inp = document.getElementById(idInput);
-            inp.type = inp.type === 'password' ? 'text' : 'password';
+            if (inp.type === 'password') {
+                inp.type = 'text';
+            } else {
+                inp.type = 'password';
+            }
         }
 
         function intentarLoginGeo() {
@@ -639,17 +664,19 @@
             if (val === claveGeologos) {
                 entrarAlSistema("GEÓLOGOS (COMPLEJO JIRETH C.A.)");
             } else {
-                alert("❌ Contraseña de Geólogos incorrecta. (Por defecto es: Mina2628)");
+                alert("❌ Contraseña de Geólogos incorrecta.");
+                document.getElementById('inputClaveGeo').value = '';
             }
         }
 
         function intentarLoginGer() {
             const val = document.getElementById('inputClaveGer').value.trim();
             claveGerencia = localStorage.getItem('jireth_clave_ger') || 'JIRETH2026';
-            if (val === claveGerencia || val === claveGeologos) {
-                entrarAlSistema("GERENCIA / AUDITORÍA");
+            if (val === claveGerencia) {
+                entrarAlSistema("GERENCIA / AUDITORÍA (SOLO LECTURA)");
             } else {
-                alert("❌ Contraseña de Gerencia incorrecta. (Por defecto es: JIRETH2026)");
+                alert("❌ Contraseña de Gerencia incorrecta.");
+                document.getElementById('inputClaveGer').value = '';
             }
         }
 
@@ -682,31 +709,29 @@
             document.getElementById('pantallaLogin').classList.add('hidden');
             document.getElementById('appPrincipal').classList.remove('hidden');
             document.getElementById('lblNombreUsuarioLogueado').innerText = rolTexto;
+            
+            if (perfilActual === 'GERENCIA') {
+                aplicarModoLecturaGerencia();
+            }
+
             switchTab('mod3_turno');
         }
 
-        function cerrarSesion() {
-            document.getElementById('appPrincipal').classList.add('hidden');
-            document.getElementById('pantallaLogin').classList.remove('hidden');
-            document.getElementById('inputClaveGeo').value = '';
-            document.getElementById('inputClaveGer').value = '';
+        function aplicarModoLecturaGerencia() {
+            const elementosDeshabilitar = [
+                'btnCrearPozo', 'btnHabilitarTopo', 'm2_btn_box', 'btnGuardarAvance', 
+                'btnCierrePozo', 'boxAccionesTurno', 'btnRetomarTurno', 'boxFormAvance'
+            ];
+            elementosDeshabilitar.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.style.display = 'none';
+            });
+            const zonaPeligro = document.getElementById('boxZonaPeligroAdmin');
+            if (zonaPeligro) zonaPeligro.style.display = 'none';
         }
 
-        function cambiarClaveSistema() {
-            const actual = prompt("Ingrese su contraseña actual:");
-            claveGeologos = localStorage.getItem('jireth_clave_geo') || 'Mina2628';
-            if (actual === claveGeologos) {
-                const nueva = prompt("Ingrese la nueva contraseña (mínimo 4 caracteres):");
-                if (nueva && nueva.trim().length >= 4) {
-                    claveGeologos = nueva.trim();
-                    localStorage.setItem('jireth_clave_geo', claveGeologos);
-                    alert("✅ Contraseña actualizada correctamente.");
-                } else if (nueva !== null) {
-                    alert("❌ La contraseña debe tener al menos 4 caracteres.");
-                }
-            } else if (actual !== null) {
-                alert("❌ Contraseña actual incorrecta.");
-            }
+        function cerrarSesion() {
+            location.reload();
         }
 
         function switchTab(tabId) {
@@ -745,6 +770,7 @@
         }
 
         async function crearPozo() {
+            if (perfilActual === 'GERENCIA') { alert("⚠️ Perfil de Gerencia: Solo lectura."); return; }
             let codigo = document.getElementById('m1_codigo').value.trim().toUpperCase();
             let empresa = document.getElementById('m1_empresa').value;
             if (empresa === 'OTRA') empresa = document.getElementById('m1_otra_empresa').value.trim().toUpperCase();
@@ -775,6 +801,7 @@
         }
 
         function habilitarEdicionTopo() {
+            if (perfilActual === 'GERENCIA') { alert("⚠️ Perfil de Gerencia: Solo lectura."); return; }
             if (!pozoActivoId) { alert("⚠️ Seleccione un sondaje activo primero."); return; }
             document.getElementById('m2_maquina').disabled = false;
             document.getElementById('m2_este').disabled = false;
@@ -788,6 +815,7 @@
         }
 
         async function guardarTopografia() {
+            if (perfilActual === 'GERENCIA') return;
             if (!pozoActivoId || !pozosData[pozoActivoId]) { alert("⚠️ No hay sondaje activo."); return; }
             let p = pozosData[pozoActivoId];
             let maq = document.getElementById('m2_maquina').value;
@@ -802,7 +830,7 @@
             p.target = document.getElementById('m2_target').value || '100.00';
 
             await guardarYPersistirTodo();
-            alert("✅ Ficha topográfica guardada y respaldada en Supabase.");
+            alert("✅ Ficha topográfica guardada y respaldada.");
             document.getElementById('m2_btn_box').classList.add('hidden');
             ['m2_maquina', 'm2_este', 'm2_norte', 'm2_cota', 'm2_azimut', 'm2_dip', 'm2_target', 'm2_otra_maquina'].forEach(id => {
                 const el = document.getElementById(id);
@@ -860,6 +888,7 @@
         }
 
         async function iniciarTurnoNuevo() {
+            if (perfilActual === 'GERENCIA') { alert("⚠️ Perfil de Gerencia: Solo lectura."); return; }
             if (!pozoActivoId) { alert("⚠️ Debe seleccionar o crear un sondaje primero."); switchTab('mod1'); return; }
             let fecha = document.getElementById('m3_fecha').value;
             let jornada = document.getElementById('m3_turno').value;
@@ -891,6 +920,7 @@
         }
 
         function finalizarTurnoActivo() {
+            if (perfilActual === 'GERENCIA') return;
             if (!turnoActivoObj) { alert("⚠️ No hay turno activo."); return; }
             alert("💾 Turno finalizado.");
             turnoActivoObj = null;
@@ -951,6 +981,7 @@
         }
 
         async function guardarAvance() {
+            if (perfilActual === 'GERENCIA') { alert("⚠️ Perfil de Gerencia: Solo lectura."); return; }
             if (!pozoActivoId || !pozosData[pozoActivoId]) { alert("⚠️ Seleccione un sondaje activo primero."); switchTab('mod1'); return; }
             let p = pozosData[pozoActivoId];
             let desde = parseFloat(document.getElementById('m3_desde').value) || 0;
@@ -983,7 +1014,7 @@
             actualizarTablaAvances();
             actualizarProgresoGrafico();
             autoCalcularHasta();
-            alert("✅ Tramo guardado y respaldado en la nube.");
+            alert("✅ Tramo guardado y respaldado.");
         }
 
         function actualizarTablaAvances() {
@@ -996,6 +1027,12 @@
             p.avances.forEach((t, idx) => {
                 let tr = document.createElement('tr');
                 tr.className = "hover:bg-slate-900/50 transition";
+                let tdAccion = perfilActual === 'GERENCIA' ? `<td class="p-3 text-center text-slate-500">Solo Lectura</td>` : `
+                    <td class="p-3 text-center space-x-1">
+                        <button onclick="editarTramo(${idx})" class="text-xs bg-sky-950 text-sky-300 px-2 py-1 rounded border border-sky-800 hover:bg-sky-900">✏️</button>
+                        <button onclick="eliminarTramo(${idx})" class="text-xs bg-rose-950 text-rose-300 px-2 py-1 rounded border border-rose-800 hover:bg-rose-900">🗑️</button>
+                    </td>
+                `;
                 tr.innerHTML = `
                     <td class="p-3">${idx + 1}</td>
                     <td class="p-3 text-cyan-400 font-bold">${t.desde} - ${t.hasta}</td>
@@ -1004,16 +1041,14 @@
                     <td class="p-3 font-bold ${parseFloat(t.porcentaje) < 80 ? 'text-amber-400' : 'text-emerald-400'}">${t.porcentaje}%</td>
                     <td class="p-3 text-slate-300">${t.meteorizacion}</td>
                     <td class="p-3 text-amber-400 font-bold">${t.pago}m</td>
-                    <td class="p-3 text-center space-x-1">
-                        <button onclick="editarTramo(${idx})" class="text-xs bg-sky-950 text-sky-300 px-2 py-1 rounded border border-sky-800 hover:bg-sky-900">✏️</button>
-                        <button onclick="eliminarTramo(${idx})" class="text-xs bg-rose-950 text-rose-300 px-2 py-1 rounded border border-rose-800 hover:bg-rose-900">🗑️</button>
-                    </td>
+                    ${tdAccion}
                 `;
                 tbody.appendChild(tr);
             });
         }
 
         function editarTramo(idx) {
+            if (perfilActual === 'GERENCIA') return;
             if (!pozoActivoId || !pozosData[pozoActivoId]) return;
             let p = pozosData[pozoActivoId];
             let t = p.avances[idx];
@@ -1036,6 +1071,7 @@
         }
 
         async function eliminarTramo(idx) {
+            if (perfilActual === 'GERENCIA') return;
             if (!pozoActivoId || !pozosData[pozoActivoId]) return;
             if (confirm("¿Está seguro de eliminar este tramo de avance?")) {
                 pozosData[pozoActivoId].avances.splice(idx, 1);
@@ -1076,6 +1112,7 @@
         }
 
         async function ejecutarCierrePozo() {
+            if (perfilActual === 'GERENCIA') { alert("⚠️ Perfil de Gerencia: Solo lectura."); return; }
             if (!pozoActivoId || !pozosData[pozoActivoId]) { alert("⚠️ No hay sondaje activo."); return; }
             let motivo = document.getElementById('m4_motivo').value;
             let obs = document.getElementById('m4_obs').value;
@@ -1157,6 +1194,7 @@
         }
 
         function importarBackupJSON(event) {
+            if (perfilActual === 'GERENCIA') { alert("⚠️ Perfil de Gerencia: Solo lectura."); return; }
             let file = event.target.files[0];
             if (!file) return;
             let reader = new FileReader();
@@ -1170,7 +1208,7 @@
                         await guardarYPersistirTodo();
                         refrescarSelectorPozos();
                         if (pozoActivoId) cargarDatosPozoEnFormularios(pozoActivoId);
-                        alert("✅ Base de datos importada y sincronizada correctamente.");
+                        alert("✅ Base de datos importada correctamente.");
                     } else { alert("❌ Formato de archivo JSON inválido."); }
                 } catch(err) { alert("❌ Error al parsear JSON: " + err); }
             };
@@ -1178,6 +1216,7 @@
         }
 
         async function borrarTodoLocal() {
+            if (perfilActual === 'GERENCIA') return;
             if (confirm("⚠️ ¿Está seguro de borrar TODOS los datos locales y de la nube?")) {
                 localStorage.clear();
                 pozosData = {}; turnosData = {}; pozoActivoId = '';
@@ -1188,32 +1227,22 @@
             }
         }
 
-        // ==========================================================
-        // FUNCIONES DE DOBLE PERSISTENCIA (LOCALSTORAGE + SUPABASE CLOUD)
-        // ==========================================================
         async function guardarYPersistirTodo() {
             localStorage.setItem('jireth_pozos', JSON.stringify(pozosData));
+            localStorage.setItem('jireth_turnos', JSON.stringify(turnosData));
             
             if (supabaseClient) {
                 try {
                     const payloadData = { pozos: pozosData, turnos: turnosData, actualizado: new Date().toISOString() };
-                    const { error } = await supabaseClient
-                        .from('jireth_geocore')
-                        .upsert({ id: 'db_principal', payload: payloadData });
-                    
-                    if (error) console.error("Error al sincronizar con Supabase:", error.message);
+                    await supabaseClient.from('jireth_geocore').upsert({ id: 'db_principal', payload: payloadData });
                 } catch(ex) {
-                    console.warn("Excepción de red al sincronizar con Supabase:", ex);
+                    console.warn("Excepción al sincronizar Supabase:", ex);
                 }
             }
         }
 
         async function sincronizarDesdeSupabaseCloud(mostrarAlerta = true) {
-            if (!supabaseClient) {
-                if (mostrarAlerta) alert("⚠️ Configure las credenciales reales de Supabase en el código.");
-                return;
-            }
-
+            if (!supabaseClient) return;
             try {
                 const { data, error } = await supabaseClient
                     .from('jireth_geocore')
@@ -1222,18 +1251,19 @@
                     .single();
 
                 if (data && data.payload) {
-                    if (data.payload.pozos) pozosData = data.payload.pozos;
-                    if (data.payload.turnos) turnosData = data.payload.turnos;
-                    localStorage.setItem('jireth_pozos', JSON.stringify(pozosData));
-                    localStorage.setItem('jireth_turnos', JSON.stringify(turnosData));
+                    if (data.payload.pozos && Object.keys(data.payload.pozos).length > 0) {
+                        pozosData = data.payload.pozos;
+                        localStorage.setItem('jireth_pozos', JSON.stringify(pozosData));
+                    }
+                    if (data.payload.turnos) {
+                        turnosData = data.payload.turnos;
+                        localStorage.setItem('jireth_turnos', JSON.stringify(turnosData));
+                    }
                     refrescarSelectorPozos();
-                    if (mostrarAlerta) alert("🔄 ¡Sincronización con Supabase Cloud exitosa! Datos actualizados.");
-                } else if (error && mostrarAlerta) {
-                    await guardarYPersistirTodo();
-                    if (mostrarAlerta) alert("☁️ Base de datos inicializada y subida a Supabase Cloud con éxito.");
+                    if (mostrarAlerta) alert("🔄 ¡Sincronización con Supabase Cloud exitosa!");
                 }
             } catch(e) {
-                if (mostrarAlerta) alert("❌ Error de conexión con Supabase Cloud. Verifique su red.");
+                if (mostrarAlerta) alert("❌ Error de conexión con Supabase Cloud.");
             }
         }
 
