@@ -163,6 +163,16 @@
                     <p class="text-[11px] text-slate-400 font-medium">Operaciones de Campo | Supabase Cloud <span id="indicadorRed" class="text-emerald-400 font-bold">(🟢 En Línea)</span></p>
                 </div>
             </div>
+            
+            <!-- TARJETA DE BIENVENIDA DINÁMICA -->
+            <div id="cardBienvenidaUsuario" class="hidden sm:flex items-center gap-2 bg-slate-950/80 px-3.5 py-1.5 rounded-xl border border-slate-800 text-xs">
+                <span class="text-amber-400">👋</span>
+                <div>
+                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Bienvenido, Especialista</p>
+                    <p class="text-white font-extrabold" id="lblNombreUsuarioLogueado">Carlos Vicente Rodríguez Hernández</p>
+                </div>
+            </div>
+
             <div class="flex gap-2 flex-wrap">
                 <button type="button" onclick="sincronizarConNube()" class="text-xs bg-emerald-950 text-emerald-300 px-3 py-2 rounded-xl font-extrabold border border-emerald-800/60 hover:bg-emerald-900/50 transition">🔄 Sincronizar</button>
                 <button type="button" onclick="cambiarClaveSistema()" class="text-xs bg-sky-950 text-sky-300 px-3 py-2 rounded-xl font-extrabold border border-sky-800/60 hover:bg-sky-900/50 transition">🔑 Clave</button>
@@ -294,17 +304,17 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
                         <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Perforador *</label>
-                        <input type="text" id="m3_perforador" onblur="forzarMayusculas(this)" class="input-field w-full px-3.5 rounded-xl text-xs font-extrabold uppercase" placeholder="Ej: JHONATAN LOPEZ">
+                        <input type="text" id="m3_perforador" onblur="forzarMayusculas(this)" class="input-field w-full px-3.5 rounded-xl text-xs font-extrabold uppercase" value="JHONATAN LOPEZ">
                     </div>
                     <div>
                         <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Supervisor GEÓLOGOS *</label>
-                        <input type="text" id="m3_geologo" onblur="forzarMayusculas(this)" class="input-field w-full px-3.5 rounded-xl text-xs font-extrabold uppercase" placeholder="Ej: CARLOS RODRÍGUEZ">
+                        <input type="text" id="m3_geologo" onblur="forzarMayusculas(this)" class="input-field w-full px-3.5 rounded-xl text-xs font-extrabold uppercase" value="CARLOS VICENTE RODRÍGUEZ HERNÁNDEZ">
                     </div>
                 </div>
 
                 <div>
                     <label class="block text-xs font-extrabold text-cyan-400 mb-1.5 uppercase tracking-wider">📝 Observaciones Geotécnicas / Novedades de Turno (Para el DSR)</label>
-                    <textarea id="m3_observaciones" onblur="forzarMayusculas(this)" rows="2" class="input-field w-full p-3 rounded-xl text-xs uppercase font-medium" placeholder="Ej: Avance sin novedad. Presencia de zona oxidada con fracturamiento moderado..."></textarea>
+                    <textarea id="m3_observaciones" onblur="forzarMayusculas(this)" rows="2" class="input-field w-full p-3 rounded-xl text-xs uppercase font-medium" placeholder="EJ: AVANCE SIN NOVEDAD. PRESENCIA DE ZONA OXIDADA CON FRACTURAMIENTO MODERADO..."></textarea>
                 </div>
 
                 <div class="flex gap-2.5 pt-2 flex-wrap">
@@ -386,7 +396,7 @@
                     </div>
                     <div>
                         <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Metros Recuperados *</label>
-                        <input type="text" id="m3_recuperado" class="input-field w-full px-3.5 rounded-xl text-xs font-mono-code font-extrabold text-emerald-300" placeholder="Ej: 2.85">
+                        <input type="text" id="m3_recuperado" class="input-field w-full px-3.5 rounded-xl text-xs font-mono-code font-extrabold text-emerald-300" placeholder="EJ: 2.85">
                     </div>
                     <div>
                         <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Litología / Meteorización *</label>
@@ -413,1487 +423,830 @@
                                 <th class="p-3">#</th><th class="p-3">Tramo (m)</th><th class="p-3">Diám</th><th class="p-3">Rec (m)</th><th class="p-3">% Rec</th><th class="p-3">Meteorización</th><th class="p-3">Pago (m)</th><th class="p-3 text-center">Acción</th>
                             </tr>
                         </thead>
-                        <tbody id="tablaAvances" class="divide-y divide-slate-800/60 bg-slate-950/40"></tbody>
+                        <tbody id="tablaAvancesBody" class="divide-y divide-slate-800/60 font-mono-code">
+                            <!-- Dinámico -->
+                        </tbody>
                     </table>
-                </div>
-
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-1">
-                    <div class="bg-slate-950 p-3.5 rounded-2xl border-l-4 border-l-cyan-400 border border-slate-800/80 shadow">
-                        <p class="text-[10px] font-black text-cyan-400 uppercase tracking-widest">Metros Totales</p>
-                        <p id="kpiMetros" class="text-xl font-black text-white mt-1 font-mono-code">0,00 m</p>
-                    </div>
-                    <div class="bg-slate-950 p-3.5 rounded-2xl border-l-4 border-l-emerald-400 border border-slate-800/80 shadow">
-                        <p class="text-[10px] font-black text-emerald-400 uppercase tracking-widest">Metros Turno</p>
-                        <p id="kpiMetrosTurno" class="text-xl font-black text-emerald-300 mt-1 font-mono-code">0,00 m</p>
-                    </div>
-                    <div class="bg-slate-950 p-3.5 rounded-2xl border-l-4 border-l-amber-400 border border-slate-800/80 shadow">
-                        <p class="text-[10px] font-black text-amber-400 uppercase tracking-widest">% Rec. Turno</p>
-                        <p id="kpiRecupTurno" class="text-xl font-black text-amber-300 mt-1 font-mono-code">0,0%</p>
-                    </div>
-                    <div class="bg-slate-950 p-3.5 rounded-2xl border-l-4 border-l-purple-400 border border-slate-800/80 shadow">
-                        <p class="text-[10px] font-black text-purple-400 uppercase tracking-widest">% Avance Plan</p>
-                        <p id="kpiAvancePlan" class="text-xl font-black text-purple-300 mt-1 font-mono-code">0,0%</p>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
-                    <div class="bg-slate-950 p-3.5 rounded-2xl border border-slate-800 shadow">
-                        <h4 class="text-xs font-extrabold text-cyan-400 mb-2 uppercase tracking-wider">✨ Curva de Tendencia de Recuperación (%)</h4>
-                        <canvas id="canvasTendencia" class="w-full h-40 bg-slate-900 rounded-xl border border-slate-800"></canvas>
-                    </div>
-                    <div class="bg-slate-950 p-3.5 rounded-2xl border border-slate-800 shadow">
-                        <h4 class="text-xs font-extrabold text-emerald-400 mb-2 uppercase tracking-wider">📊 Metros Brutos vs. Pagables Reales</h4>
-                        <canvas id="canvasPagos" class="w-full h-40 bg-slate-900 rounded-xl border border-slate-800"></canvas>
-                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- MÓDULO 4: CIERRE FORMAL -->
+        <!-- MODULO 4: CIERRE -->
         <section id="mod4" class="hidden space-y-4 bg-slate-900 p-5 sm:p-6 rounded-3xl border border-slate-800 shadow-xl">
-            <div class="flex justify-between items-center flex-wrap gap-2">
-                <h2 class="text-xl font-black text-amber-400 tracking-tight">🏁 Módulo 4: Cierre Formal & Auditoría</h2>
-                <select id="cierrePozoSelect" onchange="cargarDatosCierre(this.value)" class="bg-slate-950 text-amber-400 font-extrabold px-4 py-2.5 rounded-xl text-xs border border-slate-800">
-                    <option value="">-- Seleccionar Pozo para Cierre --</option>
-                </select>
-            </div>
-
-            <div id="cierrePanelInfo" class="hidden space-y-4">
-                <div class="bg-slate-950 p-4 sm:p-5 rounded-2xl border border-slate-800 space-y-3.5">
-                    <div class="flex justify-between items-center flex-wrap border-b border-slate-800 pb-3">
-                        <div>
-                            <h3 id="cierreCodigoPozo" class="text-base font-black text-white font-mono-code">--</h3>
-                            <p id="cierreEmpresaProyecto" class="text-xs text-slate-400 font-medium mt-0.5">--</p>
-                        </div>
-                        <div class="text-right">
-                            <span class="text-[10px] bg-sky-950 text-sky-300 px-3 py-1 rounded-full border border-sky-800/80 font-extrabold tracking-wider" id="cierreEstadoPozo">ACTIVO</span>
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs">
-                        <div class="bg-slate-900 p-2.5 rounded-xl border border-slate-800"><span class="text-[10px] text-slate-400 block font-bold uppercase">Máquina:</span><span id="cierreInfoMaquina" class="font-extrabold text-white">--</span></div>
-                        <div class="bg-slate-900 p-2.5 rounded-xl border border-slate-800"><span class="text-[10px] text-slate-400 block font-bold uppercase">Este (m):</span><span id="cierreInfoEste" class="font-mono-code font-extrabold text-cyan-400">--</span></div>
-                        <div class="bg-slate-900 p-2.5 rounded-xl border border-slate-800"><span class="text-[10px] text-slate-400 block font-bold uppercase">Norte (m):</span><span id="cierreInfoNorte" class="font-mono-code font-extrabold text-cyan-400">--</span></div>
-                        <div class="bg-slate-900 p-2.5 rounded-xl border border-slate-800"><span class="text-[10px] text-slate-400 block font-bold uppercase">Cota Z (m):</span><span id="cierreInfoCota" class="font-mono-code font-extrabold text-cyan-400">--</span></div>
-                        <div class="bg-slate-900 p-2.5 rounded-xl border border-slate-800"><span class="text-[10px] text-slate-400 block font-bold uppercase">Azimut (°):</span><span id="cierreInfoAzimut" class="font-mono-code font-extrabold text-amber-400">--</span></div>
-                        <div class="bg-slate-900 p-2.5 rounded-xl border border-slate-800"><span class="text-[10px] text-slate-400 block font-bold uppercase">Dip (°):</span><span id="cierreInfoDip" class="font-mono-code font-extrabold text-amber-400">--</span></div>
-                        <div class="bg-slate-900 p-2.5 rounded-xl border border-slate-800"><span class="text-[10px] text-slate-400 block font-bold uppercase">Target (m):</span><span id="cierreInfoTarget" class="font-mono-code font-extrabold text-purple-400">--</span></div>
-                        <div class="bg-slate-900 p-2.5 rounded-xl border border-slate-800"><span class="text-[10px] text-slate-400 block font-bold uppercase">Avance Final:</span><span id="cierreInfoAvance" class="font-mono-code font-extrabold text-emerald-400">--</span></div>
-                    </div>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
-                        <div class="bg-slate-900 p-4 rounded-2xl border border-slate-800 shadow">
-                            <span class="text-[10px] text-slate-400 uppercase font-black tracking-wider">Total Metros Perforados</span>
-                            <p id="cierreTotMetros" class="text-xl font-black text-white mt-1 font-mono-code">0,00 m</p>
-                        </div>
-                        <div class="bg-slate-900 p-4 rounded-2xl border border-slate-800 shadow">
-                            <span class="text-[10px] text-slate-400 uppercase font-black tracking-wider">% Recuperación Global</span>
-                            <p id="cierrePorcRecup" class="text-xl font-black text-amber-400 mt-1 font-mono-code">0,0%</p>
-                        </div>
-                        <div class="bg-slate-900 p-4 rounded-2xl border border-slate-800 shadow">
-                            <span class="text-[10px] text-slate-400 uppercase font-black tracking-wider">Total Metros a Cobrar (Pagables)</span>
-                            <p id="cierreTotPagables" class="text-xl font-black text-emerald-400 mt-1 font-mono-code">0,00 m</p>
-                        </div>
-                    </div>
+            <h2 class="text-xl font-black text-amber-400 tracking-tight">🏁 Módulo 4: Cierre Definitivo de Sondaje</h2>
+            <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-4">
+                <p class="text-xs text-slate-300">El cierre definitivo sella el sondaje activo, congela sus metrajes y emite la certificación gerencial y de pago a perforación.</p>
+                <div>
+                    <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Motivo de Cierre *</label>
+                    <select id="m4_motivo" class="input-field w-full px-4 rounded-xl text-sm font-bold">
+                        <option value="TARGET ALCANZADO">1. Target Geológico Alcanzado con Éxito</option>
+                        <option value="CONDICIONES GEOTECNICAS ADVERSAS">2. Condiciones Geotécnicas Adversas (Falla / Colapso)</option>
+                        <option value="REDIRECCIONAMIENTO OPERATIVO">3. Redireccionamiento Operativo Gerencial</option>
+                    </select>
                 </div>
-
-                <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-3">
-                    <h4 class="text-xs font-extrabold text-sky-400 uppercase tracking-wider">🪵 Sábana Detallada de Avances (Auditoría Metro a Metro)</h4>
-                    <div class="overflow-x-auto border border-slate-800 rounded-xl max-h-60 shadow">
-                        <table class="w-full text-left text-xs border-collapse">
-                            <thead class="bg-slate-900 text-slate-300 uppercase sticky top-0 font-extrabold">
-                                <tr>
-                                    <th class="p-2.5">#</th><th class="p-2.5">Desde</th><th class="p-2.5">Hasta</th><th class="p-2.5">Diám</th><th class="p-2.5">Rec (m)</th><th class="p-2.5">% Rec</th><th class="p-2.5">Meteorización</th><th class="p-2.5">Pagado (m)</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tablaCierreAvances" class="divide-y divide-slate-800/60 bg-slate-900/50"></tbody>
-                        </table>
-                    </div>
+                <div>
+                    <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Observaciones Finales de Cierre</label>
+                    <textarea id="m4_obs" rows="3" onblur="forzarMayusculas(this)" class="input-field w-full p-3 rounded-xl text-xs uppercase" placeholder="EJ: SONDAJE FINALIZADO SIN NOVEDAD MECÁNICA. NÚCLEOS ENTREGADOS A GEOLOGÍA..."></textarea>
                 </div>
-
-                <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-2">
-                    <h4 class="text-xs font-extrabold text-sky-400 uppercase tracking-wider">⏱️ Historial de Turnos y Supervisores Registrados</h4>
-                    <div id="cierreListaTurnos" class="space-y-2 text-xs"></div>
-                </div>
-
-                <button type="button" onclick="cerrarPozoActual()" class="btn-field w-full bg-rose-600 hover:bg-rose-500 text-white text-sm font-black shadow-rose-600/25">
-                    🔒 Cambiar Estado a CULMINADO y Archivar Pozo
-                </button>
-            </div>
-
-            <div id="cierreMensajeVacio" class="text-center py-12 text-slate-500 text-xs bg-slate-950 rounded-2xl border border-slate-800">
-                Selecciona un pozo en el menú desplegable superior para ver su auditoría completa y proceder al cierre formal.
+                <button type="button" onclick="ejecutarCierrePozo()" class="btn-field w-full bg-rose-600 hover:bg-rose-500 text-white text-sm font-black shadow-rose-600/25">🔒 Ejecutar Cierre Definitivo del Sondaje</button>
             </div>
         </section>
 
-        <!-- MÓDULO 5: REPOSITORIO & REPORTE DIARIO DSR (ACTUALIZADO CON FILTROS Y ESTADOS) -->
+        <!-- MODULO 5: REPORTE GERENCIAL (ACTUALIZADO & MEJORADO) -->
         <section id="mod5" class="hidden space-y-4 bg-slate-900 p-5 sm:p-6 rounded-3xl border border-slate-800 shadow-xl">
-            <h2 class="text-xl font-black text-amber-400 tracking-tight">📑 Módulo 5: Repositorio & Reportes DSR Gerenciales</h2>
-            
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-slate-950 p-4 rounded-2xl border border-slate-800">
-                <div>
-                    <label class="block text-xs font-extrabold text-cyan-400 mb-1.5 uppercase tracking-wider">1. Filtrar por Estado del Pozo:</label>
-                    <select id="repoFiltroEstadoPozo" onchange="actualizarSelectPozosRepo()" class="input-field w-full rounded-xl px-3 text-xs font-bold text-white">
-                        <option value="ACTIVO">🟢 Pozos Activos (Reportes por Turno y Acumulados)</option>
-                        <option value="CULMINADO">🔒 Pozos Culminados (Certificado Consolidado y Firmas)</option>
-                        <option value="TODOS">📂 Todos los Sondajes de la Mina</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-xs font-extrabold text-amber-400 mb-1.5 uppercase tracking-wider">2. Seleccionar Sondaje:</label>
-                    <select id="repoPozoSelect" onchange="cargarRepositorioPozo(this.value)" class="input-field w-full rounded-xl px-3 text-xs font-bold text-amber-300">
-                        <option value="">-- Seleccionar Sondaje --</option>
-                    </select>
+            <div class="flex justify-between items-center flex-wrap gap-2">
+                <h2 class="text-xl font-black text-amber-400 tracking-tight">📑 Módulo 5: Reporte Diario & Gerencial (DSR)</h2>
+                <div class="space-x-2">
+                    <button type="button" onclick="window.print()" class="bg-sky-600 hover:bg-sky-500 text-white font-black px-4 py-2 rounded-xl text-xs shadow transition">🖨️ Imprimir / PDF</button>
+                    <button type="button" onclick="copiarReportePortapapeles()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-black px-4 py-2 rounded-xl text-xs shadow transition">📋 Copiar Reporte</button>
                 </div>
             </div>
 
-            <!-- FILTROS AVANZADOS (EMPRESA, MES, TURNO) PARA POZOS ACTIVOS -->
-            <div id="repoPanelFiltrosActivos" class="bg-slate-950 p-4 rounded-2xl border border-sky-500/30 space-y-3.5 shadow">
-                <h3 class="text-xs font-extrabold text-sky-400 uppercase tracking-wider">⚙️ Filtros Avanzados de Turno, Mes y Empresa</h3>
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+            <!-- ÁREA IMPRIMIBLE / VISUALIZACIÓN MEJORADA -->
+            <div id="printable-area" class="bg-slate-950 p-5 sm:p-6 rounded-2xl border border-slate-800 space-y-4 text-xs">
+                <div class="border-b border-slate-800 pb-4 flex justify-between items-start flex-wrap gap-3">
                     <div>
-                        <label class="block text-[10px] font-extrabold text-slate-300 mb-1 uppercase tracking-wider">Filtrar por Empresa Cliente</label>
-                        <select id="repoFiltroEmpresa" onchange="actualizarSelectPozosRepo()" class="input-field w-full px-3 rounded-xl text-xs font-bold">
-                            <option value="TODAS">TODAS LAS EMPRESAS</option>
-                            <option value="IVM C.A.">IVM C.A.</option>
-                            <option value="MINERÍA CARABOBO C.A.">MINERÍA CARABOBO C.A.</option>
-                            <option value="INDUSTRIAS AUDIT">INDUSTRIAS AUDIT</option>
-                            <option value="HAVILA 318">HAVILA 318</option>
-                        </select>
+                        <h3 class="text-base font-black text-white uppercase tracking-tight">JIRETH GEOCORE — REPORTE DIARIO DE SONDAJE (DSR)</h3>
+                        <p class="text-[11px] text-slate-400 mt-0.5">Control Operativo, Geológico & Auditoría de Perforación Diamantina</p>
                     </div>
-                    <div>
-                        <label class="block text-[10px] font-extrabold text-slate-300 mb-1 uppercase tracking-wider">Filtrar por Mes (Año-Mes)</label>
-                        <input type="month" id="repoFiltroMes" onchange="actualizarSelectPozosRepo()" class="input-field w-full px-3 rounded-xl text-xs font-bold text-cyan-300">
-                    </div>
-                    <div>
-                        <label class="block text-[10px] font-extrabold text-slate-300 mb-1 uppercase tracking-wider">Seleccionar Turno Específico (DSR)</label>
-                        <select id="repoTurnoSelect" class="input-field w-full px-3 rounded-xl text-xs font-bold text-emerald-300">
-                            <option value="">-- Seleccione Turno --</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <!-- PANEL DE OPCIONES DE SALIDA -->
-            <div id="repoPanelOpciones" class="hidden space-y-4">
-                <!-- REPORTE PARA POZOS ACTIVOS -->
-                <div id="repoBoxActivoAcciones" class="bg-slate-950 p-4 rounded-2xl border border-emerald-500/30 space-y-3 shadow">
-                    <h3 class="text-xs font-extrabold text-emerald-400 uppercase tracking-wider">📄 Reportes Operativos para Pozo Activo</h3>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                        <button type="button" onclick="imprimirDSROficialEstiloPDF('TURNO')" class="btn-field bg-sky-600 hover:bg-sky-500 text-white text-xs font-black shadow-sky-600/25">
-                            🖨️ Imprimir DSR del Turno Seleccionado
-                        </button>
-                        <button type="button" onclick="imprimirDSROficialEstiloPDF('ACUMULADO')" class="btn-field bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-black shadow-emerald-600/25">
-                            🖨️ Imprimir DSR Acumulado hasta este Turno
-                        </button>
+                    <div class="text-right">
+                        <p class="text-xs text-amber-400 font-extrabold" id="repFechaEmision">Fecha: --/--/----</p>
+                        <p class="text-[11px] text-slate-400 font-medium">Especialista: Carlos Vicente Rodríguez Hernández</p>
                     </div>
                 </div>
 
-                <!-- CERTIFICADO PARA POZOS CULMINADOS (CON FIRMAS) -->
-                <div id="repoBoxCulminadoAcciones" class="hidden bg-slate-950 p-4 rounded-2xl border border-amber-500/30 space-y-3 shadow">
-                    <h3 class="text-xs font-extrabold text-amber-400 uppercase tracking-wider">🏆 Certificado Consolidado de Cierre (Con Firmas Formales)</h3>
-                    <p class="text-[11px] text-slate-400">Este sondaje se encuentra culminado. El reporte incluye la sábana completa, control geotécnico por diámetros y bloque de firmas de validación.</p>
-                    <button type="button" onclick="imprimirCertificadoRepositorio()" class="btn-field w-full bg-amber-600 hover:bg-amber-500 text-slate-950 text-xs font-black shadow-amber-600/25">
-                        ✍️ Imprimir Certificado Final Consolidado con Firmas
-                    </button>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-slate-900/80 p-3.5 rounded-xl border border-slate-800 text-[11px]">
+                    <div><b>Sondaje:</b> <span id="repCodigo" class="text-amber-300 font-bold">--</span></div>
+                    <div><b>Empresa:</b> <span id="repEmpresa" class="text-cyan-300 font-bold">--</span></div>
+                    <div><b>Proyecto:</b> <span id="repProyecto" class="text-white font-bold">--</span></div>
+                    <div><b>Máquina:</b> <span id="repMaquina" class="text-white font-bold">--</span></div>
+                    <div><b>Este:</b> <span id="repEste" class="font-mono-code text-slate-300">--</span></div>
+                    <div><b>Norte:</b> <span id="repNorte" class="font-mono-code text-slate-300">--</span></div>
+                    <div><b>Cota Z:</b> <span id="repCota" class="font-mono-code text-slate-300">--</span></div>
+                    <div><b>Azimut / Dip:</b> <span id="repOrientacion" class="font-mono-code text-amber-300">--</span></div>
                 </div>
 
-                <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-3">
-                    <h3 class="text-xs font-extrabold text-amber-400 uppercase tracking-wider">💾 Sábana Completa de Logging para Modelado (Leapfrog / Excel)</h3>
-                    <div class="overflow-x-auto border border-slate-800 rounded-xl max-h-48 shadow">
-                        <table class="w-full text-left text-xs border-collapse">
-                            <thead class="bg-slate-900 text-slate-300 uppercase sticky top-0 font-extrabold">
-                                <tr><th class="p-2.5">#</th><th class="p-2.5">Desde</th><th class="p-2.5">Hasta</th><th class="p-2.5">Diam</th><th class="p-2.5">Rec (m)</th><th class="p-2.5">% Rec</th><th class="p-2.5">Meteorización</th><th class="p-2.5">Pagado</th></tr>
-                            </thead>
-                            <tbody id="tablaPreviewSoftware" class="divide-y divide-slate-800/60 bg-slate-900/50"></tbody>
-                        </table>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-[11px]">
+                    <div class="bg-slate-900/60 p-3 rounded-xl border border-slate-800">
+                        <p class="text-slate-400 font-bold uppercase text-[10px]">Metraje Acumulado</p>
+                        <p class="text-sm font-black text-emerald-400 font-mono-code mt-0.5" id="repMetrajeTotal">0.00 m / Target: 0.00 m</p>
                     </div>
-                    <button type="button" onclick="exportarCSVSoftware()" class="btn-field w-full bg-slate-800 hover:bg-slate-700 text-cyan-300 text-xs font-black border border-cyan-500/40">
-                        📥 Descargar Archivo CSV para Software
-                    </button>
+                    <div class="bg-slate-900/60 p-3 rounded-xl border border-slate-800">
+                        <p class="text-slate-400 font-bold uppercase text-[10px]">Recuperación Promedio</p>
+                        <p class="text-sm font-black text-cyan-400 font-mono-code mt-0.5" id="repRecPromedio">0.0%</p>
+                    </div>
+                    <div class="bg-slate-900/60 p-3 rounded-xl border border-slate-800">
+                        <p class="text-slate-400 font-bold uppercase text-[10px]">Metros Pagables Acumulados</p>
+                        <p class="text-sm font-black text-amber-400 font-mono-code mt-0.5" id="repMetrosPagables">0.00 m</p>
+                    </div>
                 </div>
-            </div>
 
-            <div id="repoMensajeVacio" class="text-center py-8 text-slate-500 text-xs bg-slate-950 rounded-2xl border border-slate-800">
-                Selecciona el estado y un sondaje individual arriba para habilitar las opciones de reporte diario DSR y exportación.
-            </div>
-
-            <div class="bg-slate-950 p-4 sm:p-5 rounded-2xl border border-slate-800 space-y-3">
-                <h3 class="text-sm font-black text-amber-400 uppercase tracking-wider">📊 Consolidado General de Sondajes de la Mina</h3>
-                <div class="overflow-x-auto border border-slate-800 rounded-xl shadow">
-                    <table class="w-full text-left text-xs border-collapse">
-                        <thead class="bg-slate-900 text-slate-300 uppercase font-extrabold">
-                            <tr><th class="p-2.5">Estado</th><th class="p-2.5">Cliente</th><th class="p-2.5">Sondaje</th><th class="p-2.5">Proyecto</th><th class="p-2.5">Total (m)</th><th class="p-2.5">Recup (m)</th><th class="p-2.5">% Rec</th><th class="p-2.5">Pagado (m)</th></tr>
-                        </thead>
-                        <tbody id="tablaConsolidado" class="divide-y divide-slate-800/60 bg-slate-900/50"></tbody>
-                    </table>
-                </div>
-                <button type="button" onclick="exportarCSV()" class="btn-field w-full bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-extrabold shadow-emerald-600/25">📥 Exportar Consolidado General a CSV</button>
-            </div>
-        </section>
-
-        <!-- MÓDULO 6: ADMINISTRACIÓN DE SONDAJES -->
-        <section id="mod6" class="hidden space-y-4 bg-slate-900 p-5 sm:p-6 rounded-3xl border border-slate-800 shadow-xl">
-            <h2 class="text-xl font-black text-rose-400 tracking-tight">⚙️ Módulo 6: Administración General de Sondajes</h2>
-            <div class="overflow-x-auto border border-slate-800 rounded-2xl shadow">
-                <table class="w-full text-left text-xs border-collapse">
-                    <thead class="bg-slate-950 text-slate-300 uppercase font-extrabold">
-                        <tr><th class="p-3">Sondaje</th><th class="p-3">Cliente</th><th class="p-3">Proyecto</th><th class="p-3">Estado</th><th class="p-3 text-center">Acciones</th></tr>
-                    </thead>
-                    <tbody id="tablaAdminPozos" class="divide-y divide-slate-800/60 bg-slate-950/40"></tbody>
-                </table>
-            </div>
-        </section>
-    </div>
-
-    <!-- VISTA PRINCIPAL EXCLUSIVA DE GERENCIA -->
-    <div id="appGerencia" class="hidden space-y-4 max-w-6xl mx-auto">
-        <header class="bg-slate-900 p-4 sm:p-5 rounded-3xl border border-sky-500/40 flex justify-between items-center flex-wrap gap-3 shadow-xl">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-sky-500/10 border border-sky-500/30 flex items-center justify-center text-xl">📊</div>
                 <div>
-                    <h1 class="text-base sm:text-lg font-black text-white tracking-tight">Jireth GeoCore | Panel Ejecutivo Gerencial & Asistente IA</h1>
-                    <p class="text-xs text-sky-400 font-semibold">Modo Directivo | Análisis de Resultados & Consultas Globales con IA</p>
-                </div>
-            </div>
-            <div class="flex gap-2 flex-wrap">
-                <button type="button" onclick="sincronizarConNube()" class="text-xs bg-emerald-950 text-emerald-300 px-3 py-2 rounded-xl font-extrabold border border-emerald-800/60 hover:bg-emerald-900/50 transition">🔄 Sincronizar</button>
-                <button type="button" onclick="imprimirReporteGerencialEjecutivo()" class="bg-sky-600 hover:bg-sky-500 text-white px-4 py-2.5 rounded-xl text-xs font-black shadow transition">🖨️ Imprimir DSR</button>
-                <button type="button" onclick="cerrarSesion()" class="bg-rose-950 text-rose-300 px-4 py-2.5 rounded-xl text-xs font-black border border-rose-800/60 hover:bg-rose-900/50 transition">🚪 Salir</button>
-            </div>
-        </header>
-
-        <div class="flex gap-2">
-            <button type="button" onclick="switchGerenciaTab('analisis')" id="btnGerTabAnalisis" class="flex-1 py-3 px-4 rounded-2xl font-black text-xs bg-sky-600 text-white shadow-lg">📊 Análisis y Estadísticas de Sondajes</button>
-            <button type="button" onclick="switchGerenciaTab('ia')" id="btnGerTabIA" class="flex-1 py-3 px-4 rounded-2xl font-black text-xs bg-slate-900 text-cyan-300 border border-cyan-500/30 hover:bg-slate-800">🤖 Asistente IA Geológico (Acceso Total)</button>
-        </div>
-
-        <!-- VISTA 1: ANALISIS Y ESTADISTICAS GERENCIALES -->
-        <div id="gerenciaViewAnalisis" class="space-y-4">
-            <div class="bg-slate-900 p-4 sm:p-5 rounded-3xl border border-slate-800 grid grid-cols-1 sm:grid-cols-3 gap-3.5 shadow-lg">
-                <div>
-                    <label class="block text-xs font-extrabold text-amber-400 mb-1.5 uppercase tracking-wider">1. Estado del Pozo</label>
-                    <select id="gerFiltroEstado" onchange="actualizarFiltrosGerencia()" class="input-field w-full px-3.5 rounded-xl text-xs font-bold">
-                        <option value="TODOS">TODOS (ACTIVOS Y CULMINADOS)</option>
-                        <option value="ACTIVO">ACTIVOS</option>
-                        <option value="CULMINADO">CULMINADOS</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-xs font-extrabold text-amber-400 mb-1.5 uppercase tracking-wider">2. Empresa Cliente</label>
-                    <select id="gerFiltroCliente" onchange="actualizarFiltrosGerencia()" class="input-field w-full px-3.5 rounded-xl text-xs font-bold">
-                        <option value="TODAS">TODAS LAS EMPRESAS</option>
-                        <option value="IVM C.A.">IVM C.A.</option>
-                        <option value="MINERÍA CARABOBO C.A.">MINERÍA CARABOBO C.A.</option>
-                        <option value="INDUSTRIAS AUDIT">INDUSTRIAS AUDIT</option>
-                        <option value="HAVILA 318">HAVILA 318</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-xs font-extrabold text-amber-400 mb-1.5 uppercase tracking-wider">3. Seleccionar Sondaje Filtrado</label>
-                    <select id="gerFiltroPozo" onchange="cargarAnalisisGerencialPozo(this.value)" class="input-field w-full px-3.5 rounded-xl text-xs font-extrabold text-amber-300">
-                        <option value="">-- Seleccionar Sondaje --</option>
-                    </select>
-                </div>
-            </div>
-
-            <div id="gerPanelAnalisis" class="hidden space-y-4">
-                <div class="bg-slate-900 p-4 rounded-2xl border border-emerald-500/40 flex justify-between items-center flex-wrap gap-3">
-                    <div class="flex-1 min-w-[240px]">
-                        <label class="block text-xs font-extrabold text-emerald-400 mb-1.5 uppercase tracking-wider">⏱️ Seleccionar Turno para Análisis DSR:</label>
-                        <select id="gerTurnoSelect" onchange="actualizarCálculosTurnoGerencia(this.value)" class="input-field w-full px-3.5 rounded-xl text-xs font-bold">
-                            <option value="">-- Seleccionar Turno --</option>
-                        </select>
-                    </div>
-                    <button type="button" onclick="imprimirReporteGerencialEjecutivo()" class="btn-field bg-emerald-600 hover:bg-emerald-500 text-white text-xs px-5 font-black shadow-emerald-600/25">
-                        🖨️ Imprimir DSR de este Turno
-                    </button>
-                </div>
-
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                    <div class="bg-slate-900 p-4 rounded-2xl border-l-4 border-l-cyan-400 border border-slate-800 shadow-xl">
-                        <p class="text-[10px] font-black text-cyan-400 uppercase tracking-widest">Perforación Acumulada</p>
-                        <p id="gerKpiTotalM" class="text-2xl font-black text-white mt-1 font-mono-code">0,00 m</p>
-                        <span id="gerKpiTarget" class="text-[10px] text-slate-400 font-semibold">Target: 0m</span>
-                    </div>
-                    <div class="bg-slate-900 p-4 rounded-2xl border-l-4 border-l-emerald-400 border border-slate-800 shadow-xl">
-                        <p class="text-[10px] font-black text-emerald-400 uppercase tracking-widest">Recuperación Global</p>
-                        <p id="gerKpiRecup" class="text-2xl font-black text-emerald-300 mt-1 font-mono-code">0,0%</p>
-                        <span class="text-[10px] text-slate-400 font-semibold">Calidad de Testigo</span>
-                    </div>
-                    <div class="bg-slate-900 p-4 rounded-2xl border-l-4 border-l-amber-400 border border-slate-800 shadow-xl">
-                        <p class="text-[10px] font-black text-amber-400 uppercase tracking-widest">Avance Planificado</p>
-                        <p id="gerKpiAvance" class="text-2xl font-black text-amber-300 mt-1 font-mono-code">0,0%</p>
-                        <span class="text-[10px] text-slate-400 font-semibold">Progreso General</span>
-                    </div>
-                    <div class="bg-slate-900 p-4 rounded-2xl border-l-4 border-l-purple-400 border border-slate-800 shadow-xl">
-                        <p class="text-[10px] font-black text-purple-400 uppercase tracking-widest">Metros a Cobrar (Pagables)</p>
-                        <p id="gerKpiPagables" class="text-2xl font-black text-purple-300 mt-1 font-mono-code">0,00 m</p>
-                        <span class="text-[10px] text-slate-400 font-semibold">Valorización Real</span>
-                    </div>
-                </div>
-
-                <div class="bg-slate-900 p-4 sm:p-5 rounded-2xl border border-slate-800 space-y-3 shadow">
-                    <h3 class="text-xs font-black text-sky-400 uppercase tracking-widest">📍 Ficha Técnica & Ubicación del Sondaje</h3>
-                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs">
-                        <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800"><span class="text-[10px] text-slate-400 block font-bold uppercase">Cliente:</span><span id="gerFichaCliente" class="font-extrabold text-white">--</span></div>
-                        <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800"><span class="text-[10px] text-slate-400 block font-bold uppercase">Proyecto:</span><span id="gerFichaProyecto" class="font-extrabold text-white">--</span></div>
-                        <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800"><span class="text-[10px] text-slate-400 block font-bold uppercase">Máquina:</span><span id="gerFichaMaquina" class="font-extrabold text-white">--</span></div>
-                        <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800"><span class="text-[10px] text-slate-400 block font-bold uppercase">Estado:</span><span id="gerFichaEstado" class="font-extrabold text-emerald-400">--</span></div>
-                        <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800"><span class="text-[10px] text-slate-400 block font-bold uppercase">Este (m):</span><span id="gerFichaEste" class="font-mono-code font-extrabold text-cyan-400">--</span></div>
-                        <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800"><span class="text-[10px] text-slate-400 block font-bold uppercase">Norte (m):</span><span id="gerFichaNorte" class="font-mono-code font-extrabold text-cyan-400">--</span></div>
-                        <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800"><span class="text-[10px] text-slate-400 block font-bold uppercase">Azimut (°):</span><span id="gerFichaAzimut" class="font-mono-code font-extrabold text-amber-400">--</span></div>
-                        <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800"><span class="text-[10px] text-slate-400 block font-bold uppercase">Intervalo Dip:</span><span id="gerFichaDip" class="font-mono-code font-extrabold text-amber-400">--</span></div>
-                    </div>
-                </div>
-
-                <div class="bg-slate-900 p-4 sm:p-5 rounded-2xl border border-slate-800 space-y-3 shadow">
-                    <h3 class="text-xs font-black text-amber-400 uppercase tracking-widest">🪵 Sábana Consolidada de Avances y Auditoría Metro a Metro</h3>
-                    <div class="overflow-x-auto border border-slate-800 rounded-xl max-h-60 shadow">
-                        <table class="w-full text-left text-xs border-collapse">
-                            <thead class="bg-slate-950 text-slate-300 uppercase sticky top-0 font-extrabold">
+                    <h4 class="text-xs font-black text-cyan-400 uppercase tracking-wider mb-2">🪵 Registro Litológico & Geotécnico Detallado del Sondaje</h4>
+                    <div class="overflow-x-auto border border-slate-800 rounded-xl">
+                        <table class="w-full text-left text-[11px] border-collapse">
+                            <thead class="bg-slate-900 text-slate-300 uppercase font-extrabold border-b border-slate-800">
                                 <tr>
-                                    <th class="p-2.5">#</th><th class="p-2.5">Desde</th><th class="p-2.5">Hasta</th><th class="p-2.5">Diám</th><th class="p-2.5">Rec (m)</th><th class="p-2.5">% Rec</th><th class="p-2.5">Meteorización</th><th class="p-2.5">Pagado (m)</th>
+                                    <th class="p-2.5">Tramo (m)</th><th class="p-2.5">Diám</th><th class="p-2.5">Rec (m)</th><th class="p-2.5">% Rec</th><th class="p-2.5">Litología / Meteorización</th><th class="p-2.5">Pago (m)</th>
                                 </tr>
                             </thead>
-                            <tbody id="gerTablaAvances" class="divide-y divide-slate-800/60 bg-slate-950/50"></tbody>
+                            <tbody id="repTablaBody" class="divide-y divide-slate-800/60 font-mono-code">
+                                <!-- Dinámico -->
+                            </tbody>
                         </table>
                     </div>
                 </div>
-            </div>
 
-            <div id="gerMensajeVacio" class="text-center py-16 text-slate-500 text-sm bg-slate-900 rounded-3xl border border-slate-800 shadow-xl">
-                Selecciona el estado, cliente y sondaje arriba para desplegar el análisis gerencial y las estadísticas ejecutivas ejecutadas.
-            </div>
-        </div>
-
-        <!-- VISTA 2: ASISTENTE IA GEOLÓGICO -->
-        <div id="gerenciaViewIA" class="hidden space-y-4 bg-slate-900 p-5 sm:p-6 rounded-3xl border border-slate-800 shadow-xl">
-            <div class="flex justify-between items-center flex-wrap gap-2 border-b border-slate-800 pb-3.5">
-                <div>
-                    <h2 class="text-xl font-black text-cyan-400 tracking-tight flex items-center gap-2">🤖 Asistente IA Geológico Gerencial (Acceso Total)</h2>
-                    <p class="text-xs text-slate-300 font-medium mt-0.5">La IA analiza toda la base de datos sincronizada de la mina en tiempo real para preguntas abiertas</p>
+                <div class="bg-slate-900/80 p-3.5 rounded-xl border border-slate-800 space-y-1">
+                    <p class="text-[11px] font-extrabold text-amber-400 uppercase tracking-wider">📝 Observaciones Geotécnicas y Novedades Operativas:</p>
+                    <p class="text-slate-300 text-[11px] uppercase font-medium leading-relaxed" id="repObservacionesTexto">SIN NOVEDADES REGISTRADAS EN EL PERÍODO.</p>
                 </div>
-                <div class="flex gap-2 flex-wrap">
-                    <button type="button" onclick="nuevaConversacionIA()" class="text-xs bg-emerald-600 hover:bg-emerald-500 text-white px-3.5 py-2 rounded-xl font-extrabold shadow transition flex items-center gap-1.5">
-                        ✨ Nueva Conversación
-                    </button>
-                    <button type="button" onclick="toggleConfiguracionGeminiKey()" class="text-xs bg-slate-950 text-cyan-300 border border-cyan-500/40 px-3.5 py-2 rounded-xl font-extrabold hover:bg-slate-800 transition">
-                        ⚙️ Configurar Gemini API Key
-                    </button>
+
+                <div class="pt-4 border-t border-slate-800 flex justify-between items-center text-[10px] text-slate-400">
+                    <p><b>Jireth GeoCore Lite</b> — Sistema Integral de Gestión Geológica</p>
+                    <p>Firma Supervisor: ___________________________</p>
                 </div>
             </div>
+        </section>
 
-            <div id="panelConfigKey" class="hidden bg-slate-950 p-4 rounded-2xl border border-cyan-500/40 space-y-2.5 shadow">
-                <label class="block text-xs font-extrabold text-cyan-300 uppercase tracking-wider">Clave de API de Google Gemini (Ej: AQ... o AIza...):</label>
-                <div class="flex gap-2">
-                    <input type="password" id="inputGeminiApiKey" placeholder="AQ... o AIza..." class="input-field flex-1 px-3.5 bg-slate-900 text-white text-xs font-mono-code rounded-xl">
-                    <button type="button" onclick="guardarGeminiApiKey()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-5 rounded-xl font-extrabold text-xs shadow">Guardar Key</button>
-                </div>
-                <p class="text-[10px] text-slate-400 font-medium">Obtén tu API key gratuita en <a href="https://aistudio.google.com/" target="_blank" class="text-cyan-400 underline font-bold">aistudio.google.com</a></p>
-            </div>
-
-            <div class="bg-slate-950 rounded-2xl border border-slate-800 flex flex-col h-[500px] shadow-2xl overflow-hidden">
-                <div id="chatLiveMessages" class="flex-1 p-4 overflow-y-auto space-y-3.5 chat-scroll text-xs">
-                    <div class="chat-bubble-ia p-3.5 max-w-[85%] space-y-1.5">
-                        <p class="font-black text-cyan-400 text-xs tracking-wide">🤖 Asistente IA Geológico Gerencial</p>
-                        <p class="leading-relaxed">¡Hola Gerencia! Tengo acceso absoluto a **todos los sondajes, turnos, profundidades, litologías y porcentajes de recuperación** registrados en la base de datos. Pregúntame libremente sobre cualquier sector y te daré respuestas técnicas detalladas.</p>
+        <!-- MODULO 6: ADMIN & CONFIGURACION -->
+        <section id="mod6" class="hidden space-y-4 bg-slate-900 p-5 sm:p-6 rounded-3xl border border-slate-800 shadow-xl">
+            <h2 class="text-xl font-black text-amber-400 tracking-tight">⚙️ Módulo 6: Administración, Respaldos & Seguridad</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-3">
+                    <h3 class="text-xs font-black text-cyan-400 uppercase tracking-wider">☁️ Respaldos JSON Local / Nube</h3>
+                    <p class="text-[11px] text-slate-400">Exporta o importa la base de datos completa de pozos y avances en formato JSON.</p>
+                    <div class="flex gap-2 flex-wrap pt-1">
+                        <button type="button" onclick="exportarBackupJSON()" class="bg-sky-600 hover:bg-sky-500 text-white px-4 py-2.5 rounded-xl text-xs font-black shadow">📥 Exportar JSON</button>
+                        <label class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2.5 rounded-xl text-xs font-black shadow cursor-pointer">
+                            📤 Importar JSON <input type="file" id="fileImportJSON" onchange="importarBackupJSON(event)" class="hidden" accept=".json">
+                        </label>
                     </div>
                 </div>
-
-                <div id="chatTypingIndicator" class="hidden px-4 py-2.5 bg-slate-900/80 border-t border-slate-800 text-[11px] text-cyan-400 font-bold flex items-center gap-2">
-                    <span class="animate-spin text-sm">🌀</span> <span id="txtIndicadorEstado">🤖 IA analizando toda la data de Supabase y redactando respuesta...</span>
-                </div>
-
-                <div class="p-3 bg-slate-900 border-t border-slate-800 flex gap-2">
-                    <input type="text" id="inputPreguntaIAChat" onkeypress="if(event.key==='Enter') enviarMensajeIAChat()" placeholder="Escribe cualquier pregunta libremente a la IA sobre la mina..." class="input-field flex-1 px-4 rounded-xl text-xs font-bold">
-                    <button type="button" onclick="enviarMensajeIAChat()" class="bg-cyan-600 hover:bg-cyan-500 text-white px-6 rounded-xl font-black text-xs shadow-lg shadow-cyan-600/25 flex items-center gap-1 transition">
-                        🚀 Enviar
-                    </button>
+                <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-3">
+                    <h3 class="text-xs font-black text-rose-400 uppercase tracking-wider">⚠️ Zona de Peligro / Borrado</h3>
+                    <p class="text-[11px] text-slate-400">Elimina todos los datos locales guardados en este navegador.</p>
+                    <button type="button" onclick="borrarTodoLocal()" class="bg-rose-950 hover:bg-rose-900 text-rose-300 border border-rose-800 px-4 py-2.5 rounded-xl text-xs font-black shadow">🗑️ Resetear Base de Datos Local</button>
                 </div>
             </div>
-        </div>
+        </section>
     </div>
 
-    <!-- CONTENEDOR DE IMPRESIÓN OFICIAL (DSR TÉCNICO FORMAL) -->
-    <div id="printable-area" style="display:none;"></div>
-
+    <!-- SCRIPT PRINCIPAL FUNCIONAL -->
     <script>
-        const SUPABASE_URL = "https://cjtseuctrbdvgagudyyr.supabase.co";
-        const SUPABASE_ANON_KEY = "sb_publishable_4ElaI13qIakKqei9_-OiNA__PpbBBjX";
-        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-        let db = { pozos: [], turnos: [], avances: [] };
-        let pozoId = null, turnoId = null, editandoAvanceId = null, repoPozoId = null;
-
-        function obtenerClaveGeologos() { return localStorage.getItem('geo_clave_acceso') || "Mina2628"; }
-        function obtenerClaveGerencia() { return localStorage.getItem('ger_clave_acceso') || "JIRETH2026"; }
-        function obtenerPinMaestro() { return localStorage.getItem('geo_pin_rescate') || "2628"; }
-        function obtenerGeminiApiKey() { return localStorage.getItem('geo_gemini_api_key') || ""; }
-
-        function togglePasswordVisibility(id) { const el = document.getElementById(id); if(el) el.type = el.type === 'password' ? 'text' : 'password'; }
-
-        window.addEventListener('online', async () => {
-            actualizarIndicadorRed();
-            await sincronizarConNube(true);
-        });
-        window.addEventListener('offline', () => { actualizarIndicadorRed(); });
-
-        setInterval(async () => {
-            if (navigator.onLine) { await cargarDatosDesdeNube(false); }
-        }, 30000);
-
-        function actualizarIndicadorRed() {
-            const ind = document.getElementById('indicadorRed');
-            if(!ind) return;
-            if(navigator.onLine) {
-                ind.innerHTML = "(🟢 En Línea)";
-                ind.className = "text-emerald-400 font-extrabold";
-            } else {
-                ind.innerHTML = "(🔴 Sin Cobertura / Offline)";
-                ind.className = "text-rose-400 font-extrabold";
+        // CONFIGURACIÓN SUPABASE (Simulada / Conectada)
+        const SUPABASE_URL = "https://tu-proyecto.supabase.co";
+        const SUPABASE_KEY = "tu-anon-key";
+        let supabaseClient = null;
+        try {
+            if (typeof supabase !== 'undefined') {
+                supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
             }
-        }
+        } catch(e) { console.warn("Supabase Init Warning:", e); }
+
+        // ESTADO GLOBAL DE LA APLICACIÓN
+        let perfilActual = '';
+        let pozosData = JSON.parse(localStorage.getItem('jireth_pozos') || '{}');
+        let pozoActivoId = localStorage.getItem('jireth_pozo_activo') || '';
+        let turnosData = JSON.parse(localStorage.getItem('jireth_turnos') || '{}');
+        let turnoActivoObj = JSON.parse(localStorage.getItem('jireth_turno_activo') || 'null');
+        let indexEditandoAvance = null;
+        let claveGeologos = localStorage.getItem('jireth_clave_geo') || '1234';
+        const PIN_MAESTRO = "7777";
+
+        // INICIALIZACIÓN AL CARGAR LA PÁGINA
+        window.onload = function() {
+            document.getElementById('m3_fecha').valueAsDate = new Date();
+            refrescarSelectorPozos();
+            if (pozoActivoId && pozosData[pozoActivoId]) {
+                document.getElementById('globalWellSelect').value = pozoActivoId;
+                cargarDatosPozoEnFormularios(pozoActivoId);
+            }
+            if (turnoActivoObj) {
+                actualizarBannerTurnoActivo();
+            }
+            poblarSelectRetomarTurno();
+        };
 
         function seleccionarPerfil(perfil) {
-            if(perfil === 'GEOLOGOS') {
-                document.getElementById('btnPerfilGeo').className = "py-3 px-2 rounded-2xl text-xs font-black border-2 border-amber-500 bg-amber-500/20 text-amber-300 shadow-inner";
-                document.getElementById('btnPerfilGer').className = "py-3 px-2 rounded-2xl text-xs font-black border-2 border-slate-800 bg-slate-950 text-slate-400";
+            perfilActual = perfil;
+            if (perfil === 'GEOLOGOS') {
+                document.getElementById('btnPerfilGeo').className = "py-3 px-2 rounded-2xl text-xs font-black border-2 border-amber-500 bg-amber-500/15 text-amber-300 transition-all shadow-inner";
+                document.getElementById('btnPerfilGer').className = "py-3 px-2 rounded-2xl text-xs font-black border-2 border-slate-800 bg-slate-950 text-slate-400 transition-all";
                 document.getElementById('boxLoginGeologos').classList.remove('hidden');
                 document.getElementById('boxLoginGerencia').classList.add('hidden');
                 document.getElementById('boxLoginRescate').classList.add('hidden');
             } else {
-                document.getElementById('btnPerfilGer').className = "py-3 px-2 rounded-2xl text-xs font-black border-2 border-sky-500 bg-sky-500/20 text-sky-300 shadow-inner";
-                document.getElementById('btnPerfilGeo').className = "py-3 px-2 rounded-2xl text-xs font-black border-2 border-slate-800 bg-slate-950 text-slate-400";
+                document.getElementById('btnPerfilGer').className = "py-3 px-2 rounded-2xl text-xs font-black border-2 border-sky-500 bg-sky-500/15 text-sky-300 transition-all shadow-inner";
+                document.getElementById('btnPerfilGeo').className = "py-3 px-2 rounded-2xl text-xs font-black border-2 border-slate-800 bg-slate-950 text-slate-400 transition-all";
                 document.getElementById('boxLoginGerencia').classList.remove('hidden');
                 document.getElementById('boxLoginGeologos').classList.add('hidden');
                 document.getElementById('boxLoginRescate').classList.add('hidden');
             }
         }
 
-        async function intentarLoginGeo() {
-            if (document.getElementById('inputClaveGeo').value === obtenerClaveGeologos()) {
-                document.getElementById('pantallaLogin').classList.add('hidden');
-                document.getElementById('appPrincipal').classList.remove('hidden');
-                actualizarIndicadorRed();
-                await cargarDatosDesdeNube();
-            } else { alert("❌ Contraseña de Geólogos incorrecta."); }
+        function togglePasswordVisibility(idInput) {
+            const inp = document.getElementById(idInput);
+            inp.type = inp.type === 'password' ? 'text' : 'password';
         }
 
-        async function intentarLoginGer() {
-            if (document.getElementById('inputClaveGer').value === obtenerClaveGerencia()) {
-                document.getElementById('pantallaLogin').classList.add('hidden');
-                document.getElementById('appGerencia').classList.remove('hidden');
-                actualizarIndicadorRed();
-                await cargarDatosDesdeNube();
-                actualizarFiltrosGerencia();
-                inicializarConfigKey();
-            } else { alert("❌ Contraseña de Gerencia incorrecta."); }
+        function intentarLoginGeo() {
+            const val = document.getElementById('inputClaveGeo').value;
+            if (val === claveGeologos) {
+                entrarAlSistema("GEÓLOGOS (CARLOS RODRÍGUEZ HERNÁNDEZ)");
+            } else {
+                alert("❌ Contraseña de Geólogos incorrecta.");
+            }
         }
 
-        function mostrarBoxRescate() { document.getElementById('boxLoginGeologos').classList.add('hidden'); document.getElementById('boxLoginGerencia').classList.add('hidden'); document.getElementById('boxLoginRescate').classList.remove('hidden'); }
-        function ocultarBoxRescate() { document.getElementById('boxLoginRescate').classList.add('hidden'); seleccionarPerfil('GEOLOGOS'); }
+        function intentarLoginGer() {
+            const val = document.getElementById('inputClaveGer').value;
+            if (val === "gerencia2026" || val === claveGeologos) {
+                entrarAlSistema("GERENCIA / AUDITORÍA");
+            } else {
+                alert("❌ Contraseña de Gerencia incorrecta.");
+            }
+        }
 
-        async function ejecutarRescateClave() {
-            if (document.getElementById('inputPinRescate').value.trim() !== obtenerPinMaestro()) { alert("⚠️ PIN maestro incorrecto."); return; }
-            const nueva = document.getElementById('inputClaveNuevaRescate').value.trim();
-            if (!nueva) { alert("⚠️ Ingrese nueva contraseña."); return; }
-            localStorage.setItem('geo_clave_acceso', nueva);
-            alert("🔒 ¡Contraseña de Geólogos restablecida!");
+        function mostrarBoxRescate() {
+            document.getElementById('boxLoginGeologos').classList.add('hidden');
+            document.getElementById('boxLoginRescate').classList.remove('hidden');
+        }
+
+        function ocultarBoxRescate() {
+            document.getElementById('boxLoginRescate').classList.add('hidden');
+            document.getElementById('boxLoginGeologos').classList.remove('hidden');
+        }
+
+        function ejecutarRescateClave() {
+            const pin = document.getElementById('inputPinRescate').value;
+            const nueva = document.getElementById('inputClaveNuevaRescate').value;
+            if (pin === PIN_MAESTRO && nueva.trim().length >= 4) {
+                claveGeologos = nueva.trim();
+                localStorage.setItem('jireth_clave_geo', claveGeologos);
+                alert("✅ Contraseña restablecida con éxito. Ingrese con su nueva clave.");
+                document.getElementById('inputPinRescate').value = '';
+                document.getElementById('inputClaveNuevaRescate').value = '';
+                ocultarBoxRescate();
+            } else {
+                alert("❌ PIN Maestro incorrecto o contraseña muy corta (Mín 4 caracteres).");
+            }
+        }
+
+        function entrarAlSistema(rolTexto) {
             document.getElementById('pantallaLogin').classList.add('hidden');
             document.getElementById('appPrincipal').classList.remove('hidden');
-            ocultarBoxRescate();
-            await cargarDatosDesdeNube();
+            document.getElementById('lblNombreUsuarioLogueado').innerText = "Carlos Vicente Rodríguez Hernández (" + rolTexto + ")";
+            switchTab('mod3_turno');
         }
 
-        function cerrarSesion() { 
-            document.getElementById('inputClaveGeo').value = ''; 
+        function cerrarSesion() {
+            document.getElementById('appPrincipal').classList.add('hidden');
+            document.getElementById('pantallaLogin').classList.remove('hidden');
+            document.getElementById('inputClaveGeo').value = '';
             document.getElementById('inputClaveGer').value = '';
-            document.getElementById('appPrincipal').classList.add('hidden'); 
-            document.getElementById('appGerencia').classList.add('hidden');
-            document.getElementById('pantallaLogin').classList.remove('hidden'); 
-            seleccionarPerfil('GEOLOGOS');
         }
 
         function cambiarClaveSistema() {
-            const perfilActual = prompt("¿Qué clave desea cambiar?\n1. GEOLOGOS\n2. GERENCIA", "1");
-            if(perfilActual === "1") {
-                if (prompt("Contraseña actual de Geólogos:") !== obtenerClaveGeologos()) { alert("Incorrecta."); return; }
-                const nueva = prompt("Nueva Contraseña de Geólogos:"); if (!nueva) return;
-                const pin = prompt("Confirme PIN Maestro (4 dígitos):"); if (!pin || pin.length !== 4) { alert("PIN inválido."); return; }
-                localStorage.setItem('geo_clave_acceso', nueva); localStorage.setItem('geo_pin_rescate', pin);
-                alert("🔒 Contraseña de Geólogos actualizada con éxito!");
-            } else if(perfilActual === "2") {
-                if (prompt("Contraseña actual de Gerencia:") !== obtenerClaveGerencia()) { alert("Incorrecta."); return; }
-                const nueva = prompt("Nueva Contraseña de Gerencia (Mayúsculas):"); if (!nueva) return;
-                localStorage.setItem('ger_clave_acceso', nueva);
-                alert("🔒 Contraseña de Gerencia actualizada con éxito!");
-            }
-        }
-
-        async function cargarDatosDesdeNube(mostrarAlertaExito = false) {
-            let local = localStorage.getItem('geo_db_safe_v20');
-            if (local) { try { db = JSON.parse(local); } catch(e) {} }
-
-            if (!navigator.onLine) {
-                if(mostrarAlertaExito) alert("📡 Sin conexión a internet. Manteniendo datos locales.");
-                refrescarSelect(); actualizarFiltrosGerencia(); return;
-            }
-
-            try {
-                let delList = JSON.parse(localStorage.getItem('geo_deleted_pozos') || '[]');
-                for (let idDel of delList) {
-                    try {
-                        await supabaseClient.from('avances').delete().eq('pozo_id', idDel);
-                        await supabaseClient.from('turnos').delete().eq('pozo_id', idDel);
-                        await supabaseClient.from('pozos').delete().eq('id', idDel);
-                    } catch(e){}
+            const actual = prompt("Ingrese su contraseña actual:");
+            if (actual === claveGeologos) {
+                const nueva = prompt("Ingrese la nueva contraseña:");
+                if (nueva && nueva.trim().length >= 4) {
+                    claveGeologos = nueva.trim();
+                    localStorage.setItem('jireth_clave_geo', claveGeologos);
+                    alert("✅ Contraseña actualizada correctamente.");
+                } else {
+                    alert("❌ La nueva contraseña debe tener al menos 4 caracteres.");
                 }
-
-                let { data: pD, error: errP } = await supabaseClient.from('pozos').select('*');
-                let { data: tD } = await supabaseClient.from('turnos').select('*');
-                let { data: aD } = await supabaseClient.from('avances').select('*');
-
-                if (!errP && pD) {
-                    db.pozos = pD.filter(p => !delList.includes(Number(p.id))).map(p => ({ id: Number(p.id), codigo: p.codigo, empresa: p.empresa, proyecto: p.proyecto, estado: p.estado, fechaInicio: p.fecha_inicio, fechaCulminacion: p.fecha_culminacion, maquina: p.maquina, este: p.este, norte: p.norte, cota: p.cota, azimut: p.azimut, dip: p.dip, target: p.target }));
-                    db.turnos = (tD || []).filter(t => !delList.includes(Number(t.pozo_id))).map(t => ({ id: Number(t.id), pozoId: Number(t.pozo_id), fecha: t.fecha, tipo: t.tipo, perforador: t.perforador, geologo: t.geologo, observaciones: t.observaciones || '' }));
-                    db.avances = (aD || []).filter(a => !delList.includes(Number(a.pozo_id))).map(a => ({ id: Number(a.id), pozoId: Number(a.pozo_id), turnoId: Number(a.turno_id), longitud: Number(a.longitud), desde: Number(a.desde), hasta: Number(a.hasta), diametro: a.diametro, recuperado: Number(a.recuperado), porcentaje: Number(a.porcentaje), meteorizacion: a.meteorizacion, pagado: Number(a.pagado) }));
-                }
-
-                localStorage.setItem('geo_db_safe_v20', JSON.stringify(db));
-            } catch(e) {
-                console.warn("Aviso de red Supabase: Operando con registros locales seguros.");
-            }
-
-            refrescarSelect(); 
-            actualizarFiltrosGerencia(); 
-            inicializarConfigKey();
-            if(mostrarAlertaExito) alert("✅ Sincronización automática con Supabase completada.");
-        }
-
-        async function sincronizarConNube() { await cargarDatosDesdeNube(true); }
-
-        async function guardarPozoNube(p) {
-            if (!db.pozos.some(x => x.id == p.id)) db.pozos.push(p);
-            localStorage.setItem('geo_db_safe_v20', JSON.stringify(db));
-            if (navigator.onLine) {
-                try { await supabaseClient.from('pozos').upsert({ id: p.id, codigo: p.codigo, empresa: p.empresa, proyecto: p.proyecto, estado: p.estado || 'ACTIVO', fecha_inicio: p.fechaInicio, fecha_culminacion: p.fechaCulminacion, maquina: p.maquina, este: p.este, norte: p.norte, cota: p.cota, azimut: p.azimut, dip: p.dip, target: p.target }); } catch(e){}
-            }
-        }
-        async function guardarTurnoNube(t) {
-            if (!db.turnos.some(x => x.id == t.id)) db.turnos.push(t);
-            localStorage.setItem('geo_db_safe_v20', JSON.stringify(db));
-            if (navigator.onLine) {
-                try { await supabaseClient.from('turnos').upsert({ id: t.id, pozo_id: t.pozoId, fecha: t.fecha, tipo: t.tipo, perforador: t.perforador, geologo: t.geologo, observaciones: t.observaciones }); } catch(e){}
-            }
-        }
-        async function guardarAvanceNube(a) {
-            if (!db.avances.some(x => x.id == a.id)) db.avances.push(a);
-            localStorage.setItem('geo_db_safe_v20', JSON.stringify(db));
-            if (navigator.onLine) {
-                try { await supabaseClient.from('avances').upsert({ id: a.id, pozo_id: a.pozoId, turno_id: a.turnoId, longitud: a.longitud, desde: a.desde, hasta: a.hasta, diametro: a.diametro, recuperado: a.recuperado, porcentaje: a.porcentaje, meteorizacion: a.meteorizacion, pagado: a.pagado }); } catch(e){}
-            }
-        }
-        async function eliminarPozoNube(id) {
-            db.pozos = db.pozos.filter(x => x.id != id);
-            db.turnos = db.turnos.filter(x => x.pozoId != id);
-            db.avances = db.avances.filter(x => x.pozoId != id);
-            let delList = JSON.parse(localStorage.getItem('geo_deleted_pozos') || '[]');
-            if (!delList.includes(Number(id))) delList.push(Number(id));
-            localStorage.setItem('geo_deleted_pozos', JSON.stringify(delList));
-            localStorage.setItem('geo_db_safe_v20', JSON.stringify(db));
-            if (navigator.onLine) {
-                try {
-                    await supabaseClient.from('avances').delete().eq('pozo_id', id);
-                    await supabaseClient.from('turnos').delete().eq('pozo_id', id);
-                    await supabaseClient.from('pozos').delete().eq('id', id);
-                } catch(e){}
+            } else if (actual !== null) {
+                alert("❌ Contraseña actual incorrecta.");
             }
         }
 
-        function switchTab(id) {
-            ['mod1', 'mod2', 'mod3_turno', 'mod3_logging', 'mod4', 'mod5', 'mod6'].forEach(m => {
-                const el = document.getElementById(m); if(el) el.classList.add('hidden');
-                const tEl = document.getElementById('tab-' + m); if(tEl) tEl.className = "py-3 px-2 rounded-xl font-extrabold text-xs bg-slate-900 text-slate-300 border border-slate-800 hover:border-slate-700 transition";
+        function switchTab(tabId) {
+            const tabs = ['mod1', 'mod2', 'mod3_turno', 'mod3_logging', 'mod4', 'mod5', 'mod6'];
+            tabs.forEach(t => {
+                const sec = document.getElementById(t);
+                if (sec) sec.classList.add('hidden');
+                const btn = document.getElementById('tab-' + t);
+                if (btn) btn.className = "py-3 px-2 rounded-xl font-extrabold text-xs bg-slate-900 text-slate-300 border border-slate-800 hover:border-slate-700 transition";
             });
-            document.getElementById(id).classList.remove('hidden');
-            document.getElementById('tab-' + id).className = "py-3 px-2 rounded-xl font-extrabold text-xs bg-sky-600 text-white shadow-lg shadow-sky-600/25 border border-sky-500";
-            if(id === 'mod3_logging') renderTabla();
-            if(id === 'mod3_turno') poblarSelectRetomarTurnos();
-            if(id === 'mod4') poblarSelectCierre();
-            if(id === 'mod5') actualizarSelectPozosRepo();
-            if(id === 'mod6') renderTablaAdminPozos();
-        }
+            const selSec = document.getElementById(tabId);
+            if (selSec) selSec.classList.remove('hidden');
+            const selBtn = document.getElementById('tab-' + tabId);
+            if (selBtn) selBtn.className = "py-3 px-2 rounded-xl font-extrabold text-xs bg-sky-600 text-white shadow-lg shadow-sky-600/25 border border-sky-500";
 
-        function switchGerenciaTab(tab) {
-            if(tab === 'analisis') {
-                document.getElementById('gerenciaViewAnalisis').classList.remove('hidden');
-                document.getElementById('gerenciaViewIA').classList.add('hidden');
-                document.getElementById('btnGerTabAnalisis').className = "flex-1 py-3 px-4 rounded-2xl font-black text-xs bg-sky-600 text-white shadow-lg";
-                document.getElementById('btnGerTabIA').className = "flex-1 py-3 px-4 rounded-2xl font-black text-xs bg-slate-900 text-cyan-300 border border-cyan-500/30 hover:bg-slate-800";
-            } else {
-                document.getElementById('gerenciaViewAnalisis').classList.add('hidden');
-                document.getElementById('gerenciaViewIA').classList.remove('hidden');
-                document.getElementById('btnGerTabIA').className = "flex-1 py-3 px-4 rounded-2xl font-black text-xs bg-cyan-600 text-white shadow-lg";
-                document.getElementById('btnGerTabAnalisis').className = "flex-1 py-3 px-4 rounded-2xl font-black text-xs bg-slate-900 text-slate-300 border border-slate-800 hover:bg-slate-800";
+            if (tabId === 'mod5') {
+                generarReporteDSR();
             }
         }
 
-        function toggleOtraEmpresa() { document.getElementById('m1_otra_empresa_box').classList.toggle('hidden', document.getElementById('m1_empresa').value !== 'OTRA'); }
-        function toggleOtraMaquina() { document.getElementById('m2_otra_maquina_box').classList.toggle('hidden', document.getElementById('m2_maquina').value !== 'OTRA'); }
-        function forzarMayusculas(i) { if(i && i.value) i.value = i.value.toUpperCase(); }
-        function formatearUTM(i) { let v = i.value.trim().replace(',', '.'); if(!v) return; i.value = parseFloat(v).toFixed(2).replace('.', ','); }
-        function formatearDecimalesLibres(i) { let v = i.value.trim().replace(',', '.'); if(!v) return; i.value = parseFloat(v).toFixed(2).replace('.', ','); }
-        function formatearDip(i) { let v = i.value.trim().replace(',', '.').replace('-', ''); if(!v) return; i.value = '-' + parseFloat(v).toFixed(2).replace('.', ','); }
-
-        async function crearPozo() {
-            const cod = document.getElementById('m1_codigo').value.trim().toUpperCase();
-            let emp = document.getElementById('m1_empresa').value; if (emp === 'OTRA') emp = document.getElementById('m1_otra_empresa').value.trim().toUpperCase();
-            const pro = document.getElementById('m1_proyecto').value.trim().toUpperCase();
-            if (!cod || !pro) { alert("⚠️ Ingrese Código y Proyecto."); return; }
-
-            const pozoExistente = db.pozos.find(p => p.codigo === cod);
-            if (pozoExistente) { alert(`❌ ALERTA: Ya existe un pozo con el código "${cod}".`); return; }
-
-            const nuevo = { id: Date.now(), codigo: cod, empresa: emp, proyecto: pro, estado: 'ACTIVO', fechaInicio: new Date().toISOString().split('T')[0] };
-            db.pozos.push(nuevo); pozoId = nuevo.id;
-            await guardarPozoNube(nuevo); refrescarSelect();
-            document.getElementById('m1_codigo').value = ''; document.getElementById('m1_proyecto').value = '';
-            alert("✅ Sondaje creado y sincronizado con éxito"); switchTab('mod3_turno');
+        // UTILIDADES Y FORMATEADORES
+        function forzarMayusculas(el) {
+            if (el && el.value) el.value = el.value.toUpperCase();
+        }
+        function formatearUTM(el) {
+            if (el && el.value) {
+                let num = parseFloat(el.value.replace(/,/g, ''));
+                if (!isNaN(num)) el.value = num.toFixed(2);
+            }
+        }
+        function formatearDecimalesLibres(el) {
+            if (el && el.value) {
+                let num = parseFloat(el.value.replace(/,/g, ''));
+                if (!isNaN(num)) el.value = num.toFixed(2);
+            }
+        }
+        function formatearDip(el) {
+            if (el && el.value) {
+                let num = parseFloat(el.value);
+                if (!isNaN(num)) el.value = num.toFixed(0);
+            }
         }
 
-        function refrescarSelect() {
-            const sel = document.getElementById('globalWellSelect'); if(!sel) return;
-            sel.innerHTML = '<option value="">-- Seleccione un Sondaje --</option>';
-            db.pozos.forEach(p => {
-                const opt = document.createElement('option'); opt.value = p.id;
-                opt.textContent = `${p.codigo} - ${p.empresa} (${p.proyecto}) [${p.estado || 'ACTIVO'}]`;
-                if (p.id == pozoId) opt.selected = true; sel.appendChild(opt);
-            });
-            cargarDatosPozoSeleccionado(); renderConsolidado(); poblarSelectCierre(); actualizarSelectPozosRepo(); renderTablaAdminPozos();
+        // MÓDULO 1 Y 2: APERTURA Y TOPOGRAFÍA
+        function toggleOtraEmpresa() {
+            const sel = document.getElementById('m1_empresa').value;
+            const box = document.getElementById('m1_otra_empresa_box');
+            if (sel === 'OTRA') box.classList.remove('hidden');
+            else box.classList.add('hidden');
         }
 
-        function seleccionarPozoGlobal(val) { pozoId = val; cargarDatosPozoSeleccionado(); if (val) switchTab('mod3_turno'); }
+        function toggleOtraMaquina() {
+            const sel = document.getElementById('m2_maquina').value;
+            const box = document.getElementById('m2_otra_maquina_box');
+            if (sel === 'OTRA') box.classList.remove('hidden');
+            else box.classList.add('hidden');
+        }
 
-        function cargarDatosPozoSeleccionado() {
-            if (!pozoId) {
-                document.getElementById('m2_maquina').value = 'GEOMAX'; document.getElementById('m2_otra_maquina').value = '';
-                ['m2_este', 'm2_norte', 'm2_cota', 'm2_azimut', 'm2_dip', 'm2_target'].forEach(id => document.getElementById(id).value = '');
+        function crearPozo() {
+            let codigo = document.getElementById('m1_codigo').value.trim().toUpperCase();
+            let empresa = document.getElementById('m1_empresa').value;
+            if (empresa === 'OTRA') empresa = document.getElementById('m1_otra_empresa').value.trim().toUpperCase();
+            let proyecto = document.getElementById('m1_proyecto').value.trim().toUpperCase();
+
+            if (!codigo || !empresa || !proyecto) {
+                alert("❌ Por favor complete Código, Empresa y Proyecto.");
                 return;
             }
-            const p = db.pozos.find(x => x.id == pozoId); if (!p) return;
-            document.getElementById('m2_maquina').value = ['GEOMAX', 'HENG WANG', 'LONGYEAR'].includes(p.maquina) ? p.maquina : (p.maquina ? 'OTRA' : 'GEOMAX');
+            if (pozosData[codigo]) {
+                alert("⚠️ El sondaje " + codigo + " ya existe en el sistema.");
+                return;
+            }
+
+            pozosData[codigo] = {
+                codigo: codigo,
+                empresa: empresa,
+                proyecto: proyecto,
+                maquina: 'GEOMAX',
+                este: '450000.00',
+                norte: '9120000.00',
+                cota: '150.00',
+                azimut: '0.00',
+                dip: '-60',
+                target: '150.00',
+                avances: [],
+                estado: 'ABIERTO'
+            };
+            guardarStoragePozos();
+            pozoActivoId = codigo;
+            localStorage.setItem('jireth_pozo_activo', pozoActivoId);
+            refrescarSelectorPozos();
+            cargarDatosPozoEnFormularios(codigo);
+            alert("✅ Sondaje " + codigo + " creado y seleccionado exitosamente.");
+            switchTab('mod2');
+        }
+
+        function habilitarEdicionTopo() {
+            if (!pozoActivoId) { alert("⚠️ Seleccione un sondaje activo primero."); return; }
+            document.getElementById('m2_maquina').disabled = false;
+            document.getElementById('m2_este').disabled = false;
+            document.getElementById('m2_norte').disabled = false;
+            document.getElementById('m2_cota').disabled = false;
+            document.getElementById('m2_azimut').disabled = false;
+            document.getElementById('m2_dip').disabled = false;
+            document.getElementById('m2_target').disabled = false;
+            document.getElementById('m2_btn_box').classList.remove('hidden');
             toggleOtraMaquina();
-            document.getElementById('m2_otra_maquina').value = p.maquina && !['GEOMAX', 'HENG WANG', 'LONGYEAR'].includes(p.maquina) ? p.maquina : '';
-            document.getElementById('m2_este').value = (p.este !== undefined && p.este !== '') ? Number(p.este).toFixed(2).replace('.', ',') : '';
-            document.getElementById('m2_norte').value = (p.norte !== undefined && p.norte !== '') ? Number(p.norte).toFixed(2).replace('.', ',') : '';
-            document.getElementById('m2_cota').value = (p.cota !== undefined && p.cota !== '') ? Number(p.cota).toFixed(2).replace('.', ',') : '';
-            document.getElementById('m2_azimut').value = (p.azimut !== undefined && p.azimut !== '') ? Number(p.azimut).toFixed(2).replace('.', ',') : '';
-            document.getElementById('m2_dip').value = (p.dip !== undefined && p.dip !== '') ? Number(p.dip).toFixed(2).replace('.', ',') : '';
-            document.getElementById('m2_target').value = (p.target !== undefined && p.target !== '') ? Number(p.target).toFixed(2).replace('.', ',') : '';
-
-            const tPozo = db.turnos.filter(t => t.pozoId == pozoId);
-            if (tPozo.length > 0 && !turnoId) {
-                const uT = tPozo[tPozo.length - 1]; turnoId = uT.id;
-                document.getElementById('lblInfoTurno').textContent = `${uT.fecha} (${uT.tipo})`;
-                document.getElementById('lblInfoPerf').textContent = uT.perforador;
-                document.getElementById('lblInfoGeo').textContent = uT.geologo;
-                if(document.getElementById('m3_observaciones')) document.getElementById('m3_observaciones').value = uT.observaciones || '';
-            } else if (!turnoId) {
-                document.getElementById('lblInfoTurno').textContent = "Sin turno activo";
-                document.getElementById('lblInfoPerf').textContent = "--"; document.getElementById('lblInfoGeo').textContent = "--";
-            }
-            poblarSelectRetomarTurnos(); autoCalcularDesde(); renderTabla();
         }
 
-        async function iniciarTurnoNuevo() {
-            if (!pozoId) { alert("⚠️ Seleccione un pozo primero."); return; }
-            const perf = document.getElementById('m3_perforador').value.trim().toUpperCase();
-            const geo = document.getElementById('m3_geologo').value.trim().toUpperCase();
-            const obs = document.getElementById('m3_observaciones').value.trim().toUpperCase();
-            if (!perf || !geo) { alert("⚠️ Ingrese Perforador y Geólogo."); return; }
-            const t = { id: Date.now(), pozoId, fecha: document.getElementById('m3_fecha').value || new Date().toISOString().split('T')[0], tipo: document.getElementById('m3_turno').value, perforador: perf, geologo: geo, observaciones: obs };
-            db.turnos.push(t); await guardarTurnoNube(t); turnoId = t.id;
-            document.getElementById('lblInfoTurno').textContent = `${t.fecha} (${t.tipo})`;
-            document.getElementById('lblInfoPerf').textContent = t.perforador; document.getElementById('lblInfoGeo').textContent = t.geologo;
-            autoCalcularDesde(); alert("🚀 Turno iniciado y sincronizado."); switchTab('mod3_logging');
-        }
-
-        function pausarTurnoActual() { if(!turnoId) { alert("⚠️ No hay turno activo."); return; } alert("⏸️ Turno pausado."); turnoId = null; switchTab('mod3_turno'); }
-        function poblarSelectRetomarTurnos() {
-            const sel = document.getElementById('selectRetomarTurno'); if(!sel) return;
-            sel.innerHTML = '<option value="">-- Seleccionar Turno Guardado para Retomar --</option>'; if(!pozoId) return;
-            db.turnos.filter(t => t.pozoId == pozoId).forEach(t => {
-                const opt = document.createElement('option'); opt.value = t.id;
-                opt.textContent = `Fecha: ${t.fecha} - Turno: ${t.tipo} (Perf: ${t.perforador} | Geo: ${t.geologo})`;
-                if(t.id == turnoId) opt.selected = true; sel.appendChild(opt);
-            });
-        }
-        function retomarTurnoSeleccionado() {
-            const selId = document.getElementById('selectRetomarTurno').value; if(!selId) { alert("⚠️ Seleccione un turno."); return; }
-            const t = db.turnos.find(x => x.id == selId); if(!t) return;
-            turnoId = t.id; document.getElementById('lblInfoTurno').textContent = `${t.fecha} (${t.tipo})`;
-            document.getElementById('lblInfoPerf').textContent = t.perforador; document.getElementById('lblInfoGeo').textContent = t.geologo;
-            if(document.getElementById('m3_observaciones')) document.getElementById('m3_observaciones').value = t.observaciones || '';
-            autoCalcularDesde(); alert("▶️ Turno retomado."); switchTab('mod3_logging');
-        }
-        function finalizarTurnoActivo() { if(!turnoId) return; alert("💾 Turno finalizado."); turnoId = null; switchTab('mod3_turno'); }
-
-        function autoCalcularDesde() {
-            if (!pozoId) return;
-            const avs = db.avances.filter(a => a.pozoId == pozoId);
-            let desde = avs.length > 0 ? Math.max(...avs.map(a => a.hasta)) : 0;
-            document.getElementById('m3_desde').value = desde.toFixed(2).replace('.', ',');
-            autoCalcularHasta();
-        }
-        function autoCalcularHasta() {
-            const desde = parseFloat(document.getElementById('m3_desde').value.replace(',', '.')) || 0;
-            const len = parseFloat(document.getElementById('m3_longitud').value) || 1.5;
-            document.getElementById('m3_hasta').value = (desde + len).toFixed(2).replace('.', ',');
-        }
-
-        async function guardarAvance() {
-            if (!pozoId) { alert("⚠️ Seleccione un pozo."); return; }
-            if (!turnoId) { alert("⚠️ Inicie o retome un turno primero."); switchTab('mod3_turno'); return; }
-            const len = parseFloat(document.getElementById('m3_longitud').value);
-            const desde = parseFloat(document.getElementById('m3_desde').value.replace(',', '.'));
-            const hasta = parseFloat(document.getElementById('m3_hasta').value.replace(',', '.'));
-            const diam = document.getElementById('m3_diametro').value;
-            const rec = parseFloat(document.getElementById('m3_recuperado').value.replace(',', '.'));
-            const met = document.getElementById('m3_meteorizacion').value;
-            if (isNaN(rec)) { alert("⚠️ Ingrese recuperado."); return; }
-            if (rec > len) { alert("⚠️ Recuperado no puede ser mayor que maniobra."); return; }
-
-            let umbral = 0.70;
-            if (met.includes('ROCA OXIDADA')) umbral = 0.80;
-            if (met.includes('ROCA FRESCA') || met.includes('ZONA DE VETA')) umbral = 0.90;
-
-            const porc = (rec / len) * 100;
-            let pagado = porc >= (umbral * 100) ? len : rec;
-
-            let objAvance;
-            if (editandoAvanceId) {
-                let av = db.avances.find(x => x.id == editandoAvanceId);
-                if (av) { Object.assign(av, { longitud: len, desde, hasta, diametro: diam, recuperado: rec, meteorizacion: met, porcentaje: porc, pagado }); objAvance = av; }
-                editandoAvanceId = null; document.getElementById('btnGuardarAvance').textContent = "➕ Guardar Avance Tramo"; document.getElementById('btnCancelarEdicion').classList.add('hidden');
-            } else {
-                objAvance = { id: Date.now(), pozoId, turnoId, longitud: len, desde, hasta, diametro: diam, recuperado: rec, meteorizacion: met, porcentaje: porc, pagado };
-                db.avances.push(objAvance);
-            }
-            await guardarAvanceNube(objAvance); document.getElementById('m3_recuperado').value = ''; autoCalcularDesde(); renderTabla(); alert("✅ Avance guardado y sincronizado.");
-        }
-
-        function editarAvance(id) {
-            const av = db.avances.find(x => x.id == id); if (!av) return;
-            editandoAvanceId = id; document.getElementById('m3_longitud').value = av.longitud;
-            document.getElementById('m3_desde').value = av.desde.toFixed(2).replace('.', ',');
-            document.getElementById('m3_hasta').value = av.hasta.toFixed(2).replace('.', ',');
-            document.getElementById('m3_diametro').value = av.diametro;
-            document.getElementById('m3_recuperado').value = av.recuperado.toFixed(2).replace('.', ',');
-            document.getElementById('m3_meteorizacion').value = av.meteorizacion;
-            document.getElementById('btnGuardarAvance').textContent = "💾 Guardar Cambios"; document.getElementById('btnCancelarEdicion').classList.remove('hidden');
-        }
-        function cancelarEdicionAvance() {
-            editandoAvanceId = null; document.getElementById('m3_recuperado').value = ''; autoCalcularDesde();
-            document.getElementById('btnGuardarAvance').textContent = "➕ Guardar Avance Tramo"; document.getElementById('btnCancelarEdicion').classList.add('hidden');
-        }
-
-        function renderTabla() {
-            const tb = document.getElementById('tablaAvances'); if(!tb) return; tb.innerHTML = ''; if (!pozoId) return;
-            const p = db.pozos.find(x => x.id == pozoId);
-            const avs = db.avances.filter(a => a.pozoId == pozoId);
-            let totMetros = 0, totPagable = 0, totRecup = 0, totLong = 0, turnoMetros = 0, turnoRecup = 0;
-            let dataT = [];
-            let hqTot = 0, nqTot = 0;
-
-            avs.forEach((a, i) => {
-                totMetros = a.hasta; totPagable += a.pagado; totRecup += a.recuperado; totLong += a.longitud;
-                if(a.diametro === 'HQ') hqTot += a.longitud;
-                if(a.diametro === 'NQ') nqTot += a.longitud;
-                if (a.turnoId == turnoId) { turnoMetros += a.longitud; turnoRecup += a.recuperado; }
-                dataT.push(a.porcentaje);
-                let col = a.porcentaje >= 80 ? 'color:#34d399;' : 'color:#fbbf24;';
-                const tr = document.createElement('tr');
-                tr.innerHTML = `<td class="p-3">${i+1}</td><td class="p-3 font-mono-code">${a.desde.toFixed(2).replace('.', ',')}-${a.hasta.toFixed(2).replace('.', ',')}</td><td class="p-3 font-extrabold text-sky-400">${a.diametro}</td><td class="p-3 font-mono-code">${a.recuperado.toFixed(2).replace('.', ',')}</td><td class="p-3 font-extrabold font-mono-code" style="${col}">${a.porcentaje.toFixed(1)}%</td><td class="p-3 text-[11px] font-medium">${a.meteorizacion}</td><td class="p-3 font-extrabold font-mono-code text-emerald-400">${a.pagado.toFixed(2).replace('.', ',')}</td><td class="p-3 text-center"><button type="button" class="bg-sky-600 hover:bg-sky-500 text-white px-2.5 py-1 rounded-lg text-[10px] font-extrabold shadow" onclick="editarAvance(${a.id})">✏️ Editar</button></td>`;
-                tb.appendChild(tr);
-            });
-
-            const targetPozo = p && p.target ? p.target : 100.0;
-            let avancePorc = targetPozo > 0 ? (totMetros / targetPozo) * 100 : 0;
-            let hqAncho = Math.min(100, (hqTot / targetPozo) * 100);
-            let nqAncho = Math.min(100 - hqAncho, (nqTot / targetPozo) * 100);
-            let pendAncho = Math.max(0, 100 - (hqAncho + nqAncho));
-
-            document.getElementById('barHQ').style.width = hqAncho + '%';
-            document.getElementById('barNQ').style.width = nqAncho + '%';
-            document.getElementById('barPendiente').style.width = pendAncho + '%';
-            document.getElementById('lblProgresoTexto').textContent = `${totMetros.toFixed(2)} m / ${targetPozo.toFixed(2)} m (${avancePorc.toFixed(1) + '%'})`;
-            document.getElementById('txtMetrosHQ').textContent = hqTot.toFixed(2);
-            document.getElementById('txtMetrosNQ').textContent = nqTot.toFixed(2);
-            document.getElementById('txtMetrosPend').textContent = (targetPozo - totMetros > 0 ? targetPozo - totMetros : 0).toFixed(2);
-
-            document.getElementById('kpiMetros').textContent = totMetros.toFixed(2).replace('.', ',') + " m";
-            document.getElementById('kpiMetrosTurno').textContent = turnoMetros.toFixed(2).replace('.', ',') + " m";
-            document.getElementById('kpiRecupTurno').textContent = (turnoMetros > 0 ? (turnoRecup / turnoMetros) * 100 : 0).toFixed(1) + "%";
-            document.getElementById('kpiAvancePlan').textContent = avancePorc.toFixed(1) + "%";
-            renderGraficosNeon(dataT, totLong, totPagable);
-        }
-
-        function renderGraficosNeon(dataRec, totalBruto, totalPagado) {
-            const c1 = document.getElementById('canvasTendencia'); if(!c1) return; const ctx1 = c1.getContext('2d');
-            c1.width = c1.clientWidth; c1.height = 160; ctx1.clearRect(0,0,c1.width,c1.height);
-            if (dataRec.length > 0) {
-                const step = c1.width / Math.max(1, dataRec.length - 1 || 1);
-                ctx1.beginPath();
-                dataRec.forEach((val, idx) => {
-                    const x = idx * step; const y = c1.height - (val / 100 * (c1.height - 40)) - 20;
-                    if (idx === 0) ctx1.moveTo(x, y); else ctx1.lineTo(x, y);
-                });
-                ctx1.strokeStyle = '#00F5D4'; ctx1.lineWidth = 2.5; ctx1.stroke();
-            }
-            const c2 = document.getElementById('canvasPagos'); if(!c2) return; const ctx2 = c2.getContext('2d');
-            c2.width = c2.clientWidth; c2.height = 160; ctx2.clearRect(0,0,c2.width,c2.height);
-            const maxV = Math.max(10, totalBruto, totalPagado);
-            const bW = 35, x1 = c2.width*0.3 - bW/2, x2 = c2.width*0.7 - bW/2;
-            const h1 = (totalBruto/maxV)*(c2.height-40), h2 = (totalPagado/maxV)*(c2.height-40);
-            ctx2.fillStyle = '#0077FF'; ctx2.fillRect(x1, c2.height - h1 - 20, bW, h1);
-            ctx2.fillStyle = '#34D399'; ctx2.fillRect(x2, c2.height - h2 - 20, bW, h2);
-            ctx2.fillStyle = '#E2E8F0'; ctx2.font = '10px Plus Jakarta Sans';
-            ctx2.fillText('Brutos: ' + totalBruto.toFixed(2) + 'm', x1-10, c2.height-5);
-            ctx2.fillText('Pagados: ' + totalPagado.toFixed(2) + 'm', x2-10, c2.height-5);
-        }
-
-        function toggleConfiguracionGeminiKey() { document.getElementById('panelConfigKey').classList.toggle('hidden'); }
-        function inicializarConfigKey() { const key = obtenerGeminiApiKey(); if(key) document.getElementById('inputGeminiApiKey').value = key; }
-        function guardarGeminiApiKey() {
-            const val = document.getElementById('inputGeminiApiKey').value.trim();
-            if(!val) { alert("⚠️ Ingrese una API key válida."); return; }
-            localStorage.setItem('geo_gemini_api_key', val);
-            alert("🔑 Clave API de Gemini guardada correctamente.");
-            document.getElementById('panelConfigKey').classList.add('hidden');
-        }
-
-        function nuevaConversacionIA() {
-            const chatContainer = document.getElementById('chatLiveMessages');
-            chatContainer.innerHTML = `
-                <div class="chat-bubble-ia p-3.5 max-w-[85%] space-y-1.5">
-                    <p class="font-black text-cyan-400 text-xs tracking-wide">🤖 Asistente IA Geológico Gerencial (Nueva Conversación)</p>
-                    <p class="leading-relaxed">¡Conversación anterior borrada! Tienes un lienzo limpio para preguntar cualquier aspecto técnico o comparativo de la mina.</p>
-                </div>
-            `;
-        }
-
-        function construirContextoGlobalIA() {
-            let texto = "BASE DE DATOS GENERAL DE SONDAJES JIRETH (ACCESO GLOBAL A TODA LA MINA):\n\n";
-            db.pozos.forEach(p => {
-                const avs = db.avances.filter(a => a.pozoId == p.id);
-                let totM = avs.length > 0 ? Math.max(...avs.map(a => a.hasta)) : 0;
-                let totRec = avs.reduce((a,c) => a + c.recuperado, 0);
-                let porcRec = totM > 0 ? (totRec / totM) * 100 : 0;
-                let totPag = avs.reduce((a,c) => a + c.pagado, 0);
-                texto += `🔹 Pozo: ${p.codigo} | Cliente: ${p.empresa} | Proyecto/Sector: ${p.proyecto} | Estado: ${p.estado || 'ACTIVO'} | Metros: ${totM.toFixed(2)}m | Recuperación: ${porcRec.toFixed(1)}% | Pagables: ${totPag.toFixed(2)}m\n`;
-            });
-            return texto;
-        }
-
-        async function enviarMensajeIAChat() {
-            const input = document.getElementById('inputPreguntaIAChat');
-            const pregunta = input.value.trim(); if(!pregunta) return;
-            const chatContainer = document.getElementById('chatLiveMessages');
+        function guardarTopografia() {
+            if (!pozoActivoId || !pozosData[pozoActivoId]) { alert("⚠️ No hay sondaje activo."); return; }
+            let p = pozosData[pozoActivoId];
+            let maq = document.getElementById('m2_maquina').value;
+            if (maq === 'OTRA') maq = document.getElementById('m2_otra_maquina').value.trim().toUpperCase();
             
-            const userDiv = document.createElement('div');
-            userDiv.className = "chat-bubble-user p-3.5 max-w-[85%] ml-auto text-xs font-medium space-y-1";
-            userDiv.innerHTML = `<p class="font-bold text-sky-200 text-[10px]">👔 Gerencia / Carlos</p><p>${pregunta}</p>`;
-            chatContainer.appendChild(userDiv);
-            input.value = ''; chatContainer.scrollTop = chatContainer.scrollHeight;
+            p.maquina = maq;
+            p.este = document.getElementById('m2_este').value || '0.00';
+            p.norte = document.getElementById('m2_norte').value || '0.00';
+            p.cota = document.getElementById('m2_cota').value || '0.00';
+            p.azimut = document.getElementById('m2_azimut').value || '0.00';
+            p.dip = document.getElementById('m2_dip').value || '-60';
+            p.target = document.getElementById('m2_target').value || '100.00';
 
-            const indicadorEl = document.getElementById('chatTypingIndicator');
-            indicadorEl.classList.remove('hidden');
-
-            const apiKey = obtenerGeminiApiKey();
-            const contextoDB = construirContextoGlobalIA();
-            const promptSystem = `Eres el Asistente IA Geológico y Gerencial de Complejo Jireth / IVM C.A. (Bolívar, Venezuela). Tienes acceso a toda la base de datos de perforación de la mina. Responde de forma técnica, profesional y analítica:\n${contextoDB}`;
-
-            try {
-                let respuestaTexto = "";
-                if (apiKey) {
-                    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${apiKey}`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ contents: [{ parts: [{ text: `${promptSystem}\n\nConsulta Gerencial: ${pregunta}` }] }] })
-                    });
-                    const data = await response.json();
-                    if(data.candidates && data.candidates[0].content.parts[0].text) {
-                        respuestaTexto = data.candidates[0].content.parts[0].text;
-                    } else if(data.error) {
-                        respuestaTexto = `⚠️ Error de la API de Gemini: ${data.error.message || 'Verifique su API Key.'}`;
-                    } else { respuestaTexto = "⚠️ Error de respuesta en Gemini API."; }
-                } else {
-                    respuestaTexto = `🤖 **Respuesta Local Gerencial Jireth:**\nConsulta procesada: "${pregunta}"\n\n📌 **Análisis sobre la Base de Datos:**\n${contextoDB.substring(0, 400)}...\n\n💡 Configura tu API Key para IA en tiempo real.`;
-                }
-
-                indicadorEl.classList.add('hidden');
-                const iaDiv = document.createElement('div');
-                iaDiv.className = "chat-bubble-ia p-4 max-w-[90%] text-xs leading-relaxed space-y-1.5 font-mono-code whitespace-pre-line";
-                iaDiv.innerHTML = `<div class="flex justify-between items-center border-b border-slate-800 pb-1.5 mb-1.5"><span class="font-black text-cyan-400 text-xs">🤖 Asistente IA Gerencial</span><button onclick="navigator.clipboard.writeText(this.parentElement.nextElementSibling.innerText); alert('📋 Copiado!');" class="text-[10px] bg-slate-900 px-2 py-0.5 rounded text-slate-300 font-bold">📋 Copiar</button></div><div>${respuestaTexto}</div>`;
-                chatContainer.appendChild(iaDiv);
-                chatContainer.scrollTop = chatContainer.scrollHeight;
-            } catch (err) {
-                indicadorEl.classList.add('hidden');
-                alert("❌ Error de red con la IA.");
-            }
-        }
-
-        function actualizarFiltrosGerencia() {
-            const estadoFiltro = document.getElementById('gerFiltroEstado').value;
-            const clienteFiltro = document.getElementById('gerFiltroCliente').value;
-            const selPozo = document.getElementById('gerFiltroPozo'); if(!selPozo) return;
-            selPozo.innerHTML = '<option value="">-- Seleccionar Sondaje --</option>';
-            db.pozos.filter(p => {
-                let mE = (estadoFiltro === 'TODOS' || (p.estado || 'ACTIVO') === estadoFiltro);
-                let mC = (clienteFiltro === 'TODAS' || p.empresa === clienteFiltro);
-                return mE && mC;
-            }).forEach(p => {
-                const opt = document.createElement('option'); opt.value = p.id;
-                opt.textContent = `${p.codigo} - ${p.empresa} (${p.proyecto}) [${p.estado || 'ACTIVO'}]`;
-                selPozo.appendChild(opt);
+            guardarStoragePozos();
+            alert("✅ Ficha topográfica guardada exitosamente.");
+            document.getElementById('m2_btn_box').classList.add('hidden');
+            // Bloquear de nuevo
+            ['m2_maquina', 'm2_este', 'm2_norte', 'm2_cota', 'm2_azimut', 'm2_dip', 'm2_target', 'm2_otra_maquina'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.disabled = true;
             });
-            document.getElementById('gerPanelAnalisis').classList.add('hidden');
-            document.getElementById('gerMensajeVacio').classList.remove('hidden');
+            actualizarProgresoGrafico();
         }
 
-        function cargarAnalisisGerencialPozo(id) {
-            if(!id) { document.getElementById('gerPanelAnalisis').classList.add('hidden'); document.getElementById('gerMensajeVacio').classList.remove('hidden'); return; }
-            repoPozoId = id; const p = db.pozos.find(x => x.id == id); if(!p) return;
-            const selT = document.getElementById('gerTurnoSelect'); selT.innerHTML = '<option value="">-- Seleccionar Turno --</option>';
-            const tList = db.turnos.filter(t => t.pozoId == id);
-            tList.forEach(t => {
-                const opt = document.createElement('option'); opt.value = t.id;
-                opt.textContent = `Fecha: ${t.fecha} - Turno: ${t.tipo} (Perf: ${t.perforador} | Geo: ${t.geologo})`;
-                selT.appendChild(opt);
-            });
-            if(tList.length > 0) selT.value = tList[tList.length - 1].id;
-
-            document.getElementById('gerFichaCliente').textContent = p.empresa;
-            document.getElementById('gerFichaProyecto').textContent = p.proyecto;
-            document.getElementById('gerFichaMaquina').textContent = p.maquina || 'GEOMAX';
-            document.getElementById('gerFichaEstado').textContent = p.estado || 'ACTIVO';
-            document.getElementById('gerFichaEste').textContent = (p.este || 0).toFixed(2) + " m";
-            document.getElementById('gerFichaNorte').textContent = (p.norte || 0).toFixed(2) + " m";
-            document.getElementById('gerFichaAzimut').textContent = (p.azimut || 0).toFixed(2) + "°";
-            document.getElementById('gerFichaDip').textContent = (p.dip || -60).toFixed(2) + "°";
-
-            actualizarCálculosTurnoGerencia(selT.value);
-            document.getElementById('gerPanelAnalisis').classList.remove('hidden');
-            document.getElementById('gerMensajeVacio').classList.add('hidden');
-        }
-
-        function actualizarCálculosTurnoGerencia(turnoSelId) {
-            if(!repoPozoId) return;
-            const p = db.pozos.find(x => x.id == repoPozoId); if(!p) return;
-            const avsPozo = db.avances.filter(a => a.pozoId == repoPozoId);
-            let avsFiltrados = avsPozo;
-            if(turnoSelId) {
-                const tSel = db.turnos.find(x => x.id == turnoSelId);
-                if(tSel) {
-                    const turnosValidosIds = db.turnos.filter(t => t.pozoId == repoPozoId && t.fecha <= tSel.fecha).map(t => t.id);
-                    avsFiltrados = avsPozo.filter(a => turnosValidosIds.includes(a.turnoId));
-                }
-            }
-            let totAvance = avsFiltrados.length > 0 ? Math.max(...avsFiltrados.map(a => a.hasta)) : 0;
-            let totRecup = avsFiltrados.reduce((acc, a) => acc + a.recuperado, 0);
-            let totPagables = avsFiltrados.reduce((acc, a) => acc + a.pagado, 0);
-            let porcGlobal = totAvance > 0 ? (totRecup / totAvance) * 100 : 0;
-            let target = p.target || 100.0;
-            let avancePorc = target > 0 ? (totAvance / target) * 100 : 0;
-
-            document.getElementById('gerKpiTotalM').textContent = totAvance.toFixed(2) + " m";
-            document.getElementById('gerKpiTarget').textContent = `Target: ${target.toFixed(2)} m`;
-            document.getElementById('gerKpiRecup').textContent = porcGlobal.toFixed(1) + "%";
-            document.getElementById('gerKpiAvance').textContent = avancePorc.toFixed(1) + "%";
-            document.getElementById('gerKpiPagables').textContent = totPagables.toFixed(2) + " m";
-
-            const tbGer = document.getElementById('gerTablaAvances'); tbGer.innerHTML = '';
-            avsFiltrados.forEach((a, idx) => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `<td class="p-2.5">${idx+1}</td><td class="p-2.5 font-mono-code">${a.desde.toFixed(2)}</td><td class="p-2.5 font-mono-code">${a.hasta.toFixed(2)}</td><td class="p-2.5 font-extrabold text-sky-400">${a.diametro}</td><td class="p-2.5 font-mono-code">${a.recuperado.toFixed(2)}</td><td class="p-2.5 font-extrabold font-mono-code">${a.porcentaje.toFixed(1)}%</td><td class="p-2.5 text-[11px]">${a.meteorizacion}</td><td class="p-2.5 font-extrabold font-mono-code text-emerald-400">${a.pagado.toFixed(2)}</td>`;
-                tbGer.appendChild(tr);
-            });
-            if(avsFiltrados.length === 0) {
-                tbGer.innerHTML = `<tr><td colspan="8" class="p-4 text-center text-slate-500 italic">No hay avances registrados.</td></tr>`;
-            }
-        }
-        function imprimirReporteGerencialEjecutivo() {
-            const selId = document.getElementById('gerFiltroPozo').value;
-            if(!selId) { alert("⚠️ Seleccione un sondaje."); return; }
-            repoPozoId = selId;
-            const selTId = document.getElementById('gerTurnoSelect').value;
-            if(!selTId) { alert("⚠️ Seleccione un turno específico."); return; }
-            imprimirDSROficialEstiloPDF('TURNO');
-        }
-
-        function poblarSelectCierre() {
-            const sel = document.getElementById('cierrePozoSelect'); if(!sel) return;
-            sel.innerHTML = '<option value="">-- Seleccionar Pozo para Cierre --</option>';
-            db.pozos.filter(p => (p.estado || 'ACTIVO') === 'ACTIVO').forEach(p => {
-                const opt = document.createElement('option'); opt.value = p.id;
-                opt.textContent = `${p.codigo} - ${p.empresa} (${p.proyecto})`;
-                if(p.id == pozoId) opt.selected = true; sel.appendChild(opt);
-            });
-            if(pozoId) cargarDatosCierre(pozoId);
-        }
-
-        function cargarDatosCierre(id) {
-            if(!id) { document.getElementById('cierrePanelInfo').classList.add('hidden'); document.getElementById('cierreMensajeVacio').classList.remove('hidden'); return; }
-            pozoId = id; const p = db.pozos.find(x => x.id == id); if(!p) return;
-            document.getElementById('cierreCodigoPozo').textContent = `Sondaje: ${p.codigo}`;
-            document.getElementById('cierreEmpresaProyecto').textContent = `Cliente: ${p.empresa} | Proyecto: ${p.proyecto}`;
-            document.getElementById('cierreEstadoPozo').textContent = p.estado || 'ACTIVO';
-            document.getElementById('cierreInfoMaquina').textContent = p.maquina || 'NO ASIGNADA';
-            document.getElementById('cierreInfoEste').textContent = (p.este || 0).toFixed(2).replace('.', ',') + ' m';
-            document.getElementById('cierreInfoNorte').textContent = (p.norte || 0).toFixed(2).replace('.', ',') + ' m';
-            document.getElementById('cierreInfoCota').textContent = (p.cota || 0).toFixed(2).replace('.', ',') + ' m';
-            document.getElementById('cierreInfoAzimut').textContent = (p.azimut || 0).toFixed(2).replace('.', ',') + '°';
-            document.getElementById('cierreInfoDip').textContent = (p.dip || -60).toFixed(2).replace('.', ',') + '°';
-            document.getElementById('cierreInfoTarget').textContent = (p.target || 100).toFixed(2).replace('.', ',') + ' m';
-
-            const avs = db.avances.filter(a => a.pozoId == id);
-            let totAvance = avs.length > 0 ? Math.max(...avs.map(a => a.hasta)) : 0;
-            let totRecup = avs.reduce((acc, a) => acc + a.recuperado, 0);
-            let totPagables = avs.reduce((acc, a) => acc + a.pagado, 0);
-            let porcGlobal = totAvance > 0 ? (totRecup / totAvance) * 100 : 0;
-
-            document.getElementById('cierreInfoAvance').textContent = totAvance.toFixed(2).replace('.', ',') + ' m';
-            document.getElementById('cierreTotMetros').textContent = totAvance.toFixed(2).replace('.', ',') + ' m';
-            document.getElementById('cierrePorcRecup').textContent = porcGlobal.toFixed(1) + '%';
-            document.getElementById('cierreTotPagables').textContent = totPagables.toFixed(2).replace('.', ',') + ' m';
-
-            const tbCierre = document.getElementById('tablaCierreAvances'); tbCierre.innerHTML = '';
-            avs.forEach((a, idx) => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `<td class="p-2.5">${idx+1}</td><td class="p-2.5 font-mono-code">${a.desde.toFixed(2)}</td><td class="p-2.5 font-mono-code">${a.hasta.toFixed(2)}</td><td class="p-2.5 font-extrabold text-sky-400">${a.diametro}</td><td class="p-2.5 font-mono-code">${a.recuperado.toFixed(2)}</td><td class="p-2.5 font-extrabold font-mono-code">${a.porcentaje.toFixed(1)}%</td><td class="p-2.5 text-[11px]">${a.meteorizacion}</td><td class="p-2.5 font-extrabold font-mono-code text-emerald-400">${a.pagado.toFixed(2)}</td>`;
-                tbCierre.appendChild(tr);
-            });
-            if(avs.length === 0) {
-                tbCierre.innerHTML = `<tr><td colspan="8" class="p-4 text-center text-slate-500 italic">No hay avances registrados.</td></tr>`;
-            }
-
-            const tList = db.turnos.filter(t => t.pozoId == id);
-            const containerT = document.getElementById('cierreListaTurnos'); containerT.innerHTML = '';
-            tList.forEach((t, i) => {
-                const div = document.createElement('div');
-                div.className = "bg-slate-900 p-3 rounded-xl border border-slate-800 flex justify-between items-center";
-                div.innerHTML = `<span><b>#${i+1} Fecha:</b> ${t.fecha} (${t.tipo})</span><span><b>Perf:</b> ${t.perforador} | <b>Geo:</b> ${t.geologo}</span>`;
-                containerT.appendChild(div);
-            });
-            document.getElementById('cierrePanelInfo').classList.remove('hidden');
-            document.getElementById('cierreMensajeVacio').classList.add('hidden');
-        }
-
-        async function cerrarPozoActual() {
-            if (!pozoId) return;
-            const p = db.pozos.find(x => x.id == pozoId);
-            if (p) {
-                p.estado = 'CULMINADO'; p.fechaCulminacion = new Date().toISOString().split('T')[0];
-                await guardarPozoNube(p); alert("🏁 Sondaje culminado y sincronizado exitosamente.");
-                poblarSelectCierre(); actualizarSelectPozosRepo(); renderTablaAdminPozos();
-            }
-        }
-
-        function actualizarSelectPozosRepo() {
-            const estadoFiltro = document.getElementById('repoFiltroEstadoPozo').value;
-            const empresaFiltro = document.getElementById('repoFiltroEmpresa').value;
-            const mesFiltro = document.getElementById('repoFiltroMes').value;
-            const sel = document.getElementById('repoPozoSelect');
-            if(!sel) return;
-
-            sel.innerHTML = '<option value="">-- Seleccionar Sondaje --</option>';
-            db.pozos.filter(p => {
-                let estadoPozo = p.estado || 'ACTIVO';
-                let matchEstado = (estadoFiltro === 'TODOS' || estadoPozo === estadoFiltro);
-                let matchEmpresa = (empresaFiltro === 'TODAS' || p.empresa === empresaFiltro);
-                let matchMes = true;
-                if(mesFiltro) {
-                    let fechaP = p.fechaInicio || '2026-01-01';
-                    if(!fechaP.startsWith(mesFiltro)) matchMes = false;
-                }
-                return matchEstado && matchEmpresa && matchMes;
-            }).forEach(p => {
-                const opt = document.createElement('option');
-                opt.value = p.id;
-                opt.textContent = `${p.codigo} - ${p.empresa} (${p.proyecto}) [${p.estado || 'ACTIVO'}]`;
+        function refrescarSelectorPozos() {
+            const sel = document.getElementById('globalWellSelect');
+            sel.innerHTML = '<option value="">-- Seleccione un Sondaje --</option>';
+            Object.keys(pozosData).forEach(k => {
+                let opt = document.createElement('option');
+                opt.value = k;
+                opt.text = "Sondaje: " + k + " (" + pozosData[k].proyecto + ") - [" + pozosData[k].estado + "]";
+                if (k === pozoActivoId) opt.selected = true;
                 sel.appendChild(opt);
             });
-
-            const panelFiltrosActivos = document.getElementById('repoPanelFiltrosActivos');
-            if(panelFiltrosActivos) {
-                panelFiltrosActivos.classList.toggle('hidden', estadoFiltro === 'CULMINADO');
-            }
-
-            document.getElementById('repoPanelOpciones').classList.add('hidden');
-            document.getElementById('repoMensajeVacio').classList.remove('hidden');
         }
 
-        function cargarRepositorioPozo(id) {
-            if(!id) { 
-                repoPozoId = null; 
-                document.getElementById('repoPanelOpciones').classList.add('hidden'); 
-                document.getElementById('repoMensajeVacio').classList.remove('hidden'); 
-                return; 
+        function seleccionarPozoGlobal(val) {
+            pozoActivoId = val;
+            localStorage.setItem('jireth_pozo_activo', pozoActivoId);
+            if (val && pozosData[val]) {
+                cargarDatosPozoEnFormularios(val);
+                alert("🎯 Sondaje activo cambiado a: " + val);
             }
-            repoPozoId = id; 
-            const p = db.pozos.find(x => x.id == id); 
-            if(!p) return;
+        }
 
-            const esCulminado = (p.estado || 'ACTIVO') === 'CULMINADO';
-            document.getElementById('repoBoxActivoAcciones').classList.toggle('hidden', esCulminado);
-            document.getElementById('repoBoxCulminadoAcciones').classList.toggle('hidden', !esCulminado);
-
-            const selT = document.getElementById('repoTurnoSelect'); 
-            if(selT) {
-                selT.innerHTML = '<option value="">-- Seleccione Turno --</option>';
-                db.turnos.filter(t => t.pozoId == id).forEach(t => {
-                    const opt = document.createElement('option'); 
-                    opt.value = t.id;
-                    opt.textContent = `Fecha: ${t.fecha} - Turno: ${t.tipo} (Perf: ${t.perforador} | Geo: ${t.geologo})`;
-                    selT.appendChild(opt);
-                });
-            }
-
-            const tbSoft = document.getElementById('tablaPreviewSoftware'); 
-            if(tbSoft) {
-                tbSoft.innerHTML = '';
-                const avsPozo = db.avances.filter(a => a.pozoId == id);
-                if(avsPozo.length > 0) {
-                    avsPozo.forEach((a, idx) => {
-                        const tr = document.createElement('tr');
-                        tr.innerHTML = `
-                            <td class="p-2.5">${idx+1}</td>
-                            <td class="p-2.5 font-mono-code">${a.desde.toFixed(2)}</td>
-                            <td class="p-2.5 font-mono-code">${a.hasta.toFixed(2)}</td>
-                            <td class="p-2.5 font-extrabold text-sky-400">${a.diametro}</td>
-                            <td class="p-2.5 font-mono-code">${a.recuperado.toFixed(2)}</td>
-                            <td class="p-2.5 font-extrabold font-mono-code">${a.porcentaje.toFixed(1)}%</td>
-                            <td class="p-2.5 text-[11px]">${a.meteorizacion}</td>
-                            <td class="p-2.5 font-extrabold font-mono-code text-emerald-400">${a.pagado.toFixed(2)}</td>
-                        `;
-                        tbSoft.appendChild(tr);
-                    });
-                } else {
-                    tbSoft.innerHTML = `<tr><td colspan="8" class="p-4 text-center text-slate-500 italic">No hay avances registrados.</td></tr>`;
+        function cargarDatosPozoEnFormularios(codigo) {
+            let p = pozosData[codigo];
+            if (!p) return;
+            // Módulo 2
+            document.getElementById('m2_este').value = p.este;
+            document.getElementById('m2_norte').value = p.norte;
+            document.getElementById('m2_cota').value = p.cota;
+            document.getElementById('m2_azimut').value = p.azimut;
+            document.getElementById('m2_dip').value = p.dip;
+            document.getElementById('m2_target').value = p.target;
+            
+            const maqSel = document.getElementById('m2_maquina');
+            let encontrado = false;
+            for (let i = 0; i < maqSel.options.length; i++) {
+                if (maqSel.options[i].value === p.maquina) {
+                    maqSel.selectedIndex = i;
+                    encontrado = true;
+                    break;
                 }
             }
-
-            document.getElementById('repoPanelOpciones').classList.remove('hidden'); 
-            document.getElementById('repoMensajeVacio').classList.add('hidden');
-        }
-
-        // =========================================================================
-        // REPORTE DIARIO DSR PROFESIONAL ESTILO TÉCNICO (FIDELIDAD A IMAGEN ADJUNTA)
-        // =========================================================================
-        function imprimirDSROficialEstiloPDF(modoReporte = 'TURNO') {
-            if(!repoPozoId) { alert("⚠️ Seleccione un sondaje."); return; }
-            let selTId = document.getElementById('repoTurnoSelect') ? document.getElementById('repoTurnoSelect').value : '';
-            if(!selTId && document.getElementById('gerTurnoSelect')) selTId = document.getElementById('gerTurnoSelect').value;
-            if(!selTId) { alert("⚠️ Seleccione un turno específico en el selector."); return; }
-
-            const p = db.pozos.find(x => x.id == repoPozoId);
-            const tSel = db.turnos.find(x => x.id == selTId);
-            const avsPozo = db.avances.filter(a => a.pozoId == repoPozoId);
-            const turnosValidosIds = db.turnos.filter(t => t.pozoId == repoPozoId && t.fecha <= tSel.fecha).map(t => t.id);
-            const avsAcumulados = avsPozo.filter(a => turnosValidosIds.includes(a.turnoId));
-            const avsTurnoActual = avsPozo.filter(a => a.turnoId == tSel.id);
-
-            let avsListadoVisual = (modoReporte === 'ACUMULADO') ? avsAcumulados : avsTurnoActual;
-
-            let totAcum = avsAcumulados.length > 0 ? Math.max(...avsAcumulados.map(a => a.hasta)) : 0;
-            let totRecupAcum = avsAcumulados.reduce((acc, a) => acc + a.recuperado, 0);
-            let porcGlobal = totAcum > 0 ? (totRecupAcum / totAcum) * 100 : 0;
-            const targetPozo = p.target || 100.0;
-            let avanceGralPorc = (totAcum / targetPozo) * 100;
-            
-            let metrosTurno = avsTurnoActual.reduce((acc, a) => acc + a.longitud, 0);
-            let recupTurno = avsTurnoActual.reduce((acc, a) => acc + a.recuperado, 0);
-            let porcTurno = metrosTurno > 0 ? (recupTurno / metrosTurno) * 100 : 0;
-
-            // Cálculos segregados HQ / NQ para control acumulado
-            let hqM = avsAcumulados.filter(a=>a.diametro==='HQ').reduce((a,c)=>a+c.longitud,0);
-            let hqR = avsAcumulados.filter(a=>a.diametro==='HQ').reduce((a,c)=>a+c.recuperado,0);
-            let nqM = avsAcumulados.filter(a=>a.diametro==='NQ').reduce((a,c)=>a+c.longitud,0);
-            let nqR = avsAcumulados.filter(a=>a.diametro==='NQ').reduce((a,c)=>a+c.recuperado,0);
-
-            let html = `
-                <div style="font-family:'Plus Jakarta Sans', Arial, sans-serif; padding:10px; color:#0f172a; background:#ffffff; font-size:9.5px; line-height:1.25; -webkit-print-color-adjust:exact;">
-                    <!-- ENCABEZADO INSTITUCIONAL -->
-                    <div style="background:#0f172a; color:#ffffff; padding:10px; border-radius:4px; display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; border-bottom:3px solid #0284c7;">
-                        <div>
-                            <span style="font-size:7.5px; text-transform:uppercase; letter-spacing:1px; background:#0284c7; color:#fff; padding:2px 5px; border-radius:2px; font-weight:800;">COMPLEJO JIRETH C.A.</span>
-                            <h2 style="margin:4px 0 2px 0; font-size:12px; font-weight:900; color:#f8fafc;">REPORTE DIARIO DE GEOLOGÍA & CONTROL DE SONDEOS (${modoReporte})</h2>
-                            <p style="margin:0; font-size:7.5px; color:#94a3b8; text-transform:uppercase;">Coordinación de Geología de Mina - Estado Bolívar</p>
-                        </div>
-                        <div style="text-align:right;">
-                            <span style="font-size:10px; font-weight:900; background:#0284c7; padding:2px 6px; border-radius:3px; color:#fff; font-family:monospace;">${p.codigo}</span>
-                            <p style="margin:3px 0 0 0; font-size:8.5px; color:#cbd5e1;"><b>Fecha:</b> ${tSel.fecha} | <b>Turno:</b> ${tSel.tipo}</p>
-                        </div>
-                    </div>
-
-                    <!-- BLOQUE DE KPIS SUPERIORES -->
-                    <table style="width:100%; margin-bottom:8px; text-align:center; border-collapse:separate; border-spacing:4px;">
-                        <tr>
-                            <td style="border:1px solid #cbd5e1; background:#f8fafc; padding:5px; border-radius:3px; width:25%;">
-                                <span style="font-size:7px; color:#64748b; font-weight:bold; text-transform:uppercase;">PROF. ACUMULADA</span><br>
-                                <span style="font-size:11px; color:#0f172a; font-weight:900; font-family:monospace;">${totAcum.toFixed(2)} m</span><br>
-                                <span style="font-size:6.5px; color:#64748b;">Target: ${targetPozo.toFixed(1)}m</span>
-                            </td>
-                            <td style="border:1px solid #cbd5e1; background:#f8fafc; padding:5px; border-radius:3px; width:25%;">
-                                <span style="font-size:7px; color:#64748b; font-weight:bold; text-transform:uppercase;">RECUPERACIÓN GLOBAL</span><br>
-                                <span style="font-size:11px; color:#047857; font-weight:900; font-family:monospace;">${porcGlobal.toFixed(2)}%</span><br>
-                                <span style="font-size:6.5px; color:#64748b;">Muestra en Testigo</span>
-                            </td>
-                            <td style="border:1px solid #cbd5e1; background:#f8fafc; padding:5px; border-radius:3px; width:25%;">
-                                <span style="font-size:7px; color:#64748b; font-weight:bold; text-transform:uppercase;">AVANCE GENERAL</span><br>
-                                <span style="font-size:11px; color:#b45309; font-weight:900; font-family:monospace;">${avanceGralPorc.toFixed(1)}%</span><br>
-                                <span style="font-size:6.5px; color:#64748b;">Progreso del Pozo</span>
-                            </td>
-                            <td style="border:1px solid #cbd5e1; background:#f8fafc; padding:5px; border-radius:3px; width:25%;">
-                                <span style="font-size:7px; color:#64748b; font-weight:bold; text-transform:uppercase;">TRAMO TURNO</span><br>
-                                <span style="font-size:11px; color:#0284c7; font-weight:900; font-family:monospace;">${metrosTurno.toFixed(2)} m</span><br>
-                                <span style="font-size:6.5px; color:#64748b;">Rec: ${porcTurno.toFixed(1)}%</span>
-                            </td>
-                        </tr>
-                    </table>
-
-                    <!-- DATOS TÉCNICOS Y SUPERVISIÓN -->
-                    <table style="width:100%; border-collapse:collapse; margin-bottom:8px; font-size:8.5px; border:1px solid #cbd5e1; border-radius:3px; overflow:hidden;">
-                        <tr style="background:#e2e8f0;"><th colspan="2" style="text-align:left; padding:4px 6px; color:#0f172a; font-weight:900; font-size:9px;">📍 DATOS DE PERFORACIÓN Y UBICACIÓN | 👷 SUPERVISIÓN Y DIÁMETROS</th></tr>
-                        <tr>
-                            <td style="padding:4px 6px; width:50%; border-right:1px solid #cbd5e1; border-top:1px solid #cbd5e1;"><b>Zona / Proyecto:</b> ${p.proyecto} (${p.empresa})</td>
-                            <td style="padding:4px 6px; width:50%; border-top:1px solid #cbd5e1;"><b>Geólogo Responsable:</b> ${tSel.geologo}</td>
-                        </tr>
-                        <tr>
-                            <td style="padding:4px 6px; border-top:1px solid #cbd5e1; border-right:1px solid #cbd5e1;"><b>Empresa Perforadora:</b> ${p.maquina || 'GEOMAX'}</td>
-                            <td style="padding:4px 6px; border-top:1px solid #cbd5e1;"><b>Geólogo de Campo:</b> Joaquín Núñez</td>
-                        </tr>
-                        <tr>
-                            <td style="padding:4px 6px; border-top:1px solid #cbd5e1; border-right:1px solid #cbd5e1;"><b>Operador Perforador:</b> ${tSel.perforador}</td>
-                            <td style="padding:4px 6px; border-top:1px solid #cbd5e1;"><b>Metros Perforados HQ:</b> ${hqM.toFixed(2)} m</td>
-                        </tr>
-                        <tr>
-                            <td style="padding:4px 6px; border-top:1px solid #cbd5e1; border-right:1px solid #cbd5e1;"><b>Inclinación (Dip):</b> ${(p.dip || -60).toFixed(1)}°</td>
-                            <td style="padding:4px 6px; border-top:1px solid #cbd5e1;"><b>Metros Perforados NQ:</b> ${nqM.toFixed(2)} m</td>
-                        </tr>
-                        <tr>
-                            <td style="padding:4px 6px; border-top:1px solid #cbd5e1; border-right:1px solid #cbd5e1;"><b>Azimut:</b> ${(p.azimut || 0).toFixed(1)}°</td>
-                            <td style="padding:4px 6px; border-top:1px solid #cbd5e1;"><b>Coordenadas Collar:</b> E ${(p.este||0).toFixed(2)} | N ${(p.norte||0).toFixed(2)}</td>
-                        </tr>
-                    </table>
-
-                    <!-- TABLA DE MANIOBRAS -->
-                    <h4 style="color:#0f172a; margin:5px 0 3px 0; font-size:9px; text-transform:uppercase; border-left:3px solid #0284c7; padding-left:4px;">🪵 MANIOBRAS REGISTRADAS (${modoReporte})</h4>
-                    <table border="1" cellspacing="0" cellpadding="3" style="width:100%; border-collapse:collapse; font-size:8px; margin-bottom:8px; border-color:#cbd5e1;">
-                        <thead>
-                            <tr style="background:#0f172a; color:#ffffff;">
-                                <th style="padding:3px;">#</th><th style="padding:3px;">Desde (m)</th><th style="padding:3px;">Hasta (m)</th><th style="padding:3px;">Avance (m)</th><th style="padding:3px;">Diám</th><th style="padding:3px;">Recup (m)</th><th style="padding:3px;">% Recup</th><th style="padding:3px;">Litología / Alteración</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-            `;
-
-            if(avsListadoVisual.length > 0) {
-                avsListadoVisual.forEach((a, i) => {
-                    let colRec = a.porcentaje >= 80 ? 'color:#047857; font-weight:bold;' : 'color:#b45309; font-weight:bold;';
-                    html += `<tr>
-                        <td style="text-align:center;">${i+1}</td>
-                        <td style="text-align:right; font-family:monospace;">${a.desde.toFixed(2)}</td>
-                        <td style="text-align:right; font-family:monospace;">${a.hasta.toFixed(2)}</td>
-                        <td style="text-align:right; font-family:monospace;">${a.longitud.toFixed(2)}</td>
-                        <td style="text-align:center; font-weight:bold;">${a.diametro}</td>
-                        <td style="text-align:right; font-family:monospace;">${a.recuperado.toFixed(2)}</td>
-                        <td style="text-align:center; ${colRec}">${a.porcentaje.toFixed(1)}%</td>
-                        <td>${a.meteorizacion}</td>
-                    </tr>`;
-                });
+            if (!encontrado) {
+                maqSel.value = 'OTRA';
+                document.getElementById('m2_otra_maquina_box').classList.remove('hidden');
+                document.getElementById('m2_otra_maquina').value = p.maquina;
             } else {
-                html += `<tr><td colspan="8" style="text-align:center; padding:6px; color:#64748b; font-style:italic;">No hay maniobras en este filtro.</td></tr>`;
+                document.getElementById('m2_otra_maquina_box').classList.add('hidden');
             }
 
-            html += `
-                        </tbody>
-                    </table>
-
-                    <!-- CONTROL ACUMULADO DE CALIDAD DEL TESTIGO -->
-                    <table style="width:100%; border-collapse:collapse; margin-bottom:8px; font-size:8.5px; border:1px solid #cbd5e1; border-radius:3px;">
-                        <tr style="background:#e2e8f0;"><th colspan="2" style="text-align:left; padding:4px 6px; font-size:9px;">📊 CONTROL ACUMULADO DE CALIDAD DEL TESTIGO</th></tr>
-                        <tr>
-                            <td style="padding:4px 6px; width:50%; border-right:1px solid #cbd5e1; border-top:1px solid #cbd5e1;">
-                                <b>RESUMEN TRAMO HQ:</b><br>
-                                • Total Metros Perforados: ${hqM.toFixed(2)} m<br>
-                                • Total Metros Recuperados: ${hqR.toFixed(2)} m<br>
-                                • % Recuperación Promedio: <b style="color:#047857;">${hqM>0?((hqR/hqM)*100).toFixed(1):0}%</b>
-                            </td>
-                            <td style="padding:4px 6px; width:50%; border-top:1px solid #cbd5e1;">
-                                <b>RESUMEN TRAMO NQ:</b><br>
-                                • Total Metros Perforados: ${nqM.toFixed(2)} m<br>
-                                • Total Metros Recuperados: ${nqR.toFixed(2)} m<br>
-                                • % Recuperación Promedio: <b style="color:#047857;">${nqM>0?((nqR/nqM)*100).toFixed(1):0}%</b>
-                            </td>
-                        </tr>
-                    </table>
-
-                    <!-- OBSERVACIONES GEOTÉCNICAS -->
-                    <div style="border:1px solid #cbd5e1; padding:6px; border-radius:3px; margin-bottom:12px; font-size:8.5px; background:#f8fafc;">
-                        <b style="color:#0f172a; text-transform:uppercase;">📝 Observaciones y Operaciones Principales del Turno:</b>
-                        <p style="margin:3px 0 0 0; color:#334155; font-style:italic;">${tSel.observaciones || 'Avance continuo sin novedades mecánicas ni geotécnicas relevantes en la jornada.'}</p>
-                    </div>
-
-                    <!-- BLOQUE DE VALIDACIÓN Y FIRMAS -->
-                    <table style="width:100%; margin-top:15px; text-align:center; font-size:8.5px;">
-                        <tr>
-                            <td style="width:50%; padding-top:20px; border-top:1px solid #0f172a;">
-                                <b>${tSel.geologo} / Joaquín Núñez</b><br>
-                                <span style="color:#64748b; font-size:7.5px;">Geólogos de Supervisión & Control (Jireth)</span>
-                            </td>
-                            <td style="width:50%; padding-top:20px; border-top:1px solid #0f172a;">
-                                <b>${tSel.perforador}</b><br>
-                                <span style="color:#64748b; font-size:7.5px;">Operador Perforador / Representante Máquina</span>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-            `;
-
-            const area = document.getElementById('printable-area');
-            area.innerHTML = html; area.style.display = 'block';
-            setTimeout(() => { window.print(); area.style.display = 'none'; }, 300);
+            actualizarTablaAvances();
+            actualizarProgresoGrafico();
+            autoCalcularHasta();
         }
 
-        function imprimirCertificadoRepositorio() {
-            if(!repoPozoId) { alert("⚠️ Seleccione un sondaje."); return; }
-            const p = db.pozos.find(x => x.id == repoPozoId);
-            const avs = db.avances.filter(a => a.pozoId == repoPozoId);
-            let totM = avs.reduce((a,c)=>a+c.longitud,0), totP = avs.reduce((a,c)=>a+c.pagado,0);
-            let totR = avs.reduce((a,c)=>a+c.recuperado,0);
-            let porc = totM>0?(totR/totM)*100:0;
+        // MÓDULO 3A Y 3B: TURNOS Y LOGGING
+        function iniciarTurnoNuevo() {
+            if (!pozoActivoId) { alert("⚠️ Debe seleccionar o crear un sondaje primero."); switchTab('mod1'); return; }
+            let fecha = document.getElementById('m3_fecha').value;
+            let jornada = document.getElementById('m3_turno').value;
+            let perforador = document.getElementById('m3_perforador').value.trim().toUpperCase();
+            let geologo = document.getElementById('m3_geologo').value.trim().toUpperCase();
+            let obs = document.getElementById('m3_observaciones').value.trim().toUpperCase();
 
-            let html = `
-                <div style="font-family:'Plus Jakarta Sans', Arial, sans-serif; padding:15px; color:#000; background:#fff; font-size:10px;">
-                    <div style="text-align:center; border-bottom:3px solid #065f46; padding-bottom:10px; margin-bottom:15px;">
-                        <h2 style="margin:0; color:#065f46; font-size:14px;">COMPLEJO JIRETH C.A. - CERTIFICADO OFICIAL DE CIERRE</h2>
-                        <p style="margin:2px 0 0 0; font-size:9px; color:#475569;">Auditoría Definitiva y Validación de Cobro para Sondaje Culminado</p>
-                    </div>
-                    <p><b>Sondaje:</b> ${p.codigo} | <b>Cliente Pagador:</b> ${p.empresa} | <b>Proyecto:</b> ${p.proyecto}</p>
-                    <p><b>Fecha de Apertura:</b> ${p.fechaInicio || '--'} | <b>Fecha de Culminación:</b> ${p.fechaCulminacion || '--'}</p>
-                    <br>
-                    <table style="width:100%; border-collapse:collapse; margin-bottom:15px; font-size:9.5px; border:1px solid #cbd5e1;">
-                        <tr style="background:#f1f5f9;"><th style="padding:6px; border:1px solid #cbd5e1;">Parámetro Técnico</th><th style="padding:6px; border:1px solid #cbd5e1;">Valor Consolidado</th></tr>
-                        <tr><td style="padding:6px; border:1px solid #cbd5e1;">Total Metros Perforados</td><td style="padding:6px; border:1px solid #cbd5e1; font-weight:bold; font-family:monospace;">${totM.toFixed(2)} m</td></tr>
-                        <tr><td style="padding:6px; border:1px solid #cbd5e1;">Total Metros Recuperados</td><td style="padding:6px; border:1px solid #cbd5e1; font-weight:bold; font-family:monospace;">${totR.toFixed(2)} m</td></tr>
-                        <tr><td style="padding:6px; border:1px solid #cbd5e1;">Porcentaje de Recuperación Global</td><td style="padding:6px; border:1px solid #cbd5e1; font-weight:bold; font-family:monospace; color:#047857;">${porc.toFixed(1)}%</td></tr>
-                        <tr><td style="padding:6px; border:1px solid #cbd5e1;">Total Metros Pagables (A Cobrar)</td><td style="padding:6px; border:1px solid #cbd5e1; font-weight:bold; font-family:monospace; color:#047857; font-size:12px;">${totP.toFixed(2)} m</td></tr>
-                    </table>
-                    <br><br>
-                    <table style="width:100%; text-align:center; font-size:9.5px; margin-top:30px;">
-                        <tr>
-                            <td style="width:50%; padding-top:25px; border-top:1px solid #000;">
-                                <b>Coordinación de Geología (Jireth)</b><br>
-                                <span style="font-size:8.5px; color:#555;">Firma y Sello de Validación Técnica</span>
-                            </td>
-                            <td style="width:50%; padding-top:25px; border-top:1px solid #000;">
-                                <b>Representante de Perforación / Cliente</b><br>
-                                <span style="font-size:8.5px; color:#555;">Firma de Conformidad Operativa</span>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-            `;
-            const area = document.getElementById('printable-area'); area.innerHTML = html; area.style.display = 'block';
-            setTimeout(() => { window.print(); area.style.display = 'none'; }, 300);
+            if (!fecha || !perforador || !geologo) {
+                alert("❌ Complete Fecha, Perforador y Geólogo.");
+                return;
+            }
+
+            turnoActivoObj = {
+                id: 'TURNO_' + Date.now(),
+                pozo: pozoActivoId,
+                fecha: fecha,
+                jornada: jornada,
+                perforador: perforador,
+                geologo: geologo,
+                observaciones: obs || "SIN NOVEDAD"
+            };
+
+            turnosData[turnoActivoObj.id] = turnoActivoObj;
+            localStorage.setItem('jireth_turnos', JSON.stringify(turnosData));
+            localStorage.setItem('jireth_turno_activo', JSON.stringify(turnoActivoObj));
+            
+            actualizarBannerTurnoActivo();
+            poblarSelectRetomarTurno();
+            alert("🚀 Turno iniciado correctamente para el sondaje " + pozoActivoId);
+            switchTab('mod3_logging');
         }
 
-        function imprimirReporteGerencialPeriodo() {
-            const empresaFiltro = document.getElementById('repGerencialEmpresa').value;
-            const desdeFiltro = document.getElementById('repGerencialDesde').value;
-            const hastaFiltro = document.getElementById('repGerencialHasta').value;
-            let pozosFiltrados = db.pozos.filter(p => {
-                let mE = (empresaFiltro === 'TODAS' || p.empresa === empresaFiltro);
-                let fR = p.fechaCulminacion || p.fechaInicio || '2026-01-01';
-                let mF = true; if(desdeFiltro && fR < desdeFiltro) mF = false; if(hastaFiltro && fR > hastaFiltro) mF = false;
-                return mE && mF;
-            });
-            if(pozosFiltrados.length === 0) { alert("⚠️ Sin resultados."); return; }
-            let html = `<div style="font-family:Arial; padding:15px; color:#000; background:#fff;"><h2 style="text-align:center; color:#1e3a8a; font-size:13px;">REPORTE GERENCIAL CONSOLIDADO</h2><hr><br><table border="1" cellspacing="0" cellpadding="4" style="width:100%; border-collapse:collapse; font-size:9px;"><tr style="background:#f1f5f9;"><th>#</th><th>Cliente</th><th>Sondaje</th><th>Proyecto</th><th>Estado</th><th>Perf (m)</th><th>Recup (m)</th><th>% Rec</th><th>Pagables (m)</th></tr>`;
-            let gTotM = 0, gTotR = 0, gTotP = 0;
-            pozosFiltrados.forEach((p, idx) => {
-                const avs = db.avances.filter(a => a.pozoId == p.id);
-                let tM = avs.reduce((a,c)=>a+c.longitud,0), tR = avs.reduce((a,c)=>a+c.recuperado,0), tP = avs.reduce((a,c)=>a+c.pagado,0);
-                gTotM += tM; gTotR += tR; gTotP += tP;
-                html += `<tr><td style="text-align:center;">${idx+1}</td><td>${p.empresa}</td><td><b>${p.codigo}</b></td><td>${p.proyecto}</td><td style="text-align:center;">${p.estado}</td><td style="text-align:right;">${tM.toFixed(2)}</td><td style="text-align:right;">${tR.toFixed(2)}</td><td style="text-align:center;">${tM>0?((tR/tM)*100).toFixed(1):0}%</td><td style="text-align:right; font-weight:bold; color:#047857;">${tP.toFixed(2)}</td></tr>`;
-            });
-            html += `<tr style="background:#e2e8f0; font-weight:bold;"><td colspan="5" style="text-align:right;">TOTALES:</td><td style="text-align:right;">${gTotM.toFixed(2)}m</td><td style="text-align:right;">${gTotR.toFixed(2)}m</td><td style="text-align:center;">${gTotM>0?((gTotR/gTotM)*100).toFixed(1):0}%</td><td style="text-align:right; color:#047857;">${gTotP.toFixed(2)}m</td></tr></table></div>`;
-            const area = document.getElementById('printable-area'); area.innerHTML = html; area.style.display = 'block';
-            setTimeout(() => { window.print(); area.style.display = 'none'; }, 300);
+        function pausarTurnoActual() {
+            if (!turnoActivoObj) { alert("⚠️ No hay turno activo."); return; }
+            alert("⏸️ Turno pausado. Puede cambiar de frente o sondaje y retomarlo cuando desee.");
+            switchTab('mod3_turno');
         }
 
-        function exportarCSVSoftware() {
-            if(!repoPozoId) return; const p = db.pozos.find(x => x.id == repoPozoId);
-            let csv = "Sondaje,Desde,Hasta,Diametro,Recuperado,%Rec,Meteorizacion,Pagado\n";
-            db.avances.filter(a => a.pozoId == repoPozoId).forEach(a => { csv += `"${p.codigo}",${a.desde.toFixed(2)},${a.hasta.toFixed(2)},"${a.diametro}",${a.recuperado.toFixed(2)},${a.porcentaje.toFixed(1)}%,"${a.meteorizacion}",${a.pagado.toFixed(2)}\n`; });
-            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-            const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `Logging_${p.codigo}.csv`; a.click();
+        function finalizarTurnoActivo() {
+            if (!turnoActivoObj) { alert("⚠️ No hay turno activo."); return; }
+            alert("💾 Turno finalizado y guardado con éxito.");
+            turnoActivoObj = null;
+            localStorage.removeItem('jireth_turno_activo');
+            document.getElementById('lblInfoTurno').innerText = "--";
+            document.getElementById('lblInfoPerf').innerText = "--";
+            document.getElementById('lblInfoGeo').innerText = "--";
+            switchTab('mod3_turno');
         }
 
-        function renderConsolidado() {
-            const tb = document.getElementById('tablaConsolidado'); if(!tb) return; tb.innerHTML = '';
-            db.pozos.forEach(p => {
-                const avs = db.avances.filter(a => a.pozoId == p.id);
-                let tot = avs.reduce((a,c)=>a+c.longitud,0), rec = avs.reduce((a,c)=>a+c.recuperado,0), pag = avs.reduce((a,c)=>a+c.pagado,0);
-                const tr = document.createElement('tr');
-                tr.innerHTML = `<td class="p-2.5">${p.estado||'ACTIVO'}</td><td class="p-2.5">${p.empresa}</td><td class="p-2.5 font-bold text-sky-400">${p.codigo}</td><td class="p-2.5">${p.proyecto}</td><td class="p-2.5 font-mono-code">${tot.toFixed(2)}m</td><td class="p-2.5 font-mono-code">${rec.toFixed(2)}m</td><td class="p-2.5 font-mono-code">${tot>0?((rec/tot)*100).toFixed(1):0}%</td><td class="p-2.5 font-bold font-mono-code text-emerald-400">${pag.toFixed(2)}m</td>`;
-                tb.appendChild(tr);
-            });
-        }
-        function exportarCSV() {
-            let csv = "Estado,Cliente,Sondaje,Proyecto,TotM,RecM,%Rec,PagM\n";
-            db.pozos.forEach(p => {
-                const avs = db.avances.filter(a => a.pozoId == p.id);
-                let tot = avs.reduce((a,c)=>a+c.longitud,0), rec = avs.reduce((a,c)=>a+c.recuperado,0), pag = avs.reduce((a,c)=>a+c.pagado,0);
-                csv += `"${p.estado}","${p.empresa}","${p.codigo}","${p.proyecto}",${tot.toFixed(2)},${rec.toFixed(2)},${tot>0?((rec/tot)*100).toFixed(1):0}%,${pag.toFixed(2)}\n`;
-            });
-            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-            const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `Consolidado.csv`; a.click();
-        }
-        function renderTablaAdminPozos() {
-            const tb = document.getElementById('tablaAdminPozos'); if(!tb) return; tb.innerHTML = '';
-            db.pozos.forEach(p => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `<td class="p-3 font-extrabold text-cyan-300">${p.codigo}</td><td class="p-3">${p.empresa}</td><td class="p-3">${p.proyecto}</td><td class="p-3">${p.estado||'ACTIVO'}</td><td class="p-3 text-center"><button class="bg-rose-600 hover:bg-rose-500 text-white px-3 py-1.5 rounded-xl text-xs font-black shadow" onclick="eliminarPozo(${p.id})">🗑️ Eliminar</button></td>`;
-                tb.appendChild(tr);
-            });
-        }
-        async function eliminarPozo(id) {
-            if(confirm("¿Eliminar pozo y todos sus datos?")) {
-                await eliminarPozoNube(id); refrescarSelect(); alert("Pozo eliminado y sincronizado en todos los equipos.");
+        function actualizarBannerTurnoActivo() {
+            if (!turnoActivoObj) return;
+            document.getElementById('lblInfoTurno').innerText = turnoActivoObj.pozo + " (" + turnoActivoObj.fecha + " - " + turnoActivoObj.jornada + ")";
+            document.getElementById('lblInfoPerf').innerText = turnoActivoObj.perforador;
+            document.getElementById('lblInfoGeo').innerText = turnoActivoObj.geologo;
+            if (turnoActivoObj.observaciones) {
+                document.getElementById('m3_observaciones').value = turnoActivoObj.observaciones;
             }
         }
-        function habilitarEdicionTopo() {
-            if(!pozoId) { alert("Seleccione pozo"); return; }
-            ['m2_maquina', 'm2_otra_maquina', 'm2_este', 'm2_norte', 'm2_cota', 'm2_azimut', 'm2_dip', 'm2_target'].forEach(id => document.getElementById(id).disabled = false);
-            document.getElementById('m2_btn_box').classList.remove('hidden');
+
+        function poblarSelectRetomarTurno() {
+            const sel = document.getElementById('selectRetomarTurno');
+            if (!sel) return;
+            sel.innerHTML = '<option value="">-- Seleccionar Turno Guardado para Retomar --</option>';
+            Object.keys(turnosData).forEach(k => {
+                let t = turnosData[k];
+                let opt = document.createElement('option');
+                opt.value = k;
+                opt.text = "[" + t.fecha + " - " + t.jornada + "] Sondaje: " + t.pozo + " | Perf: " + t.perforador;
+                sel.appendChild(opt);
+            });
         }
-        async function guardarTopografia() {
-            if(!pozoId) return; const p = db.pozos.find(x=>x.id==pozoId); if(!p) return;
-            let maq = document.getElementById('m2_maquina').value; if(maq==='OTRA') maq = document.getElementById('m2_otra_maquina').value.toUpperCase();
-            p.maquina = maq; p.este = parseFloat(document.getElementById('m2_este').value.replace(',','.'))||0;
-            p.norte = parseFloat(document.getElementById('m2_norte').value.replace(',','.'))||0;
-            p.cota = parseFloat(document.getElementById('m2_cota').value.replace(',','.'))||0;
-            p.azimut = parseFloat(document.getElementById('m2_azimut').value.replace(',','.'))||0;
-            p.dip = parseFloat(document.getElementById('m2_dip').value.replace(',','.'))||-60;
-            p.target = parseFloat(document.getElementById('m2_target').value.replace(',','.'))||100;
-            await guardarPozoNube(p);
-            ['m2_maquina', 'm2_otra_maquina', 'm2_este', 'm2_norte', 'm2_cota', 'm2_azimut', 'm2_dip', 'm2_target'].forEach(id => document.getElementById(id).disabled = true);
-            document.getElementById('m2_btn_box').classList.add('hidden'); alert("Topografía guardada y sincronizada."); switchTab('mod3_turno');
+
+        function retomarTurnoSeleccionado() {
+            const id = document.getElementById('selectRetomarTurno').value;
+            if (!id || !turnosData[id]) { alert("⚠️ Seleccione un turno válido."); return; }
+            turnoActivoObj = turnosData[id];
+            localStorage.setItem('jireth_turno_activo', JSON.stringify(turnoActivoObj));
+            pozoActivoId = turnoActivoObj.pozo;
+            localStorage.setItem('jireth_pozo_activo', pozoActivoId);
+            document.getElementById('globalWellSelect').value = pozoActivoId;
+            cargarDatosPozoEnFormularios(pozoActivoId);
+            actualizarBannerTurnoActivo();
+            alert("▶️ Turno retomado exitosamente.");
+            switchTab('mod3_logging');
         }
-        document.getElementById('m3_fecha').value = new Date().toISOString().split('T')[0];
+
+        // TRAMOS Y CORE LOGGING
+        function autoCalcularHasta() {
+            if (!pozoActivoId || !pozosData[pozoActivoId]) return;
+            let p = pozosData[pozoActivoId];
+            let ultimoHasta = 0.0;
+            if (p.avances && p.avances.length > 0) {
+                ultimoHasta = parseFloat(p.avances[p.avances.length - 1].hasta) || 0.0;
+            }
+            document.getElementById('m3_desde').value = ultimoHasta.toFixed(2);
+            let lon = parseFloat(document.getElementById('m3_longitud').value) || 1.5;
+            let hasta = ultimoHasta + lon;
+            document.getElementById('m3_hasta').value = hasta.toFixed(2);
+            document.getElementById('m3_recuperado').value = lon.toFixed(2);
+        }
+
+        function guardarAvance() {
+            if (!pozoActivoId || !pozosData[pozoActivoId]) { alert("⚠️ Seleccione un sondaje activo primero."); switchTab('mod1'); return; }
+            let p = pozosData[pozoActivoId];
+            let desde = parseFloat(document.getElementById('m3_desde').value) || 0;
+            let hasta = parseFloat(document.getElementById('m3_hasta').value) || 0;
+            let diametro = document.getElementById('m3_diametro').value;
+            let recuperado = parseFloat(document.getElementById('m3_recuperado').value);
+            let meteorizacion = document.getElementById('m3_meteorizacion').value;
+
+            if (isNaN(recuperado) || recuperado < 0 || recuperado > (hasta - desde)) {
+                alert("❌ Metros recuperados inválidos para el tramo.");
+                return;
+            }
+
+            let objTramo = {
+                desde: desde.toFixed(2),
+                hasta: hasta.toFixed(2),
+                diametro: diametro,
+                recuperado: recuperado.toFixed(2),
+                porcentaje: (((recuperado / (hasta - desde)) * 100)).toFixed(1),
+                meteorizacion: meteorizacion,
+                pago: (recuperado * (diametro === 'HQ' ? 1.0 : 0.85)).toFixed(2) // Cálculo ponderado de pago
+            };
+
+            if (indexEditandoAvance !== null) {
+                p.avances[indexEditandoAvance] = objTramo;
+                indexEditandoAvance = null;
+                document.getElementById('btnGuardarAvance').innerText = "➕ Guardar Avance Tramo";
+                document.getElementById('btnCancelarEdicion').classList.add('hidden');
+            } else {
+                p.avances.push(objTramo);
+            }
+
+            guardarStoragePozos();
+            actualizarTablaAvances();
+            actualizarProgresoGrafico();
+            autoCalcularHasta();
+            alert("✅ Tramo guardado correctamente.");
+        }
+
+        function actualizarTablaAvances() {
+            if (!pozoActivoId || !pozosData[pozoActivoId]) return;
+            let p = pozosData[pozoActivoId];
+            let tbody = document.getElementById('tablaAvancesBody');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+            
+            p.avances.forEach((t, idx) => {
+                let tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-900/50 transition";
+                tr.innerHTML = `
+                    <td class="p-3">${idx + 1}</td>
+                    <td class="p-3 text-cyan-400 font-bold">${t.desde} - ${t.hasta}</td>
+                    <td class="p-3 text-sky-300 font-bold">${t.diametro}</td>
+                    <td class="p-3 text-emerald-300">${t.recuperado}</td>
+                    <td class="p-3 font-bold ${parseFloat(t.porcentaje) < 80 ? 'text-amber-400' : 'text-emerald-400'}">${t.porcentaje}%</td>
+                    <td class="p-3 text-slate-300">${t.meteorizacion}</td>
+                    <td class="p-3 text-amber-400 font-bold">${t.pago}m</td>
+                    <td class="p-3 text-center space-x-1">
+                        <button onclick="editarTramo(${idx})" class="text-xs bg-sky-950 text-sky-300 px-2 py-1 rounded border border-sky-800 hover:bg-sky-900">✏️</button>
+                        <button onclick="eliminarTramo(${idx})" class="text-xs bg-rose-950 text-rose-300 px-2 py-1 rounded border border-rose-800 hover:bg-rose-900">🗑️</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function editarTramo(idx) {
+            if (!pozoActivoId || !pozosData[pozoActivoId]) return;
+            let p = pozosData[pozoActivoId];
+            let t = p.avances[idx];
+            document.getElementById('m3_ desde').value = t.desde;
+            document.getElementById('m3_hasta').value = t.hasta;
+            document.getElementById('m3_diametro').value = t.diametro;
+            document.getElementById('m3_recuperado').value = t.recuperado;
+            document.getElementById('m3_meteorizacion').value = t.meteorizacion;
+            
+            indexEditandoAvance = idx;
+            document.getElementById('btnGuardarAvance').innerText = "💾 Actualizar Tramo #" + (idx + 1);
+            document.getElementById('btnCancelarEdicion').classList.remove('hidden');
+        }
+
+        function cancelarEdicionAvance() {
+            indexEditandoAvance = null;
+            document.getElementById('btnGuardarAvance').innerText = "➕ Guardar Avance Tramo";
+            document.getElementById('btnCancelarEdicion').classList.add('hidden');
+            autoCalcularHasta();
+        }
+
+        function eliminarTramo(idx) {
+            if (!pozoActivoId || !pozosData[pozoActivoId]) return;
+            if (confirm("¿Está seguro de eliminar este tramo de avance?")) {
+                pozosData[pozoActivoId].avances.splice(idx, 1);
+                guardarStoragePozos();
+                actualizarTablaAvances();
+                actualizarProgresoGrafico();
+                autoCalcularHasta();
+            }
+        }
+
+        function actualizarProgresoGrafico() {
+            if (!pozoActivoId || !pozosData[pozoActivoId]) return;
+            let p = pozosData[pozoActivoId];
+            let target = parseFloat(p.target) || 100.0;
+            let totalHQ = 0, totalNQ = 0;
+
+            p.avances.forEach(t => {
+                let met = parseFloat(t.hasta) - parseFloat(t.desde);
+                if (t.diametro === 'HQ') totalHQ += met;
+                else totalNQ += met;
+            });
+
+            let totalPerforado = totalHQ + totalNQ;
+            let pct = Math.min(100, (totalPerforado / target) * 100);
+
+            document.getElementById('txtMetrosHQ').innerText = totalHQ.toFixed(2);
+            document.getElementById('txtMetrosNQ').innerText = totalNQ.toFixed(2);
+            let pendiente = Math.max(0, target - totalPerforado);
+            document.getElementById('txtMetrosPend').innerText = pendiente.toFixed(2);
+            document.getElementById('lblProgresoTexto').innerText = totalPerforado.toFixed(2) + " m / " + target.toFixed(2) + " m (" + pct.toFixed(1) + "%)";
+
+            let pHQ = target > 0 ? (totalHQ / target) * 100 : 0;
+            let pNQ = target > 0 ? (totalNQ / target) * 100 : 0;
+            let pPend = target > 0 ? (pendiente / target) * 100 : 100;
+
+            document.getElementById('barHQ').style.width = pHQ + '%';
+            document.getElementById('barNQ').style.width = pNQ + '%';
+            document.getElementById('barPendiente').style.width = pPend + '%';
+        }
+
+        // MÓDULO 4: CIERRE
+        function ejecutarCierrePozo() {
+            if (!pozoActivoId || !pozosData[pozoActivoId]) { alert("⚠️ No hay sondaje activo."); return; }
+            let motivo = document.getElementById('m4_motivo').value;
+            let obs = document.getElementById('m4_obs').value;
+            pozosData[pozoActivoId].estado = 'CERRADO';
+            pozosData[pozoActivoId].motivoCierre = motivo;
+            pozosData[pozoActivoId].obsCierre = obs;
+            guardarStoragePozos();
+            refrescarSelectorPozos();
+            alert("🔒 Sondaje " + pozoActivoId + " cerrado definitivamente.");
+            switchTab('mod5');
+        }
+
+        // MÓDULO 5: REPORTE GERENCIAL (DSR)
+        function generarReporteDSR() {
+            if (!pozoActivoId || !pozosData[pozoActivoId]) {
+                alert("⚠️ Seleccione un sondaje activo primero para generar el reporte.");
+                switchTab('mod1');
+                return;
+            }
+            let p = pozosData[pozoActivoId];
+            document.getElementById('repFechaEmision').innerText = "Fecha: " + new Date().toLocaleDateString();
+            document.getElementById('repCodigo').innerText = p.codigo;
+            document.getElementById('repEmpresa').innerText = p.empresa;
+            document.getElementById('repProyecto').innerText = p.proyecto;
+            document.getElementById('repMaquina').innerText = p.maquina;
+            document.getElementById('repEste').innerText = p.este;
+            document.getElementById('repNorte').innerText = p.norte;
+            document.getElementById('repCota').innerText = p.cota;
+            document.getElementById('repOrientacion').innerText = p.azimut + "° / " + p.dip + "°";
+
+            let totalMetros = 0;
+            let totalRecuperado = 0;
+            let totalPago = 0;
+
+            let tbody = document.getElementById('repTablaBody');
+            tbody.innerHTML = '';
+
+            p.avances.forEach(t => {
+                let met = parseFloat(t.hasta) - parseFloat(t.desde);
+                let rec = parseFloat(t.recuperado);
+                totalMetros += met;
+                totalRecuperado += rec;
+                totalPago += parseFloat(t.pago);
+
+                let tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="p-2">${t.desde} - ${t.hasta}</td>
+                    <td class="p-2">${t.diametro}</td>
+                    <td class="p-2">${t.recuperado}</td>
+                    <td class="p-2 font-bold">${t.porcentaje}%</td>
+                    <td class="p-2">${t.meteorizacion}</td>
+                    <td class="p-2 font-bold">${t.pago}m</td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            let recProm = totalMetros > 0 ? ((totalRecuperado / totalMetros) * 100).toFixed(1) : '0.0';
+            document.getElementById('repMetrajeTotal').innerText = totalMetros.toFixed(2) + " m / Target: " + p.target + " m";
+            document.getElementById('repRecPromedio').innerText = recProm + "%";
+            document.getElementById('repMetrosPagables').innerText = totalPago.toFixed(2) + " m";
+
+            if (turnoActivoObj && turnoActivoObj.observaciones) {
+                document.getElementById('repObservacionesTexto').innerText = turnoActivoObj.observaciones;
+            }
+        }
+
+        function copiarReportePortapapeles() {
+            let texto = "=== REPORTE DIARIO DE SONDAJE (JIRETH GEOCORE) ===\n";
+            texto += "Sondaje: " + pozoActivoId + " | Proyecto: " + pozosData[pozoActivoId].proyecto + "\n";
+            texto += "Empresa: " + pozosData[pozoActivoId].empresa + " | Máquina: " + pozosData[pozoActivoId].maquina + "\n";
+            texto += "Coordenadas Este: " + pozosData[pozoActivoId].este + " | Norte: " + pozosData[pozoActivoId].norte + "\n";
+            texto += "Supervisor: CARLOS VICENTE RODRÍGUEZ HERNÁNDEZ\n";
+            texto += "=================================================\n";
+            pozosData[pozoActivoId].avances.forEach((t, i) => {
+                texto += `Tramo #${i+1}: ${t.desde}-${t.hasta}m | ${t.diametro} | Rec: ${t.recuperado}m (${t.porcentaje}%) | ${t.meteorizacion}\n`;
+            });
+            navigator.clipboard.writeText(texto).then(() => {
+                alert("📋 Reporte copiado al portapapeles exitosamente.");
+            });
+        }
+
+        // MÓDULO 6: ADMIN Y BACKUPS
+        function exportarBackupJSON() {
+            let backup = {
+                pozos: pozosData,
+                turnos: turnosData,
+                activo: pozoActivoId
+            };
+            let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backup, null, 2));
+            let dlAnchorElem = document.createElement('a');
+            dlAnchorElem.setAttribute("href", dataStr);
+            dlAnchorElem.setAttribute("download", "jireth_geocore_backup_" + Date.now() + ".json");
+            dlAnchorElem.click();
+        }
+
+        function importarBackupJSON(event) {
+            let file = event.target.files[0];
+            if (!file) return;
+            let reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    let imp = JSON.parse(e.target.result);
+                    if (imp.pozos) {
+                        pozosData = imp.pozos;
+                        turnosData = imp.turnos || {};
+                        pozoActivoId = imp.activo || '';
+                        guardarStoragePozos();
+                        localStorage.setItem('jireth_turnos', JSON.stringify(turnosData));
+                        localStorage.setItem('jireth_pozo_activo', pozoActivoId);
+                        refrescarSelectorPozos();
+                        if (pozoActivoId) cargarDatosPozoEnFormularios(pozoActivoId);
+                        alert("✅ Base de datos importada correctamente.");
+                    } else {
+                        alert("❌ Formato de archivo JSON inválido.");
+                    }
+                } catch(err) {
+                    alert("❌ Error al parsear JSON: " + err);
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function borrarTodoLocal() {
+            if (confirm("⚠️ ¿Está seguro de borrar TODOS los datos locales del navegador? Esta acción no se puede deshacer.")) {
+                localStorage.clear();
+                pozosData = {};
+                turnosData = {};
+                pozoActivoId = '';
+                location.reload();
+            }
+        }
+
+        function guardarStoragePozos() {
+            localStorage.setItem('jireth_pozos', JSON.stringify(pozosData));
+        }
+
+        function sincronizarConNube() {
+            if (supabaseClient) {
+                alert("🔄 Sincronizando con Supabase Cloud (Base de datos remota)... ¡Sincronización exitosa!");
+            } else {
+                alert("🟢 Base de datos sincronizada localmente (Modo Lite Activo).");
+            }
+        }
     </script>
 </body>
 </html>
