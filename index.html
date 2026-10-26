@@ -70,11 +70,39 @@
         }
         .pulse-live { animation: pulseSlow 2s infinite ease-in-out; }
 
+        /* REGLAS ESTRICTAS DE IMPRESIÓN PDF SIN HOJAS EN BLANCO FANTASMA */
         @media print {
-            @page { size: portrait; margin: 6mm; }
-            body * { visibility: hidden; }
-            #printable-area, #printable-area * { visibility: visible; }
-            #printable-area { position: absolute; left: 0; top: 0; width: 100%; color: #000; background: #fff; padding: 4px; font-size: 9.5px; }
+            @page { 
+                size: portrait; 
+                margin: 5mm; 
+            }
+            html, body {
+                height: auto !important;
+                background: #0f172a !important;
+                color: #f8fafc !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            body * { visibility: hidden !important; }
+            #printable-area, #printable-area * { visibility: visible !important; }
+            #printable-area { 
+                position: absolute !important; 
+                left: 0 !important; 
+                top: 0 !important; 
+                width: 100% !important; 
+                padding: 0 !important;
+                margin: 0 !important;
+                background: #020617 !important;
+                color: #ffffff !important;
+            }
+            .avoid-break {
+                break-inside: avoid !important;
+                page-break-inside: avoid !important;
+            }
+            .page-break {
+                break-before: page !important;
+                page-break-before: always !important;
+            }
         }
     </style>
 </head>
@@ -148,7 +176,7 @@
                     </div>
                 </div>
                 <button type="button" onclick="intentarLoginGer()" class="btn-field w-full bg-sky-600 hover:bg-sky-500 text-white text-sm font-black shadow-sky-600/20">
-                    📊 Ingresar a Repositorio (Modo Lectura)
+                    📊 Ingresar a Repositorio & Sala Situacional
                 </button>
             </div>
 
@@ -224,11 +252,11 @@
             <button type="button" onclick="switchTab('mod3_turno')" id="tab-mod3_turno" class="py-3 px-2 rounded-xl font-extrabold text-xs bg-slate-900 text-slate-300 border border-slate-800 hover:border-slate-700 transition">⏱️ 4A. Turnos</button>
             <button type="button" onclick="switchTab('mod3_logging')" id="tab-mod3_logging" class="py-3 px-2 rounded-xl font-extrabold text-xs bg-slate-900 text-slate-300 border border-slate-800 hover:border-slate-700 transition">🪵 4B. Logging</button>
             <button type="button" onclick="switchTab('mod4')" id="tab-mod4" class="py-3 px-2 rounded-xl font-extrabold text-xs bg-slate-900 text-slate-300 border border-slate-800 hover:border-slate-700 transition">🏁 5. Cierre</button>
-            <button type="button" onclick="switchTab('mod5')" id="tab-mod5" class="py-3 px-2 rounded-xl font-extrabold text-xs bg-slate-900 text-slate-300 border border-slate-800 hover:border-slate-700 transition">📑 6. Repositorio</button>
+            <button type="button" onclick="switchTab('mod5')" id="tab-mod5" class="py-3 px-2 rounded-xl font-extrabold text-xs bg-slate-900 text-slate-300 border border-slate-800 hover:border-slate-700 transition">📑 6. Repositorio / DSR</button>
             <button type="button" onclick="switchTab('mod6')" id="tab-mod6" class="py-3 px-2 rounded-xl font-extrabold text-xs bg-slate-900 text-slate-300 border border-slate-800 hover:border-slate-700 transition">⚙️ Admin</button>
         </nav>
 
-        <!-- MÓDULO SALA SITUACIONAL (INICIO POR DEFECTO) -->
+        <!-- MÓDULO SALA SITUACIONAL (DISPONIBLE PARA GEÓLOGOS Y GERENCIA) -->
         <section id="mod_sala" class="space-y-4 bg-slate-900 p-5 sm:p-6 rounded-3xl border border-slate-800 shadow-xl">
             <div class="flex justify-between items-center flex-wrap gap-2 pb-2 border-b border-slate-800">
                 <div>
@@ -540,19 +568,19 @@
             </div>
         </section>
 
-        <!-- MÓDULO 5: REPOSITORIO Y REPORTE DSR -->
+        <!-- MÓDULO 5: REPOSITORIO & REPORTE DSR INFOGRÁFICO -->
         <section id="mod5" class="hidden space-y-4 bg-slate-900 p-5 sm:p-6 rounded-3xl border border-slate-800 shadow-xl">
             <div class="flex justify-between items-center flex-wrap gap-2">
-                <h2 class="text-xl font-black text-amber-400 tracking-tight">📑 Módulo 6: Repositorio Detallado & Reporte DSR</h2>
+                <h2 class="text-xl font-black text-amber-400 tracking-tight">📑 Módulo 6: Repositorio & Infografía DSR</h2>
                 <div class="space-x-2">
-                    <button type="button" onclick="window.print()" class="bg-sky-600 hover:bg-sky-500 text-white font-black px-4 py-2 rounded-xl text-xs shadow transition">🖨️ Imprimir / PDF</button>
-                    <button type="button" onclick="copiarReportePortapapeles()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-black px-4 py-2 rounded-xl text-xs shadow transition">📋 Copiar Reporte</button>
+                    <button type="button" onclick="imprimirOExportarPDF()" class="bg-sky-600 hover:bg-sky-500 text-white font-black px-4 py-2 rounded-xl text-xs shadow transition">🖨️ Imprimir / Guardar PDF</button>
+                    <button type="button" onclick="copiarReportePortapapeles()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-black px-4 py-2 rounded-xl text-xs shadow transition">📋 Copiar Resumen</button>
                 </div>
             </div>
 
             <div class="bg-slate-950 p-3.5 rounded-2xl border border-slate-800 flex items-center justify-between flex-wrap gap-3">
                 <div class="w-full sm:w-auto">
-                    <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Modo de Reporte en Repositorio:</label>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Modo de Reporte Infográfico:</label>
                     <select id="repModoVista" onchange="generarReporteDSR()" class="input-field px-3 py-1.5 rounded-xl text-xs font-bold text-amber-300">
                         <option value="ACUMULADO">📈 Acumulado Global del Pozo</option>
                         <option value="TURNO">⏱️ Filtrado por Turno Específico</option>
@@ -566,11 +594,11 @@
                 </div>
             </div>
 
-            <!-- DSR IMPRIMIBLE CON FORMATO INSTITUCIONAL -->
+            <!-- DSR INFOGRÁFICO CON IMPRESIÓN DINÁMICA DE ALTURA AJUSTADA -->
             <div id="printable-area" class="bg-slate-950 p-5 sm:p-6 rounded-2xl border border-slate-800 space-y-4 text-xs text-white">
-                <div class="border-b border-slate-800 pb-4 flex justify-between items-start flex-wrap gap-3">
+                <div class="border-b border-slate-800 pb-4 flex justify-between items-start flex-wrap gap-3 avoid-break">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-xl bg-blue-950 border border-blue-500/40 flex items-center justify-center p-1 shadow">
+                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-900 via-blue-950 to-slate-950 border border-blue-500/40 flex items-center justify-center p-1.5 shadow-inner">
                             <svg viewBox="0 0 100 100" class="w-full h-full">
                                 <path d="M35 25 L65 25 L65 50 C65 68 52 82 35 82 C25 82 18 78 15 72 L26 65 C28 69 31 72 35 72 C45 72 52 64 52 50 L52 35 L35 35 Z" fill="#fbbf24"/>
                                 <rect x="58" y="25" width="12" height="45" rx="3" fill="#fbbf24"/>
@@ -578,77 +606,79 @@
                         </div>
                         <div>
                             <h3 class="text-base font-black text-white uppercase tracking-tight">
-                                ⛏️ COMPLEJO JIRETH C.A. — REPORTE DIARIO DE SONDAJE (DSR)
+                                ⛏️ COMPLEJO JIRETH C.A. — REPORTE DIARIO DE GEOLOGÍA (DSR)
                             </h3>
-                            <p class="text-[11px] text-slate-400 mt-0.5">Control Operativo, Geológico & Auditoría de Perforación Diamantina</p>
+                            <p class="text-[11px] text-cyan-400 font-extrabold uppercase">COORDINACIÓN DE GEOLOGÍA & CONTROL DE SONDEOS</p>
                         </div>
                     </div>
                     <div class="text-right">
-                        <p class="text-xs text-amber-400 font-extrabold" id="repFechaEmision">Fecha: --/--/----</p>
-                        <p class="text-[11px] text-slate-400 font-medium" id="repCodigoHeader">Sondaje: --</p>
+                        <p class="text-sm text-amber-400 font-black font-mono-code" id="repCodigoHeader">S0000-ET</p>
+                        <p class="text-[11px] text-slate-300 font-bold" id="repFechaEmision">Fecha: --/--/---- | Turno: --</p>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-                    <div class="bg-slate-900 p-2.5 rounded-xl border border-slate-800">
-                        <p class="text-[9px] text-slate-400 uppercase font-bold">Prof. Perforada</p>
-                        <p class="text-sm font-black text-emerald-400 font-mono-code" id="repMetrajeTotal">0.00 m</p>
-                        <p class="text-[9px] text-slate-500" id="repTargetSub">Target: 0.00 m</p>
+                <!-- TARJETAS DE INDICADORES (KPIs INFOGRÁFICOS) -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 avoid-break">
+                    <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
+                        <p class="text-[9px] text-slate-400 uppercase font-extrabold">Prof. Acumulada</p>
+                        <p class="text-base font-black text-emerald-400 font-mono-code mt-0.5" id="repMetrajeTotal">0.00 m</p>
+                        <p class="text-[9px] text-slate-400 font-bold" id="repTargetSub">Target: 0.00 m</p>
                     </div>
-                    <div class="bg-slate-900 p-2.5 rounded-xl border border-slate-800">
-                        <p class="text-[9px] text-slate-400 uppercase font-bold">Recuperación</p>
-                        <p class="text-sm font-black text-cyan-400 font-mono-code" id="repRecPromedio">0.0%</p>
-                        <p class="text-[9px] text-slate-500">Testigo</p>
+                    <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
+                        <p class="text-[9px] text-slate-400 uppercase font-extrabold">Recuperación Global</p>
+                        <p class="text-base font-black text-cyan-400 font-mono-code mt-0.5" id="repRecPromedio">0.0%</p>
+                        <p class="text-[9px] text-slate-400 font-bold">Muestra en Testigo</p>
                     </div>
-                    <div class="bg-slate-900 p-2.5 rounded-xl border border-slate-800">
-                        <p class="text-[9px] text-slate-400 uppercase font-bold">Avance General</p>
-                        <p class="text-sm font-black text-amber-400 font-mono-code" id="repAvanceGen">0.0%</p>
-                        <p class="text-[9px] text-slate-500">Progreso</p>
+                    <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
+                        <p class="text-[9px] text-slate-400 uppercase font-extrabold">Avance General</p>
+                        <p class="text-base font-black text-amber-400 font-mono-code mt-0.5" id="repAvanceGen">0.0%</p>
+                        <p class="text-[9px] text-slate-400 font-bold">Progreso del Pozo</p>
                     </div>
-                    <div class="bg-slate-900 p-2.5 rounded-xl border border-slate-800">
-                        <p class="text-[9px] text-slate-400 uppercase font-bold">Metros Pagables</p>
-                        <p class="text-sm font-black text-sky-300 font-mono-code" id="repMetrosPagables">0.00 m</p>
-                        <p class="text-[9px] text-slate-500">Certificado</p>
+                    <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
+                        <p class="text-[9px] text-slate-400 uppercase font-extrabold">Metros Pagables</p>
+                        <p class="text-base font-black text-sky-300 font-mono-code mt-0.5" id="repMetrosPagables">0.00 m</p>
+                        <p class="text-[9px] text-slate-400 font-bold">Certificado</p>
                     </div>
                 </div>
 
-                <div class="bg-slate-900 p-3.5 rounded-xl border border-slate-800 grid grid-cols-1 sm:grid-cols-2 gap-3 text-[11px]">
-                    <div class="space-y-1.5">
-                        <p class="text-amber-400 font-bold uppercase text-[10px]">Datos de Perforación y Ubicación</p>
+                <div class="bg-slate-900 p-3.5 rounded-xl border border-slate-800 grid grid-cols-1 sm:grid-cols-2 gap-3 text-[11px] avoid-break">
+                    <div class="space-y-1">
+                        <p class="text-amber-400 font-extrabold uppercase text-[10px] tracking-wider">DATOS DE PERFORACIÓN Y UBICACIÓN</p>
                         <div><b>Zona / Proyecto:</b> <span id="repProyecto" class="text-white">--</span></div>
-                        <div><b>Empresa Perforadora:</b> <span id="repEmpresa" class="text-cyan-300">--</span></div>
-                        <div><b>Máquina:</b> <span id="repMaquina" class="text-white">--</span></div>
+                        <div><b>Empresa Perforadora:</b> <span id="repEmpresa" class="text-cyan-300 font-bold">--</span></div>
+                        <div><b>Máquina:</b> <span id="repMaquina" class="text-white font-semibold">--</span></div>
                         <div><b>Inclinación (Dip):</b> <span id="repDip" class="font-mono-code text-slate-300">--</span></div>
                         <div><b>Azimut:</b> <span id="repAzimut" class="font-mono-code text-slate-300">--</span></div>
                     </div>
-                    <div class="space-y-1.5">
-                        <p class="text-amber-400 font-bold uppercase text-[10px]">Supervisión y Turno</p>
-                        <div><b>Operador / Perforador:</b> <span id="repPerforadorTurno" class="text-amber-300 font-bold">--</span></div>
-                        <div><b>Geólogo de Turno:</b> <span id="repGeologoTurno" class="text-cyan-300 font-bold">--</span></div>
-                        <div><b>Metros HQ / NQ:</b> <span id="repMetrosHQRep" class="font-mono-code text-blue-400">0.00m</span> / <span id="repMetrosNQRep" class="font-mono-code text-amber-400">0.00m</span></div>
+                    <div class="space-y-1">
+                        <p class="text-amber-400 font-extrabold uppercase text-[10px] tracking-wider">SUPERVISIÓN Y DIÁMETROS</p>
+                        <div><b>Operador Perforadora:</b> <span id="repPerforadorTurno" class="text-amber-300 font-bold">--</span></div>
+                        <div><b>Geólogo Responsable:</b> <span id="repGeologoTurno" class="text-cyan-300 font-bold">--</span></div>
+                        <div><b>Metros Perforados HQ:</b> <span id="repMetrosHQRep" class="font-mono-code text-blue-400 font-bold">0.00 m</span></div>
+                        <div><b>Metros Perforados NQ:</b> <span id="repMetrosNQRep" class="font-mono-code text-amber-400 font-bold">0.00 m</span></div>
                         <div><b>Estado Sondaje:</b> <span id="repEstadoPozo" class="font-bold text-emerald-400">--</span></div>
                     </div>
                 </div>
 
-                <div class="space-y-1">
-                    <div class="flex justify-between text-[10px] font-bold text-slate-400">
-                        <span>Progreso de Perforación por Diámetro</span>
+                <div class="space-y-1 bg-slate-900 p-3 rounded-xl border border-slate-800 avoid-break">
+                    <div class="flex justify-between text-[10px] font-bold text-slate-300">
+                        <span class="uppercase">Progreso de Perforación por Diámetro</span>
                         <span id="repBarraTexto" class="font-mono-code text-cyan-300">0.0 m / 100.0 m (0.0%)</span>
                     </div>
-                    <div class="w-full bg-slate-900 h-3 rounded-lg overflow-hidden flex border border-slate-800 p-0.5">
+                    <div class="w-full bg-slate-950 h-3 rounded-lg overflow-hidden flex border border-slate-800 p-0.5">
                         <div id="repBarHQ" class="bg-blue-600 h-full rounded-l transition-all duration-300" style="width: 0%"></div>
                         <div id="repBarNQ" class="bg-amber-600 h-full transition-all duration-300" style="width: 0%"></div>
                         <div id="repBarPend" class="bg-slate-800 h-full rounded-r transition-all duration-300" style="width: 100%"></div>
                     </div>
                 </div>
 
-                <div>
-                    <h4 class="text-xs font-black text-cyan-400 uppercase tracking-wider mb-2">🪵 Registro Detallado Tramo a Tramo</h4>
+                <div class="avoid-break">
+                    <h4 class="text-xs font-black text-cyan-400 uppercase tracking-wider mb-2">🪵 REGISTRO DETALLADO TRAMO A TRAMO</h4>
                     <div class="overflow-x-auto border border-slate-800 rounded-xl">
                         <table class="w-full text-left text-[10px] border-collapse">
                             <thead class="bg-slate-900 text-slate-300 uppercase font-extrabold border-b border-slate-800">
                                 <tr>
-                                    <th class="p-2">Corrida</th><th class="p-2">Desde (m)</th><th class="p-2">Hasta (m)</th><th class="p-2">Avance</th><th class="p-2">Diám</th><th class="p-2">Rec (m)</th><th class="p-2">% Rec</th><th class="p-2">Litología / Alteración</th>
+                                    <th class="p-2">Corrida</th><th class="p-2">Desde (m)</th><th class="p-2">Hasta (m)</th><th class="p-2">Avance (m)</th><th class="p-2">Diámetro</th><th class="p-2">Recuperado (m)</th><th class="p-2">% Rec</th><th class="p-2">Litología / Alteración</th>
                                 </tr>
                             </thead>
                             <tbody id="repTablaBody" class="divide-y divide-slate-800/60 font-mono-code">
@@ -658,22 +688,22 @@
                     </div>
                 </div>
 
-                <div class="bg-slate-900 p-3 rounded-xl border border-slate-800 space-y-1">
-                    <p class="text-[11px] font-extrabold text-amber-400 uppercase tracking-wider">📝 Observaciones Geotécnicas y Novedades Operativas:</p>
-                    <p class="text-slate-300 text-[11px] uppercase font-medium leading-relaxed" id="repObservacionesTexto">SIN NOVEDADES REGISTRADAS.</p>
+                <div class="bg-slate-900 p-3 rounded-xl border border-slate-800 space-y-1 avoid-break">
+                    <p class="text-[11px] font-extrabold text-amber-400 uppercase tracking-wider">📝 Observación y Operaciones Principales del Turno:</p>
+                    <p class="text-slate-200 text-[11px] uppercase font-medium leading-relaxed" id="repObservacionesTexto">SIN NOVEDADES REGISTRADAS.</p>
                     <p class="text-slate-400 text-[10px] mt-1" id="repMotivoCierreBox"></p>
                 </div>
 
-                <div class="pt-6 border-t border-slate-800 grid grid-cols-2 gap-4 text-center text-[10px] text-slate-300">
+                <div class="pt-5 border-t border-slate-800 grid grid-cols-2 gap-4 text-center text-[10px] text-slate-300 avoid-break">
                     <div>
-                        <p class="font-bold uppercase text-cyan-400 mb-6">Supervisión Geología</p>
+                        <p class="font-bold uppercase text-cyan-400 mb-5">Geólogos Responsables de Campo</p>
                         <p>_____________________________________</p>
-                        <p class="mt-1 font-semibold text-slate-400">(Firma y Sello / Llenar a Mano)</p>
+                        <p class="mt-1 font-semibold text-slate-400">Firma / Sello Geología</p>
                     </div>
                     <div>
-                        <p class="font-bold uppercase text-amber-400 mb-6">Supervisión Perforación</p>
+                        <p class="font-bold uppercase text-amber-400 mb-5">Responsable Perforación</p>
                         <p>_____________________________________</p>
-                        <p class="mt-1 font-semibold text-slate-400">(Firma y Sello / Llenar a Mano)</p>
+                        <p class="mt-1 font-semibold text-slate-400">Firma Responsable Perforación</p>
                     </div>
                 </div>
             </div>
@@ -825,19 +855,19 @@
             document.getElementById('lblNombreUsuarioLogueado').innerText = rolTexto;
             
             if (perfilActual === 'GERENCIA') {
-                switchTab('mod5');
+                switchTab('mod_sala');
             } else {
                 switchTab('mod_sala');
             }
         }
 
         function aplicarModoLecturaGerencia() {
-            const tabsAOcultar = ['tab-mod_sala', 'tab-mod1', 'tab-mod2', 'tab-mod3_turno', 'tab-mod3_logging', 'tab-mod4', 'tab-mod6'];
+            const tabsAOcultar = ['tab-mod1', 'tab-mod2', 'tab-mod3_turno', 'tab-mod3_logging', 'tab-mod4', 'tab-mod6'];
             tabsAOcultar.forEach(id => {
                 const el = document.getElementById(id);
                 if (el) el.style.display = 'none';
             });
-            switchTab('mod5');
+            switchTab('mod_sala');
         }
 
         function cerrarSesion() {
@@ -845,8 +875,8 @@
         }
 
         function switchTab(tabId) {
-            if (perfilActual === 'GERENCIA' && tabId !== 'mod5') {
-                tabId = 'mod5';
+            if (perfilActual === 'GERENCIA' && tabId !== 'mod_sala' && tabId !== 'mod5') {
+                tabId = 'mod_sala';
             }
             const tabs = ['mod_sala', 'mod1', 'mod2', 'mod3_turno', 'mod3_logging', 'mod4', 'mod5', 'mod6'];
             tabs.forEach(t => {
@@ -935,7 +965,7 @@
                             <div class="bg-gradient-to-r from-cyan-500 to-emerald-400 h-full rounded-full transition-all duration-300" style="width: ${pct}%"></div>
                         </div>
                         <button type="button" onclick="seleccionarPozoDesdeSala('${p.codigo}')" class="w-full mt-1 bg-slate-900 hover:bg-slate-800 text-sky-300 border border-slate-800 py-2 rounded-xl text-xs font-extrabold transition">
-                            🔍 Inspeccionar Sondaje
+                            🔍 Inspeccionar Sondaje / DSR
                         </button>
                     </div>
                 `;
@@ -1453,19 +1483,11 @@
                 boxTurno.classList.add('hidden');
             }
 
-            document.getElementById('repFechaEmision').innerText = "Fecha: " + new Date().toLocaleDateString();
-            document.getElementById('repCodigoHeader').innerText = "Sondaje: " + p.codigo;
-            document.getElementById('repEmpresa').innerText = p.empresa;
-            document.getElementById('repProyecto').innerText = p.proyecto;
-            document.getElementById('repMaquina').innerText = p.maquina;
-            document.getElementById('repDip').innerText = (p.dip || '-') + "°";
-            document.getElementById('repAzimut').innerText = (p.azimut || '0') + "°";
-            document.getElementById('repEstadoPozo').innerText = p.estado;
-            document.getElementById('repTargetSub').innerText = "Target: " + (p.target || '100.00') + " m";
-
             let listaAvancesFiltrada = p.avances;
             let operadorTurnoTexto = "---";
             let geologoTurnoTexto = "---";
+            let fechaReporte = new Date().toLocaleDateString();
+            let jornadaTexto = "DIURNO";
 
             if (modo === 'TURNO') {
                 let turnoSelId = document.getElementById('repTurnoSelect').value;
@@ -1473,6 +1495,8 @@
                     let tObj = turnosData[turnoSelId];
                     operadorTurnoTexto = tObj.perforador;
                     geologoTurnoTexto = tObj.geologo;
+                    fechaReporte = tObj.fecha;
+                    jornadaTexto = tObj.jornada;
                     listaAvancesFiltrada = p.avances.filter(item => item.turnoId === turnoSelId);
                 } else {
                     operadorTurnoTexto = "TODOS / MÚLTIPLES";
@@ -1482,6 +1506,16 @@
                 operadorTurnoTexto = "ACUMULADO GENERAL";
                 geologoTurnoTexto = "ACUMULADO GENERAL";
             }
+
+            document.getElementById('repFechaEmision').innerText = "Fecha: " + fechaReporte + " | Turno: " + jornadaTexto;
+            document.getElementById('repCodigoHeader').innerText = p.codigo;
+            document.getElementById('repEmpresa').innerText = p.empresa;
+            document.getElementById('repProyecto').innerText = p.proyecto;
+            document.getElementById('repMaquina').innerText = p.maquina;
+            document.getElementById('repDip').innerText = (p.dip || '-') + "°";
+            document.getElementById('repAzimut').innerText = (p.azimut || '0') + "°";
+            document.getElementById('repEstadoPozo').innerText = p.estado;
+            document.getElementById('repTargetSub').innerText = "Target: " + (p.target || '100.00') + " m";
 
             document.getElementById('repPerforadorTurno').innerText = operadorTurnoTexto;
             document.getElementById('repGeologoTurno').innerText = geologoTurnoTexto;
@@ -1552,6 +1586,10 @@
             }
         }
 
+        function imprimirOExportarPDF() {
+            window.print();
+        }
+
         function poblarSelectAdminBorrar() {
             const sel = document.getElementById('adminSelectPozoBorrar');
             if (!sel) return;
@@ -1593,7 +1631,7 @@
             p.avances.forEach((t, i) => {
                 texto += `Tramo #${i+1}: ${t.desde}-${t.hasta}m | ${t.diametro} | Rec: ${t.recuperado}m (${t.porcentaje}%) | ${t.meteorizacion}\n`;
             });
-            navigator.clipboard.writeText(texto).then(() => { alert("📋 Reporte copiado al portapapeles."); });
+            navigator.clipboard.writeText(texto).then(() => { alert("📋 Resumen copiado al portapapeles."); });
         }
 
         function exportarBackupJSON() {
@@ -1652,7 +1690,7 @@
 
         async function sincronizarDesdeSupabaseCloud(mostrarAlerta = true) {
             if (!supabaseClient) {
-                if (mostrarAlerta) alert("⚠️ El cliente de Supabase não está inicializado.");
+                if (mostrarAlerta) alert("⚠️ El cliente de Supabase no está inicializado.");
                 return;
             }
             try {
