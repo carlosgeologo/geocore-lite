@@ -694,19 +694,13 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-3">
-                    <h3 class="text-xs font-black text-cyan-400 uppercase tracking-wider">☁️ Respaldos JSON Local / Nube</h3>
-                    <div class="flex gap-2 flex-wrap pt-1">
-                        <button type="button" onclick="exportarBackupJSON()" class="bg-sky-600 hover:bg-sky-500 text-white px-4 py-2.5 rounded-xl text-xs font-black shadow">📥 Exportar JSON</button>
-                        <label class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2.5 rounded-xl text-xs font-black shadow cursor-pointer">
-                            📤 Importar JSON <input type="file" id="fileImportJSON" onchange="importarBackupJSON(event)" class="hidden" accept=".json">
-                        </label>
-                    </div>
-                </div>
-                <div id="boxZonaPeligroAdmin" class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-3">
-                    <h3 class="text-xs font-black text-rose-400 uppercase tracking-wider">⚠️ Zona de Peligro Total</h3>
-                    <button type="button" onclick="borrarTodoLocal()" class="bg-rose-950 hover:bg-rose-900 text-rose-300 border border-rose-800 px-4 py-2.5 rounded-xl text-xs font-black shadow">⚠️ Resetear Toda la Base de Datos</button>
+            <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-3">
+                <h3 class="text-xs font-black text-cyan-400 uppercase tracking-wider">☁️ Respaldos JSON Local / Nube</h3>
+                <div class="flex gap-2 flex-wrap pt-1">
+                    <button type="button" onclick="exportarBackupJSON()" class="bg-sky-600 hover:bg-sky-500 text-white px-4 py-2.5 rounded-xl text-xs font-black shadow">📥 Exportar JSON</button>
+                    <label class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2.5 rounded-xl text-xs font-black shadow cursor-pointer">
+                        📤 Importar JSON <input type="file" id="fileImportJSON" onchange="importarBackupJSON(event)" class="hidden" accept=".json">
+                    </label>
                 </div>
             </div>
         </section>
@@ -838,7 +832,6 @@
         }
 
         function aplicarModoLecturaGerencia() {
-            // El usuario gerencia solo tiene acceso al Módulo 5 (Repositorio) en modo lectura
             const tabsAOcultar = ['tab-mod_sala', 'tab-mod1', 'tab-mod2', 'tab-mod3_turno', 'tab-mod3_logging', 'tab-mod4', 'tab-mod6'];
             tabsAOcultar.forEach(id => {
                 const el = document.getElementById(id);
@@ -853,7 +846,7 @@
 
         function switchTab(tabId) {
             if (perfilActual === 'GERENCIA' && tabId !== 'mod5') {
-                tabId = 'mod5'; // Forzar que gerencia permanezca solo en repositorio
+                tabId = 'mod5';
             }
             const tabs = ['mod_sala', 'mod1', 'mod2', 'mod3_turno', 'mod3_logging', 'mod4', 'mod5', 'mod6'];
             tabs.forEach(t => {
@@ -1633,18 +1626,6 @@
                 } catch(err) { alert("❌ Error al parsear JSON: " + err); }
             };
             reader.readAsText(file);
-        }
-
-        async function borrarTodoLocal() {
-            if (perfilActual === 'GERENCIA') return;
-            if (confirm("⚠️ ¿Está seguro de borrar TODOS los datos locales y de la nube?")) {
-                localStorage.clear();
-                pozosData = {}; turnosData = {}; pozoActivoId = '';
-                if (supabaseClient) {
-                    await supabaseClient.from('jireth_geocore').delete().eq('id', 'db_principal');
-                }
-                location.reload();
-            }
         }
 
         async function guardarYPersistirTodo() {
