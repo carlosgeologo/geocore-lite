@@ -70,7 +70,7 @@
         }
         .pulse-live { animation: pulseGlow 1.8s infinite ease-in-out; }
 
-        /* ESTILOS DE IMPRESIÓN Y PDF OFICIAL CON MARCA DE AGUA Y NUMERACIÓN */
+        /* ESTILOS DE IMPRESIÓN Y PDF OFICIAL CON REPETICIÓN DE CABECERAS DE TABLA */
         @media print {
             @page { size: portrait; margin: 10mm; }
             body * { visibility: hidden !important; }
@@ -87,7 +87,10 @@
                 z-index: 10;
             }
             .avoid-break { break-inside: avoid !important; page-break-inside: avoid !important; }
-            .print-break-after { break-after: page !important; page-break-after: always !important; }
+            
+            /* REPETIR CABECERA DE TABLA EN CADA PÁGINA AL IMPRIMIR */
+            thead { display: table-header-group !important; }
+            tr { break-inside: avoid !important; page-break-inside: avoid !important; }
             
             .print-bar-hq { background-color: #2563eb !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
             .print-bar-nq { background-color: #d97706 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
@@ -109,7 +112,7 @@
             
             <div class="text-center pt-2 space-y-2">
                 <div class="mx-auto flex items-center justify-center gap-3 bg-slate-950/90 p-3 rounded-2xl border border-slate-800 shadow-lg">
-                    <img src="1001007025.jpg" alt="Jireth Logo" class="w-12 h-12 rounded-xl object-cover border border-amber-500/40 shadow-inner shrink-0">
+                    <img src="1001007025.jpg" alt="Jireth Logo" class="w-12 h-12 rounded-xl object-cover border border-amber-500/40 shadow-inner shrink-0" onerror="this.src='https://via.placeholder.com/48?text=JIRETH'">
                     <div class="text-left leading-tight">
                         <div class="text-base font-black tracking-wider text-white">JIRETH <span class="text-amber-400 text-xs">GEOCORE LITE</span></div>
                         <div class="text-[10px] text-cyan-400 font-extrabold uppercase">Complejo Jireth C.A.</div>
@@ -188,7 +191,7 @@
     <div id="appPrincipal" class="hidden space-y-3.5 max-w-7xl mx-auto">
         <header class="bg-slate-900/95 backdrop-blur p-3.5 rounded-2xl border border-slate-800 flex justify-between items-center flex-wrap gap-3 shadow-lg laser-line">
             <div class="flex items-center gap-3">
-                <img src="1001007025.jpg" alt="Logo" class="w-10 h-10 rounded-xl object-cover border border-blue-500/40 shadow">
+                <img src="1001007025.jpg" alt="Logo" class="w-10 h-10 rounded-xl object-cover border border-blue-500/40 shadow" onerror="this.src='https://via.placeholder.com/40?text=J'">
                 <div>
                     <h1 class="text-base font-black text-white tracking-tight flex items-center gap-1.5">
                         <span>Jireth GeoCore Lite</span>
@@ -636,7 +639,7 @@
                 <!-- MEMBRETE CON LOGO EXACTO (REPETIDO EN CADA HOJA) -->
                 <div class="page-header-membrete border-b-2 border-slate-900 pb-3 flex justify-between items-center flex-wrap gap-3">
                     <div class="flex items-center gap-3">
-                        <img src="1001007025.jpg" alt="Logo" class="w-10 h-10 rounded-xl object-cover border border-slate-400 shadow-sm shrink-0">
+                        <img src="1001007025.jpg" alt="Logo" class="w-10 h-10 rounded-xl object-cover border border-slate-400 shadow-sm shrink-0" onerror="this.src='https://via.placeholder.com/40?text=J'">
                         <div>
                             <h3 class="text-sm font-black text-slate-900 uppercase tracking-tight" id="repTituloPrincipalDSR">
                                 REPORTE DE TURNO
@@ -712,7 +715,7 @@
                     </div>
                 </div>
 
-                <!-- INMEDIATAMENTE DEBAJO: TABLA DE REGISTRO DETALLADO CON CABECERAS REPETIBLES -->
+                <!-- INMEDIATAMENTE DEBAJO: TABLA DE REGISTRO DETALLADO CON CABECERAS REPETIBLES EN CADA PÁGINA -->
                 <div>
                     <h4 class="text-xs font-black text-slate-900 uppercase tracking-wider mb-2">🪵 REGISTRO DETALLADO TRAMO A TRAMO (CON ESTÁNDAR DE PAGO)</h4>
                     <div class="overflow-x-auto border border-slate-300 rounded-xl shadow-sm">
@@ -1492,7 +1495,6 @@
             document.getElementById('barPendiente').style.width = pPend + '%';
         }
 
-        // MÓDULO DE CIERRE EXHAUSTIVO (CON ABSOLUTAMENTE TODOS LOS DATOS)
         function cargarResumenCierrePozo() {
             let container = document.getElementById('cierreResumenPozo');
             if (!container) return;
@@ -1594,13 +1596,21 @@
             });
         }
 
-        // GENERACIÓN DE REPORTE DSR CON TÍTULOS EXACTOS Y NUMERACIÓN DE PÁGINAS
+        // GENERACIÓN DE REPORTE DSR CON VALIDACIÓN ESTRICTA DE CULMINACIÓN
         function generarReporteDSR() {
             if (!pozoActivoId || !pozosData[pozoActivoId]) { alert("⚠️ Seleccione un sondaje activo primero."); return; }
             let p = pozosData[pozoActivoId];
             let modo = document.getElementById('repModoVista').value;
             let boxTurno = document.getElementById('boxSelectTurnoRepo');
             
+            // VALIDACIÓN ESTRICTA PARA REPORTE DE POZO CULMINADO
+            if (modo === 'CULMINADO' && p.estado !== 'CULMINADO') {
+                alert(`⚠️ ALERTA: El sondaje seleccionado (${p.codigo}) se encuentra en estado ACTIVO y no ha sido culminado. Debe proceder al Módulo de Cierre (Módulo 5) para culminarlo antes de emitir este reporte.`);
+                document.getElementById('repModoVista').value = 'ACUMULADO';
+                generarReporteDSR();
+                return;
+            }
+
             if (modo === 'TURNO') {
                 boxTurno.classList.remove('hidden');
                 document.getElementById('repTituloPrincipalDSR').innerText = "REPORTE DE TURNO";
