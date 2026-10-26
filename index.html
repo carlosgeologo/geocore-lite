@@ -70,9 +70,9 @@
         }
         .pulse-live { animation: pulseGlow 1.8s infinite ease-in-out; }
 
-        /* ESTILOS DE IMPRESIÓN Y PDF CON FONDO BLANCO Y COLORES SÓLIDOS FORZADOS */
+        /* ESTILOS DE IMPRESIÓN Y PDF OFICIAL CON MARCA DE AGUA Y NUMERACIÓN */
         @media print {
-            @page { size: portrait; margin: 8mm; }
+            @page { size: portrait; margin: 10mm; }
             body * { visibility: hidden !important; }
             #printable-area, #printable-area * { visibility: visible !important; }
             #printable-area { 
@@ -84,12 +84,19 @@
             .page-header-membrete {
                 display: block !important; position: fixed; top: 0; left: 0; right: 0;
                 background: #ffffff; border-bottom: 2px solid #0f172a; padding-bottom: 6px; margin-bottom: 10px;
+                z-index: 10;
             }
             .avoid-break { break-inside: avoid !important; page-break-inside: avoid !important; }
+            .print-break-after { break-after: page !important; page-break-after: always !important; }
             
             .print-bar-hq { background-color: #2563eb !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
             .print-bar-nq { background-color: #d97706 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
             .print-bar-pend { background-color: #cbd5e1 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            
+            .watermark-bg {
+                position: fixed; inset: 0; display: flex; align-items: center; justify-content: center;
+                opacity: 0.04; z-index: 0; pointer-events: none;
+            }
         }
     </style>
 </head>
@@ -102,19 +109,7 @@
             
             <div class="text-center pt-2 space-y-2">
                 <div class="mx-auto flex items-center justify-center gap-3 bg-slate-950/90 p-3 rounded-2xl border border-slate-800 shadow-lg">
-                    <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-900 via-blue-950 to-slate-950 border border-blue-500/40 flex items-center justify-center shadow-inner shrink-0">
-                        <svg viewBox="0 0 100 100" class="w-8 h-8 drop-shadow">
-                            <defs>
-                                <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                    <stop offset="0%" stop-color="#fbbf24"/>
-                                    <stop offset="50%" stop-color="#d97706"/>
-                                    <stop offset="100%" stop-color="#b45309"/>
-                                </linearGradient>
-                            </defs>
-                            <path d="M35 25 L65 25 L65 50 C65 68 52 82 35 82 C25 82 18 78 15 72 L26 65 C28 69 31 72 35 72 C45 72 52 64 52 50 L52 35 L35 35 Z" fill="url(#goldGrad)"/>
-                            <rect x="58" y="25" width="12" height="45" rx="3" fill="url(#goldGrad)"/>
-                        </svg>
-                    </div>
+                    <img src="1001007025.jpg" alt="Jireth Logo" class="w-12 h-12 rounded-xl object-cover border border-amber-500/40 shadow-inner shrink-0">
                     <div class="text-left leading-tight">
                         <div class="text-base font-black tracking-wider text-white">JIRETH <span class="text-amber-400 text-xs">GEOCORE LITE</span></div>
                         <div class="text-[10px] text-cyan-400 font-extrabold uppercase">Complejo Jireth C.A.</div>
@@ -193,12 +188,7 @@
     <div id="appPrincipal" class="hidden space-y-3.5 max-w-7xl mx-auto">
         <header class="bg-slate-900/95 backdrop-blur p-3.5 rounded-2xl border border-slate-800 flex justify-between items-center flex-wrap gap-3 shadow-lg laser-line">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-blue-950 border border-blue-500/40 flex items-center justify-center p-1 shadow">
-                    <svg viewBox="0 0 100 100" class="w-full h-full">
-                        <path d="M35 25 L65 25 L65 50 C65 68 52 82 35 82 C25 82 18 78 15 72 L26 65 C28 69 31 72 35 72 C45 72 52 64 52 50 L52 35 L35 35 Z" fill="#fbbf24"/>
-                        <rect x="58" y="25" width="12" height="45" rx="3" fill="#fbbf24"/>
-                    </svg>
-                </div>
+                <img src="1001007025.jpg" alt="Logo" class="w-10 h-10 rounded-xl object-cover border border-blue-500/40 shadow">
                 <div>
                     <h1 class="text-base font-black text-white tracking-tight flex items-center gap-1.5">
                         <span>Jireth GeoCore Lite</span>
@@ -243,7 +233,7 @@
             <button type="button" onclick="switchTab('mod6')" id="tab-mod6" class="py-3 px-2 rounded-xl font-extrabold text-xs bg-slate-900 text-slate-300 border border-slate-800 hover:border-slate-700 transition">⚙️ Admin</button>
         </nav>
 
-        <!-- MÓDULO SALA SITUACIONAL CON INFOGRAFÍA DE PRIMERA LÍNEA -->
+        <!-- MÓDULO SALA SITUACIONAL -->
         <section id="mod_sala" class="space-y-4 bg-slate-900 p-5 sm:p-6 rounded-3xl border border-slate-800 shadow-xl">
             <div class="flex justify-between items-center flex-wrap gap-2 pb-2 border-b border-slate-800">
                 <div>
@@ -256,7 +246,6 @@
                 <button type="button" onclick="renderizarSalaSituacional()" class="bg-slate-950 hover:bg-slate-800 text-cyan-300 border border-slate-800 px-3 py-2 rounded-xl text-xs font-bold transition">🔄 Actualizar En Vivo</button>
             </div>
 
-            <!-- INFOGRAFÍA MACRO GLOBAL CON LUCES NEÓN -->
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 <div class="bg-slate-950 p-3.5 rounded-2xl border border-slate-800 relative overflow-hidden">
                     <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-500 to-cyan-400"></div>
@@ -284,9 +273,7 @@
                 </div>
             </div>
 
-            <div id="gridSalaSituacional" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pt-2">
-                <!-- Se llena dinámicamente con UI Gráfica Pro -->
-            </div>
+            <div id="gridSalaSituacional" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pt-2"></div>
         </section>
 
         <!-- MÓDULO 1: APERTURA -->
@@ -343,27 +330,27 @@
                 </div>
                 <div>
                     <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Coordenada Este (m)</label>
-                    <input type="text" id="m2_este" disabled onblur="formatearUTM(this)" class="input-field w-full px-4 rounded-xl font-mono-code font-extrabold text-sm text-cyan-400" placeholder="">
+                    <input type="text" id="m2_este" disabled onblur="formatearUTM(this)" class="input-field w-full px-4 rounded-xl font-mono-code font-extrabold text-sm text-cyan-400">
                 </div>
                 <div>
                     <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Coordenada Norte (m)</label>
-                    <input type="text" id="m2_norte" disabled onblur="formatearUTM(this)" class="input-field w-full px-4 rounded-xl font-mono-code font-extrabold text-sm text-cyan-400" placeholder="">
+                    <input type="text" id="m2_norte" disabled onblur="formatearUTM(this)" class="input-field w-full px-4 rounded-xl font-mono-code font-extrabold text-sm text-cyan-400">
                 </div>
                 <div>
                     <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Cota Z (m)</label>
-                    <input type="text" id="m2_cota" disabled onblur="formatearDecimalesLibres(this)" class="input-field w-full px-4 rounded-xl font-mono-code font-extrabold text-sm text-cyan-400" placeholder="">
+                    <input type="text" id="m2_cota" disabled onblur="formatearDecimalesLibres(this)" class="input-field w-full px-4 rounded-xl font-mono-code font-extrabold text-sm text-cyan-400">
                 </div>
                 <div>
                     <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Azimut (°)</label>
-                    <input type="text" id="m2_azimut" disabled onblur="formatearDecimalesLibres(this)" class="input-field w-full px-4 rounded-xl font-mono-code font-extrabold text-sm text-amber-400" placeholder="">
+                    <input type="text" id="m2_azimut" disabled onblur="formatearDecimalesLibres(this)" class="input-field w-full px-4 rounded-xl font-mono-code font-extrabold text-sm text-amber-400">
                 </div>
                 <div>
                     <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Inclinación (Dip °)</label>
-                    <input type="text" id="m2_dip" disabled oninput="forzarDipNegativo(this)" class="input-field w-full px-4 rounded-xl font-mono-code font-extrabold text-sm text-amber-400" placeholder="-">
+                    <input type="text" id="m2_dip" disabled oninput="forzarDipNegativo(this)" class="input-field w-full px-4 rounded-xl font-mono-code font-extrabold text-sm text-amber-400">
                 </div>
                 <div>
                     <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Profundidad Target (m)</label>
-                    <input type="text" id="m2_target" disabled onblur="formatearDecimalesLibres(this)" class="input-field w-full px-4 rounded-xl font-mono-code font-extrabold text-sm text-purple-400" placeholder="">
+                    <input type="text" id="m2_target" disabled onblur="formatearDecimalesLibres(this)" class="input-field w-full px-4 rounded-xl font-mono-code font-extrabold text-sm text-purple-400">
                 </div>
             </div>
             <div id="m2_btn_box" class="hidden pt-2">
@@ -371,7 +358,7 @@
             </div>
         </section>
 
-        <!-- MÓDULO 3A: TURNOS & EDICIÓN DE TURNO CON INSPECCIÓN DETALLADA DE AVANCES -->
+        <!-- MÓDULO 3A: TURNOS -->
         <section id="mod3_turno" class="hidden space-y-4 bg-slate-900 p-5 sm:p-6 rounded-3xl border border-slate-800 shadow-xl">
             <h2 class="text-xl font-black text-amber-400 tracking-tight">⏱️ Módulo 4A: Gestión, Inspección y Edición de Turnos</h2>
             <p class="text-xs text-slate-300 font-medium leading-relaxed">Abre un turno operativo nuevo, edita los datos generales de un turno existente, o selecciona un turno del historial para inspeccionar detalladamente todos sus avances registrados.</p>
@@ -410,7 +397,7 @@
                 </div>
             </div>
 
-            <!-- SELECCIONAR PARA RETOMAR, INSPECCIONAR, EDITAR DATOS O BORRAR TURNO -->
+            <!-- HISTORIAL E INSPECCIÓN -->
             <div class="bg-slate-950 p-4 sm:p-5 rounded-2xl border border-slate-800 space-y-3.5">
                 <h3 class="text-xs font-black text-cyan-400 uppercase tracking-wider">📂 Historial de Turnos & Auditoría de Avances</h3>
                 <div class="space-y-3">
@@ -418,7 +405,6 @@
                         <option value="">-- Seleccionar Turno del Historial --</option>
                     </select>
 
-                    <!-- CONTENEDOR DE INSPECCIÓN DETALLADA DE AVANCES DEL TURNO SELECCIONADO -->
                     <div id="contenedorDetalleTurnoSeleccionado" class="hidden space-y-2.5 pt-3 border-t border-slate-800">
                         <div class="bg-slate-900 p-3.5 rounded-xl border border-slate-800 text-[11px] space-y-1.5 shadow-inner">
                             <div class="flex justify-between items-center flex-wrap gap-1">
@@ -440,23 +426,15 @@
                                         <th class="p-2 text-amber-400">Pago Estándar</th>
                                     </tr>
                                 </thead>
-                                <tbody id="inspTablaAvancesBody" class="divide-y divide-slate-800 font-mono-code text-slate-200">
-                                    <!-- Dinámico -->
-                                </tbody>
+                                <tbody id="inspTablaAvancesBody" class="divide-y divide-slate-800 font-mono-code text-slate-200"></tbody>
                             </table>
                         </div>
                     </div>
 
                     <div class="flex gap-2 flex-wrap pt-1">
-                        <button type="button" onclick="retomarTurnoSeleccionado()" class="btn-field flex-1 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-extrabold shadow-emerald-600/25">
-                            ▶️ Retomar Turno Activo
-                        </button>
-                        <button type="button" onclick="cargarTurnoParaEditar()" class="bg-amber-600 hover:bg-amber-500 text-slate-950 px-4 py-2.5 rounded-xl font-extrabold text-xs shadow">
-                            ✏️ Editar Datos Turno
-                        </button>
-                        <button type="button" onclick="eliminarTurnoSeleccionado()" class="bg-rose-950 hover:bg-rose-900 text-rose-300 border border-rose-800 px-4 py-2.5 rounded-xl font-extrabold text-xs shadow">
-                            🗑️ Borrar Turno
-                        </button>
+                        <button type="button" onclick="retomarTurnoSeleccionado()" class="btn-field flex-1 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-extrabold shadow-emerald-600/25">▶️ Retomar Turno Activo</button>
+                        <button type="button" onclick="cargarTurnoParaEditar()" class="bg-amber-600 hover:bg-amber-500 text-slate-950 px-4 py-2.5 rounded-xl font-extrabold text-xs shadow">✏️ Editar Datos Turno</button>
+                        <button type="button" onclick="eliminarTurnoSeleccionado()" class="bg-rose-950 hover:bg-rose-900 text-rose-300 border border-rose-800 px-4 py-2.5 rounded-xl font-extrabold text-xs shadow">🗑️ Borrar Turno</button>
                     </div>
                 </div>
             </div>
@@ -484,7 +462,6 @@
                 </div>
             </div>
 
-            <!-- TARJETAS SUPERIORES CON GRÁFICOS PRO -->
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 <div class="bg-slate-950 p-3.5 rounded-2xl border border-slate-800">
                     <p class="text-[10px] text-slate-400 font-bold uppercase">Metraje Acumulado</p>
@@ -508,7 +485,6 @@
                 </div>
             </div>
 
-            <!-- GRÁFICO PRO ANIMADO DE PROGRESO -->
             <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-2.5">
                 <div class="flex justify-between items-center text-xs font-extrabold">
                     <span class="text-amber-400 uppercase tracking-wider">📈 Progreso Analítico por Diámetro (Dashboard Pro)</span>
@@ -579,24 +555,19 @@
                                 <th class="p-3">#</th><th class="p-3">Tramo (m)</th><th class="p-3">Diám</th><th class="p-3">Rec (m)</th><th class="p-3">% Rec</th><th class="p-3">Meteorización</th><th class="p-3 text-amber-400">Pago Estándar</th><th class="p-3 text-center" id="thAccionTabla">Acción</th>
                             </tr>
                         </thead>
-                        <tbody id="tablaAvancesBody" class="divide-y divide-slate-800/60 font-mono-code">
-                            <!-- Dinámico -->
-                        </tbody>
+                        <tbody id="tablaAvancesBody" class="divide-y divide-slate-800/60 font-mono-code"></tbody>
                     </table>
                 </div>
             </div>
         </section>
 
-        <!-- MÓDULO 4: CIERRE DE POZO ACTIVO / REACTIVACIÓN -->
+        <!-- MÓDULO 4: CIERRE EXHAUSTIVO -->
         <section id="mod4" class="hidden space-y-4 bg-slate-900 p-5 sm:p-6 rounded-3xl border border-slate-800 shadow-xl">
-            <h2 class="text-xl font-black text-amber-400 tracking-tight">🏁 Módulo 5: Cierre & Gestión de Sondajes</h2>
-            <p class="text-xs text-slate-300">Revise la información completa del pozo activo o proceda a reactivarlo si requiere modificaciones.</p>
+            <h2 class="text-xl font-black text-amber-400 tracking-tight">🏁 Módulo 5: Cierre & Evaluación Exhaustiva del Sondaje</h2>
+            <p class="text-xs text-slate-300">Aquí se evalúa el sondaje con el 100% de los datos técnicos registrados (sin dejar nada por fuera) para su cierre o reactivación.</p>
 
-            <div id="cierreResumenPozo" class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-3 text-xs">
-                <!-- Se llena dinámicamente -->
-            </div>
+            <div id="cierreResumenPozo" class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-3 text-xs"></div>
 
-            <!-- GRÁFICO PRO EN CIERRE -->
             <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-2">
                 <div class="flex justify-between items-center text-xs font-extrabold">
                     <span class="text-amber-400 uppercase">📈 Gráfico Analítico Pro de Avance del Sondaje</span>
@@ -629,10 +600,10 @@
             </div>
         </section>
 
-        <!-- MÓDULO 5: REPOSITORIO & REPORTES DSR OFICIALES -->
+        <!-- MÓDULO 5: REPOSITORIO & DSR -->
         <section id="mod5" class="hidden space-y-4 bg-slate-900 p-5 sm:p-6 rounded-3xl border border-slate-800 shadow-xl">
             <div class="flex justify-between items-center flex-wrap gap-2">
-                <h2 class="text-xl font-black text-amber-400 tracking-tight">📑 Módulo 6: Repositorio & 3 Informes DSR</h2>
+                <h2 class="text-xl font-black text-amber-400 tracking-tight">📑 Módulo 6: Repositorio & Informes DSR Oficiales</h2>
                 <div class="space-x-2">
                     <button type="button" onclick="imprimirOExportarPDF()" class="bg-sky-600 hover:bg-sky-500 text-white font-black px-4 py-2 rounded-xl text-xs shadow transition">🖨️ Imprimir / Guardar PDF</button>
                     <button type="button" onclick="copiarReportePortapapeles()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-black px-4 py-2 rounded-xl text-xs shadow transition">📋 Copiar Resumen</button>
@@ -643,34 +614,32 @@
                 <div class="w-full sm:w-auto">
                     <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Seleccionar Tipo de Informe:</label>
                     <select id="repModoVista" onchange="generarReporteDSR()" class="input-field px-3 py-1.5 rounded-xl text-xs font-bold text-amber-300">
-                        <option value="TURNO">1. ⏱️ Informe de Reporte de Turno</option>
-                        <option value="ACUMULADO">2. 📈 Reporte Acumulado por Pozo</option>
-                        <option value="CULMINADO">3. 🏁 Reporte de Pozo Culminado (Cierre)</option>
+                        <option value="TURNO">1. ⏱️ REPORTE DE TURNO</option>
+                        <option value="ACUMULADO">2. 📈 REPORTE ACUMULADO DEL SONDAJE</option>
+                        <option value="CULMINADO">3. 🏁 REPORTE SONDAJE CULMINADO</option>
                     </select>
                 </div>
                 <div id="boxSelectTurnoRepo" class="hidden w-full sm:w-auto">
                     <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Seleccionar Turno Específico:</label>
-                    <select id="repTurnoSelect" onchange="generarReporteDSR()" class="input-field px-3 py-1.5 rounded-xl text-xs font-bold text-cyan-300">
-                        <!-- Dinámico -->
-                    </select>
+                    <select id="repTurnoSelect" onchange="generarReporteDSR()" class="input-field px-3 py-1.5 rounded-xl text-xs font-bold text-cyan-300"></select>
                 </div>
             </div>
 
-            <!-- DSR FORMATO OFICIAL CON FONDO BLANCO Y GRÁFICOS DE ALTO CONTRASTE FORZADOS EN IMPRESIÓN -->
-            <div id="printable-area" class="bg-white p-6 rounded-2xl border border-slate-300 space-y-4 text-xs text-slate-900 shadow-xl">
+            <!-- DSR FORMATO OFICIAL CON MARCA DE AGUA, LOGO Y TABLA INMEDIATA -->
+            <div id="printable-area" class="bg-white p-6 rounded-2xl border border-slate-300 space-y-4 text-xs text-slate-900 shadow-xl relative overflow-hidden">
                 
-                <!-- MEMBRETE CON LOGO INSTITUCIONAL (SE REPITE EN CADA HOJA AL IMPRIMIR) -->
+                <!-- MARCA DE AGUA GOTA DE AGUA -->
+                <div class="watermark-bg hidden print:flex">
+                    <img src="1001007025.jpg" alt="Watermark" class="w-96 h-96 object-contain opacity-10">
+                </div>
+
+                <!-- MEMBRETE CON LOGO EXACTO (REPETIDO EN CADA HOJA) -->
                 <div class="page-header-membrete border-b-2 border-slate-900 pb-3 flex justify-between items-center flex-wrap gap-3">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-xl bg-blue-950 border border-blue-500/40 flex items-center justify-center p-1 shadow shrink-0">
-                            <svg viewBox="0 0 100 100" class="w-full h-full">
-                                <path d="M35 25 L65 25 L65 50 C65 68 52 82 35 82 C25 82 18 78 15 72 L26 65 C28 69 31 72 35 72 C45 72 52 64 52 50 L52 35 L35 35 Z" fill="#fbbf24"/>
-                                <rect x="58" y="25" width="12" height="45" rx="3" fill="#fbbf24"/>
-                            </svg>
-                        </div>
+                        <img src="1001007025.jpg" alt="Logo" class="w-10 h-10 rounded-xl object-cover border border-slate-400 shadow-sm shrink-0">
                         <div>
-                            <h3 class="text-sm font-black text-slate-900 uppercase tracking-tight">
-                                JIRETH GEOCORE — REPORTE DIARIO DE GEOLOGÍA (DSR)
+                            <h3 class="text-sm font-black text-slate-900 uppercase tracking-tight" id="repTituloPrincipalDSR">
+                                REPORTE DE TURNO
                             </h3>
                             <p class="text-[10px] text-slate-700 font-extrabold uppercase">COMPLEJO JIRETH C.A. — COORDINACIÓN DE GEOLOGÍA</p>
                         </div>
@@ -681,7 +650,7 @@
                     </div>
                 </div>
 
-                <!-- TARJETAS DE KPIs CON FONDO BLANCO / GRIS CLARO Y BORDES DEFINIDOS -->
+                <!-- KPIS -->
                 <div class="grid grid-cols-4 gap-2 avoid-break pt-2">
                     <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-300 shadow-sm">
                         <p class="text-[9px] text-slate-600 uppercase font-black">PROF. PERFORADA</p>
@@ -725,7 +694,7 @@
                     </div>
                 </div>
 
-                <!-- GRÁFICO PRO DE PROGRESO CON COLORES SÓLIDOS FORZADOS PARA PDF -->
+                <!-- GRÁFICO PRO DE PROGRESO -->
                 <div class="space-y-1.5 bg-slate-50 p-3.5 rounded-xl border border-slate-300 avoid-break shadow-sm">
                     <div class="flex justify-between text-[10px] font-black text-slate-900">
                         <span class="uppercase">📈 Gráfico Pro — Progreso de Perforación por Diámetro</span>
@@ -743,7 +712,8 @@
                     </div>
                 </div>
 
-                <div class="avoid-break">
+                <!-- INMEDIATAMENTE DEBAJO: TABLA DE REGISTRO DETALLADO CON CABECERAS REPETIBLES -->
+                <div>
                     <h4 class="text-xs font-black text-slate-900 uppercase tracking-wider mb-2">🪵 REGISTRO DETALLADO TRAMO A TRAMO (CON ESTÁNDAR DE PAGO)</h4>
                     <div class="overflow-x-auto border border-slate-300 rounded-xl shadow-sm">
                         <table class="w-full text-left text-[10px] border-collapse">
@@ -760,9 +730,7 @@
                                     <th class="p-2 text-amber-300 font-black">Pago Estándar</th>
                                 </tr>
                             </thead>
-                            <tbody id="repTablaBody" class="divide-y divide-slate-300 font-mono-code text-slate-900">
-                                <!-- Dinámico -->
-                            </tbody>
+                            <tbody id="repTablaBody" class="divide-y divide-slate-300 font-mono-code text-slate-900"></tbody>
                         </table>
                     </div>
                 </div>
@@ -773,10 +741,7 @@
                     <p class="text-slate-600 text-[10px] mt-1 font-bold" id="repMotivoCierreBox"></p>
                 </div>
 
-                <!-- SECCIÓN DINÁMICA DE FIRMAS -->
-                <div class="pt-6 border-t-2 border-slate-300 text-[10px] text-slate-800 avoid-break" id="contenedorFirmasDSR">
-                    <!-- Dinámico -->
-                </div>
+                <div class="pt-6 border-t-2 border-slate-300 text-[10px] text-slate-800 avoid-break" id="contenedorFirmasDSR"></div>
             </div>
         </section>
 
@@ -833,7 +798,6 @@
         let claveGerencia = 'JIRETH2026';
         const PIN_MAESTRO = "2628";
 
-        // GESTIÓN DE TIMEOUT DE INACTIVIDAD (15 MINUTOS)
         setInterval(() => {
             if (document.getElementById('appPrincipal').classList.contains('hidden') === false) {
                 if (Date.now() - lastActivityTime > 15 * 60 * 1000) {
@@ -849,24 +813,17 @@
 
         window.onload = async function() {
             document.getElementById('m3_fecha').valueAsDate = new Date();
-            
-            migrarRecalcularPagosEstandار = migrarRecalcularPagosEstandar;
             migrarRecalcularPagosEstandar();
-
             refrescarSelectorPozos();
             if (pozoActivoId && pozosData[pozoActivoId]) {
                 document.getElementById('globalWellSelect').value = pozoActivoId;
                 cargarDatosPozoEnFormularios(pozoActivoId);
             }
-            if (turnoActivoObj) {
-                actualizarBannerTurnoActivo();
-            }
+            if (turnoActivoObj) actualizarBannerTurnoActivo();
             poblarSelectRetomarTurno();
             renderizarSalaSituacional();
 
-            if (supabaseClient) {
-                await sincronizarDesdeSupabaseCloud(false);
-            }
+            if (supabaseClient) await sincronizarDesdeSupabaseCloud(false);
         };
 
         function migrarRecalcularPagosEstandar() {
@@ -879,7 +836,6 @@
                         let rec = parseFloat(t.recuperado) || 0;
                         let lit = t.meteorizacion || "SAPROLITA";
                         let pagoCalculado = calcularMetrosAPagar(lonManiobra, rec, lit);
-                        
                         if (!t.pagoEstandar || parseFloat(t.pagoEstandar) !== parseFloat(pagoCalculado.toFixed(2))) {
                             t.pagoEstandar = pagoCalculado.toFixed(2);
                             huboCambios = true;
@@ -887,9 +843,7 @@
                     });
                 }
             });
-            if (huboCambios) {
-                localStorage.setItem('jireth_pozos', JSON.stringify(pozosData));
-            }
+            if (huboCambios) localStorage.setItem('jireth_pozos', JSON.stringify(pozosData));
         }
 
         function seleccionarPerfil(perfil) {
@@ -917,23 +871,14 @@
         function intentarLoginGeo() {
             const val = document.getElementById('inputClaveGeo').value.trim();
             claveGeologos = localStorage.getItem('jireth_clave_geo') || 'Mina2628';
-            if (val === claveGeologos) {
-                entrarAlSistema("GEÓLOGOS (COMPLEJO JIRETH C.A.)");
-            } else {
-                alert("❌ Contraseña de Geólogos incorrecta.");
-                document.getElementById('inputClaveGeo').value = '';
-            }
+            if (val === claveGeologos) entrarAlSistema("GEÓLOGOS (COMPLEJO JIRETH C.A.)");
+            else { alert("❌ Contraseña de Geólogos incorrecta."); document.getElementById('inputClaveGeo').value = ''; }
         }
 
         function intentarLoginGer() {
             const val = document.getElementById('inputClaveGer').value.trim();
-            if (val === claveGerencia) {
-                entrarAlSistema("GERENCIA / AUDITORÍA (REPOSITORIO)");
-                aplicarModoLecturaGerencia();
-            } else {
-                alert("❌ Contraseña de Gerencia incorrecta.");
-                document.getElementById('inputClaveGer').value = '';
-            }
+            if (val === claveGerencia) { entrarAlSistema("GERENCIA / AUDITORÍA (REPOSITORIO)"); aplicarModoLecturaGerencia(); }
+            else { alert("❌ Contraseña de Gerencia incorrecta."); document.getElementById('inputClaveGer').value = ''; }
         }
 
         function mostrarBoxRescate() {
@@ -956,9 +901,7 @@
                 document.getElementById('inputPinRescate').value = '';
                 document.getElementById('inputClaveNuevaRescate').value = '';
                 ocultarBoxRescate();
-            } else {
-                alert("❌ PIN Maestro incorrecto (es 2628) o contraseña muy corta.");
-            }
+            } else { alert("❌ PIN Maestro incorrecto (es 2628) o contraseña muy corta."); }
         }
 
         function entrarAlSistema(rolTexto) {
@@ -969,8 +912,7 @@
         }
 
         function aplicarModoLecturaGerencia() {
-            const tabsAOcultar = ['tab-mod1', 'tab-mod2', 'tab-mod3_turno', 'tab-mod3_logging', 'tab-mod4', 'tab-mod6'];
-            tabsAOcultar.forEach(id => {
+            ['tab-mod1', 'tab-mod2', 'tab-mod3_turno', 'tab-mod3_logging', 'tab-mod4', 'tab-mod6'].forEach(id => {
                 const el = document.getElementById(id);
                 if (el) el.style.display = 'none';
             });
@@ -980,11 +922,8 @@
         function cerrarSesion() { location.reload(); }
 
         function switchTab(tabId) {
-            if (perfilActual === 'GERENCIA' && tabId !== 'mod_sala' && tabId !== 'mod5') {
-                tabId = 'mod_sala';
-            }
-            const tabs = ['mod_sala', 'mod1', 'mod2', 'mod3_turno', 'mod3_logging', 'mod4', 'mod5', 'mod6'];
-            tabs.forEach(t => {
+            if (perfilActual === 'GERENCIA' && tabId !== 'mod_sala' && tabId !== 'mod5') tabId = 'mod_sala';
+            ['mod_sala', 'mod1', 'mod2', 'mod3_turno', 'mod3_logging', 'mod4', 'mod5', 'mod6'].forEach(t => {
                 const sec = document.getElementById(t);
                 if (sec) sec.classList.add('hidden');
                 const btn = document.getElementById('tab-' + t);
@@ -997,10 +936,7 @@
 
             if (tabId === 'mod_sala') renderizarSalaSituacional();
             if (tabId === 'mod4') cargarResumenCierrePozo();
-            if (tabId === 'mod5') {
-                poblarSelectTurnosRepo();
-                generarReporteDSR();
-            }
+            if (tabId === 'mod5') { poblarSelectTurnosRepo(); generarReporteDSR(); }
             if (tabId === 'mod6') poblarSelectAdminBorrar();
         }
 
@@ -1010,19 +946,13 @@
             let litUpper = (litologia || "").toUpperCase();
             if (litUpper.includes('OXIDADA')) umbral = 80;
             if (litUpper.includes('FRESCA') || litUpper.includes('VETA')) umbral = 90;
-
-            if (pct >= umbral) {
-                return lonManiobra;
-            } else {
-                return rec;
-            }
+            return pct >= umbral ? lonManiobra : rec;
         }
 
         function renderizarSalaSituacional() {
             const grid = document.getElementById('gridSalaSituacional');
             const contador = document.getElementById('contadorFrentesActivos');
             if (!grid) return;
-            
             grid.innerHTML = '';
             let pozosKeys = Object.keys(pozosData);
             let pozosActivosKeys = pozosKeys.filter(k => pozosData[k].estado === 'ABIERTO');
@@ -1050,13 +980,7 @@
             document.getElementById('macroRecuperacionGlobal').innerText = recPromGral + "%";
 
             if (pozosActivosKeys.length === 0) {
-                grid.innerHTML = `
-                    <div class="col-span-full bg-slate-950 p-8 rounded-2xl border border-slate-800 text-center space-y-3">
-                        <div class="text-3xl">📡</div>
-                        <h3 class="text-base font-black text-amber-400 uppercase tracking-wider">SALA SITUACIONAL — SIN FRENTES ACTIVOS</h3>
-                        <p class="text-xs text-slate-400 max-w-md mx-auto">Actualmente no hay sondajes abiertos en operación.</p>
-                    </div>
-                `;
+                grid.innerHTML = `<div class="col-span-full bg-slate-950 p-8 rounded-2xl border border-slate-800 text-center space-y-3"><div class="text-3xl">📡</div><h3 class="text-base font-black text-amber-400 uppercase tracking-wider">SALA SITUACIONAL — SIN FRENTES ACTIVOS</h3><p class="text-xs text-slate-400 max-w-md mx-auto">Actualmente no hay sondajes abiertos en operación.</p></div>`;
                 return;
             }
 
@@ -1091,34 +1015,19 @@
                             <span class="text-xs font-mono-code font-black text-amber-400">${p.codigo}</span>
                         </div>
                         <div class="grid grid-cols-2 gap-2 pt-1 text-[11px]">
-                            <div class="bg-slate-900/80 p-2.5 rounded-xl border border-slate-800">
-                                <span class="text-slate-400 text-[9px] block uppercase font-bold">Cliente</span>
-                                <span class="text-white font-extrabold truncate block">${p.empresa}</span>
-                            </div>
-                            <div class="bg-slate-900/80 p-2.5 rounded-xl border border-slate-800">
-                                <span class="text-slate-400 text-[9px] block uppercase font-bold">Proyecto</span>
-                                <span class="text-cyan-300 font-extrabold truncate block">${p.proyecto}</span>
-                            </div>
+                            <div class="bg-slate-900/80 p-2.5 rounded-xl border border-slate-800"><span class="text-slate-400 text-[9px] block uppercase font-bold">Cliente</span><span class="text-white font-extrabold truncate block">${p.empresa}</span></div>
+                            <div class="bg-slate-900/80 p-2.5 rounded-xl border border-slate-800"><span class="text-slate-400 text-[9px] block uppercase font-bold">Proyecto</span><span class="text-cyan-300 font-extrabold truncate block">${p.proyecto}</span></div>
                         </div>
                     </div>
-
                     <div class="space-y-3 pt-2 border-t border-slate-800/80">
-                        <div class="flex justify-between items-center text-xs font-extrabold">
-                            <span class="text-slate-300">Progreso Gráfico Pro:</span>
-                            <span class="text-emerald-400 font-mono-code">${totalMetros.toFixed(2)}m / ${target.toFixed(2)}m (${pct.toFixed(1)}%)</span>
-                        </div>
+                        <div class="flex justify-between items-center text-xs font-extrabold"><span class="text-slate-300">Progreso Gráfico Pro:</span><span class="text-emerald-400 font-mono-code">${totalMetros.toFixed(2)}m / ${target.toFixed(2)}m (${pct.toFixed(1)}%)</span></div>
                         <div class="w-full bg-slate-900 h-3.5 rounded-full overflow-hidden flex border border-slate-800 p-0.5 shadow-inner">
-                            <div class="bg-gradient-to-r from-blue-600 to-cyan-500 h-full rounded-l" style="width: ${target > 0 ? (totalHQ/target)*100 : 0}%" title="HQ: ${totalHQ.toFixed(2)}m"></div>
-                            <div class="bg-gradient-to-r from-amber-600 to-yellow-500 h-full" style="width: ${target > 0 ? (totalNQ/target)*100 : 0}%" title="NQ: ${totalNQ.toFixed(2)}m"></div>
-                            <div class="bg-slate-800 h-full rounded-r" style="width: ${Math.max(0, 100 - pct)}%" title="Pendiente"></div>
+                            <div class="bg-gradient-to-r from-blue-600 to-cyan-500 h-full rounded-l" style="width: ${target > 0 ? (totalHQ/target)*100 : 0}%"></div>
+                            <div class="bg-gradient-to-r from-amber-600 to-yellow-500 h-full" style="width: ${target > 0 ? (totalNQ/target)*100 : 0}%"></div>
+                            <div class="bg-slate-800 h-full rounded-r" style="width: ${Math.max(0, 100 - pct)}%"></div>
                         </div>
-                        <div class="flex justify-between text-[10px] text-slate-300 font-bold px-1 bg-slate-900/50 p-2 rounded-xl border border-slate-800/50">
-                            <span>Recup: <b class="text-cyan-400 font-mono-code">${recPozo}%</b></span>
-                            <span>A Pagar: <b class="text-amber-400 font-mono-code">${totalPago.toFixed(2)}m</b></span>
-                        </div>
-                        <button type="button" onclick="seleccionarPozoDesdeSala('${p.codigo}')" class="w-full mt-1 bg-slate-900 hover:bg-slate-800 text-sky-300 border border-slate-800 py-2.5 rounded-xl text-xs font-extrabold transition shadow">
-                            🔍 Inspeccionar Sondaje / DSR
-                        </button>
+                        <div class="flex justify-between text-[10px] text-slate-300 font-bold px-1 bg-slate-900/50 p-2 rounded-xl border border-slate-800/50"><span>Recup: <b class="text-cyan-400 font-mono-code">${recPozo}%</b></span><span>A Pagar: <b class="text-amber-400 font-mono-code">${totalPago.toFixed(2)}m</b></span></div>
+                        <button type="button" onclick="seleccionarPozoDesdeSala('${p.codigo}')" class="w-full mt-1 bg-slate-900 hover:bg-slate-800 text-sky-300 border border-slate-800 py-2.5 rounded-xl text-xs font-extrabold transition shadow">🔍 Inspeccionar Sondaje / DSR</button>
                     </div>
                 `;
                 grid.appendChild(card);
@@ -1136,12 +1045,10 @@
         function forzarMayusculas(el) { if (el && el.value) el.value = el.value.toUpperCase(); }
         function formatearUTM(el) { if (el && el.value) { let num = parseFloat(el.value.replace(/,/g, '')); if (!isNaN(num)) el.value = num.toFixed(2); } }
         function formatearDecimalesLibres(el) { if (el && el.value) { let num = parseFloat(el.value.replace(/,/g, '')); if (!isNaN(num)) el.value = num.toFixed(2); } }
-        
         function forzarDipNegativo(el) {
             if (!el) return;
-            let val = el.value.replace(/[^0-9.-]/g, '');
-            val = val.replace(/-/g, '');
-            if (val.length > 0) el.value = '-' + val; else el.value = '-';
+            let val = el.value.replace(/[^0-9.-]/g, '').replace(/-/g, '');
+            el.value = val.length > 0 ? '-' + val : '-';
         }
 
         function toggleOtraEmpresa() {
@@ -1166,11 +1073,7 @@
             if (!codigo || !empresa || !proyecto) { alert("❌ Complete Código, Empresa y Proyecto."); return; }
             if (pozosData[codigo]) { alert("⚠️ El sondaje " + codigo + " ya existe."); return; }
 
-            pozosData[codigo] = {
-                codigo: codigo, empresa: empresa, proyecto: proyecto, maquina: 'GEOMAX',
-                este: '', norte: '', cota: '', azimut: '', dip: '-', target: '', avances: [], estado: 'ABIERTO'
-            };
-            
+            pozosData[codigo] = { codigo: codigo, empresa: empresa, proyecto: proyecto, maquina: 'GEOMAX', este: '', norte: '', cota: '', azimut: '', dip: '-', target: '', avances: [], estado: 'ABIERTO' };
             await guardarYPersistirTodo();
             pozoActivoId = codigo;
             localStorage.setItem('jireth_pozo_activo', pozoActivoId);
@@ -1190,9 +1093,7 @@
         function habilitarEdicionTopo() {
             if (perfilActual === 'GERENCIA') { alert("⚠️ Solo lectura."); return; }
             if (!pozoActivoId) { alert("⚠️ Seleccione un sondaje primero."); return; }
-            ['m2_maquina', 'm2_este', 'm2_norte', 'm2_cota', 'm2_azimut', 'm2_dip', 'm2_target'].forEach(id => {
-                document.getElementById(id).disabled = false;
-            });
+            ['m2_maquina', 'm2_este', 'm2_norte', 'm2_cota', 'm2_azimut', 'm2_dip', 'm2_target'].forEach(id => document.getElementById(id).disabled = false);
             document.getElementById('m2_btn_box').classList.remove('hidden');
             toggleOtraMaquina();
         }
@@ -1215,9 +1116,7 @@
             await guardarYPersistirTodo();
             alert("✅ Ficha topográfica guardada.");
             document.getElementById('m2_btn_box').classList.add('hidden');
-            ['m2_maquina', 'm2_este', 'm2_norte', 'm2_cota', 'm2_azimut', 'm2_dip', 'm2_target', 'm2_otra_maquina'].forEach(id => {
-                document.getElementById(id).disabled = true;
-            });
+            ['m2_maquina', 'm2_este', 'm2_norte', 'm2_cota', 'm2_azimut', 'm2_dip', 'm2_target', 'm2_otra_maquina'].forEach(id => document.getElementById(id).disabled = true);
             actualizarProgresoGrafico();
             renderizarSalaSituacional();
         }
@@ -1260,9 +1159,7 @@
                 maqSel.value = 'OTRA';
                 document.getElementById('m2_otra_maquina_box').classList.remove('hidden');
                 document.getElementById('m2_otra_maquina').value = p.maquina;
-            } else {
-                document.getElementById('m2_otra_maquina_box').classList.add('hidden');
-            }
+            } else { document.getElementById('m2_otra_maquina_box').classList.add('hidden'); }
 
             actualizarTablaAvances();
             actualizarProgresoGrafico();
@@ -1270,10 +1167,7 @@
             poblarSelectRetomarTurno();
             
             if (!document.getElementById('mod4').classList.contains('hidden')) cargarResumenCierrePozo();
-            if (!document.getElementById('mod5').classList.contains('hidden')) {
-                poblarSelectTurnosRepo();
-                generarReporteDSR();
-            }
+            if (!document.getElementById('mod5').classList.contains('hidden')) { poblarSelectTurnosRepo(); generarReporteDSR(); }
         }
 
         async function guardarOIniciarTurno() {
@@ -1289,10 +1183,7 @@
             if (!fecha || !perforador || !geologo) { alert("❌ Complete Fecha, Perforador y Geólogo."); return; }
 
             let duplicado = Object.values(turnosData).some(t => t.pozo === pozoActivoId && t.fecha === fecha && t.jornada === jornada && t.id !== turnoEditId);
-            if (duplicado) {
-                alert(`⚠️ Ya existe un turno ${jornada} para la fecha ${fecha} en el sondaje ${pozoActivoId}. No se permiten turnos duplicados.`);
-                return;
-            }
+            if (duplicado) { alert(`⚠️ Ya existe un turno ${jornada} para la fecha ${fecha} en el sondaje ${pozoActivoId}.`); return; }
 
             if (turnoEditId && turnosData[turnoEditId]) {
                 turnosData[turnoEditId].fecha = fecha;
@@ -1312,11 +1203,7 @@
                 cancelarEdicionTurno();
             } else {
                 let nuevoId = 'TURNO_' + Date.now();
-                turnoActivoObj = {
-                    id: nuevoId, pozo: pozoActivoId, fecha: fecha,
-                    jornada: jornada, perforador: perforador, geologo: geologo, observaciones: ""
-                };
-
+                turnoActivoObj = { id: nuevoId, pozo: pozoActivoId, fecha: fecha, jornada: jornada, perforador: perforador, geologo: geologo, observaciones: "" };
                 turnosData[nuevoId] = turnoActivoObj;
                 localStorage.setItem('jireth_turnos', JSON.stringify(turnosData));
                 localStorage.setItem('jireth_turno_activo', JSON.stringify(turnoActivoObj));
@@ -1332,13 +1219,11 @@
             let id = document.getElementById('selectRetomarTurno').value;
             if (!id || !turnosData[id]) { alert("⚠️ Seleccione un turno del historial."); return; }
             let t = turnosData[id];
-
             document.getElementById('editTurnoId').value = t.id;
             document.getElementById('m3_fecha').value = t.fecha;
             document.getElementById('m3_turno').value = t.jornada;
             document.getElementById('m3_perforador').value = t.perforador;
             document.getElementById('m3_geologo').value = t.geologo;
-
             document.getElementById('tituloBoxTurno').innerText = "✏️ Editando Datos del Turno (" + t.pozo + ")";
             document.getElementById('btnAccionTurno').innerText = "💾 Guardar Cambios del Turno";
             document.getElementById('btnCancelarEdicionTurno').classList.remove('hidden');
@@ -1417,14 +1302,10 @@
             document.getElementById('contenedorDetalleTurnoSeleccionado').classList.add('hidden');
         }
 
-        // NUEVA FUNCIÓN PARA MOSTRAR LA INFORMACIÓN DETALLADA DEL TURNO SELECCIONADO
         function mostrarDetallesTurnoSeleccionado() {
             let id = document.getElementById('selectRetomarTurno').value;
             let contenedor = document.getElementById('contenedorDetalleTurnoSeleccionado');
-            if (!id || !turnosData[id]) {
-                contenedor.classList.add('hidden');
-                return;
-            }
+            if (!id || !turnosData[id]) { contenedor.classList.add('hidden'); return; }
             let t = turnosData[id];
             let p = pozosData[t.pozo];
             contenedor.classList.remove('hidden');
@@ -1434,34 +1315,19 @@
 
             let tbody = document.getElementById('inspTablaAvancesBody');
             tbody.innerHTML = '';
-
-            let tramosturno = [];
+            let tramosturno = p && p.avances ? p.avances.filter(av => av.turnoId === id) : [];
             let totalMetrosTurno = 0;
-            if (p && p.avances) {
-                tramosturno = p.avances.filter(av => av.turnoId === id);
-            }
 
             tramosturno.forEach((av, idx) => {
                 let met = parseFloat(av.hasta) - parseFloat(av.desde);
                 totalMetrosTurno += met;
                 let tr = document.createElement('tr');
                 tr.className = "hover:bg-slate-900/40 transition";
-                tr.innerHTML = `
-                    <td class="p-2">#${idx + 1}</td>
-                    <td class="p-2 text-sky-300 font-bold">${av.diametro}</td>
-                    <td class="p-2 text-cyan-400 font-bold">${av.desde} - ${av.hasta}</td>
-                    <td class="p-2 text-emerald-300">${av.recuperado}m</td>
-                    <td class="p-2 font-bold ${parseFloat(av.porcentaje) < 70 ? 'text-amber-400' : 'text-emerald-400'}">${av.porcentaje}%</td>
-                    <td class="p-2 text-slate-300">${av.meteorizacion}</td>
-                    <td class="p-2 text-amber-400 font-bold">${av.pagoEstandar || '0.00'}m</td>
-                `;
+                tr.innerHTML = `<td class="p-2">#${idx + 1}</td><td class="p-2 text-sky-300 font-bold">${av.diametro}</td><td class="p-2 text-cyan-400 font-bold">${av.desde} - ${av.hasta}</td><td class="p-2 text-emerald-300">${av.recuperado}m</td><td class="p-2 font-bold ${parseFloat(av.porcentaje) < 70 ? 'text-amber-400' : 'text-emerald-400'}">${av.porcentaje}%</td><td class="p-2 text-slate-300">${av.meteorizacion}</td><td class="p-2 text-amber-400 font-bold">${av.pagoEstandar || '0.00'}m</td>`;
                 tbody.appendChild(tr);
             });
 
-            if (tramosturno.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" class="p-3 text-center text-slate-500 font-bold">No hay tramos de avance registrados en este turno.</td></tr>`;
-            }
-
+            if (tramosturno.length === 0) tbody.innerHTML = `<tr><td colspan="7" class="p-3 text-center text-slate-500 font-bold">No hay tramos de avance registrados en este turno.</td></tr>`;
             document.getElementById('inspTurnoMetraje').innerText = `${totalMetrosTurno.toFixed(2)} m perforados (${tramosturno.length} tramos)`;
         }
 
@@ -1483,9 +1349,7 @@
             if (!pozoActivoId || !pozosData[pozoActivoId]) return;
             let p = pozosData[pozoActivoId];
             let ultimoHasta = 0.0;
-            if (p.avances && p.avances.length > 0) {
-                ultimoHasta = parseFloat(p.avances[p.avances.length - 1].hasta) || 0.0;
-            }
+            if (p.avances && p.avances.length > 0) ultimoHasta = parseFloat(p.avances[p.avances.length - 1].hasta) || 0.0;
             document.getElementById('m3_desde').value = ultimoHasta.toFixed(2);
             let lon = parseFloat(document.getElementById('m3_longitud').value) || 1.5;
             let hasta = ultimoHasta + lon;
@@ -1506,20 +1370,14 @@
             let meteorizacion = document.getElementById('m3_meteorizacion').value;
             let lonManiobra = hasta - desde;
 
-            if (isNaN(recuperado) || recuperado < 0 || recuperado > lonManiobra) {
-                alert("❌ Metros recuperados inválidos respecto a la longitud del tramo.");
-                return;
-            }
+            if (isNaN(recuperado) || recuperado < 0 || recuperado > lonManiobra) { alert("❌ Metros recuperados inválidos respecto a la longitud del tramo."); return; }
 
             let metrosPago = calcularMetrosAPagar(lonManiobra, recuperado, meteorizacion);
-
             let objTramo = {
                 desde: desde.toFixed(2), hasta: hasta.toFixed(2), diametro: diametro,
                 recuperado: recuperado.toFixed(2), porcentaje: (((recuperado / lonManiobra) * 100)).toFixed(1),
                 meteorizacion: meteorizacion, pagoEstandar: metrosPago.toFixed(2),
-                turnoId: turnoActivoObj.id,
-                perforador: turnoActivoObj.perforador,
-                geologoTurno: turnoActivoObj.geologo
+                turnoId: turnoActivoObj.id, perforador: turnoActivoObj.perforador, geologoTurno: turnoActivoObj.geologo
             };
 
             if (indexEditandoAvance !== null) {
@@ -1527,9 +1385,7 @@
                 indexEditandoAvance = null;
                 document.getElementById('btnGuardarAvance').innerText = "➕ Guardar Avance Tramo";
                 document.getElementById('btnCancelarEdicion').classList.add('hidden');
-            } else {
-                p.avances.push(objTramo);
-            }
+            } else { p.avances.push(objTramo); }
 
             await guardarYPersistirTodo();
             actualizarTablaAvances();
@@ -1546,10 +1402,7 @@
             if (!tbody) return;
             tbody.innerHTML = '';
             
-            let avancesAMostrar = p.avances;
-            if (turnoActivoObj) {
-                avancesAMostrar = p.avances.filter(t => t.turnoId === turnoActivoObj.id);
-            }
+            let avancesAMostrar = turnoActivoObj ? p.avances.filter(t => t.turnoId === turnoActivoObj.id) : p.avances;
 
             avancesAMostrar.forEach((t) => {
                 let idxOriginal = p.avances.indexOf(t);
@@ -1558,22 +1411,8 @@
 
                 let tr = document.createElement('tr');
                 tr.className = "hover:bg-slate-900/50 transition";
-                let tdAccion = perfilActual === 'GERENCIA' ? `<td class="p-3 text-center text-slate-500">Solo Lectura</td>` : `
-                    <td class="p-3 text-center space-x-1">
-                        <button onclick="editarTramo(${idxOriginal})" class="text-xs bg-sky-950 text-sky-300 px-2 py-1 rounded border border-sky-800">✏️</button>
-                        <button onclick="eliminarTramo(${idxOriginal})" class="text-xs bg-rose-950 text-rose-300 px-2 py-1 rounded border border-rose-800">🗑️</button>
-                    </td>
-                `;
-                tr.innerHTML = `
-                    <td class="p-3">#${idxOriginal + 1}</td>
-                    <td class="p-3 text-cyan-400 font-bold">${t.desde} - ${t.hasta}</td>
-                    <td class="p-3 text-sky-300 font-bold">${t.diametro}</td>
-                    <td class="p-3 text-emerald-300">${t.recuperado}</td>
-                    <td class="p-3 font-bold ${parseFloat(t.porcentaje) < 70 ? 'text-amber-400' : 'text-emerald-400'}">${t.porcentaje}%</td>
-                    <td class="p-3 text-slate-300">${t.meteorizacion}</td>
-                    <td class="p-3 text-amber-400 font-bold">${pagVal.toFixed(2)}m</td>
-                    ${tdAccion}
-                `;
+                let tdAccion = perfilActual === 'GERENCIA' ? `<td class="p-3 text-center text-slate-500">Solo Lectura</td>` : `<td class="p-3 text-center space-x-1"><button onclick="editarTramo(${idxOriginal})" class="text-xs bg-sky-950 text-sky-300 px-2 py-1 rounded border border-sky-800">✏️</button><button onclick="eliminarTramo(${idxOriginal})" class="text-xs bg-rose-950 text-rose-300 px-2 py-1 rounded border border-rose-800">🗑️</button></td>`;
+                tr.innerHTML = `<td class="p-3">#${idxOriginal + 1}</td><td class="p-3 text-cyan-400 font-bold">${t.desde} - ${t.hasta}</td><td class="p-3 text-sky-300 font-bold">${t.diametro}</td><td class="p-3 text-emerald-300">${t.recuperado}</td><td class="p-3 font-bold ${parseFloat(t.porcentaje) < 70 ? 'text-amber-400' : 'text-emerald-400'}">${t.porcentaje}%</td><td class="p-3 text-slate-300">${t.meteorizacion}</td><td class="p-3 text-amber-400 font-bold">${pagVal.toFixed(2)}m</td>${tdAccion}`;
                 tbody.appendChild(tr);
             });
         }
@@ -1587,7 +1426,6 @@
             document.getElementById('m3_diametro').value = t.diametro;
             document.getElementById('m3_recuperado').value = t.recuperado;
             document.getElementById('m3_meteorizacion').value = t.meteorizacion;
-            
             indexEditandoAvance = idx;
             document.getElementById('btnGuardarAvance').innerText = "💾 Actualizar Tramo #" + (idx + 1);
             document.getElementById('btnCancelarEdicion').classList.remove('hidden');
@@ -1654,6 +1492,7 @@
             document.getElementById('barPendiente').style.width = pPend + '%';
         }
 
+        // MÓDULO DE CIERRE EXHAUSTIVO (CON ABSOLUTAMENTE TODOS LOS DATOS)
         function cargarResumenCierrePozo() {
             let container = document.getElementById('cierreResumenPozo');
             if (!container) return;
@@ -1665,24 +1504,39 @@
             let totalMetros = 0, totalRec = 0, totalPago = 0;
             p.avances.forEach(t => {
                 let met = (parseFloat(t.hasta) - parseFloat(t.desde));
-                let lonM = met;
-                let pag = t.pagoEstandar ? parseFloat(t.pagoEstandar) : calcularMetrosAPagar(lonM, parseFloat(t.recuperado), t.meteorizacion);
+                let pag = t.pagoEstandar ? parseFloat(t.pagoEstandar) : calcularMetrosAPagar(met, parseFloat(t.recuperado), t.meteorizacion);
                 totalMetros += met;
-                totalRec += parseFloat(t.recuperado);
+                totalRec += parseFloat(t.recuperado) || 0;
                 totalPago += pag;
             });
             let target = parseFloat(p.target) || 100.0;
+            let recGralPozo = totalMetros > 0 ? ((totalRec / totalMetros) * 100).toFixed(1) : '0.0';
 
             container.innerHTML = `
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pb-3 border-b border-slate-800">
-                    <div><b>Sondaje:</b> <span class="text-amber-300 font-bold">${p.codigo}</span></div>
-                    <div><b>Proyecto:</b> <span class="text-white font-bold">${p.proyecto}</span></div>
-                    <div><b>Empresa:</b> <span class="text-cyan-300 font-bold">${p.empresa}</span></div>
-                    <div><b>Estado:</b> <span class="text-emerald-400 font-bold">${p.estado}</span></div>
-                    <div><b>Metros Perforados:</b> <span class="font-mono-code text-cyan-400">${totalMetros.toFixed(2)} m</span></div>
-                    <div><b>Metros a Pagar:</b> <span class="font-mono-code text-amber-400 font-bold">${totalPago.toFixed(2)} m</span></div>
-                    <div><b>Cota Z:</b> <span class="font-mono-code">${p.cota || '0.00'}</span></div>
-                    <div><b>Target:</b> <span class="font-mono-code text-purple-400">${target} m</span></div>
+                <div class="space-y-3">
+                    <p class="text-amber-400 font-black uppercase text-xs tracking-wider border-b border-slate-800 pb-1">📋 Ficha Técnica Consolidada para Evaluación y Cierre (100% de Trazabilidad)</p>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[11px]">
+                        <div><b>Código Sondaje:</b> <span class="text-amber-300 font-bold">${p.codigo}</span></div>
+                        <div><b>Proyecto / Sector:</b> <span class="text-white font-bold">${p.proyecto}</span></div>
+                        <div><b>Empresa Cliente:</b> <span class="text-cyan-300 font-bold">${p.empresa}</span></div>
+                        <div><b>Estado Actual:</b> <span class="text-emerald-400 font-bold">${p.estado}</span></div>
+                        <div><b>Máquina Perf.:</b> <span class="text-sky-300 font-bold">${p.maquina || 'GEOMAX'}</span></div>
+                        <div><b>Coordenada Este:</b> <span class="font-mono-code text-cyan-400">${p.este || '0.00'} m</span></div>
+                        <div><b>Coordenada Norte:</b> <span class="font-mono-code text-cyan-400">${p.norte || '0.00'} m</span></div>
+                        <div><b>Cota Z (m):</b> <span class="font-mono-code text-cyan-400">${p.cota || '0.00'} m</span></div>
+                        <div><b>Inclinación (Dip):</b> <span class="font-mono-code text-amber-400">${p.dip || '-'}°</span></div>
+                        <div><b>Azimut (°):</b> <span class="font-mono-code text-amber-400">${p.azimut || '0'}°</span></div>
+                        <div><b>Prof. Target:</b> <span class="font-mono-code text-purple-400">${target} m</span></div>
+                        <div><b>Total Perforado:</b> <span class="font-mono-code text-emerald-400 font-bold">${totalMetros.toFixed(2)} m</span></div>
+                        <div><b>Recuperación Gral:</b> <span class="font-mono-code text-cyan-300 font-bold">${recGralPozo}%</span></div>
+                        <div><b>Total Metros a Pagar:</b> <span class="font-mono-code text-amber-300 font-bold">${totalPago.toFixed(2)} m</span></div>
+                    </div>
+                    <div class="pt-2 border-t border-slate-800">
+                        <p class="text-slate-300 font-bold text-[10px] uppercase mb-1">Listado Completo de Tramos Registrados (${p.avances.length} tramos):</p>
+                        <div class="max-h-36 overflow-y-auto border border-slate-800 rounded-xl p-2 bg-slate-900 font-mono-code text-[10px]">
+                            ${p.avances.length > 0 ? p.avances.map((tr, i) => `#${i+1}: ${tr.desde}-${tr.hasta}m | ${tr.diametro} | Rec: ${tr.recuperado}m (${tr.porcentaje}%) | Pago: ${tr.pagoEstandar}m | ${tr.meteorizacion}`).join('<br>') : 'Sin tramos registrados todavía.'}
+                        </div>
+                    </div>
                 </div>
             `;
 
@@ -1740,17 +1594,23 @@
             });
         }
 
+        // GENERACIÓN DE REPORTE DSR CON TÍTULOS EXACTOS Y NUMERACIÓN DE PÁGINAS
         function generarReporteDSR() {
-            if (!pozoActivoId || !pozosData[pozoActivoId]) {
-                alert("⚠️ Seleccione un sondaje activo primero.");
-                return;
-            }
+            if (!pozoActivoId || !pozosData[pozoActivoId]) { alert("⚠️ Seleccione un sondaje activo primero."); return; }
             let p = pozosData[pozoActivoId];
             let modo = document.getElementById('repModoVista').value;
             let boxTurno = document.getElementById('boxSelectTurnoRepo');
             
-            if (modo === 'TURNO') boxTurno.classList.remove('hidden');
-            else boxTurno.classList.add('hidden');
+            if (modo === 'TURNO') {
+                boxTurno.classList.remove('hidden');
+                document.getElementById('repTituloPrincipalDSR').innerText = "REPORTE DE TURNO";
+            } else if (modo === 'ACUMULADO') {
+                boxTurno.classList.add('hidden');
+                document.getElementById('repTituloPrincipalDSR').innerText = "REPORTE ACUMULADO DEL SONDAJE";
+            } else if (modo === 'CULMINADO') {
+                boxTurno.classList.add('hidden');
+                document.getElementById('repTituloPrincipalDSR').innerText = "REPORTE SONDAJE CULMINADO";
+            }
 
             let listaAvancesFiltrada = [];
             let operadorTurnoTexto = "---";
@@ -1811,22 +1671,11 @@
                 totalMetros += met; 
                 totalRecuperado += rec;
                 totalPagoFinal += pagoTramo;
-
                 if (t.diametro === 'HQ') totalHQMet += met; else totalNQMet += met;
 
                 let tr = document.createElement('tr');
                 tr.className = "border-b border-slate-300 hover:bg-slate-100";
-                tr.innerHTML = `
-                    <td class="p-2 border-r border-slate-300 font-bold">#${idx + 1}</td>
-                    <td class="p-2 border-r border-slate-300">${t.desde}</td>
-                    <td class="p-2 border-r border-slate-300">${t.hasta}</td>
-                    <td class="p-2 border-r border-slate-300 font-bold">${met.toFixed(2)}</td>
-                    <td class="p-2 border-r border-slate-300 font-bold text-blue-700">${t.diametro}</td>
-                    <td class="p-2 border-r border-slate-300">${t.recuperado}</td>
-                    <td class="p-2 border-r border-slate-300 font-bold ${parseFloat(t.porcentaje) < 70 ? 'text-amber-700' : 'text-emerald-700'}">${t.porcentaje}%</td>
-                    <td class="p-2 border-r border-slate-300">${t.meteorizacion}</td>
-                    <td class="p-2 font-black text-amber-900 bg-amber-50">${pagoTramo.toFixed(2)} m</td>
-                `;
+                tr.innerHTML = `<td class="p-2 border-r border-slate-300 font-bold">#${idx + 1}</td><td class="p-2 border-r border-slate-300">${t.desde}</td><td class="p-2 border-r border-slate-300">${t.hasta}</td><td class="p-2 border-r border-slate-300 font-bold">${met.toFixed(2)}</td><td class="p-2 border-r border-slate-300 font-bold text-blue-700">${t.diametro}</td><td class="p-2 border-r border-slate-300">${t.recuperado}</td><td class="p-2 border-r border-slate-300 font-bold ${parseFloat(t.porcentaje) < 70 ? 'text-amber-700' : 'text-emerald-700'}">${t.porcentaje}%</td><td class="p-2 border-r border-slate-300">${t.meteorizacion}</td><td class="p-2 font-black text-amber-900 bg-amber-50">${pagoTramo.toFixed(2)} m</td>`;
                 tbody.appendChild(tr);
             });
 
@@ -1852,7 +1701,6 @@
             document.getElementById('repBarraTexto').innerText = totalMetros.toFixed(2) + " m / " + targetNum.toFixed(2) + " m (" + avGen.toFixed(1) + "%)";
 
             document.getElementById('repObservacionesTexto').innerText = observacionesTurnoTexto;
-
             if (p.estado === 'CULMINADO') {
                 document.getElementById('repMotivoCierreBox').innerHTML = `<b>Motivo de Cierre:</b> ${p.motivoCierre || 'CULMINADO'}`;
             } else {
@@ -1861,27 +1709,9 @@
 
             const contenedorFirmas = document.getElementById('contenedorFirmasDSR');
             if (modo === 'CULMINADO') {
-                contenedorFirmas.innerHTML = `
-                    <div class="grid grid-cols-2 gap-4 text-center pt-4">
-                        <div>
-                            <p class="font-bold uppercase text-slate-900 mb-6">Geología & Supervisión General</p>
-                            <p>_____________________________________</p>
-                            <p class="mt-1 font-semibold text-slate-600">Firma / Sello Geología Complejo Jireth</p>
-                        </div>
-                        <div>
-                            <p class="font-bold uppercase text-slate-900 mb-6">Supervisor Perforación</p>
-                            <p>_____________________________________</p>
-                            <p class="mt-1 font-semibold text-slate-600">Firma Supervisor Operativo</p>
-                        </div>
-                    </div>
-                `;
+                contenedorFirmas.innerHTML = `<div class="grid grid-cols-2 gap-4 text-center pt-4"><div><p class="font-bold uppercase text-slate-900 mb-6">Geología & Supervisión General</p><p>_____________________________________</p><p class="mt-1 font-semibold text-slate-600">Firma / Sello Geología Complejo Jireth</p></div><div><p class="font-bold uppercase text-slate-900 mb-6">Supervisor Perforación</p><p>_____________________________________</p><p class="mt-1 font-semibold text-slate-600">Firma Supervisor Operativo</p></div></div>`;
             } else {
-                contenedorFirmas.innerHTML = `
-                    <div class="grid grid-cols-2 gap-4 text-[11px] pt-2 text-slate-800 font-semibold">
-                        <div><b>Supervisor Turno (Geólogo):</b> ${geologoTurnoTexto}</div>
-                        <div><b>Perforador Turno:</b> ${operadorTurnoTexto}</div>
-                    </div>
-                `;
+                contenedorFirmas.innerHTML = `<div class="grid grid-cols-2 gap-4 text-[11px] pt-2 text-slate-800 font-semibold"><div><b>Supervisor Turno (Geólogo):</b> ${geologoTurnoTexto}</div><div><b>Perforador Turno:</b> ${operadorTurnoTexto}</div></div>`;
             }
         }
 
@@ -1918,10 +1748,7 @@
         function copiarReportePortapapeles() {
             if (!pozoActivoId || !pozosData[pozoActivoId]) { alert("⚠️ Seleccione un sondaje."); return; }
             let p = pozosData[pozoActivoId];
-            let texto = "=== COMPLEJO JIRETH C.A. — REPORTE DIARIO DE GEOLOGÍA (DSR) ===\n";
-            texto += "Sondaje: " + p.codigo + " | Proyecto: " + p.proyecto + "\n";
-            texto += "Empresa: " + p.empresa + " | Máquina: " + p.maquina + "\n";
-            texto += "===========================================================\n";
+            let texto = "=== COMPLEJO JIRETH C.A. — REPORTE DIARIO DE GEOLOGÍA (DSR) ===\nSondaje: " + p.codigo + " | Proyecto: " + p.proyecto + "\nEmpresa: " + p.empresa + " | Máquina: " + p.maquina + "\n===========================================================\n";
             p.avances.forEach((t, i) => {
                 let lonM = parseFloat(t.hasta) - parseFloat(t.desde);
                 let pagVal = t.pagoEstandar ? t.pagoEstandar : calcularMetrosAPagar(lonM, parseFloat(t.recuperado), t.meteorizacion);
@@ -1971,28 +1798,16 @@
                 try {
                     const payloadData = { pozos: pozosData, turnos: turnosData, actualizado: new Date().toISOString() };
                     const { error } = await supabaseClient.from('jireth_geocore').upsert({ id: 'db_principal', payload: payloadData });
-                    if (error) {
-                        console.error("Supabase Sync Warning:", error.message);
-                    }
-                } catch(ex) { 
-                    console.warn("Supabase Excepción controlada:", ex); 
-                }
+                    if (error) console.error("Supabase Sync Warning:", error.message);
+                } catch(ex) { console.warn("Supabase Excepción controlada:", ex); }
             }
         }
 
         async function sincronizarDesdeSupabaseCloud(mostrarAlerta = true) {
             if (!supabaseClient) return;
             try {
-                const { data, error } = await supabaseClient
-                    .from('jireth_geocore')
-                    .select('payload')
-                    .eq('id', 'db_principal')
-                    .maybeSingle();
-
-                if (error) {
-                    if (mostrarAlerta) alert("⚠️ No se pudo conectar con la nube, operando en modo local.");
-                    return;
-                }
+                const { data, error } = await supabaseClient.from('jireth_geocore').select('payload').eq('id', 'db_principal').maybeSingle();
+                if (error) { if (mostrarAlerta) alert("⚠️ No se pudo conectar con la nube, operando en modo local."); return; }
 
                 if (data && data.payload) {
                     if (data.payload.pozos && Object.keys(data.payload.pozos).length > 0) {
@@ -2008,12 +1823,8 @@
                     renderizarSalaSituacional();
                     if (pozoActivoId && pozosData[pozoActivoId]) cargarDatosPozoEnFormularios(pozoActivoId);
                     if (mostrarAlerta) alert("✅ Sincronizado con Supabase correctamente.");
-                } else {
-                    await guardarYPersistirTodo();
-                }
-            } catch(e) {
-                if (mostrarAlerta) alert("⚠️ Error de red al sincronizar con Supabase.");
-            }
+                } else { await guardarYPersistirTodo(); }
+            } catch(e) { if (mostrarAlerta) alert("⚠️ Error de red al sincronizar con Supabase."); }
         }
 
         async function sincronizarConSupabaseReal() { await sincronizarDesdeSupabaseCloud(true); }
