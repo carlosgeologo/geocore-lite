@@ -64,6 +64,12 @@
             animation: laserMove 2.5s infinite linear;
         }
 
+        @keyframes pulseSlow {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.95); }
+        }
+        .pulse-live { animation: pulseSlow 2s infinite ease-in-out; }
+
         @media print {
             @page { size: portrait; margin: 6mm; }
             body * { visibility: hidden; }
@@ -113,7 +119,7 @@
                     👷 GEÓLOGOS
                 </button>
                 <button type="button" onclick="seleccionarPerfil('GERENCIA')" id="btnPerfilGer" class="py-3 px-2 rounded-2xl text-xs font-black border-2 border-slate-800 bg-slate-950 text-slate-400 transition-all">
-                    👔 GERENCIA (LECTURA)
+                    👔 GERENCIA (REPOSITORIO)
                 </button>
             </div>
 
@@ -142,7 +148,7 @@
                     </div>
                 </div>
                 <button type="button" onclick="intentarLoginGer()" class="btn-field w-full bg-sky-600 hover:bg-sky-500 text-white text-sm font-black shadow-sky-600/20">
-                    📊 Ingresar a Visión Gerencial (Solo Lectura)
+                    📊 Ingresar a Repositorio (Modo Lectura)
                 </button>
             </div>
 
@@ -211,19 +217,38 @@
             </select>
         </div>
 
-        <nav class="grid grid-cols-3 sm:flex gap-1.5 overflow-x-auto pb-1">
-            <button type="button" onclick="switchTab('mod1')" id="tab-mod1" class="py-3 px-2 rounded-xl font-extrabold text-xs bg-slate-900 text-slate-300 border border-slate-800 hover:border-slate-700 transition">🛠️ 1. Apertura</button>
-            <button type="button" onclick="switchTab('mod2')" id="tab-mod2" class="py-3 px-2 rounded-xl font-extrabold text-xs bg-slate-900 text-slate-300 border border-slate-800 hover:border-slate-700 transition">📍 2. Topo</button>
-            <button type="button" onclick="switchTab('mod3_turno')" id="tab-mod3_turno" class="py-3 px-2 rounded-xl font-extrabold text-xs bg-sky-600 text-white shadow-lg shadow-sky-600/25 border border-sky-500">⏱️ 3A. Turnos</button>
-            <button type="button" onclick="switchTab('mod3_logging')" id="tab-mod3_logging" class="py-3 px-2 rounded-xl font-extrabold text-xs bg-slate-900 text-slate-300 border border-slate-800 hover:border-slate-700 transition">🪵 3B. Logging</button>
-            <button type="button" onclick="switchTab('mod4')" id="tab-mod4" class="py-3 px-2 rounded-xl font-extrabold text-xs bg-slate-900 text-slate-300 border border-slate-800 hover:border-slate-700 transition">🏁 4. Cierre</button>
-            <button type="button" onclick="switchTab('mod5')" id="tab-mod5" class="py-3 px-2 rounded-xl font-extrabold text-xs bg-slate-900 text-slate-300 border border-slate-800 hover:border-slate-700 transition">📑 5. Repo</button>
+        <nav id="menuNavegacion" class="grid grid-cols-3 sm:flex gap-1.5 overflow-x-auto pb-1">
+            <button type="button" onclick="switchTab('mod_sala')" id="tab-mod_sala" class="py-3 px-2 rounded-xl font-extrabold text-xs bg-sky-600 text-white shadow-lg shadow-sky-600/25 border border-sky-500">📡 1. Sala Situacional</button>
+            <button type="button" onclick="switchTab('mod1')" id="tab-mod1" class="py-3 px-2 rounded-xl font-extrabold text-xs bg-slate-900 text-slate-300 border border-slate-800 hover:border-slate-700 transition">🛠️ 2. Apertura</button>
+            <button type="button" onclick="switchTab('mod2')" id="tab-mod2" class="py-3 px-2 rounded-xl font-extrabold text-xs bg-slate-900 text-slate-300 border border-slate-800 hover:border-slate-700 transition">📍 3. Topo</button>
+            <button type="button" onclick="switchTab('mod3_turno')" id="tab-mod3_turno" class="py-3 px-2 rounded-xl font-extrabold text-xs bg-slate-900 text-slate-300 border border-slate-800 hover:border-slate-700 transition">⏱️ 4A. Turnos</button>
+            <button type="button" onclick="switchTab('mod3_logging')" id="tab-mod3_logging" class="py-3 px-2 rounded-xl font-extrabold text-xs bg-slate-900 text-slate-300 border border-slate-800 hover:border-slate-700 transition">🪵 4B. Logging</button>
+            <button type="button" onclick="switchTab('mod4')" id="tab-mod4" class="py-3 px-2 rounded-xl font-extrabold text-xs bg-slate-900 text-slate-300 border border-slate-800 hover:border-slate-700 transition">🏁 5. Cierre</button>
+            <button type="button" onclick="switchTab('mod5')" id="tab-mod5" class="py-3 px-2 rounded-xl font-extrabold text-xs bg-slate-900 text-slate-300 border border-slate-800 hover:border-slate-700 transition">📑 6. Repositorio</button>
             <button type="button" onclick="switchTab('mod6')" id="tab-mod6" class="py-3 px-2 rounded-xl font-extrabold text-xs bg-slate-900 text-slate-300 border border-slate-800 hover:border-slate-700 transition">⚙️ Admin</button>
         </nav>
 
+        <!-- MÓDULO SALA SITUACIONAL (INICIO POR DEFECTO) -->
+        <section id="mod_sala" class="space-y-4 bg-slate-900 p-5 sm:p-6 rounded-3xl border border-slate-800 shadow-xl">
+            <div class="flex justify-between items-center flex-wrap gap-2 pb-2 border-b border-slate-800">
+                <div>
+                    <h2 class="text-xl font-black text-amber-400 tracking-tight flex items-center gap-2">
+                        <span>📡 Sala Situacional: Perforadoras y Frentes Activos</span>
+                        <span class="text-xs bg-emerald-950 text-emerald-300 px-2.5 py-0.5 rounded-full border border-emerald-800/60 font-mono-code" id="contadorFrentesActivos">0 Activos</span>
+                    </h2>
+                    <p class="text-xs text-slate-300 mt-0.5">Monitoreo en vivo de ubicación, empresas y porcentaje de avance real vs. planificado.</p>
+                </div>
+                <button type="button" onclick="renderizarSalaSituacional()" class="bg-slate-950 hover:bg-slate-800 text-cyan-300 border border-slate-800 px-3 py-2 rounded-xl text-xs font-bold transition">🔄 Actualizar En Vivo</button>
+            </div>
+
+            <div id="gridSalaSituacional" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- Se llena dinámicamente -->
+            </div>
+        </section>
+
         <!-- MÓDULO 1: APERTURA -->
         <section id="mod1" class="hidden space-y-4 bg-slate-900 p-5 sm:p-6 rounded-3xl border border-slate-800 shadow-xl">
-            <h2 class="text-xl font-black text-amber-400 tracking-tight flex items-center gap-2">🛠️ Módulo 1: Apertura de Nuevo Sondaje</h2>
+            <h2 class="text-xl font-black text-amber-400 tracking-tight flex items-center gap-2">🛠️ Módulo 2: Apertura de Nuevo Sondaje</h2>
             <div class="space-y-4">
                 <div>
                     <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Código del Sondaje * (Ej: S0001-ET)</label>
@@ -256,7 +281,7 @@
         <!-- MÓDULO 2: TOPOGRAFÍA -->
         <section id="mod2" class="hidden space-y-4 bg-slate-900 p-5 sm:p-6 rounded-3xl border border-slate-800 shadow-xl">
             <div class="flex justify-between items-center flex-wrap gap-2">
-                <h2 class="text-xl font-black text-amber-400 tracking-tight">📍 Módulo 2: Ficha Topográfica</h2>
+                <h2 class="text-xl font-black text-amber-400 tracking-tight">📍 Módulo 3: Ficha Topográfica</h2>
                 <button type="button" id="btnHabilitarTopo" onclick="habilitarEdicionTopo()" class="bg-sky-600 hover:bg-sky-500 text-white font-extrabold px-4 py-2 rounded-xl text-xs shadow transition">✏️ Habilitar Edición</button>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -304,8 +329,8 @@
         </section>
 
         <!-- MÓDULO 3A: TURNOS -->
-        <section id="mod3_turno" class="space-y-4 bg-slate-900 p-5 sm:p-6 rounded-3xl border border-slate-800 shadow-xl">
-            <h2 class="text-xl font-black text-amber-400 tracking-tight">⏱️ Módulo 3A: Gestión de Turnos y Frentes Múltiples</h2>
+        <section id="mod3_turno" class="hidden space-y-4 bg-slate-900 p-5 sm:p-6 rounded-3xl border border-slate-800 shadow-xl">
+            <h2 class="text-xl font-black text-amber-400 tracking-tight">⏱️ Módulo 4A: Gestión de Turnos y Frentes Múltiples</h2>
             <p class="text-xs text-slate-300 font-medium leading-relaxed">Abre un turno operativo nuevo, o retoma un turno anterior para carga retroactiva desde planillas de campo.</p>
 
             <div class="bg-slate-950 p-4 sm:p-5 rounded-2xl border border-slate-800 space-y-3.5">
@@ -353,7 +378,7 @@
 
         <!-- MÓDULO 3B: CORE LOGGING -->
         <section id="mod3_logging" class="hidden space-y-4 bg-slate-900 p-5 sm:p-6 rounded-3xl border border-slate-800 shadow-xl">
-            <h2 class="text-xl font-black text-amber-400 tracking-tight">🪵 Módulo 3B: Core Logging & Avances Dinámicos</h2>
+            <h2 class="text-xl font-black text-amber-400 tracking-tight">🪵 Módulo 4B: Core Logging & Avances Dinámicos</h2>
             
             <div id="infoTurnoActivo" class="bg-sky-950/70 p-3.5 rounded-2xl border border-sky-800/60 flex justify-between items-center flex-wrap gap-2 text-xs backdrop-blur">
                 <div>
@@ -478,7 +503,7 @@
 
         <!-- MÓDULO 4: CIERRE DE POZO ACTIVO -->
         <section id="mod4" class="hidden space-y-4 bg-slate-900 p-5 sm:p-6 rounded-3xl border border-slate-800 shadow-xl">
-            <h2 class="text-xl font-black text-amber-400 tracking-tight">🏁 Módulo 4: Cierre Definitivo del Sondaje Activo</h2>
+            <h2 class="text-xl font-black text-amber-400 tracking-tight">🏁 Módulo 5: Cierre Definitivo del Sondaje Activo</h2>
             <p class="text-xs text-slate-300">Revise la información completa del pozo activo antes de dar por concluida la perforación.</p>
 
             <div id="cierreResumenPozo" class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-3 text-xs">
@@ -518,7 +543,7 @@
         <!-- MÓDULO 5: REPOSITORIO Y REPORTE DSR -->
         <section id="mod5" class="hidden space-y-4 bg-slate-900 p-5 sm:p-6 rounded-3xl border border-slate-800 shadow-xl">
             <div class="flex justify-between items-center flex-wrap gap-2">
-                <h2 class="text-xl font-black text-amber-400 tracking-tight">📑 Módulo 5: Repositorio de Sondajes & Reporte DSR</h2>
+                <h2 class="text-xl font-black text-amber-400 tracking-tight">📑 Módulo 6: Repositorio Detallado & Reporte DSR</h2>
                 <div class="space-x-2">
                     <button type="button" onclick="window.print()" class="bg-sky-600 hover:bg-sky-500 text-white font-black px-4 py-2 rounded-xl text-xs shadow transition">🖨️ Imprimir / PDF</button>
                     <button type="button" onclick="copiarReportePortapapeles()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-black px-4 py-2 rounded-xl text-xs shadow transition">📋 Copiar Reporte</button>
@@ -656,7 +681,7 @@
 
         <!-- MÓDULO 6: ADMIN -->
         <section id="mod6" class="hidden space-y-4 bg-slate-900 p-5 sm:p-6 rounded-3xl border border-slate-800 shadow-xl">
-            <h2 class="text-xl font-black text-amber-400 tracking-tight">⚙️ Módulo 6: Administración, Respaldos & Seguridad</h2>
+            <h2 class="text-xl font-black text-amber-400 tracking-tight">⚙️ Módulo 7: Administración, Respaldos & Seguridad</h2>
             
             <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-3">
                 <h3 class="text-xs font-black text-rose-400 uppercase tracking-wider">🗑️ Gestión y Eliminación Individual de Pozos</h3>
@@ -707,9 +732,9 @@
         let indexEditandoAvance = null;
 
         if (!localStorage.getItem('jireth_clave_geo')) localStorage.setItem('jireth_clave_geo', 'Mina2628');
-        if (!localStorage.getItem('jireth_clave_ger')) localStorage.setItem('jireth_clave_ger', 'JIRETH2026');
+        localStorage.setItem('jireth_clave_ger', 'JIRETH2026');
         let claveGeologos = localStorage.getItem('jireth_clave_geo');
-        let claveGerencia = localStorage.getItem('jireth_clave_ger');
+        let claveGerencia = 'JIRETH2026';
         const PIN_MAESTRO = "2628";
 
         window.onload = async function() {
@@ -724,6 +749,7 @@
                 actualizarBannerTurnoActivo();
             }
             poblarSelectRetomarTurno();
+            renderizarSalaSituacional();
 
             if (supabaseClient) {
                 await sincronizarDesdeSupabaseCloud(false);
@@ -765,9 +791,9 @@
 
         function intentarLoginGer() {
             const val = document.getElementById('inputClaveGer').value.trim();
-            claveGerencia = localStorage.getItem('jireth_clave_ger') || 'JIRETH2026';
             if (val === claveGerencia) {
-                entrarAlSistema("GERENCIA / AUDITORÍA (SOLO LECTURA)");
+                entrarAlSistema("GERENCIA / AUDITORÍA (REPOSITORIO)");
+                aplicarModoLecturaGerencia();
             } else {
                 alert("❌ Contraseña de Gerencia incorrecta.");
                 document.getElementById('inputClaveGer').value = '';
@@ -805,23 +831,20 @@
             document.getElementById('lblNombreUsuarioLogueado').innerText = rolTexto;
             
             if (perfilActual === 'GERENCIA') {
-                aplicarModoLecturaGerencia();
+                switchTab('mod5');
+            } else {
+                switchTab('mod_sala');
             }
-
-            switchTab('mod3_turno');
         }
 
         function aplicarModoLecturaGerencia() {
-            const elementosDeshabilitar = [
-                'btnCrearPozo', 'btnHabilitarTopo', 'm2_btn_box', 'btnGuardarAvance', 
-                'btnCierrePozo', 'boxAccionesTurno', 'btnRetomarTurno', 'boxFormAvance'
-            ];
-            elementosDeshabilitar.forEach(id => {
+            // El usuario gerencia solo tiene acceso al Módulo 5 (Repositorio) en modo lectura
+            const tabsAOcultar = ['tab-mod_sala', 'tab-mod1', 'tab-mod2', 'tab-mod3_turno', 'tab-mod3_logging', 'tab-mod4', 'tab-mod6'];
+            tabsAOcultar.forEach(id => {
                 const el = document.getElementById(id);
                 if (el) el.style.display = 'none';
             });
-            const zonaPeligro = document.getElementById('boxZonaPeligroAdmin');
-            if (zonaPeligro) zonaPeligro.style.display = 'none';
+            switchTab('mod5');
         }
 
         function cerrarSesion() {
@@ -829,7 +852,10 @@
         }
 
         function switchTab(tabId) {
-            const tabs = ['mod1', 'mod2', 'mod3_turno', 'mod3_logging', 'mod4', 'mod5', 'mod6'];
+            if (perfilActual === 'GERENCIA' && tabId !== 'mod5') {
+                tabId = 'mod5'; // Forzar que gerencia permanezca solo en repositorio
+            }
+            const tabs = ['mod_sala', 'mod1', 'mod2', 'mod3_turno', 'mod3_logging', 'mod4', 'mod5', 'mod6'];
             tabs.forEach(t => {
                 const sec = document.getElementById(t);
                 if (sec) sec.classList.add('hidden');
@@ -841,6 +867,9 @@
             const selBtn = document.getElementById('tab-' + tabId);
             if (selBtn) selBtn.className = "py-3 px-2 rounded-xl font-extrabold text-xs bg-sky-600 text-white shadow-lg shadow-sky-600/25 border border-sky-500";
 
+            if (tabId === 'mod_sala') {
+                renderizarSalaSituacional();
+            }
             if (tabId === 'mod4') {
                 cargarResumenCierrePozo();
             }
@@ -851,6 +880,82 @@
             if (tabId === 'mod6') {
                 poblarSelectAdminBorrar();
             }
+        }
+
+        function renderizarSalaSituacional() {
+            const grid = document.getElementById('gridSalaSituacional');
+            const contador = document.getElementById('contadorFrentesActivos');
+            if (!grid) return;
+            
+            grid.innerHTML = '';
+            let pozosActivosKeys = Object.keys(pozosData).filter(k => pozosData[k].estado === 'ABIERTO');
+            if (contador) contador.innerText = pozosActivosKeys.length + " Activos";
+
+            if (pozosActivosKeys.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full bg-slate-950 p-8 rounded-2xl border border-slate-800 text-center space-y-3">
+                        <div class="text-3xl">📡</div>
+                        <h3 class="text-base font-black text-amber-400 uppercase tracking-wider">SALA SITUACIONAL — SIN FRENTES ACTIVOS</h3>
+                        <p class="text-xs text-slate-400 max-w-md mx-auto">Actualmente no hay sondajes abiertos en operación. Todas las perforadoras se encuentran sin actividad o con pozos culminados.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            pozosActivosKeys.forEach(k => {
+                let p = pozosData[k];
+                let totalMetros = 0;
+                if (p.avances && p.avances.length > 0) {
+                    p.avances.forEach(t => { totalMetros += (parseFloat(t.hasta) - parseFloat(t.desde)); });
+                }
+                let target = parseFloat(p.target) || 100.0;
+                let pct = target > 0 ? Math.min(100, (totalMetros / target) * 100) : 0;
+
+                let card = document.createElement('div');
+                card.className = "bg-slate-950 p-4.5 rounded-2xl border border-slate-800 space-y-3 shadow-lg relative overflow-hidden flex flex-col justify-between";
+                card.innerHTML = `
+                    <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-500 via-cyan-400 to-emerald-500"></div>
+                    <div class="space-y-2.5">
+                        <div class="flex justify-between items-center">
+                            <span class="text-[10px] font-black uppercase tracking-wider bg-emerald-950 text-emerald-300 px-2.5 py-1 rounded-full border border-emerald-800/60 flex items-center gap-1.5">
+                                <span class="w-2 h-2 rounded-full bg-emerald-400 pulse-live inline-block"></span>
+                                Máquina: ${p.maquina || 'GEOMAX'}
+                            </span>
+                            <span class="text-xs font-mono-code font-black text-amber-400">${p.codigo}</span>
+                        </div>
+                        <div>
+                            <p class="text-[10px] text-slate-400 uppercase font-bold">Empresa Cliente</p>
+                            <p class="text-xs font-extrabold text-white">${p.empresa}</p>
+                        </div>
+                        <div>
+                            <p class="text-[10px] text-slate-400 uppercase font-bold">Sector / Zona</p>
+                            <p class="text-xs font-extrabold text-cyan-300">${p.proyecto}</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2 pt-2 border-t border-slate-800/80">
+                        <div class="flex justify-between items-center text-xs font-extrabold">
+                            <span class="text-slate-300">Avance Actual:</span>
+                            <span class="text-emerald-400 font-mono-code">${totalMetros.toFixed(2)} m / ${target.toFixed(2)} m (${pct.toFixed(1)}%)</span>
+                        </div>
+                        <div class="w-full bg-slate-900 h-2.5 rounded-full overflow-hidden border border-slate-800 p-0.5">
+                            <div class="bg-gradient-to-r from-cyan-500 to-emerald-400 h-full rounded-full transition-all duration-300" style="width: ${pct}%"></div>
+                        </div>
+                        <button type="button" onclick="seleccionarPozoDesdeSala('${p.codigo}')" class="w-full mt-1 bg-slate-900 hover:bg-slate-800 text-sky-300 border border-slate-800 py-2 rounded-xl text-xs font-extrabold transition">
+                            🔍 Inspeccionar Sondaje
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function seleccionarPozoDesdeSala(codigo) {
+            pozoActivoId = codigo;
+            localStorage.setItem('jireth_pozo_activo', pozoActivoId);
+            document.getElementById('globalWellSelect').value = codigo;
+            cargarDatosPozoEnFormularios(codigo);
+            switchTab('mod5');
         }
 
         function forzarMayusculas(el) { if (el && el.value) el.value = el.value.toUpperCase(); }
@@ -955,6 +1060,7 @@
                 if (el) el.disabled = true;
             });
             actualizarProgresoGrafico();
+            renderizarSalaSituacional();
         }
 
         function refrescarSelectorPozos() {
@@ -1143,6 +1249,7 @@
             await guardarYPersistirTodo();
             actualizarTablaAvances();
             actualizarProgresoGrafico();
+            renderizarSalaSituacional();
             autoCalcularHasta();
             alert("✅ Tramo guardado correctamente.");
         }
@@ -1208,6 +1315,7 @@
                 await guardarYPersistirTodo();
                 actualizarTablaAvances();
                 actualizarProgresoGrafico();
+                renderizarSalaSituacional();
                 autoCalcularHasta();
             }
         }
@@ -1317,6 +1425,7 @@
             pozosData[pozoActivoId].obsCierre = obs;
             await guardarYPersistirTodo();
             refrescarSelectorPozos();
+            renderizarSalaSituacional();
             alert("🔒 Sondaje " + pozoActivoId + " cerrado y culminado con éxito.");
             switchTab('mod5');
         }
@@ -1475,6 +1584,7 @@
                 await guardarYPersistirTodo();
                 refrescarSelectorPozos();
                 poblarSelectAdminBorrar();
+                renderizarSalaSituacional();
                 alert("✅ Sondaje " + codigo + " eliminado correctamente.");
                 location.reload();
             }
@@ -1516,6 +1626,7 @@
                         pozoActivoId = imp.activo || '';
                         await guardarYPersistirTodo();
                         refrescarSelectorPozos();
+                        renderizarSalaSituacional();
                         if (pozoActivoId) cargarDatosPozoEnFormularios(pozoActivoId);
                         alert("✅ Base de datos importada correctamente.");
                     } else { alert("❌ Formato de archivo JSON inválido."); }
@@ -1546,10 +1657,15 @@
                     const { error } = await supabaseClient.from('jireth_geocore').upsert({ id: 'db_principal', payload: payloadData });
                     if (error) {
                         console.error("Supabase Error:", error);
+                        alert("⚠️ Error al sincronizar con Supabase: " + error.message);
+                    } else {
+                        alert("✅ Sincronización realizada con éxito en Supabase");
                     }
                 } catch(ex) {
                     console.warn("Excepción al sincronizar Supabase:", ex);
                 }
+            } else {
+                alert("✅ Sincronización local realizada con éxito (Supabase no configurado)");
             }
         }
 
@@ -1580,14 +1696,13 @@
                         localStorage.setItem('jireth_turnos', JSON.stringify(turnosData));
                     }
                     refrescarSelectorPozos();
+                    renderizarSalaSituacional();
                     if (pozoActivoId && pozosData[pozoActivoId]) {
                         cargarDatosPozoEnFormularios(pozoActivoId);
                     }
-                    if (mostrarAlerta) alert("🔄 ¡Sincronización con Supabase Cloud exitosa!");
+                    if (mostrarAlerta) alert("✅ Sincronización realizada con éxito en Supabase");
                 } else {
-                    // Si la tabla está vacía, subimos el estado actual automáticamente para inicializarla
                     await guardarYPersistirTodo();
-                    if (mostrarAlerta) alert("🚀 Base de datos inicializada y sincronizada en la nube correctamente.");
                 }
             } catch(e) {
                 if (mostrarAlerta) alert("❌ Error al conectar con Supabase.");
