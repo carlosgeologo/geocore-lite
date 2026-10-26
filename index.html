@@ -87,7 +87,6 @@
             }
             .avoid-break { break-inside: avoid !important; page-break-inside: avoid !important; }
             
-            /* Forzar colores sólidos de gráficos y barras en PDF */
             .print-bar-hq { background-color: #2563eb !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
             .print-bar-nq { background-color: #d97706 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
             .print-bar-pend { background-color: #cbd5e1 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
@@ -372,10 +371,10 @@
             </div>
         </section>
 
-        <!-- MÓDULO 3A: TURNOS & EDICIÓN DE TURNO -->
+        <!-- MÓDULO 3A: TURNOS & EDICIÓN DE TURNO CON INSPECCIÓN DETALLADA DE AVANCES -->
         <section id="mod3_turno" class="hidden space-y-4 bg-slate-900 p-5 sm:p-6 rounded-3xl border border-slate-800 shadow-xl">
-            <h2 class="text-xl font-black text-amber-400 tracking-tight">⏱️ Módulo 4A: Gestión y Edición de Turnos</h2>
-            <p class="text-xs text-slate-300 font-medium leading-relaxed">Abre un turno operativo nuevo o edita los datos generales de un turno existente (evitando duplicados de fecha y jornada por sondaje).</p>
+            <h2 class="text-xl font-black text-amber-400 tracking-tight">⏱️ Módulo 4A: Gestión, Inspección y Edición de Turnos</h2>
+            <p class="text-xs text-slate-300 font-medium leading-relaxed">Abre un turno operativo nuevo, edita los datos generales de un turno existente, o selecciona un turno del historial para inspeccionar detalladamente todos sus avances registrados.</p>
 
             <div class="bg-slate-950 p-4 sm:p-5 rounded-2xl border border-slate-800 space-y-3.5">
                 <h3 class="text-xs font-black text-amber-400 uppercase tracking-wider" id="tituloBoxTurno">🚀 Apertura de Turno Nuevo</h3>
@@ -411,19 +410,49 @@
                 </div>
             </div>
 
-            <!-- SELECCIONAR PARA RETOMAR O EDITAR DATOS DE TURNO -->
-            <div class="bg-slate-950 p-4 sm:p-5 rounded-2xl border border-slate-800 space-y-3">
-                <h3 class="text-xs font-black text-cyan-400 uppercase tracking-wider">📂 Historial de Turnos (Retomar / Editar Datos / Borrar)</h3>
-                <div class="space-y-2.5">
-                    <select id="selectRetomarTurno" class="input-field w-full px-3.5 rounded-xl text-xs font-bold text-cyan-300">
-                        <option value="">-- Seleccionar Turno Guardado --</option>
+            <!-- SELECCIONAR PARA RETOMAR, INSPECCIONAR, EDITAR DATOS O BORRAR TURNO -->
+            <div class="bg-slate-950 p-4 sm:p-5 rounded-2xl border border-slate-800 space-y-3.5">
+                <h3 class="text-xs font-black text-cyan-400 uppercase tracking-wider">📂 Historial de Turnos & Auditoría de Avances</h3>
+                <div class="space-y-3">
+                    <select id="selectRetomarTurno" onchange="mostrarDetallesTurnoSeleccionado()" class="input-field w-full px-3.5 rounded-xl text-xs font-bold text-cyan-300">
+                        <option value="">-- Seleccionar Turno del Historial --</option>
                     </select>
-                    <div class="flex gap-2 flex-wrap">
+
+                    <!-- CONTENEDOR DE INSPECCIÓN DETALLADA DE AVANCES DEL TURNO SELECCIONADO -->
+                    <div id="contenedorDetalleTurnoSeleccionado" class="hidden space-y-2.5 pt-3 border-t border-slate-800">
+                        <div class="bg-slate-900 p-3.5 rounded-xl border border-slate-800 text-[11px] space-y-1.5 shadow-inner">
+                            <div class="flex justify-between items-center flex-wrap gap-1">
+                                <span id="inspTurnoTitulo" class="text-cyan-300 font-black">Turno: --</span>
+                                <span id="inspTurnoMetraje" class="font-mono-code text-emerald-400 font-black">0.00 m perforados</span>
+                            </div>
+                            <p class="text-slate-300 font-semibold" id="inspTurnoObs">📝 Observaciones: --</p>
+                        </div>
+                        <div class="overflow-x-auto border border-slate-800 rounded-xl shadow">
+                            <table class="w-full text-left text-[10px] border-collapse">
+                                <thead class="bg-slate-900 text-slate-300 uppercase font-extrabold border-b border-slate-800">
+                                    <tr>
+                                        <th class="p-2">Tramo</th>
+                                        <th class="p-2">Diám</th>
+                                        <th class="p-2">Desde - Hasta</th>
+                                        <th class="p-2">Recup</th>
+                                        <th class="p-2">% Rec</th>
+                                        <th class="p-2">Litología</th>
+                                        <th class="p-2 text-amber-400">Pago Estándar</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="inspTablaAvancesBody" class="divide-y divide-slate-800 font-mono-code text-slate-200">
+                                    <!-- Dinámico -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-2 flex-wrap pt-1">
                         <button type="button" onclick="retomarTurnoSeleccionado()" class="btn-field flex-1 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-extrabold shadow-emerald-600/25">
-                            ▶️ Retomar Turno y Cargar Logging
+                            ▶️ Retomar Turno Activo
                         </button>
                         <button type="button" onclick="cargarTurnoParaEditar()" class="bg-amber-600 hover:bg-amber-500 text-slate-950 px-4 py-2.5 rounded-xl font-extrabold text-xs shadow">
-                            ✏️ Editar Datos del Turno
+                            ✏️ Editar Datos Turno
                         </button>
                         <button type="button" onclick="eliminarTurnoSeleccionado()" class="bg-rose-950 hover:bg-rose-900 text-rose-300 border border-rose-800 px-4 py-2.5 rounded-xl font-extrabold text-xs shadow">
                             🗑️ Borrar Turno
@@ -821,6 +850,7 @@
         window.onload = async function() {
             document.getElementById('m3_fecha').valueAsDate = new Date();
             
+            migrarRecalcularPagosEstandار = migrarRecalcularPagosEstandar;
             migrarRecalcularPagosEstandar();
 
             refrescarSelectorPozos();
@@ -974,18 +1004,17 @@
             if (tabId === 'mod6') poblarSelectAdminBorrar();
         }
 
-        // FUNCIÓN MAESTRA DE CÁLCULO DE PAGO SEGÚN ESTÁNDAR EXACTO
         function calcularMetrosAPagar(lonManiobra, rec, litologia) {
             let pct = (rec / lonManiobra) * 100;
-            let umbral = 70; // Suelo, saprolita, saprock, roca fracturada
+            let umbral = 70;
             let litUpper = (litologia || "").toUpperCase();
             if (litUpper.includes('OXIDADA')) umbral = 80;
             if (litUpper.includes('FRESCA') || litUpper.includes('VETA')) umbral = 90;
 
             if (pct >= umbral) {
-                return lonManiobra; // Se paga el avance completo (1.5 o 3.0 m)
+                return lonManiobra;
             } else {
-                return rec; // Proporcional al testigo recuperado si está por debajo
+                return rec;
             }
         }
 
@@ -1259,7 +1288,6 @@
 
             if (!fecha || !perforador || !geologo) { alert("❌ Complete Fecha, Perforador y Geólogo."); return; }
 
-            // VALIDAR DUPLICADOS DE FECHA Y JORNADA EN EL MISMO SONDAJE
             let duplicado = Object.values(turnosData).some(t => t.pozo === pozoActivoId && t.fecha === fecha && t.jornada === jornada && t.id !== turnoEditId);
             if (duplicado) {
                 alert(`⚠️ Ya existe un turno ${jornada} para la fecha ${fecha} en el sondaje ${pozoActivoId}. No se permiten turnos duplicados.`);
@@ -1339,6 +1367,7 @@
                     document.getElementById('lblInfoPerf').innerText = "--";
                     document.getElementById('lblInfoGeo').innerText = "--";
                 }
+                document.getElementById('contenedorDetalleTurnoSeleccionado').classList.add('hidden');
                 await guardarYPersistirTodo();
                 poblarSelectRetomarTurno();
                 alert("✅ Turno eliminado.");
@@ -1375,7 +1404,7 @@
         function poblarSelectRetomarTurno() {
             const sel = document.getElementById('selectRetomarTurno');
             if (!sel) return;
-            sel.innerHTML = '<option value="">-- Seleccionar Turno Guardado --</option>';
+            sel.innerHTML = '<option value="">-- Seleccionar Turno del Historial --</option>';
             Object.keys(turnosData).forEach(k => {
                 let t = turnosData[k];
                 if (!pozoActivoId || t.pozo === pozoActivoId) {
@@ -1385,6 +1414,55 @@
                     sel.appendChild(opt);
                 }
             });
+            document.getElementById('contenedorDetalleTurnoSeleccionado').classList.add('hidden');
+        }
+
+        // NUEVA FUNCIÓN PARA MOSTRAR LA INFORMACIÓN DETALLADA DEL TURNO SELECCIONADO
+        function mostrarDetallesTurnoSeleccionado() {
+            let id = document.getElementById('selectRetomarTurno').value;
+            let contenedor = document.getElementById('contenedorDetalleTurnoSeleccionado');
+            if (!id || !turnosData[id]) {
+                contenedor.classList.add('hidden');
+                return;
+            }
+            let t = turnosData[id];
+            let p = pozosData[t.pozo];
+            contenedor.classList.remove('hidden');
+
+            document.getElementById('inspTurnoTitulo').innerText = `📅 ${t.fecha} (${t.jornada}) | Sondaje: ${t.pozo} | Perf: ${t.perforador} | Geo: ${t.geologo}`;
+            document.getElementById('inspTurnoObs').innerText = `📝 Observaciones: ${t.observaciones || 'Sin observaciones registradas en este turno.'}`;
+
+            let tbody = document.getElementById('inspTablaAvancesBody');
+            tbody.innerHTML = '';
+
+            let tramosturno = [];
+            let totalMetrosTurno = 0;
+            if (p && p.avances) {
+                tramosturno = p.avances.filter(av => av.turnoId === id);
+            }
+
+            tramosturno.forEach((av, idx) => {
+                let met = parseFloat(av.hasta) - parseFloat(av.desde);
+                totalMetrosTurno += met;
+                let tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-900/40 transition";
+                tr.innerHTML = `
+                    <td class="p-2">#${idx + 1}</td>
+                    <td class="p-2 text-sky-300 font-bold">${av.diametro}</td>
+                    <td class="p-2 text-cyan-400 font-bold">${av.desde} - ${av.hasta}</td>
+                    <td class="p-2 text-emerald-300">${av.recuperado}m</td>
+                    <td class="p-2 font-bold ${parseFloat(av.porcentaje) < 70 ? 'text-amber-400' : 'text-emerald-400'}">${av.porcentaje}%</td>
+                    <td class="p-2 text-slate-300">${av.meteorizacion}</td>
+                    <td class="p-2 text-amber-400 font-bold">${av.pagoEstandar || '0.00'}m</td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            if (tramosturno.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="p-3 text-center text-slate-500 font-bold">No hay tramos de avance registrados en este turno.</td></tr>`;
+            }
+
+            document.getElementById('inspTurnoMetraje').innerText = `${totalMetrosTurno.toFixed(2)} m perforados (${tramosturno.length} tramos)`;
         }
 
         function retomarTurnoSeleccionado() {
