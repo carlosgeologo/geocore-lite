@@ -709,7 +709,7 @@
     <!-- SCRIPT DE CONTROL TÉCNICO Y SUPABASE -->
     <script>
         const SUPABASE_URL = "https://cjtseuctrbdvgagudyyr.supabase.co";
-        const SUPABASE_KEY = "Sb_publishable_4ElaI13qIakKqei9_-OiNA__PpbBBjX";
+        const SUPABASE_KEY = "sb_publishable_4ElaI13qIakKqei9_-OiNA__PpbBBjX";
         
         let supabaseClient = null;
         try {
@@ -1652,7 +1652,7 @@
 
         async function sincronizarDesdeSupabaseCloud(mostrarAlerta = true) {
             if (!supabaseClient) {
-                if (mostrarAlerta) alert("⚠️ El cliente de Supabase no está inicializado.");
+                if (mostrarAlerta) alert("⚠️ El cliente de Supabase não está inicializado.");
                 return;
             }
             try {
