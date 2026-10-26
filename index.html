@@ -367,7 +367,7 @@
         <!-- MÓDULO 3A: TURNOS & EDICIÓN DE TURNO -->
         <section id="mod3_turno" class="hidden space-y-4 bg-slate-900 p-5 sm:p-6 rounded-3xl border border-slate-800 shadow-xl">
             <h2 class="text-xl font-black text-amber-400 tracking-tight">⏱️ Módulo 4A: Gestión y Edición de Turnos</h2>
-            <p class="text-xs text-slate-300 font-medium leading-relaxed">Abre un turno operativo nuevo, edita los datos generales de un turno existente o retómalo para carga en campo.</p>
+            <p class="text-xs text-slate-300 font-medium leading-relaxed">Abre un turno operativo nuevo o edita los datos generales de un turno existente (evitando duplicados de fecha y jornada por sondaje).</p>
 
             <div class="bg-slate-950 p-4 sm:p-5 rounded-2xl border border-slate-800 space-y-3.5">
                 <h3 class="text-xs font-black text-amber-400 uppercase tracking-wider" id="tituloBoxTurno">🚀 Apertura de Turno Nuevo</h3>
@@ -442,7 +442,7 @@
                     </div>
                     <div class="flex gap-2">
                         <button type="button" onclick="finalizarTurnoActivo()" class="flex-1 bg-emerald-700 hover:bg-emerald-600 text-white px-3 py-2 rounded-xl font-extrabold text-xs shadow">💾 Finalizar y Guardar Turno</button>
-                        <button type="button" onclick="switchTab('mod3_turno')" class="bg-slate-900 text-sky-300 px-3 py-2 rounded-xl border border-sky-700/60 font-extrabold text-xs hover:bg-slate-800">Cambiar</button>
+                        <button type="button" onclick="switchTab('mod3_turno')" class="bg-slate-900 text-sky-300 px-3 py-2 rounded-xl border border-sky-700/60 font-extrabold text-xs hover:bg-slate-800">Cambiar / Editar</button>
                     </div>
                 </div>
             </div>
@@ -619,7 +619,7 @@
                 </div>
             </div>
 
-            <!-- DSR FORMATO OFICIAL CON LOGO JIRETH GEOCORE REPETIDO EN MEMBRETE -->
+            <!-- DSR FORMATO OFICIAL CON LOGO JIRETH GEOCORE REPETIDO EN MEMBRETE Y GRÁFICOS -->
             <div id="printable-area" class="bg-white p-6 rounded-2xl border border-slate-300 space-y-4 text-xs text-slate-900 shadow-xl">
                 
                 <!-- MEMBRETE CON LOGO INSTITUCIONAL (SE REPITE EN CADA HOJA AL IMPRIMIR) -->
@@ -688,12 +688,13 @@
                     </div>
                 </div>
 
+                <!-- GRÁFICO PRO DE PROGRESO EN EL REPORTE -->
                 <div class="space-y-1 bg-slate-50 p-3 rounded-xl border border-slate-300 avoid-break">
                     <div class="flex justify-between text-[10px] font-black text-slate-800">
-                        <span class="uppercase">Progreso de Perforación por Diámetro (Infografía)</span>
+                        <span class="uppercase">📈 Gráfico Pro — Progreso de Perforación por Diámetro</span>
                         <span id="repBarraTexto" class="font-mono-code text-slate-900">0.0 m / 100.0 m (0.0%)</span>
                     </div>
-                    <div class="w-full bg-slate-200 h-2.5 rounded-lg overflow-hidden flex border border-slate-300 p-0.5">
+                    <div class="w-full bg-slate-200 h-3 rounded-lg overflow-hidden flex border border-slate-300 p-0.5">
                         <div id="repBarHQ" class="bg-blue-600 h-full rounded-l transition-all duration-300" style="width: 0%"></div>
                         <div id="repBarNQ" class="bg-amber-600 h-full transition-all duration-300" style="width: 0%"></div>
                         <div id="repBarPend" class="bg-slate-400 h-full rounded-r transition-all duration-300" style="width: 100%"></div>
@@ -1196,6 +1197,7 @@
             actualizarTablaAvances();
             actualizarProgresoGrafico();
             autoCalcularHasta();
+            poblarSelectRetomarTurno();
             
             if (!document.getElementById('mod4').classList.contains('hidden')) cargarResumenCierrePozo();
             if (!document.getElementById('mod5').classList.contains('hidden')) {
@@ -1216,6 +1218,13 @@
 
             if (!fecha || !perforador || !geologo) { alert("❌ Complete Fecha, Perforador y Geólogo."); return; }
 
+            // VALIDAR DUPLICADOS DE FECHA Y JORNADA EN EL MISMO SONDAJE
+            let duplicado = Object.values(turnosData).some(t => t.pozo === pozoActivoId && t.fecha === fecha && t.jornada === jornada && t.id !== turnoEditId);
+            if (duplicado) {
+                alert(`⚠️ Ya existe un turno ${jornada} para la fecha ${fecha} en el sondaje ${pozoActivoId}. No se permiten turnos duplicados.`);
+                return;
+            }
+
             if (turnoEditId && turnosData[turnoEditId]) {
                 turnosData[turnoEditId].fecha = fecha;
                 turnosData[turnoEditId].jornada = jornada;
@@ -1230,28 +1239,29 @@
 
                 await guardarYPersistirTodo();
                 poblarSelectRetomarTurno();
-                alert("✅ Turno actualizado.");
+                alert("✅ Turno actualizado correctamente.");
                 cancelarEdicionTurno();
             } else {
+                let nuevoId = 'TURNO_' + Date.now();
                 turnoActivoObj = {
-                    id: 'TURNO_' + Date.now(), pozo: pozoActivoId, fecha: fecha,
+                    id: nuevoId, pozo: pozoActivoId, fecha: fecha,
                     jornada: jornada, perforador: perforador, geologo: geologo, observaciones: ""
                 };
 
-                turnosData[turnoActivoObj.id] = turnoActivoObj;
+                turnosData[nuevoId] = turnoActivoObj;
                 localStorage.setItem('jireth_turnos', JSON.stringify(turnosData));
                 localStorage.setItem('jireth_turno_activo', JSON.stringify(turnoActivoObj));
                 
                 actualizarBannerTurnoActivo();
                 poblarSelectRetomarTurno();
-                alert("🚀 Turno iniciado.");
+                alert("🚀 Turno iniciado y cargado para registro.");
                 switchTab('mod3_logging');
             }
         }
 
         function cargarTurnoParaEditar() {
             let id = document.getElementById('selectRetomarTurno').value;
-            if (!id || !turnosData[id]) { alert("⚠️ Seleccione un turno."); return; }
+            if (!id || !turnosData[id]) { alert("⚠️ Seleccione un turno del historial."); return; }
             let t = turnosData[id];
 
             document.getElementById('editTurnoId').value = t.id;
@@ -1261,7 +1271,7 @@
             document.getElementById('m3_geologo').value = t.geologo;
 
             document.getElementById('tituloBoxTurno').innerText = "✏️ Editando Datos del Turno (" + t.pozo + ")";
-            document.getElementById('btnAccionTurno').innerText = "💾 Guardar Cambios";
+            document.getElementById('btnAccionTurno').innerText = "💾 Guardar Cambios del Turno";
             document.getElementById('btnCancelarEdicionTurno').classList.remove('hidden');
         }
 
@@ -1279,11 +1289,14 @@
             if (perfilActual === 'GERENCIA') { alert("⚠️ Solo lectura."); return; }
             let id = document.getElementById('selectRetomarTurno').value;
             if (!id || !turnosData[id]) { alert("⚠️ Seleccione un turno."); return; }
-            if (confirm("⚠️ ¿Eliminar este turno?")) {
+            if (confirm("⚠️ ¿Eliminar este turno y sus datos asociados?")) {
                 delete turnosData[id];
                 if (turnoActivoObj && turnoActivoObj.id === id) {
                     turnoActivoObj = null;
                     localStorage.removeItem('jireth_turno_activo');
+                    document.getElementById('lblInfoTurno').innerText = "--";
+                    document.getElementById('lblInfoPerf').innerText = "--";
+                    document.getElementById('lblInfoGeo').innerText = "--";
                 }
                 await guardarYPersistirTodo();
                 poblarSelectRetomarTurno();
@@ -1324,10 +1337,12 @@
             sel.innerHTML = '<option value="">-- Seleccionar Turno Guardado --</option>';
             Object.keys(turnosData).forEach(k => {
                 let t = turnosData[k];
-                let opt = document.createElement('option');
-                opt.value = k;
-                opt.text = "[" + t.fecha + " - " + t.jornada + "] Sondaje: " + t.pozo + " | Perf: " + t.perforador;
-                sel.appendChild(opt);
+                if (!pozoActivoId || t.pozo === pozoActivoId) {
+                    let opt = document.createElement('option');
+                    opt.value = k;
+                    opt.text = "[" + t.fecha + " - " + t.jornada + "] Sondaje: " + t.pozo + " | Perf: " + t.perforador;
+                    sel.appendChild(opt);
+                }
             });
         }
 
@@ -1341,7 +1356,7 @@
             document.getElementById('globalWellSelect').value = pozoActivoId;
             cargarDatosPozoEnFormularios(pozoActivoId);
             actualizarBannerTurnoActivo();
-            alert("▶️ Turno retomado.");
+            alert("▶️ Turno retomado con éxito.");
             switchTab('mod3_logging');
         }
 
@@ -1362,7 +1377,7 @@
         async function guardarAvance() {
             if (perfilActual === 'GERENCIA') { alert("⚠️ Solo lectura."); return; }
             if (!pozoActivoId || !pozosData[pozoActivoId]) { alert("⚠️ Seleccione un sondaje."); switchTab('mod1'); return; }
-            if (!turnoActivoObj) { alert("⚠️ Debe tener un turno activo para registrar avances."); switchTab('mod3_turno'); return; }
+            if (!turnoActivoObj) { alert("⚠️ Debe iniciar o retomar un turno antes de registrar avances."); switchTab('mod3_turno'); return; }
 
             let p = pozosData[pozoActivoId];
             let desde = parseFloat(document.getElementById('m3_desde').value) || 0;
@@ -1373,7 +1388,7 @@
             let lonManiobra = hasta - desde;
 
             if (isNaN(recuperado) || recuperado < 0 || recuperado > lonManiobra) {
-                alert("❌ Metros recuperados inválidos.");
+                alert("❌ Metros recuperados inválidos respecto a la longitud del tramo.");
                 return;
             }
 
