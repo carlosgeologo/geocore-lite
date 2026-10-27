@@ -69,6 +69,31 @@
         }
         .pulse-live { animation: pulseGlow 1.8s infinite ease-in-out; }
 
+        /* Estilo vectorial para el logotipo JJ corporativo */
+        .logo-jj-badge {
+            width: 38px;
+            height: 38px;
+            border-radius: 0.75rem;
+            background: linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%);
+            border: 1px solid #3b82f6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        .logo-jj-badge::before {
+            content: 'JJ';
+            font-size: 15px;
+            font-weight: 900;
+            background: linear-gradient(180deg, #fde047 0%, #d97706 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.05em;
+        }
+
         /* Sidebar Menú Lateral */
         #sidebarMenu {
             transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -148,9 +173,8 @@
             <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-slate-700 via-slate-500 to-slate-700 laser-line"></div>
             
             <div class="text-center pt-2 space-y-2">
-                <!-- LOGO VECTORIAL LIMPIO ORIGINAL -->
                 <div class="mx-auto flex items-center justify-center gap-3 bg-slate-50 p-3 rounded-2xl border border-slate-200 shadow-sm w-max">
-                    <div class="w-12 h-12 rounded-xl bg-slate-900 text-white flex items-center justify-center text-xl font-black shadow-inner shrink-0">💎</div>
+                    <div class="logo-jj-badge" style="width: 48px; height: 48px;"></div>
                     <div class="text-left leading-tight">
                         <div class="text-base font-black tracking-wider text-slate-900">JIRETH <span class="text-slate-600 text-xs">GEOCORE LITE</span></div>
                         <div class="text-[10px] text-slate-600 font-extrabold uppercase">Complejo Jireth C.A.</div>
@@ -231,7 +255,7 @@
         <div class="space-y-6">
             <div class="flex items-center justify-between border-b border-slate-200 pb-4">
                 <div class="flex items-center gap-3">
-                    <div class="w-9 h-9 rounded-xl bg-slate-900 text-white flex items-center justify-center text-base font-black">💎</div>
+                    <div class="logo-jj-badge" style="width: 36px; height: 36px;"></div>
                     <div>
                         <h2 class="text-xs font-black uppercase text-slate-900">Jireth GeoCore</h2>
                         <p class="text-[10px] text-slate-500 font-bold">Menú Operativo Global</p>
@@ -277,12 +301,13 @@
 
     <!-- APLICACIÓN PRINCIPAL -->
     <div id="appPrincipal" class="hidden space-y-3.5 max-w-7xl mx-auto pb-16 sm:pb-4">
-        <header class="bg-white backdrop-blur p-3.5 rounded-2xl border border-slate-200 flex justify-between items-center flex-wrap gap-3 shadow-sm laser-line">
+        <!-- HEADER PRINCIPAL (SIN LA LÚZ LASER SUPERIOR PARA EVITAR INTERFERENCIA CON EL BOTÓN) -->
+        <header class="bg-white backdrop-blur p-3.5 rounded-2xl border border-slate-200 flex justify-between items-center flex-wrap gap-3 shadow-sm">
             <div class="flex items-center gap-3">
-                <button type="button" onclick="toggleSidebar()" class="w-10 h-10 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-300 flex items-center justify-center text-slate-800 font-black shadow-sm transition" title="Menú Principal">
+                <button type="button" onclick="toggleSidebar()" class="w-10 h-10 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-300 flex items-center justify-center text-slate-800 font-black shadow-sm transition relative z-20" title="Menú Principal">
                     ☰
                 </button>
-                <div class="w-9 h-9 rounded-xl bg-slate-900 text-white flex items-center justify-center text-base font-black shadow-sm">💎</div>
+                <div class="logo-jj-badge"></div>
                 <div>
                     <h1 class="text-base font-black text-slate-900 tracking-tight flex items-center gap-1.5">
                         <span>Jireth GeoCore Lite</span>
@@ -293,7 +318,7 @@
             </div>
             
             <div id="cardBienvenidaUsuario" class="hidden sm:flex items-center gap-3 bg-slate-50 px-3.5 py-1.5 rounded-xl border border-slate-200 text-xs shadow-sm">
-                <div class="w-7 h-7 rounded-lg bg-slate-200 border border-slate-300 flex items-center justify-center text-sm pulse-live">💎</div>
+                <div class="logo-jj-badge" style="width: 28px; height: 28px;"></div>
                 <div>
                     <p class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Sesión Activa Pro</p>
                     <p class="text-slate-900 font-extrabold" id="lblNombreUsuarioLogueado">Operador Autorizado</p>
@@ -737,7 +762,7 @@
                 </div>
             </div>
 
-            <!-- DSR FORMATO OFICIAL (USA EL LOGO ADJUNTO ÚNICAMENTE AQUÍ) -->
+            <!-- DSR FORMATO OFICIAL (USA LA IMAGEN ADJUNTA EN EL MEMBRETE Y MARCA DE AGUA) -->
             <div id="printable-area" class="bg-white p-6 rounded-2xl border border-slate-200 space-y-4 text-xs text-slate-900 shadow-xl relative overflow-hidden">
                 
                 <div class="watermark-bg hidden print:flex">
