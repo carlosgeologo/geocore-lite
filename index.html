@@ -209,7 +209,7 @@
                         <button type="button" onclick="togglePasswordVisibility('inputClaveGeo')" class="absolute right-3.5 text-slate-500 hover:text-slate-800 text-base">👁️</button>
                     </div>
                 </div>
-                <button type="button" onclick="intentarLoginGeo()" class="btn-field w-full bg-slate-900 hover:bg-slate-800 text-white text-sm font-black shadow-slate-900/20">
+                <button type="button" onclick="intentarLoginGeo()" class="btn-field w-full bg-slate-900 hover:bg-slate-800 text-white text-sm font-black shadow-slate-900/25">
                     🔐 Ingresar como Geólogos
                 </button>
                 <div class="text-center pt-1">
@@ -225,7 +225,7 @@
                         <button type="button" onclick="togglePasswordVisibility('inputClaveGer')" class="absolute right-3.5 text-slate-500 hover:text-slate-800 text-base">👁️</button>
                     </div>
                 </div>
-                <button type="button" onclick="intentarLoginGer()" class="btn-field w-full bg-slate-700 hover:bg-slate-600 text-white text-sm font-black shadow-slate-700/20">
+                <button type="button" onclick="intentarLoginGer()" class="btn-field w-full bg-slate-700 hover:bg-slate-600 text-white text-sm font-black shadow-slate-700/25">
                     📊 Ingresar a Repositorio & Sala Situacional
                 </button>
             </div>
@@ -242,7 +242,7 @@
                     <label class="block text-xs font-extrabold text-slate-700 mb-1 uppercase tracking-wider">Nueva Contraseña Geólogos</label>
                     <input type="password" id="inputClaveNuevaRescate" placeholder="Nueva clave" class="input-field w-full px-3 text-sm font-bold">
                 </div>
-                <button type="button" onclick="ejecutarRescateClave()" class="btn-field w-full bg-slate-800 hover:bg-slate-700 text-white text-sm font-black shadow-slate-800/20">
+                <button type="button" onclick="ejecutarRescateClave()" class="btn-field w-full bg-slate-800 hover:bg-slate-700 text-white text-sm font-black shadow-slate-800/25">
                     🔄 Restablecer Clave e Ingresar
                 </button>
                 <div class="text-center pt-1">
@@ -978,7 +978,7 @@
         </section>
     </div>
 
-    <!-- SCRIPT TÉCNICO ACTUALIZADO -->
+    <!-- SCRIPT TÉCNICO COMPLETO REPARADO -->
     <script>
         const SUPABASE_URL = "https://cjtseuctrbdvgagudyyr.supabase.co";
         const SUPABASE_KEY = "sb_publishable_4ElaI13qIakKqei9_-OiNA__PpbBBjX";
@@ -1133,10 +1133,6 @@
         }
 
         function intentarLoginGer() {
-            if (!navigator.onLine) {
-                alert("⚠️ El acceso a Gerencia requiere conexión a internet para cargar los datos sincronizados de la oficina.");
-                return;
-            }
             const val = document.getElementById('inputClaveGer').value.trim();
             if (val === claveGerencia) { entrarAlSistema("GERENCIA / AUDITORÍA (REPOSITORIO)"); aplicarModoLecturaGerencia(); }
             else { alert("❌ Contraseña de Gerencia incorrecta."); document.getElementById('inputClaveGer').value = ''; }
@@ -1229,4 +1225,1222 @@
             let chartLabels = [], chartAvances = [], chartPlan = [], chartRec = [], chartPorcentajes = [];
             let meteorizacionTotales = {};
 
-            pozosActivosKeys.forEach(k =>
+            pozosActivosKeys.forEach(k => {
+                let p = pozosData[k];
+                let metPozo = 0, recPozoAcc = 0;
+                let targetPozo = parseFloat(p.target) || 100.0;
+                if (p.avances) {
+                    p.avances.forEach(t => {
+                        let met = parseFloat(t.hasta) - parseFloat(t.desde);
+                        metPozo += met;
+                        recPozoAcc += parseFloat(t.recuperado) || 0;
+                        totalRecGral += parseFloat(t.recuperado) || 0;
+                        cuentaTramosGral += met;
+
+                        let lit = t.meteorizacion || 'OTRO';
+                        meteorizacionTotales[lit] = (meteorizacionTotales[lit] || 0) + met;
+                    });
+                }
+                totalMetrosGlobal += metPozo;
+                chartLabels.push(p.codigo);
+                chartAvances.push(metPozo.toFixed(2));
+                chartPlan.push(targetPozo);
+                let recP = metPozo > 0 ? ((recPozoAcc / metPozo) * 100).toFixed(1) : 0;
+                chartRec.push(recP);
+                let pctP = targetPozo > 0 ? Math.min(100, (metPozo / targetPozo) * 100).toFixed(1) : 0;
+                chartPorcentajes.push(pctP);
+            });
+
+            let recPromGral = cuentaTramosGral > 0 ? ((totalRecGral / cuentaTramosGral) * 100).toFixed(1) : '0.0';
+
+            document.getElementById('macroTotalMetros').innerText = totalMetrosGlobal.toFixed(2) + " m";
+            document.getElementById('macroFrentesActivos').innerText = pozosActivosKeys.length;
+            document.getElementById('macroSondajesCulminados').innerText = pozosCulminadosKeys.length;
+            document.getElementById('macroRecuperacionGlobal').innerText = recPromGral + "%";
+
+            renderChartSituacionalAvance(chartLabels, chartAvances, chartPlan);
+            renderChartSituacionalRecuperacion(chartLabels, chartRec);
+            renderChartSituacionalMeteorizacion(meteorizacionTotales);
+            renderChartSituacionalPorcentajes(chartLabels, chartPorcentajes);
+
+            if (pozosActivosKeys.length === 0) {
+                grid.innerHTML = `<div class="col-span-full bg-slate-50 p-8 rounded-2xl border border-slate-200 text-center space-y-3 shadow-sm"><div class="text-3xl">📡</div><h3 class="text-base font-black text-slate-900 uppercase tracking-wider">SALA SITUACIONAL — SIN SONDAJES ACTIVOS</h3><p class="text-xs text-slate-500 max-w-md mx-auto">No hay sondajes activos en este momento.</p></div>`;
+                return;
+            }
+
+            pozosActivosKeys.forEach(k => {
+                let p = pozosData[k];
+                let totalMetros = 0, totalHQ = 0, totalNQ = 0, totalRec = 0, totalPago = 0;
+                if (p.avances && p.avances.length > 0) {
+                    p.avances.forEach(t => { 
+                        let met = (parseFloat(t.hasta) - parseFloat(t.desde));
+                        totalMetros += met;
+                        totalRec += parseFloat(t.recuperado) || 0;
+                        let lonM = parseFloat(t.hasta) - parseFloat(t.desde);
+                        let pag = t.pagoEstandar ? parseFloat(t.pagoEstandar) : calcularMetrosAPagar(lonM, parseFloat(t.recuperado), t.meteorizacion);
+                        totalPago += pag;
+                        if (t.diametro === 'HQ') totalHQ += met; else totalNQ += met;
+                    });
+                }
+                let target = parseFloat(p.target) || 100.0;
+                let pct = target > 0 ? Math.min(100, (totalMetros / target) * 100) : 0;
+                let recPozo = totalMetros > 0 ? ((totalRec / totalMetros) * 100).toFixed(1) : '0.0';
+
+                let card = document.createElement('div');
+                card.className = "bg-white p-4.5 rounded-2xl border-2 border-slate-300 space-y-3.5 shadow-md relative overflow-hidden flex flex-col justify-between";
+                card.innerHTML = `
+                    <div class="absolute top-0 left-0 right-0 h-1.5 bg-indigo-600"></div>
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-center">
+                            <span class="text-[10px] font-black uppercase tracking-wider bg-emerald-100 text-emerald-900 px-2.5 py-1 rounded-full border border-emerald-300 flex items-center gap-1.5">
+                                <span class="w-2 h-2 rounded-full bg-emerald-600 pulse-live inline-block"></span>
+                                ACTIVO
+                            </span>
+                            <span class="text-xs font-mono-code font-black text-indigo-900">${p.codigo}</span>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2 pt-1 text-[11px]">
+                            <div class="bg-indigo-50 p-2.5 rounded-xl border border-indigo-200"><span class="text-indigo-800 text-[9px] block uppercase font-bold">Cliente</span><span class="text-indigo-950 font-extrabold truncate block">${p.empresa}</span></div>
+                            <div class="bg-purple-50 p-2.5 rounded-xl border border-purple-200"><span class="text-purple-800 text-[9px] block uppercase font-bold">Proyecto</span><span class="text-purple-950 font-extrabold truncate block">${p.proyecto}</span></div>
+                        </div>
+                    </div>
+                    <div class="space-y-3 pt-2 border-t border-slate-200">
+                        <div class="flex justify-between items-center text-xs font-extrabold"><span class="text-slate-700">Progreso:</span><span class="text-indigo-950 font-mono-code font-black">${totalMetros.toFixed(2)}m / ${target.toFixed(2)}m (${pct.toFixed(1)}%)</span></div>
+                        <div class="w-full bg-slate-200 h-3.5 rounded-full overflow-hidden flex border border-slate-300 p-0.5 shadow-inner">
+                            <div class="bg-indigo-600 h-full rounded-l" style="width: ${target > 0 ? (totalHQ/target)*100 : 0}%"></div>
+                            <div class="bg-amber-600 h-full" style="width: ${target > 0 ? (totalNQ/target)*100 : 0}%"></div>
+                            <div class="bg-slate-300 h-full rounded-r" style="width: ${Math.max(0, 100 - pct)}%"></div>
+                        </div>
+                        <div class="flex justify-between text-[10px] text-slate-700 font-bold px-1 bg-slate-50 p-2 rounded-xl border border-slate-200">
+                            <span class="text-purple-900">Recup: <b class="font-mono-code">${recPozo}%</b></span>
+                            <span class="text-amber-900">A Pagar: <b class="font-mono-code">${totalPago.toFixed(2)}m</b></span>
+                        </div>
+                        <button type="button" onclick="irARepositorioSondaje('${p.codigo}')" class="w-full mt-1 bg-indigo-900 hover:bg-indigo-800 text-white py-2.5 rounded-xl text-xs font-extrabold transition shadow-sm">📑 Gestionar Sondaje (Repositorio)</button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function irARepositorioSondaje(codigo) {
+            pozoActivoId = codigo;
+            localStorage.setItem('jireth_pozo_activo', pozoActivoId);
+            cargarDatosPozoEnFormularios(codigo);
+            switchTab('mod5');
+        }
+
+        function renderChartSituacionalAvance(labels, avances, plan) {
+            const ctx = document.getElementById('chart-situacional-avances');
+            if (!ctx) return;
+            if (chartSituacionalAvance) chartSituacionalAvance.destroy();
+
+            chartSituacionalAvance = new Chart(ctx.getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        { label: 'Metros Avanzados (Activos)', data: avances, backgroundColor: '#312e81', borderRadius: 4 },
+                        { label: 'Prof. Planificada', data: plan, backgroundColor: '#cbd5e1', borderRadius: 4 }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { labels: { color: '#1e293b', font: { size: 10, weight: 'bold' } } } },
+                    scales: {
+                        x: { ticks: { color: '#1e293b', font: { weight: 'bold' } }, grid: { display: false } },
+                        y: { ticks: { color: '#1e293b' }, grid: { color: '#e2e8f0' } }
+                    }
+                }
+            });
+        }
+
+        function renderChartSituacionalRecuperacion(labels, recuperacion) {
+            const ctx = document.getElementById('chart-situacional-recuperacion');
+            if (!ctx) return;
+            if (chartSituacionalRecuperacion) chartSituacionalRecuperacion.destroy();
+
+            chartSituacionalRecuperacion = new Chart(ctx.getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{ label: '% Rec. Testigo', data: recuperacion, backgroundColor: '#7e22ce', borderRadius: 4 }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { ticks: { color: '#1e293b', font: { weight: 'bold' } }, grid: { display: false } },
+                        y: { max: 100, ticks: { color: '#1e293b' }, grid: { color: '#e2e8f0' } }
+                    }
+                }
+            });
+        }
+
+        function renderChartSituacionalMeteorizacion(totalsObj) {
+            const ctx = document.getElementById('chart-situacional-meteorizacion');
+            if (!ctx) return;
+            let keys = Object.keys(totalsObj);
+            let vals = keys.map(k => totalsObj[k].toFixed(2));
+
+            if (chartSituacionalMeteorizacion) chartSituacionalMeteorizacion.destroy();
+
+            chartSituacionalMeteorizacion = new Chart(ctx.getContext('2d'), {
+                type: 'doughnut',
+                data: {
+                    labels: keys.length > 0 ? keys : ['SIN DATOS'],
+                    datasets: [{
+                        data: vals.length > 0 ? vals : [1],
+                        backgroundColor: ['#312e81', '#7e22ce', '#047857', '#b45309', '#0284c7', '#db2777', '#475569']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'right', labels: { color: '#1e293b', font: { size: 9, weight: 'bold' } } } }
+                }
+            });
+        }
+
+        function renderChartSituacionalPorcentajes(labels, porcentajes) {
+            const ctx = document.getElementById('chart-situacional-porcentajes');
+            if (!ctx) return;
+            if (chartSituacionalPorcentajes) chartSituacionalPorcentajes.destroy();
+
+            chartSituacionalPorcentajes = new Chart(ctx.getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{ label: '% Progreso vs Target', data: porcentajes, backgroundColor: '#047857', borderRadius: 4 }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { ticks: { color: '#1e293b', font: { weight: 'bold' } }, grid: { display: false } },
+                        y: { max: 100, ticks: { color: '#1e293b' }, grid: { color: '#e2e8f0' } }
+                    }
+                }
+            });
+        }
+
+        function forzarMayusculas(el) { if (el && el.value) el.value = el.value.toUpperCase(); }
+        function formatearUTM(el) { if (el && el.value) { let num = parseFloat(el.value.replace(/,/g, '')); if (!isNaN(num)) el.value = num.toFixed(2); } }
+        function formatearDecimalesLibres(el) { if (el && el.value) { let num = parseFloat(el.value.replace(/,/g, '')); if (!isNaN(num)) el.value = num.toFixed(2); } }
+        function forzarDipNegativo(el) {
+            if (!el) return;
+            let val = el.value.replace(/[^0-9.-]/g, '').replace(/-/g, '');
+            el.value = val.length > 0 ? '-' + val : '-';
+        }
+
+        function toggleOtraEmpresa() {
+            const sel = document.getElementById('m1_empresa').value;
+            const box = document.getElementById('m1_otra_empresa_box');
+            if (sel === 'OTRA') box.classList.remove('hidden'); else box.classList.add('hidden');
+        }
+
+        function toggleOtraMaquina() {
+            const sel = document.getElementById('m2_maquina').value;
+            const box = document.getElementById('m2_otra_maquina_box');
+            if (sel === 'OTRA') box.classList.remove('hidden'); else box.classList.add('hidden');
+        }
+
+        function refrescarSelectorModuloUno() {
+            const sel = document.getElementById('m1_selectSelector');
+            if (!sel) return;
+            sel.innerHTML = '<option value="">-- Seleccione un Pozo Activo o Registrar Nuevo --</option>';
+            
+            Object.keys(pozosData).forEach(k => {
+                let p = pozosData[k];
+                if (p.estado === 'ABIERTO') {
+                    let opt = document.createElement('option');
+                    opt.value = k;
+                    opt.text = "Sondaje Activo: " + k + " (" + p.proyecto + ")";
+                    sel.appendChild(opt);
+                }
+            });
+
+            let optNuevo = document.createElement('option');
+            optNuevo.value = "REGISTRAR_NUEVO";
+            optNuevo.text = "➕ Registrar Nuevo Sondaje";
+            optNuevo.className = "font-black text-slate-900 bg-slate-100";
+            sel.appendChild(optNuevo);
+
+            document.getElementById('m1_formularioNuevoPozo').classList.add('hidden');
+        }
+
+        function manejarSeleccionModoPozo(val) {
+            const formNuevo = document.getElementById('m1_formularioNuevoPozo');
+            if (!val) {
+                formNuevo.classList.add('hidden');
+                return;
+            }
+            if (val === 'REGISTRAR_NUEVO') {
+                formNuevo.classList.remove('hidden');
+                document.getElementById('m1_codigo').value = '';
+                document.getElementById('m1_proyecto').value = '';
+                document.getElementById('m1_otra_empresa').value = '';
+                document.getElementById('m1_empresa').selectedIndex = 0;
+                document.getElementById('m1_otra_empresa_box').classList.add('hidden');
+            } else {
+                formNuevo.classList.add('hidden');
+                pozoActivoId = val;
+                localStorage.setItem('jireth_pozo_activo', pozoActivoId);
+                cargarDatosPozoEnFormularios(val);
+                switchTab('mod3_turno');
+            }
+        }
+
+        async function crearPozo() {
+            if (perfilActual === 'GERENCIA') { alert("⚠️ Perfil de Gerencia: Solo lectura."); return; }
+            let codigo = document.getElementById('m1_codigo').value.trim().toUpperCase();
+            let empresa = document.getElementById('m1_empresa').value;
+            if (empresa === 'OTRA') empresa = document.getElementById('m1_otra_empresa').value.trim().toUpperCase();
+            let proyecto = document.getElementById('m1_proyecto').value.trim().toUpperCase();
+
+            if (!codigo || !empresa || !proyecto) { alert("❌ Complete Código, Empresa y Proyecto."); return; }
+            if (pozosData[codigo]) { alert("⚠️ El sondaje " + codigo + " ya existe."); return; }
+
+            pozosData[codigo] = { codigo: codigo, empresa: empresa, proyecto: proyecto, maquina: 'GEOMAX', este: '', norte: '', cota: '', azimut: '', dip: '-', target: '', avances: [], estado: 'ABIERTO' };
+            await guardarYPersistirTodo();
+            pozoActivoId = codigo;
+            localStorage.setItem('jireth_pozo_activo', pozoActivoId);
+            refrescarSelectoresOperativos();
+            refrescarSelectorModuloUno();
+            poblarSelectTopografia();
+
+            cargarDatosPozoEnFormularios(codigo);
+            alert("✅ Sondaje " + codigo + " creado. Ahora complete la Ficha Topográfica.");
+            switchTab('mod2');
+        }
+
+        function poblarSelectTopografia() {
+            const sel = document.getElementById('m2_selectPozoActivo');
+            if (!sel) return;
+            sel.innerHTML = '<option value="">-- Seleccionar Sondaje a Editar --</option>';
+            Object.keys(pozosData).forEach(k => {
+                let p = pozosData[k];
+                if (p.estado === 'ABIERTO') {
+                    let opt = document.createElement('option');
+                    opt.value = k;
+                    opt.text = "Sondaje: " + k + " (" + p.proyecto + ")";
+                    if (k === pozoActivoId) opt.selected = true;
+                    sel.appendChild(opt);
+                }
+            });
+        }
+
+        function seleccionarPozoTopografia(codigo) {
+            if (!codigo) {
+                limpiarFormularioTopografia();
+                return;
+            }
+            pozoActivoId = codigo;
+            localStorage.setItem('jireth_pozo_activo', pozoActivoId);
+            cargarDatosPozoEnFormularios(codigo);
+        }
+
+        function limpiarFormularioTopografia() {
+            ['m2_maquina', 'm2_este', 'm2_norte', 'm2_cota', 'm2_azimut', 'm2_dip', 'm2_target', 'm2_otra_maquina'].forEach(id => {
+                let el = document.getElementById(id);
+                if (el) el.value = '';
+            });
+            ['m2_maquina', 'm2_este', 'm2_norte', 'm2_cota', 'm2_azimut', 'm2_dip', 'm2_target'].forEach(id => document.getElementById(id).disabled = true);
+            document.getElementById('m2_btn_box').classList.add('hidden');
+        }
+
+        function habilitarEdicionTopo() {
+            if (perfilActual === 'GERENCIA') { alert("⚠️ Solo lectura."); return; }
+            if (!pozoActivoId) { alert("⚠️ Seleccione un sondaje de la lista desplegable primero."); return; }
+            ['m2_maquina', 'm2_este', 'm2_norte', 'm2_cota', 'm2_azimut', 'm2_dip', 'm2_target'].forEach(id => document.getElementById(id).disabled = false);
+            document.getElementById('m2_btn_box').classList.remove('hidden');
+            toggleOtraMaquina();
+        }
+
+        function cancelarEdicionTopo() {
+            if (!pozoActivoId) { limpiarFormularioTopografia(); return; }
+            cargarDatosPozoEnFormularios(pozoActivoId);
+            ['m2_maquina', 'm2_este', 'm2_norte', 'm2_cota', 'm2_azimut', 'm2_dip', 'm2_target', 'm2_otra_maquina'].forEach(id => document.getElementById(id).disabled = true);
+            document.getElementById('m2_btn_box').classList.add('hidden');
+            alert("ℹ️ Edición cancelada. Se mantuvieron los datos previos.");
+        }
+
+        async function guardarTopografia() {
+            if (perfilActual === 'GERENCIA') return;
+            if (!pozoActivoId || !pozosData[pozoActivoId]) { alert("⚠️ Seleccione un sondaje válido."); return; }
+            let p = pozosData[pozoActivoId];
+            let maq = document.getElementById('m2_maquina').value;
+            if (maq === 'OTRA') maq = document.getElementById('m2_otra_maquina').value.trim().toUpperCase();
+            
+            p.maquina = maq;
+            p.este = document.getElementById('m2_este').value || '';
+            p.norte = document.getElementById('m2_norte').value || '';
+            p.cota = document.getElementById('m2_cota').value || '';
+            p.azimut = document.getElementById('m2_azimut').value || '';
+            p.dip = document.getElementById('m2_dip').value || '-';
+            p.target = document.getElementById('m2_target').value || '';
+
+            await guardarYPersistirTodo();
+            alert("✅ Topografía guardada. Pasando a apertura de turnos.");
+            document.getElementById('m2_btn_box').classList.add('hidden');
+            ['m2_maquina', 'm2_este', 'm2_norte', 'm2_cota', 'm2_azimut', 'm2_dip', 'm2_target', 'm2_otra_maquina'].forEach(id => document.getElementById(id).disabled = true);
+            actualizarProgresoGrafico();
+            renderizarSalaSituacional();
+            switchTab('mod3_turno');
+        }
+
+        function refrescarSelectoresOperativos() {
+            ['wellSelectTurno', 'wellSelectLogging', 'wellSelectCierre'].forEach(id => {
+                const sel = document.getElementById(id);
+                if (!sel) return;
+                sel.innerHTML = '<option value="">-- Seleccione Sondaje Activo --</option>';
+                Object.keys(pozosData).forEach(k => {
+                    let p = pozosData[k];
+                    if (p.estado === 'ABIERTO') {
+                        let opt = document.createElement('option');
+                        opt.value = k;
+                        opt.text = "Sondaje Activo: " + k + " (" + p.proyecto + ")";
+                        if (k === pozoActivoId) opt.selected = true;
+                        sel.appendChild(opt);
+                    }
+                });
+            });
+            verificarSeleccionTurnosModulo();
+        }
+
+        function verificarSeleccionTurnosModulo() {
+            const selTurno = document.getElementById('wellSelectTurno');
+            const contForm = document.getElementById('contenedorFormTurnos');
+            if (!selTurno || !contForm) return;
+
+            if (!selTurno.value) {
+                contForm.classList.add('hidden');
+                document.getElementById('editTurnoId').value = '';
+                document.getElementById('m3_fecha').valueAsDate = new Date();
+                document.getElementById('m3_perforador').value = '';
+                document.getElementById('m3_geologo').value = '';
+                document.getElementById('selectRetomarTurno').innerHTML = '<option value="">-- Seleccionar Turno del Historial --</option>';
+                document.getElementById('contenedorDetalleTurnoSeleccionado').classList.add('hidden');
+            } else {
+                contForm.classList.remove('hidden');
+            }
+        }
+
+        function seleccionarPozoOperativo(val) {
+            if (!val) {
+                pozoActivoId = '';
+                localStorage.removeItem('jireth_pozo_activo');
+                verificarSeleccionTurnosModulo();
+                return;
+            }
+            pozoActivoId = val;
+            localStorage.setItem('jireth_pozo_activo', pozoActivoId);
+            refrescarSelectoresOperativos();
+            cargarDatosPozoEnFormularios(val);
+            verificarSeleccionTurnosModulo();
+        }
+
+        function poblarSelectRepositorioTodos() {
+            const sel = document.getElementById('wellSelectRepositorio');
+            if (!sel) return;
+            sel.innerHTML = '<option value="">-- Seleccione un Sondaje (Activos y Culminados) --</option>';
+            Object.keys(pozosData).forEach(k => {
+                let p = pozosData[k];
+                let opt = document.createElement('option');
+                opt.value = k;
+                opt.text = "Sondaje: " + k + " (" + p.proyecto + ") - [" + p.estado + "]";
+                if (k === pozoActivoId) opt.selected = true;
+                sel.appendChild(opt);
+            });
+        }
+
+        function seleccionarPozoRepositorio(val) {
+            if (!val) return;
+            pozoActivoId = val;
+            localStorage.setItem('jireth_pozo_activo', pozoActivoId);
+            cargarDatosPozoEnFormularios(val);
+            poblarSelectTurnosRepo();
+            generarReporteDSR();
+        }
+
+        function cargarDatosPozoEnFormularios(codigo) {
+            let p = pozosData[codigo];
+            if (!p) return;
+            document.getElementById('m2_este').value = p.este || '';
+            document.getElementById('m2_norte').value = p.norte || '';
+            document.getElementById('m2_cota').value = p.cota || '';
+            document.getElementById('m2_azimut').value = p.azimut || '';
+            document.getElementById('m2_dip').value = p.dip || '-';
+            document.getElementById('m2_target').value = p.target || '';
+            
+            const maqSel = document.getElementById('m2_maquina');
+            let encontrado = false;
+            for (let i = 0; i < maqSel.options.length; i++) {
+                if (maqSel.options[i].value === p.maquina) { maqSel.selectedIndex = i; encontrado = true; break; }
+            }
+            if (!encontrado) {
+                maqSel.value = 'OTRA';
+                document.getElementById('m2_otra_maquina_box').classList.remove('hidden');
+                document.getElementById('m2_otra_maquina').value = p.maquina;
+            } else { document.getElementById('m2_otra_maquina_box').classList.add('hidden'); }
+
+            const selTopo = document.getElementById('m2_selectPozoActivo');
+            if (selTopo) selTopo.value = codigo;
+
+            ['wellSelectTurno', 'wellSelectLogging', 'wellSelectCierre', 'wellSelectRepositorio'].forEach(id => {
+                let el = document.getElementById(id);
+                if (el) el.value = codigo;
+            });
+
+            actualizarTablaAvances();
+            actualizarProgresoGrafico();
+            autoCalcularHasta();
+            poblarSelectRetomarTurno();
+            verificarSeleccionTurnosModulo();
+            
+            if (!document.getElementById('mod4').classList.contains('hidden')) cargarResumenCierrePozo();
+            if (!document.getElementById('mod5').classList.contains('hidden')) { poblarSelectRepositorioTodos(); poblarSelectTurnosRepo(); generarReporteDSR(); }
+        }
+
+        async function guardarOIniciarTurno() {
+            if (perfilActual === 'GERENCIA') { alert("⚠️ Solo lectura."); return; }
+            if (!pozoActivoId) { alert("⚠️ Seleccione un sondaje primero."); switchTab('mod1'); return; }
+            
+            let fecha = document.getElementById('m3_fecha').value;
+            let jornada = document.getElementById('m3_turno').value;
+            let perforador = document.getElementById('m3_perforador').value.trim().toUpperCase();
+            let geologo = document.getElementById('m3_geologo').value.trim().toUpperCase();
+            let turnoEditId = document.getElementById('editTurnoId').value;
+
+            if (!fecha || !perforador || !geologo) { alert("❌ Complete Fecha, Perforador y Geólogo."); return; }
+
+            let duplicado = Object.values(turnosData).some(t => t.pozo === pozoActivoId && t.fecha === fecha && t.jornada === jornada && t.id !== turnoEditId);
+            if (duplicado) { alert(`⚠️ Ya existe un turno ${jornada} para la fecha ${fecha} en el sondaje ${pozoActivoId}.`); return; }
+
+            if (turnoEditId && turnosData[turnoEditId]) {
+                turnosData[turnoEditId].fecha = fecha;
+                turnosData[turnoEditId].jornada = jornada;
+                turnosData[turnoEditId].perforador = perforador;
+                turnosData[turnoEditId].geologo = geologo;
+
+                if (turnoActivoObj && turnoActivoObj.id === turnoEditId) {
+                    turnoActivoObj = turnosData[turnoEditId];
+                    localStorage.setItem('jireth_turno_activo', JSON.stringify(turnoActivoObj));
+                    actualizarBannerTurnoActivo();
+                }
+
+                await guardarYPersistirTodo();
+                poblarSelectRetomarTurno();
+                alert("✅ Turno actualizado correctamente.");
+                cancelarEdicionTurno();
+            } else {
+                let nuevoId = 'TURNO_' + Date.now();
+                turnoActivoObj = { id: nuevoId, pozo: pozoActivoId, fecha: fecha, jornada: jornada, perforador: perforador, geologo: geologo, observaciones: "" };
+                turnosData[nuevoId] = turnoActivoObj;
+                localStorage.setItem('jireth_turnos', JSON.stringify(turnosData));
+                localStorage.setItem('jireth_turno_activo', JSON.stringify(turnoActivoObj));
+                
+                actualizarBannerTurnoActivo();
+                poblarSelectRetomarTurno();
+                alert("🚀 Turno iniciado. Pasando directo a Core Logging.");
+                switchTab('mod3_logging');
+            }
+        }
+
+        function cargarTurnoParaEditar() {
+            let id = document.getElementById('selectRetomarTurno').value;
+            if (!id || !turnosData[id]) { alert("⚠️ Seleccione un turno del historial."); return; }
+            let t = turnosData[id];
+            document.getElementById('editTurnoId').value = t.id;
+            document.getElementById('m3_fecha').value = t.fecha;
+            document.getElementById('m3_turno').value = t.jornada;
+            document.getElementById('m3_perforador').value = t.perforador;
+            document.getElementById('m3_geologo').value = t.geologo;
+            document.getElementById('tituloBoxTurno').innerText = "✏️ Editando Datos del Turno (" + t.pozo + ")";
+            document.getElementById('btnAccionTurno').innerText = "💾 Guardar Cambios del Turno";
+            document.getElementById('btnCancelarEdicionTurno').classList.remove('hidden');
+        }
+
+        function cancelarEdicionTurno() {
+            document.getElementById('editTurnoId').value = '';
+            document.getElementById('m3_fecha').valueAsDate = new Date();
+            document.getElementById('m3_perforador').value = '';
+            document.getElementById('m3_geologo').value = '';
+            document.getElementById('tituloBoxTurno').innerText = "🚀 Apertura de Turno Nuevo";
+            document.getElementById('btnAccionTurno').innerText = "🚀 Abrir Turno e Ir Directo a Core Logging";
+            document.getElementById('btnCancelarEdicionTurno').classList.add('hidden');
+        }
+
+        async function eliminarTurnoSeleccionado() {
+            if (perfilActual === 'GERENCIA') { alert("⚠️ Solo lectura."); return; }
+            let id = document.getElementById('selectRetomarTurno').value;
+            if (!id || !turnosData[id]) { alert("⚠️ Seleccione un turno."); return; }
+            if (confirm("⚠️ ¿Eliminar este turno y sus datos asociados?")) {
+                delete turnosData[id];
+                if (turnoActivoObj && turnoActivoObj.id === id) {
+                    turnoActivoObj = null;
+                    localStorage.removeItem('jireth_turno_activo');
+                    document.getElementById('lblInfoTurno').innerText = "--";
+                    document.getElementById('lblInfoPerf').innerText = "--";
+                    document.getElementById('lblInfoGeo').innerText = "--";
+                }
+                document.getElementById('contenedorDetalleTurnoSeleccionado').classList.add('hidden');
+                await guardarYPersistirTodo();
+                poblarSelectRetomarTurno();
+                alert("✅ Turno eliminado.");
+            }
+        }
+
+        async function finalizarTurnoActivo() {
+            if (perfilActual === 'GERENCIA') return;
+            if (!turnoActivoObj) { alert("⚠️ No hay turno activo."); return; }
+            let obs = document.getElementById('m3_observaciones').value.trim().toUpperCase();
+            turnoActivoObj.observaciones = obs || "SIN NOVEDAD";
+            turnosData[turnoActivoObj.id] = turnoActivoObj;
+            localStorage.setItem('jireth_turnos', JSON.stringify(turnosData));
+
+            await guardarYPersistirTodo();
+            alert("💾 Turno finalizado y guardado.");
+            turnoActivoObj = null;
+            localStorage.removeItem('jireth_turno_activo');
+            document.getElementById('lblInfoTurno').innerText = "--";
+            document.getElementById('lblInfoPerf').innerText = "--";
+            document.getElementById('lblInfoGeo').innerText = "--";
+            document.getElementById('m3_observaciones').value = '';
+            switchTab('mod3_turno');
+        }
+
+        function actualizarBannerTurnoActivo() {
+            if (!turnoActivoObj) return;
+            document.getElementById('lblInfoTurno').innerText = turnoActivoObj.pozo + " (" + turnoActivoObj.fecha + " - " + turnoActivoObj.jornada + ")";
+            document.getElementById('lblInfoPerf').innerText = turnoActivoObj.perforador;
+            document.getElementById('lblInfoGeo').innerText = turnoActivoObj.geologo;
+            document.getElementById('m3_observaciones').value = turnoActivoObj.observaciones || '';
+        }
+
+        function poblarSelectRetomarTurno() {
+            const sel = document.getElementById('selectRetomarTurno');
+            if (!sel) return;
+            sel.innerHTML = '<option value="">-- Seleccionar Turno del Historial --</option>';
+            Object.keys(turnosData).forEach(k => {
+                let t = turnosData[k];
+                if (!pozoActivoId || t.pozo === pozoActivoId) {
+                    let opt = document.createElement('option');
+                    opt.value = k;
+                    opt.text = "[" + t.fecha + " - " + t.jornada + "] Sondaje: " + t.pozo + " | Perf: " + t.perforador;
+                    sel.appendChild(opt);
+                }
+            });
+            document.getElementById('contenedorDetalleTurnoSeleccionado').classList.add('hidden');
+        }
+
+        function mostrarDetallesTurnoSeleccionado() {
+            let id = document.getElementById('selectRetomarTurno').value;
+            let contenedor = document.getElementById('contenedorDetalleTurnoSeleccionado');
+            if (!id || !turnosData[id]) { contenedor.classList.add('hidden'); return; }
+            let t = turnosData[id];
+            let p = pozosData[t.pozo];
+            contenedor.classList.remove('hidden');
+
+            document.getElementById('inspTurnoTitulo').innerText = `📅 ${t.fecha} (${t.jornada}) | Sondaje: ${t.pozo} | Perf: ${t.perforador} | Geo: ${t.geologo}`;
+            document.getElementById('inspTurnoObs').innerText = `📝 Observaciones: ${t.observaciones || 'Sin observaciones registradas en este turno.'}`;
+
+            let tbody = document.getElementById('inspTablaAvancesBody');
+            tbody.innerHTML = '';
+            let tramosturno = p && p.avances ? p.avances.filter(av => av.turnoId === id) : [];
+            let totalMetrosTurno = 0;
+
+            tramosturno.forEach((av, idx) => {
+                let met = parseFloat(av.hasta) - parseFloat(av.desde);
+                totalMetrosTurno += met;
+                let tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-50 transition";
+                tr.innerHTML = `<td class="p-2">#${idx + 1}</td><td class="p-2 text-slate-800 font-bold">${av.diametro}</td><td class="p-2 text-slate-900 font-bold">${av.desde} - ${av.hasta}</td><td class="p-2 text-slate-700">${av.recuperado}m</td><td class="p-2 font-bold ${parseFloat(av.porcentaje) < 70 ? 'text-amber-800' : 'text-slate-800'}">${av.porcentaje}%</td><td class="p-2 text-slate-700">${av.meteorizacion}</td><td class="p-2 text-slate-900 font-bold">${av.pagoEstandar || '0.00'}m</td>`;
+                tbody.appendChild(tr);
+            });
+
+            if (tramosturno.length === 0) tbody.innerHTML = `<tr><td colspan="7" class="p-3 text-center text-slate-400 font-bold">No hay tramos de avance registrados en este turno.</td></tr>`;
+            document.getElementById('inspTurnoMetraje').innerText = `${totalMetrosTurno.toFixed(2)} m perforados (${tramosturno.length} tramos)`;
+        }
+
+        function retomarTurnoSeleccionado() {
+            const id = document.getElementById('selectRetomarTurno').value;
+            if (!id || !turnosData[id]) { alert("⚠️ Seleccione un turno."); return; }
+            turnoActivoObj = turnosData[id];
+            localStorage.setItem('jireth_turno_activo', JSON.stringify(turnoActivoObj));
+            pozoActivoId = turnoActivoObj.pozo;
+            localStorage.setItem('jireth_pozo_activo', pozoActivoId);
+            cargarDatosPozoEnFormularios(pozoActivoId);
+            actualizarBannerTurnoActivo();
+            alert("▶️ Turno retomado con éxito.");
+            switchTab('mod3_logging');
+        }
+
+        function autoCalcularHasta() {
+            if (!pozoActivoId || !pozosData[pozoActivoId]) return;
+            let p = pozosData[pozoActivoId];
+            let ultimoHasta = 0.0;
+            if (p.avances && p.avances.length > 0) ultimoHasta = parseFloat(p.avances[p.avances.length - 1].hasta) || 0.0;
+            document.getElementById('m3_desde').value = ultimoHasta.toFixed(2);
+            let lon = parseFloat(document.getElementById('m3_longitud').value) || 1.5;
+            let hasta = ultimoHasta + lon;
+            document.getElementById('m3_hasta').value = hasta.toFixed(2);
+            document.getElementById('m3_recuperado').value = '';
+        }
+
+        async function guardarAvance() {
+            if (perfilActual === 'GERENCIA') { alert("⚠️ Solo lectura."); return; }
+            if (!pozoActivoId || !pozosData[pozoActivoId]) { alert("⚠️ Seleccione un sondaje."); switchTab('mod1'); return; }
+            if (!turnoActivoObj) { alert("⚠️ Debe iniciar o retomar un turno antes de registrar avances."); switchTab('mod3_turno'); return; }
+
+            let p = pozosData[pozoActivoId];
+            let desde = parseFloat(document.getElementById('m3_desde').value) || 0;
+            let hasta = parseFloat(document.getElementById('m3_hasta').value) || 0;
+            let diametro = document.getElementById('m3_diametro').value;
+            let recuperado = parseFloat(document.getElementById('m3_recuperado').value);
+            let meteorizacion = document.getElementById('m3_meteorizacion').value;
+            let lonManiobra = hasta - desde;
+
+            if (isNaN(recuperado) || recuperado < 0 || recuperado > lonManiobra) { 
+                alert("❌ Metros recuperados inválidos o campo vacío respecto a la longitud del tramo."); 
+                return; 
+            }
+
+            let metrosPago = calcularMetrosAPagar(lonManiobra, recuperado, meteorizacion);
+            let objTramo = {
+                desde: desde.toFixed(2), hasta: hasta.toFixed(2), diametro: diametro,
+                recuperado: recuperado.toFixed(2), porcentaje: (((recuperado / lonManiobra) * 100)).toFixed(1),
+                meteorizacion: meteorizacion, pagoEstandar: metrosPago.toFixed(2),
+                turnoId: turnoActivoObj.id, perforador: turnoActivoObj.perforador, geologoTurno: turnoActivoObj.geologo
+            };
+
+            if (indexEditandoAvance !== null) {
+                p.avances[indexEditandoAvance] = objTramo;
+                indexEditandoAvance = null;
+                document.getElementById('btnGuardarAvance').innerText = "➕ Guardar Avance Tramo";
+                document.getElementById('btnCancelarEdicion').classList.add('hidden');
+            } else { p.avances.push(objTramo); }
+
+            localStorage.setItem('jireth_pozos', JSON.stringify(pozosData));
+            localStorage.setItem('jireth_turnos', JSON.stringify(turnosData));
+
+            actualizarTablaAvances();
+            actualizarProgresoGrafico();
+            autoCalcularHasta();
+
+            if (navigator.onLine && supabaseClient) {
+                setTimeout(async () => {
+                    try {
+                        const payloadData = { pozos: pozosData, turnos: turnosData, actualizado: new Date().toISOString() };
+                        await supabaseClient.from('jireth_geocore').upsert({ id: 'db_principal', payload: payloadData });
+                    } catch(e) { console.warn("Sync diferida offline", e); }
+                }, 50);
+            }
+        }
+
+        function actualizarTablaAvances() {
+            if (!pozoActivoId || !pozosData[pozoActivoId]) return;
+            let p = pozosData[pozoActivoId];
+            let tbody = document.getElementById('tablaAvancesBody');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+            
+            let avancesAMostrar = turnoActivoObj ? p.avances.filter(t => t.turnoId === turnoActivoObj.id) : p.avances;
+
+            avancesAMostrar.forEach((t) => {
+                let idxOriginal = p.avances.indexOf(t);
+                let lonM = parseFloat(t.hasta) - parseFloat(t.desde);
+                let pagVal = t.pagoEstandar ? parseFloat(t.pagoEstandar) : calcularMetrosAPagar(lonM, parseFloat(t.recuperado), t.meteorizacion);
+
+                let tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-50 transition";
+                let tdAccion = perfilActual === 'GERENCIA' ? `<td class="p-3 text-center text-slate-400">Solo Lectura</td>` : `<td class="p-3 text-center space-x-1"><button onclick="editarTramo(${idxOriginal})" class="text-xs bg-slate-100 text-slate-800 px-2 py-1 rounded border border-slate-200 shadow-sm">✏️</button><button onclick="eliminarTramo(${idxOriginal})" class="text-xs bg-rose-50 text-rose-800 px-2 py-1 rounded border border-rose-200 shadow-sm">🗑️</button></td>`;
+                tr.innerHTML = `<td class="p-3">#${idxOriginal + 1}</td><td class="p-3 text-slate-900 font-bold">${t.desde} - ${t.hasta}</td><td class="p-3 text-indigo-800 font-bold">${t.diametro}</td><td class="p-3 text-slate-900">${t.recuperado}</td><td class="p-3 font-bold ${parseFloat(t.porcentaje) < 70 ? 'text-amber-800' : 'text-emerald-800'}">${t.porcentaje}%</td><td class="p-3 text-slate-700">${t.meteorizacion}</td><td class="p-3 text-amber-900 font-bold">${pagVal.toFixed(2)}m</td>${tdAccion}`;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function editarTramo(idx) {
+            if (perfilActual === 'GERENCIA') return;
+            let p = pozosData[pozoActivoId];
+            let t = p.avances[idx];
+            document.getElementById('m3_desde').value = t.desde;
+            document.getElementById('m3_hasta').value = t.hasta;
+            document.getElementById('m3_diametro').value = t.diametro;
+            document.getElementById('m3_recuperado').value = t.recuperado;
+            document.getElementById('m3_meteorizacion').value = t.meteorizacion;
+            indexEditandoAvance = idx;
+            document.getElementById('btnGuardarAvance').innerText = "💾 Actualizar Tramo #" + (idx + 1);
+            document.getElementById('btnCancelarEdicion').classList.remove('hidden');
+        }
+
+        function cancelarEdicionAvance() {
+            indexEditandoAvance = null;
+            document.getElementById('btnGuardarAvance').innerText = "➕ Guardar Avance Tramo";
+            document.getElementById('btnCancelarEdicion').classList.add('hidden');
+            autoCalcularHasta();
+        }
+
+        async function eliminarTramo(idx) {
+            if (perfilActual === 'GERENCIA') return;
+            if (confirm("¿Eliminar este tramo?")) {
+                pozosData[pozoActivoId].avances.splice(idx, 1);
+                await guardarYPersistirTodo();
+                actualizarTablaAvances();
+                actualizarProgresoGrafico();
+                autoCalcularHasta();
+            }
+        }
+
+        function actualizarProgresoGrafico() {
+            if (!pozoActivoId || !pozosData[pozoActivoId]) return;
+            let p = pozosData[pozoActivoId];
+            let target = parseFloat(p.target) || 100.0;
+            let totalHQ = 0, totalNQ = 0, totalRecuperado = 0, totalMetros = 0, totalPago = 0;
+
+            p.avances.forEach(t => {
+                let met = parseFloat(t.hasta) - parseFloat(t.desde);
+                let rec = parseFloat(t.recuperado) || 0;
+                let lonM = parseFloat(t.hasta) - parseFloat(t.desde);
+                let pago = t.pagoEstandar ? parseFloat(t.pagoEstandar) : calcularMetrosAPagar(lonM, rec, t.meteorizacion);
+                totalMetros += met;
+                totalRecuperado += rec;
+                totalPago += pago;
+                if (t.diametro === 'HQ') totalHQ += met; else totalNQ += met;
+            });
+
+            let totalPerforado = totalHQ + totalNQ;
+            let pct = target > 0 ? Math.min(100, (totalPerforado / target) * 100) : 0;
+            let recGlobal = totalMetros > 0 ? ((totalRecuperado / totalMetros) * 100) : 0;
+
+            document.getElementById('cardMetrajeAcum').innerText = totalPerforado.toFixed(2) + " m";
+            document.getElementById('cardTargetSub').innerText = "Target: " + target.toFixed(2) + " m";
+            document.getElementById('cardRecGlobal').innerText = recGlobal.toFixed(1) + "%";
+            document.getElementById('cardAvanceGen').innerText = pct.toFixed(1) + "%";
+            document.getElementById('cardMetrosPago').innerText = totalPago.toFixed(2) + " m";
+
+            document.getElementById('txtMetrosHQ').innerText = totalHQ.toFixed(2);
+            document.getElementById('txtMetrosNQ').innerText = totalNQ.toFixed(2);
+            let pendiente = Math.max(0, target - totalPerforado);
+            document.getElementById('txtMetrosPend').innerText = pendiente.toFixed(2);
+            document.getElementById('lblProgresoTexto').innerText = totalPerforado.toFixed(2) + " m / " + target.toFixed(2) + " m (" + pct.toFixed(1) + "%)";
+
+            let pHQ = target > 0 ? (totalHQ / target) * 100 : 0;
+            let pNQ = target > 0 ? (totalNQ / target) * 100 : 0;
+            let pPend = target > 0 ? (pendiente / target) * 100 : 100;
+
+            document.getElementById('barHQ').style.width = pHQ + '%';
+            document.getElementById('barNQ').style.width = pNQ + '%';
+            document.getElementById('barPendiente').style.width = pPend + '%';
+        }
+
+        function cargarResumenCierrePozo() {
+            let container = document.getElementById('cierreResumenPozo');
+            if (!container) return;
+            if (!pozoActivoId || !pozosData[pozoActivoId]) {
+                container.innerHTML = '<p class="text-rose-600 font-bold">No hay sondaje seleccionado.</p>';
+                return;
+            }
+            let p = pozosData[pozoActivoId];
+            let totalMetros = 0, totalRec = 0, totalPago = 0;
+            p.avances.forEach(t => {
+                let met = (parseFloat(t.hasta) - parseFloat(t.desde));
+                let pag = t.pagoEstandar ? parseFloat(t.pagoEstandar) : calcularMetrosAPagar(met, parseFloat(t.recuperado), t.meteorizacion);
+                totalMetros += met;
+                totalRec += parseFloat(t.recuperado) || 0;
+                totalPago += pag;
+            });
+            let target = parseFloat(p.target) || 100.0;
+            let recGralPozo = totalMetros > 0 ? ((totalRec / totalMetros) * 100).toFixed(1) : '0.0';
+
+            container.innerHTML = `
+                <div class="space-y-3">
+                    <p class="text-slate-900 font-black uppercase text-xs tracking-wider border-b border-slate-200 pb-1">📋 Ficha Técnica Consolidada para Evaluación y Cierre (100% de Trazabilidad)</p>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[11px]">
+                        <div><b>Código Sondaje:</b> <span class="text-indigo-900 font-bold">${p.codigo}</span></div>
+                        <div><b>Proyecto / Sector:</b> <span class="text-purple-900 font-bold">${p.proyecto}</span></div>
+                        <div><b>Empresa Cliente:</b> <span class="text-slate-800 font-bold">${p.empresa}</span></div>
+                        <div><b>Estado Actual:</b> <span class="text-emerald-800 font-bold">${p.estado}</span></div>
+                        <div><b>Máquina Perf.:</b> <span class="text-slate-700 font-bold">${p.maquina || 'GEOMAX'}</span></div>
+                        <div><b>Coordenada Este:</b> <span class="font-mono-code text-slate-800">${p.este || '0.00'} m</span></div>
+                        <div><b>Coordenada Norte:</b> <span class="font-mono-code text-slate-800">${p.norte || '0.00'} m</span></div>
+                        <div><b>Cota Z (m):</b> <span class="font-mono-code text-slate-800">${p.cota || '0.00'} m</span></div>
+                        <div><b>Inclinación (Dip):</b> <span class="font-mono-code text-slate-800">${p.dip || '-'}°</span></div>
+                        <div><b>Azimut (°):</b> <span class="font-mono-code text-slate-800">${p.azimut || '0'}°</span></div>
+                        <div><b>Prof. Target:</b> <span class="font-mono-code text-slate-800">${target} m</span></div>
+                        <div><b>Total Perforado:</b> <span class="font-mono-code text-indigo-950 font-bold">${totalMetros.toFixed(2)} m</span></div>
+                        <div><b>Recuperación Gral:</b> <span class="font-mono-code text-purple-900 font-bold">${recGralPozo}%</span></div>
+                        <div><b>Total Metros a Pagar:</b> <span class="font-mono-code text-amber-900 font-bold">${totalPago.toFixed(2)} m</span></div>
+                    </div>
+                </div>
+            `;
+
+            renderChartCierreMeteorizacion(p);
+
+            if (p.estado === 'CULMINADO') {
+                document.getElementById('btnCierrePozo').classList.add('hidden');
+                document.getElementById('btnReactivarPozo').classList.remove('hidden');
+            } else {
+                document.getElementById('btnCierrePozo').classList.remove('hidden');
+                document.getElementById('btnReactivarPozo').classList.add('hidden');
+            }
+        }
+
+        function renderChartCierreMeteorizacion(p) {
+            const ctx = document.getElementById('chart-cierre-meteorizacion');
+            if (!ctx) return;
+
+            let totals = {};
+            p.avances.forEach(t => {
+                let len = parseFloat(t.hasta) - parseFloat(t.desde);
+                totals[t.meteorizacion] = (totals[t.meteorizacion] || 0) + len;
+            });
+
+            let sortedKeys = Object.keys(totals).sort((a, b) => totals[b] - totals[a]);
+            let sortedData = sortedKeys.map(k => totals[k].toFixed(2));
+
+            if (chartCierreMeteorizacion) chartCierreMeteorizacion.destroy();
+
+            chartCierreMeteorizacion = new Chart(ctx.getContext('2d'), {
+                type: 'doughnut',
+                data: {
+                    labels: sortedKeys,
+                    datasets: [{
+                        data: sortedData,
+                        backgroundColor: ['#312e81', '#7e22ce', '#047857', '#b45309', '#0284c7', '#db2777', '#475569']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'right', labels: { color: '#1e293b', font: { size: 10, weight: 'bold' } } }
+                    }
+                }
+            });
+        }
+
+        async function ejecutarCierrePozo() {
+            if (perfilActual === 'GERENCIA') { alert("⚠️ Solo lectura."); return; }
+            if (!pozoActivoId || !pozosData[pozoActivoId]) return;
+            let motivo = document.getElementById('m4_motivo').value;
+            let obs = document.getElementById('m4_obs').value;
+            pozosData[pozoActivoId].estado = 'CULMINADO';
+            pozosData[pozoActivoId].motivoCierre = motivo;
+            pozosData[pozoActivoId].obsCierre = obs;
+            await guardarYPersistirTodo();
+            refrescarSelectoresOperativos();
+            refrescarSelectorModuloUno();
+            poblarSelectTopografia();
+            renderizarSalaSituacional();
+            cargarResumenCierrePozo();
+            alert("🔒 Sondaje " + pozoActivoId + " cerrado con éxito.");
+        }
+
+        async function reactivarPozoActual() {
+            if (perfilActual === 'GERENCIA') return;
+            if (!pozoActivoId || !pozosData[pozoActivoId]) return;
+            if (confirm("🔓 ¿Desea reactivar este sondaje?")) {
+                pozosData[pozoActivoId].estado = 'ABIERTO';
+                delete pozosData[pozoActivoId].motivoCierre;
+                delete pozosData[pozoActivoId].obsCierre;
+                await guardarYPersistirTodo();
+                refrescarSelectoresOperativos();
+                refrescarSelectorModuloUno();
+                poblarSelectTopografia();
+                renderizarSalaSituacional();
+                cargarResumenCierrePozo();
+                alert("✅ Sondaje reactivado a estado ABIERTO.");
+            }
+        }
+
+        function poblarSelectTurnosRepo() {
+            const sel = document.getElementById('repTurnoSelect');
+            if (!sel) return;
+            sel.innerHTML = '';
+            Object.keys(turnosData).forEach(k => {
+                let t = turnosData[k];
+                if (t.pozo === pozoActivoId) {
+                    let opt = document.createElement('option');
+                    opt.value = k;
+                    opt.text = "[" + t.fecha + " - " + t.jornada + "] Perf: " + t.perforador;
+                    sel.appendChild(opt);
+                }
+            });
+        }
+
+        function generarReporteDSR() {
+            if (!pozoActivoId || !pozosData[pozoActivoId]) { alert("⚠️ Seleccione un sondaje en el repositorio primero."); return; }
+            let p = pozosData[pozoActivoId];
+            let modo = document.getElementById('repModoVista').value;
+            let boxTurno = document.getElementById('boxSelectTurnoRepo');
+            
+            if (modo === 'CULMINADO' && p.estado !== 'CULMINADO') {
+                alert(`⚠️ ALERTA: El sondaje seleccionado (${p.codigo}) se encuentra en estado ACTIVO y no ha sido culminado. Debe proceder al Módulo de Cierre (Módulo 4) para culminarlo antes de emitir este reporte.`);
+                document.getElementById('repModoVista').value = 'ACUMULADO';
+                generarReporteDSR();
+                return;
+            }
+
+            if (modo === 'TURNO') {
+                boxTurno.classList.remove('hidden');
+                document.getElementById('repTituloPrincipalDSR').innerText = "REPORTE DE TURNO";
+            } else if (modo === 'ACUMULADO') {
+                boxTurno.classList.add('hidden');
+                document.getElementById('repTituloPrincipalDSR').innerText = "REPORTE ACUMULADO DEL SONDAJE";
+            } else if (modo === 'CULMINADO') {
+                boxTurno.classList.add('hidden');
+                document.getElementById('repTituloPrincipalDSR').innerText = "REPORTE SONDAJE CULMINADO";
+            }
+
+            let listaAvancesFiltrada = [];
+            let operadorTurnoTexto = "---";
+            let geologoTurnoTexto = "---";
+            let fechaReporte = new Date().toLocaleDateString();
+            let jornadaTexto = "DIURNO";
+            let observacionesTurnoTexto = "SIN NOVEDADES REGISTRADAS.";
+
+            if (modo === 'TURNO') {
+                let turnoSelId = document.getElementById('repTurnoSelect').value;
+                if (turnoSelId && turnosData[turnoSelId]) {
+                    let tObj = turnosData[turnoSelId];
+                    operadorTurnoTexto = tObj.perforador;
+                    geologoTurnoTexto = tObj.geologo;
+                    fechaReporte = tObj.fecha;
+                    jornadaTexto = tObj.jornada;
+                    observacionesTurnoTexto = tObj.observaciones || "SIN NOVEDADES EN EL TURNO.";
+                    listaAvancesFiltrada = p.avances.filter(item => item.turnoId === turnoSelId);
+                }
+            } else if (modo === 'ACUMULADO') {
+                operadorTurnoTexto = "MÚLTIPLES (ACUMULADO GENERAL)";
+                geologoTurnoTexto = "MÚLTIPLES (ACUMULADO GENERAL)";
+                listaAvancesFiltrada = p.avances;
+                observacionesTurnoTexto = p.obsCierre || "REGISTRO ACUMULADO GENERAL DEL SONDAJE.";
+            } else if (modo === 'CULMINADO') {
+                operadorTurnoTexto = "CONSOLIDADO FIN DE POZO";
+                geologoTurnoTexto = "SUPERVISIÓN GENERAL DE GEOLOGÍA";
+                listaAvancesFiltrada = p.avances;
+                observacionesTurnoTexto = p.obsCierre || "SONDAJE CULMINADO SATISFACTORIAMENTE.";
+            }
+
+            document.getElementById('repFechaEmision').innerText = "Fecha: " + fechaReporte + " | Turno: " + jornadaTexto;
+            document.getElementById('repCodigoHeader').innerText = p.codigo;
+            document.getElementById('repEmpresa').innerText = p.empresa;
+            document.getElementById('repProyecto').innerText = p.proyecto;
+            document.getElementById('repMaquina').innerText = p.maquina;
+            document.getElementById('repEste').innerText = (p.este || '0.00') + " m";
+            document.getElementById('repNorte').innerText = (p.norte || '0.00') + " m";
+            document.getElementById('repCota').innerText = (p.cota || '0.00') + " m";
+            document.getElementById('repDipAzimut').innerText = (p.dip || '-') + "° / " + (p.azimut || '0') + "°";
+            document.getElementById('repEstadoPozo').innerText = p.estado;
+            document.getElementById('repTargetSub').innerText = "Target: " + (p.target || '100.00') + " m";
+
+            document.getElementById('repPerforadorTurno').innerText = operadorTurnoTexto;
+            document.getElementById('repGeologoTurno').innerText = geologoTurnoTexto;
+
+            let totalMetros = 0, totalRecuperado = 0, totalPagoFinal = 0;
+            let totalHQMet = 0, totalNQMet = 0;
+            let tbody = document.getElementById('repTablaBody');
+            tbody.innerHTML = '';
+
+            listaAvancesFiltrada.forEach((t, idx) => {
+                let met = parseFloat(t.hasta) - parseFloat(t.desde);
+                let rec = parseFloat(t.recuperado);
+                let lonM = met;
+                let pagoTramo = t.pagoEstandar ? parseFloat(t.pagoEstandar) : calcularMetrosAPagar(lonM, rec, t.meteorizacion);
+                
+                totalMetros += met; 
+                totalRecuperado += rec;
+                totalPagoFinal += pagoTramo;
+                if (t.diametro === 'HQ') totalHQMet += met; else totalNQMet += met;
+
+                let tr = document.createElement('tr');
+                tr.className = "border-b border-slate-200 hover:bg-slate-50";
+                tr.innerHTML = `<td class="p-2 border-r border-slate-200 font-bold">#${idx + 1}</td><td class="p-2 border-r border-slate-200">${t.desde}</td><td class="p-2 border-r border-slate-200">${t.hasta}</td><td class="p-2 border-r border-slate-200 font-bold">${met.toFixed(2)}</td><td class="p-2 border-r border-slate-200 font-bold text-slate-800">${t.diametro}</td><td class="p-2 border-r border-slate-200">${t.recuperado}</td><td class="p-2 border-r border-slate-200 font-bold ${parseFloat(t.porcentaje) < 70 ? 'text-amber-800' : 'text-slate-900'}">${t.porcentaje}%</td><td class="p-2 border-r border-slate-200">${t.meteorizacion}</td><td class="p-2 font-black text-slate-950 bg-slate-100">${pagoTramo.toFixed(2)} m</td>`;
+                tbody.appendChild(tr);
+            });
+
+            let targetNum = parseFloat(p.target) || 100.0;
+            let avGen = targetNum > 0 ? Math.min(100, (totalMetros / targetNum) * 100) : 0;
+            let recProm = totalMetros > 0 ? ((totalRecuperado / totalMetros) * 100).toFixed(1) : '0.0';
+
+            document.getElementById('repMetrajeTotal').innerText = totalMetros.toFixed(2) + " m";
+            document.getElementById('repRecPromedio').innerText = recProm + "%";
+            document.getElementById('repMetrosPagoTotal').innerText = totalPagoFinal.toFixed(2) + " m";
+            document.getElementById('repAvanceGen').innerText = avGen.toFixed(1) + "%";
+
+            document.getElementById('repMetrosHQRep').innerText = totalHQMet.toFixed(2) + " m";
+            document.getElementById('repMetrosNQRep').innerText = totalNQMet.toFixed(2) + " m";
+
+            document.getElementById('repObservacionesTexto').innerText = observacionesTurnoTexto;
+            if (p.estado === 'CULMINADO') {
+                document.getElementById('repMotivoCierreBox').innerHTML = `<b>Motivo de Cierre:</b> ${p.motivoCierre || 'CULMINADO'}`;
+            } else {
+                document.getElementById('repMotivoCierreBox').innerHTML = `<b>Estado:</b> Sondaje Activo en Operación`;
+            }
+
+            const contenedorFirmas = document.getElementById('contenedorFirmasDSR');
+            if (modo === 'CULMINADO' || modo === 'ACUMULADO') {
+                contenedorFirmas.innerHTML = `
+                    <div class="grid grid-cols-2 gap-6 text-center pt-6">
+                        <div>
+                            <p class="font-bold uppercase text-slate-900 mb-8">Supervisor de Perforación</p>
+                            <p>_____________________________________</p>
+                            <p class="mt-1 font-semibold text-slate-600">Nombre y Apellido / Firma</p>
+                        </div>
+                        <div>
+                            <p class="font-bold uppercase text-slate-900 mb-8">Supervisor de Geología</p>
+                            <p>_____________________________________</p>
+                            <p class="mt-1 font-semibold text-slate-600">Firma y Sello Oficial</p>
+                        </div>
+                    </div>
+                `;
+            } else {
+                contenedorFirmas.innerHTML = `
+                    <div class="grid grid-cols-2 gap-4 text-center pt-6">
+                        <div>
+                            <p class="font-bold uppercase text-slate-900 mb-6">Perforador de Turno</p>
+                            <p>_____________________________________</p>
+                            <p class="mt-1 font-semibold text-slate-600">${operadorTurnoTexto}</p>
+                        </div>
+                        <div>
+                            <p class="font-bold uppercase text-slate-900 mb-6">Supervisor de Geología</p>
+                            <p>_____________________________________</p>
+                            <p class="mt-1 font-semibold text-slate-600">${geologoTurnoTexto}</p>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function imprimirOExportarPDF() { window.print(); }
+
+        function poblarSelectAdminBorrar() {
+            const sel = document.getElementById('adminSelectPozoBorrar');
+            if (!sel) return;
+            sel.innerHTML = '<option value="">-- Seleccionar Sondaje a Eliminar --</option>';
+            Object.keys(pozosData).forEach(k => {
+                let opt = document.createElement('option');
+                opt.value = k;
+                opt.text = "Sondaje: " + k + " (" + pozosData[k].proyecto + ")";
+                sel.appendChild(opt);
+            });
+        }
+
+        async function eliminarPozoEspecifico() {
+            if (perfilActual === 'GERENCIA') { alert("⚠️ Solo lectura."); return; }
+            let codigo = document.getElementById('adminSelectPozoBorrar').value;
+            if (!codigo) { alert("⚠️ Seleccione un sondaje."); return; }
+            if (confirm("⚠️ ¿Eliminar el sondaje " + codigo + "?")) {
+                delete pozosData[codigo];
+                if (pozoActivoId === codigo) { pozoActivoId = ''; localStorage.removeItem('jireth_pozo_activo'); }
+                await guardarYPersistirTodo();
+                refrescarSelectoresOperativos();
+                refrescarSelectorModuloUno();
+                poblarSelectTopografia();
+                poblarSelectAdminBorrar();
+                renderizarSalaSituacional();
+                alert("✅ Sondaje eliminado.");
+                location.reload();
+            }
+        }
+
+        function copiarReportePortapapeles() {
+            if (!pozoActivoId || !pozosData[pozoActivoId]) { alert("⚠️ Seleccione un sondaje."); return; }
+            let p = pozosData[pozoActivoId];
+            let texto = "=== COMPLEJO JIRETH C.A. — REPORTE DIARIO DE GEOLOGÍA (DSR) ===\nSondaje: " + p.codigo + " | Proyecto: " + p.proyecto + "\nEmpresa: " + p.empresa + " | Máquina: " + p.maquina + "\n===========================================================\n";
+            p.avances.forEach((t, i) => {
+                let lonM = parseFloat(t.hasta) - parseFloat(t.desde);
+                let pagVal = t.pagoEstandar ? t.pagoEstandar : calcularMetrosAPagar(lonM, parseFloat(t.recuperado), t.meteorizacion);
+                texto += `Tramo #${i+1}: ${t.desde}-${t.hasta}m | ${t.diametro} | Rec: ${t.recuperado}m (${t.porcentaje}%) | Pago: ${pagVal}m | ${t.meteorizacion}\n`;
+            });
+            navigator.clipboard.writeText(texto).then(() => { alert("📋 Resumen copiado."); });
+        }
+
+        function exportarBackupJSON() {
+            let backup = { pozos: pozosData, turnos: turnosData, activo: pozoActivoId };
+            let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backup, null, 2));
+            let dlAnchorElem = document.createElement('a');
+            dlAnchorElem.setAttribute("href", dataStr);
+            dlAnchorElem.setAttribute("download", "jireth_geocore_backup_" + Date.now() + ".json");
+            dlAnchorElem.click();
+        }
+
+        function importarBackupJSON(event) {
+            if (perfilActual === 'GERENCIA') { alert("⚠️ Solo lectura."); return; }
+            let file = event.target.files[0];
+            if (!file) return;
+            let reader = new FileReader();
+            reader.onload = async function(e) {
+                try {
+                    let imp = JSON.parse(e.target.result);
+                    if (imp.pozos) {
+                        pozosData = imp.pozos;
+                        turnosData = imp.turnos || {};
+                        pozoActivoId = imp.activo || '';
+                        migrarRecalcularPagosEstandar();
+                        await guardarYPersistirTodo();
+                        refrescarSelectoresOperativos();
+                        refrescarSelectorModuloUno();
+                        poblarSelectTopografia();
+                        renderizarSalaSituacional();
+                        if (pozoActivoId) cargarDatosPozoEnFormularios(pozoActivoId);
+                        alert("✅ Importado con éxito.");
+                    } else { alert("❌ JSON inválido."); }
+                } catch(err) { alert("❌ Error: " + err); }
+            };
+            reader.readAsText(file);
+        }
+
+        async function guardarYPersistirTodo() {
+            localStorage.setItem('jireth_pozos', JSON.stringify(pozosData));
+            localStorage.setItem('jireth_turnos', JSON.stringify(turnosData));
+            
+            if (navigator.onLine && supabaseClient) {
+                try {
+                    const payloadData = { pozos: pozosData, turnos: turnosData, actualizado: new Date().toISOString() };
+                    await supabaseClient.from('jireth_geocore').upsert({ id: 'db_principal', payload: payloadData });
+                } catch(ex) { console.warn("Supabase Excepción controlada offline:", ex); }
+            }
+        }
+
+        async function sincronizarDesdeSupabaseCloud(mostrarAlerta = true) {
+            if (!navigator.onLine || !supabaseClient) {
+                if (mostrarAlerta) alert("⚠️ Estás sin conexión a internet. Trabajando con datos locales de campo.");
+                return;
+            }
+            try {
+                const { data, error } = await supabaseClient.from('jireth_geocore').select('payload').eq('id', 'db_principal').maybeSingle();
+                if (error) { if (mostrarAlerta) alert("⚠️ No se pudo conectar con la nube, operando en modo local."); return; }
+
+                if (data && data.payload) {
+                    if (data.payload.pozos && Object.keys(data.payload.pozos).length > 0) {
+                        pozosData = data.payload.pozos;
+                        localStorage.setItem('jireth_pozos', JSON.stringify(pozosData));
+                    }
+                    if (data.payload.turnos) {
+                        turnosData = data.payload.turnos;
+                        localStorage.setItem('jireth_turnos', JSON.stringify(turnosData));
+                    }
+                    migrarRecalcularPagosEstandar();
+                    refrescarSelectoresOperativos();
+                    refrescarSelectorModuloUno();
+                    poblarSelectTopografia();
+                    renderizarSalaSituacional();
+                    if (pozoActivoId && pozosData[pozoActivoId]) cargarDatosPozoEnFormularios(pozoActivoId);
+                    if (mostrarAlerta) alert("✅ Sincronizado con Supabase correctamente.");
+                } else { await guardarYPersistirTodo(); }
+            } catch(e) { if (mostrarAlerta) alert("⚠️ Error de red al sincronizar con Supabase."); }
+        }
+
+        async function sincronizarConSupabaseReal() { 
+            if (!navigator.onLine) {
+                alert("⚠️ No hay conexión a internet en este momento. El sistema está operando en Modo Local (Offline).");
+                return;
+            }
+            await sincronizarDesdeSupabaseCloud(true); 
+        }
+    </script>
+</body>
+</html>
