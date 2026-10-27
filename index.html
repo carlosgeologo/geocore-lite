@@ -6,40 +6,40 @@
     <title>Jireth GeoCore Lite | Complejo Jireth C.A.</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <!-- Chart.js para Gráficos Analíticos Pro -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap');
         
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: #f1f5f9; /* Fondo general limpio y claro (Slate-100) */
+            background-color: #f8fafc;
             color: #0f172a;
         }
         .font-mono-code { font-family: 'JetBrains Mono', monospace; }
         
         .btn-field { 
-            min-height: 52px; 
+            min-height: 48px; 
             font-weight: 800; 
-            border-radius: 0.625rem; 
+            border-radius: 0.75rem; 
             letter-spacing: 0.025em;
             transition: all 0.15s ease-in-out;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
         }
         .btn-field:active { transform: scale(0.98); }
         
         .input-field { 
-            min-height: 48px; 
-            border: 2px solid #cbd5e1; 
+            min-height: 46px; 
+            border: 1.5px solid #cbd5e1; 
             font-weight: 700;
             background-color: #ffffff;
             color: #0f172a;
+            border-radius: 0.75rem;
             transition: border-color 0.2s;
         }
         .input-field:focus {
             border-color: #0284c7;
             outline: none;
-            box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+            box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.12);
         }
 
         .bg-bienvenida-oficial {
@@ -72,7 +72,27 @@
         }
         .pulse-live { animation: pulseGlow 1.8s infinite ease-in-out; }
 
-        /* ESTILOS DE IMPRESIÓN Y PDF OFICIAL CON LOGO COMPLETO A LO LARGO EN EL ENCABEZADO */
+        /* Estilo de lista tipo App (MercadoLibre style) para los ítems del menú */
+        .menu-item-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            background-color: #ffffff;
+            border-bottom: 1px solid #f1f5f9;
+            transition: background-color 0.15s ease;
+            cursor: pointer;
+            text-align: left;
+            width: 100%;
+        }
+        .menu-item-row:hover {
+            background-color: #f8fafc;
+        }
+        .menu-item-row.active {
+            background-color: #f0fdf4;
+            border-left: 4px solid #10b981;
+        }
+
         @media print {
             @page { size: portrait; margin: 12mm 10mm 10mm 10mm; }
             body * { visibility: hidden !important; }
@@ -86,7 +106,7 @@
                 background: #ffffff !important; 
                 color: #0f172a !important; 
                 padding: 0 !important; 
-                padding-top: 130px !important; /* Espacio para el membrete fijo con logo completo */
+                padding-top: 130px !important;
                 font-size: 11px !important;
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
@@ -108,7 +128,6 @@
             }
 
             .avoid-break { break-inside: avoid !important; page-break-inside: avoid !important; }
-            
             thead { display: table-header-group !important; }
             tr { break-inside: avoid !important; page-break-inside: avoid !important; }
             
@@ -130,8 +149,8 @@
                 <div class="mx-auto flex items-center justify-center gap-3 bg-slate-50 p-3 rounded-2xl border border-slate-200 shadow-sm">
                     <img src="1792941546023.jpg" alt="Jireth Logo" class="w-12 h-12 rounded-xl object-cover border border-amber-500/40 shadow-inner shrink-0" onerror="this.src='https://images.unsplash.com/photo-1579783902614-a3fb3927b675?w=100&auto=format&fit=crop&q=60';">
                     <div class="text-left leading-tight">
-                        <div class="text-base font-black tracking-wider text-slate-900">JIRETH <span class="text-amber-700 text-xs">GEOCORE LITE</span></div>
-                        <div class="text-[10px] text-sky-700 font-extrabold uppercase">Complejo Jireth C.A.</div>
+                        <div class="text-base font-black tracking-wider text-slate-900">JIRETH <span class="text-amber-800 text-xs">GEOCORE LITE</span></div>
+                        <div class="text-[10px] text-sky-800 font-extrabold uppercase">Complejo Jireth C.A.</div>
                         <div class="text-[9px] text-slate-500 font-bold">Sistema de Integración & Control de Sondajes</div>
                     </div>
                 </div>
@@ -156,7 +175,7 @@
                 <div>
                     <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Contraseña de Geólogos</label>
                     <div class="relative flex items-center">
-                        <input type="password" id="inputClaveGeo" autocomplete="current-password" placeholder="Ingrese clave..." class="input-field w-full px-3.5 pr-11 rounded-xl text-sm font-bold">
+                        <input type="password" id="inputClaveGeo" autocomplete="current-password" placeholder="Ingrese clave..." class="input-field w-full px-3.5 pr-11 text-sm font-bold">
                         <button type="button" onclick="togglePasswordVisibility('inputClaveGeo')" class="absolute right-3.5 text-slate-500 hover:text-slate-800 text-base">👁️</button>
                     </div>
                 </div>
@@ -164,7 +183,7 @@
                     🔐 Ingresar como Geólogos
                 </button>
                 <div class="text-center pt-1">
-                    <button type="button" onclick="mostrarBoxRescate()" class="text-xs text-sky-700 hover:text-sky-800 underline font-bold">🔑 ¿Olvidaste tu contraseña? (PIN Maestro)</button>
+                    <button type="button" onclick="mostrarBoxRescate()" class="text-xs text-sky-800 hover:text-sky-900 underline font-bold">🔑 ¿Olvidaste tu contraseña? (PIN Maestro)</button>
                 </div>
             </div>
 
@@ -172,7 +191,7 @@
                 <div>
                     <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Contraseña de Gerencia</label>
                     <div class="relative flex items-center">
-                        <input type="password" id="inputClaveGer" autocomplete="current-password" placeholder="Ingrese clave..." class="input-field w-full px-3.5 pr-11 rounded-xl text-sm font-bold">
+                        <input type="password" id="inputClaveGer" autocomplete="current-password" placeholder="Ingrese clave..." class="input-field w-full px-3.5 pr-11 text-sm font-bold">
                         <button type="button" onclick="togglePasswordVisibility('inputClaveGer')" class="absolute right-3.5 text-slate-500 hover:text-slate-800 text-base">👁️</button>
                     </div>
                 </div>
@@ -187,11 +206,11 @@
                 </div>
                 <div>
                     <label class="block text-xs font-extrabold text-slate-700 mb-1 uppercase tracking-wider">PIN Maestro (4 dígitos)</label>
-                    <input type="password" maxlength="4" id="inputPinRescate" placeholder="----" class="input-field w-full px-3 bg-white text-slate-900 rounded-xl text-sm font-mono-code font-bold text-center tracking-widest">
+                    <input type="password" maxlength="4" id="inputPinRescate" placeholder="----" class="input-field w-full px-3 bg-white text-slate-900 text-sm font-mono-code font-bold text-center tracking-widest">
                 </div>
                 <div>
                     <label class="block text-xs font-extrabold text-slate-700 mb-1 uppercase tracking-wider">Nueva Contraseña Geólogos</label>
-                    <input type="password" id="inputClaveNuevaRescate" placeholder="Nueva clave" class="input-field w-full px-3 rounded-xl text-sm font-bold">
+                    <input type="password" id="inputClaveNuevaRescate" placeholder="Nueva clave" class="input-field w-full px-3 text-sm font-bold">
                 </div>
                 <button type="button" onclick="ejecutarRescateClave()" class="btn-field w-full bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-black shadow-emerald-600/20">
                     🔄 Restablecer Clave e Ingresar
@@ -204,7 +223,7 @@
     </div>
 
     <!-- APLICACIÓN PRINCIPAL -->
-    <div id="appPrincipal" class="hidden space-y-3.5 max-w-7xl mx-auto">
+    <div id="appPrincipal" class="hidden space-y-3.5 max-w-7xl mx-auto pb-16 sm:pb-4">
         <header class="bg-white backdrop-blur p-3.5 rounded-2xl border border-slate-200 flex justify-between items-center flex-wrap gap-3 shadow-sm laser-line">
             <div class="flex items-center gap-3">
                 <img src="1792941546023.jpg" alt="Logo" class="w-10 h-10 rounded-xl object-cover border border-slate-300 shadow-sm" onerror="this.src='https://images.unsplash.com/photo-1579783902614-a3fb3927b675?w=100&auto=format&fit=crop&q=60';">
@@ -236,21 +255,121 @@
             <label class="block text-xs font-extrabold text-amber-800 mb-1.5 uppercase tracking-wider flex items-center gap-1.5">
                 <span>🎯</span> Frente Activo / Sondaje Seleccionado en Sistema:
             </label>
-            <select id="globalWellSelect" onchange="seleccionarPozoGlobal(this.value)" class="input-field w-full rounded-xl px-3.5 text-sm font-bold text-amber-900">
+            <select id="globalWellSelect" onchange="seleccionarPozoGlobal(this.value)" class="input-field w-full px-3.5 text-sm font-bold text-amber-900">
                 <option value="">-- Seleccione un Sondaje --</option>
             </select>
         </div>
 
-        <nav id="menuNavegacion" class="grid grid-cols-3 sm:flex gap-1.5 overflow-x-auto pb-1">
-            <button type="button" onclick="switchTab('mod_sala')" id="tab-mod_sala" class="py-3 px-2 rounded-xl font-extrabold text-xs bg-sky-600 text-white shadow-md shadow-sky-600/20 border border-sky-500">📡 1. Sala Situacional Pro</button>
-            <button type="button" onclick="switchTab('mod1')" id="tab-mod1" class="py-3 px-2 rounded-xl font-extrabold text-xs bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 transition shadow-sm">🛠️ 2. Apertura</button>
-            <button type="button" onclick="switchTab('mod2')" id="tab-mod2" class="py-3 px-2 rounded-xl font-extrabold text-xs bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 transition shadow-sm">📍 3. Topo</button>
-            <button type="button" onclick="switchTab('mod3_turno')" id="tab-mod3_turno" class="py-3 px-2 rounded-xl font-extrabold text-xs bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 transition shadow-sm">⏱️ 4A. Turnos</button>
-            <button type="button" onclick="switchTab('mod3_logging')" id="tab-mod3_logging" class="py-3 px-2 rounded-xl font-extrabold text-xs bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 transition shadow-sm">🪵 4B. Logging</button>
-            <button type="button" onclick="switchTab('mod4')" id="tab-mod4" class="py-3 px-2 rounded-xl font-extrabold text-xs bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 transition shadow-sm">🏁 5. Cierre</button>
-            <button type="button" onclick="switchTab('mod5')" id="tab-mod5" class="py-3 px-2 rounded-xl font-extrabold text-xs bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 transition shadow-sm">📑 6. Repositorio / DSR</button>
-            <button type="button" onclick="switchTab('mod6')" id="tab-mod6" class="py-3 px-2 rounded-xl font-extrabold text-xs bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 transition shadow-sm">⚙️ Admin</button>
-        </nav>
+        <!-- NUEVO MENÚ ESTILO LISTA MINIMALISTA (TIPO MERCADOLIBRE) ORGANIZADO POR SECCIONES -->
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+            <div class="px-4 py-3 bg-slate-50 border-b border-slate-200 flex justify-between items-center">
+                <span class="text-xs font-black text-slate-700 uppercase tracking-widest">📋 Menú de Navegación & Actividad</span>
+                <span class="text-[10px] font-bold text-sky-700 bg-sky-50 px-2.5 py-0.5 rounded-full border border-sky-200">Panel Rápido</span>
+            </div>
+
+            <div id="menuNavegacion" class="divide-y divide-slate-100 text-xs font-bold text-slate-800">
+                
+                <!-- SECCIÓN: GENERAL -->
+                <div class="px-4 py-2 bg-slate-100/75 text-[10px] font-black text-slate-500 uppercase tracking-wider">Tablero General</div>
+                <button type="button" onclick="switchTab('mod_sala')" id="tab-mod_sala" class="menu-item-row active">
+                    <div class="flex items-center gap-3">
+                        <span class="text-base text-sky-600">📡</span>
+                        <div>
+                            <p class="font-black text-slate-900 text-xs">Sala Situacional Pro</p>
+                            <p class="text-[10px] text-slate-500 font-medium">Dashboard macro y estado de frentes activos</p>
+                        </div>
+                    </div>
+                    <span class="text-slate-400 font-mono text-sm">›</span>
+                </button>
+
+                <!-- SECCIÓN: OPERACIONES DE CAMPO -->
+                <div class="px-4 py-2 bg-slate-100/75 text-[10px] font-black text-slate-500 uppercase tracking-wider">Operaciones en Campo</div>
+                <button type="button" onclick="switchTab('mod1')" id="tab-mod1" class="menu-item-row">
+                    <div class="flex items-center gap-3">
+                        <span class="text-base text-amber-600">🛠️</span>
+                        <div>
+                            <p class="font-black text-slate-900 text-xs">Apertura de Nuevo Sondaje</p>
+                            <p class="text-[10px] text-slate-500 font-medium">Registro de códigos, proyectos y empresa cliente</p>
+                        </div>
+                    </div>
+                    <span class="text-slate-400 font-mono text-sm">›</span>
+                </button>
+
+                <button type="button" onclick="switchTab('mod2')" id="tab-mod2" class="menu-item-row">
+                    <div class="flex items-center gap-3">
+                        <span class="text-base text-sky-600">📍</span>
+                        <div>
+                            <p class="font-black text-slate-900 text-xs">Ficha Topográfica</p>
+                            <p class="text-[10px] text-slate-500 font-medium">Coordenadas UTM, cotas, azimut y dip</p>
+                        </div>
+                    </div>
+                    <span class="text-slate-400 font-mono text-sm">›</span>
+                </button>
+
+                <button type="button" onclick="switchTab('mod3_turno')" id="tab-mod3_turno" class="menu-item-row">
+                    <div class="flex items-center gap-3">
+                        <span class="text-base text-cyan-600">⏱️</span>
+                        <div>
+                            <p class="font-black text-slate-900 text-xs">Gestión y Edición de Turnos</p>
+                            <p class="text-[10px] text-slate-500 font-medium">Apertura de turnos diurnos/nocturnos y auditoría</p>
+                        </div>
+                    </div>
+                    <span class="text-slate-400 font-mono text-sm">›</span>
+                </button>
+
+                <button type="button" onclick="switchTab('mod3_logging')" id="tab-mod3_logging" class="menu-item-row">
+                    <div class="flex items-center gap-3">
+                        <span class="text-base text-emerald-600">🪵</span>
+                        <div>
+                            <p class="font-black text-slate-900 text-xs">Core Logging & Avances (Tramo a Tramo)</p>
+                            <p class="text-[10px] text-slate-500 font-medium">Registro de recuperación, diámetros y litología</p>
+                        </div>
+                    </div>
+                    <span class="text-slate-400 font-mono text-sm">›</span>
+                </button>
+
+                <!-- SECCIÓN: CIERRE Y REPORTES -->
+                <div class="px-4 py-2 bg-slate-100/75 text-[10px] font-black text-slate-500 uppercase tracking-wider">Cierre & Reportes Oficiales</div>
+                <button type="button" onclick="switchTab('mod4')" id="tab-mod4" class="menu-item-row">
+                    <div class="flex items-center gap-3">
+                        <span class="text-base text-rose-600">🏁</span>
+                        <div>
+                            <p class="font-black text-slate-900 text-xs">Cierre & Evaluación Exhaustiva</p>
+                            <p class="text-[10px] text-slate-500 font-medium">Cierre por target alcanzado o condiciones adversas</p>
+                        </div>
+                    </div>
+                    <span class="text-slate-400 font-mono text-sm">›</span>
+                </button>
+
+                <button type="button" onclick="switchTab('mod5')" id="tab-mod5" class="menu-item-row">
+                    <div class="flex items-center gap-3">
+                        <span class="text-base text-amber-600">📑</span>
+                        <div>
+                            <p class="font-black text-slate-900 text-xs">Repositorio & Informes DSR Oficiales</p>
+                            <p class="text-[10px] text-slate-500 font-medium">Vista previa, membrete oficial e impresión PDF</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="bg-amber-500 text-slate-950 text-[9px] font-black px-2 py-0.5 rounded-full">DSR</span>
+                        <span class="text-slate-400 font-mono text-sm">›</span>
+                    </div>
+                </button>
+
+                <!-- SECCIÓN: CONFIGURACIÓN -->
+                <div class="px-4 py-2 bg-slate-100/75 text-[10px] font-black text-slate-500 uppercase tracking-wider">Sistema & Ajustes</div>
+                <button type="button" onclick="switchTab('mod6')" id="tab-mod6" class="menu-item-row">
+                    <div class="flex items-center gap-3">
+                        <span class="text-base text-slate-600">⚙️</span>
+                        <div>
+                            <p class="font-black text-slate-900 text-xs">Administración & Respaldos</p>
+                            <p class="text-[10px] text-slate-500 font-medium">Exportar JSON, importar datos y gestión de sondajes</p>
+                        </div>
+                    </div>
+                    <span class="text-slate-400 font-mono text-sm">›</span>
+                </button>
+
+            </div>
+        </div>
 
         <!-- MÓDULO SALA SITUACIONAL -->
         <section id="mod_sala" class="space-y-4 bg-white p-5 sm:p-6 rounded-3xl border border-slate-200 shadow-sm">
@@ -292,7 +411,6 @@
                 </div>
             </div>
 
-            <!-- GRÁFICAS ANALÍTICAS DE SALA SITUACIONAL (CHART.JS) -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 pt-2">
                 <div class="lg:col-span-2 bg-slate-50 p-4 rounded-2xl border border-slate-200 shadow-sm">
                     <h3 class="text-xs font-bold text-slate-800 mb-3 flex items-center justify-between">
@@ -322,11 +440,11 @@
             <div class="space-y-4">
                 <div>
                     <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Código del Sondaje * (Ej: S0001-ET)</label>
-                    <input type="text" id="m1_codigo" onblur="forzarMayusculas(this)" class="input-field w-full px-4 rounded-xl uppercase font-extrabold text-sm font-mono-code tracking-wider" placeholder="CÓDIGO ÚNICO">
+                    <input type="text" id="m1_codigo" onblur="forzarMayusculas(this)" class="input-field w-full px-4 uppercase font-extrabold text-sm font-mono-code tracking-wider" placeholder="CÓDIGO ÚNICO">
                 </div>
                 <div>
                     <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Empresa Titular / Cliente (Pagadora) *</label>
-                    <select id="m1_empresa" onchange="toggleOtraEmpresa()" class="input-field w-full px-4 rounded-xl text-sm font-bold">
+                    <select id="m1_empresa" onchange="toggleOtraEmpresa()" class="input-field w-full px-4 text-sm font-bold">
                         <option value="IVM C.A.">IVM C.A.</option>
                         <option value="MINERÍA CARABOBO C.A.">MINERÍA CARABOBO C.A.</option>
                         <option value="INDUSTRIAS AUDIT">INDUSTRIAS AUDIT</option>
@@ -336,11 +454,11 @@
                 </div>
                 <div id="m1_otra_empresa_box" class="hidden">
                     <label class="block text-xs font-extrabold text-amber-800 mb-1.5 uppercase tracking-wider">Especifique Empresa Cliente *</label>
-                    <input type="text" id="m1_otra_empresa" onblur="forzarMayusculas(this)" class="input-field w-full px-4 rounded-xl text-sm uppercase font-bold" placeholder="NOMBRE DE LA EMPRESA">
+                    <input type="text" id="m1_otra_empresa" onblur="forzarMayusculas(this)" class="input-field w-full px-4 text-sm uppercase font-bold" placeholder="NOMBRE DE LA EMPRESA">
                 </div>
                 <div>
                     <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Proyecto / Sector *</label>
-                    <input type="text" id="m1_proyecto" onblur="forzarMayusculas(this)" class="input-field w-full px-4 rounded-xl font-extrabold text-sm uppercase" placeholder="EJ: EL CALLAO / SECTOR NORTE">
+                    <input type="text" id="m1_proyecto" onblur="forzarMayusculas(this)" class="input-field w-full px-4 font-extrabold text-sm uppercase" placeholder="EJ: EL CALLAO / SECTOR NORTE">
                 </div>
                 <button type="button" id="btnCrearPozo" onclick="crearPozo()" class="btn-field w-full bg-amber-500 hover:bg-amber-400 text-slate-950 text-base font-black shadow-amber-500/20">
                     💾 Crear y Abrir Sondaje con Sincronización en la Nube
@@ -357,7 +475,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                     <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Perforadora / Máquina *</label>
-                    <select id="m2_maquina" disabled onchange="toggleOtraMaquina()" class="input-field w-full px-4 rounded-xl text-sm font-bold">
+                    <select id="m2_maquina" disabled onchange="toggleOtraMaquina()" class="input-field w-full px-4 text-sm font-bold">
                         <option value="GEOMAX">GEOMAX</option>
                         <option value="HENG WANG">HENG WANG</option>
                         <option value="LONGYEAR">LONGYEAR</option>
@@ -366,31 +484,31 @@
                 </div>
                 <div id="m2_otra_maquina_box" class="hidden">
                     <label class="block text-xs font-extrabold text-amber-800 mb-1.5 uppercase tracking-wider">Especifique Máquina *</label>
-                    <input type="text" id="m2_otra_maquina" disabled onblur="forzarMayusculas(this)" class="input-field w-full px-4 rounded-xl text-sm uppercase font-bold" placeholder="NOMBRE MÁQUINA">
+                    <input type="text" id="m2_otra_maquina" disabled onblur="forzarMayusculas(this)" class="input-field w-full px-4 text-sm uppercase font-bold" placeholder="NOMBRE MÁQUINA">
                 </div>
                 <div>
                     <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Coordenada Este (m)</label>
-                    <input type="text" id="m2_este" disabled onblur="formatearUTM(this)" class="input-field w-full px-4 rounded-xl font-mono-code font-extrabold text-sm text-sky-800">
+                    <input type="text" id="m2_este" disabled onblur="formatearUTM(this)" class="input-field w-full px-4 font-mono-code font-extrabold text-sm text-sky-800">
                 </div>
                 <div>
                     <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Coordenada Norte (m)</label>
-                    <input type="text" id="m2_norte" disabled onblur="formatearUTM(this)" class="input-field w-full px-4 rounded-xl font-mono-code font-extrabold text-sm text-sky-800">
+                    <input type="text" id="m2_norte" disabled onblur="formatearUTM(this)" class="input-field w-full px-4 font-mono-code font-extrabold text-sm text-sky-800">
                 </div>
                 <div>
                     <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Cota Z (m)</label>
-                    <input type="text" id="m2_cota" disabled onblur="formatearDecimalesLibres(this)" class="input-field w-full px-4 rounded-xl font-mono-code font-extrabold text-sm text-sky-800">
+                    <input type="text" id="m2_cota" disabled onblur="formatearDecimalesLibres(this)" class="input-field w-full px-4 font-mono-code font-extrabold text-sm text-sky-800">
                 </div>
                 <div>
                     <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Azimut (°)</label>
-                    <input type="text" id="m2_azimut" disabled onblur="formatearDecimalesLibres(this)" class="input-field w-full px-4 rounded-xl font-mono-code font-extrabold text-sm text-amber-800">
+                    <input type="text" id="m2_azimut" disabled onblur="formatearDecimalesLibres(this)" class="input-field w-full px-4 font-mono-code font-extrabold text-sm text-amber-800">
                 </div>
                 <div>
                     <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Inclinación (Dip °)</label>
-                    <input type="text" id="m2_dip" disabled oninput="forzarDipNegativo(this)" class="input-field w-full px-4 rounded-xl font-mono-code font-extrabold text-sm text-amber-800">
+                    <input type="text" id="m2_dip" disabled oninput="forzarDipNegativo(this)" class="input-field w-full px-4 font-mono-code font-extrabold text-sm text-amber-800">
                 </div>
                 <div>
                     <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Profundidad Target (m)</label>
-                    <input type="text" id="m2_target" disabled onblur="formatearDecimalesLibres(this)" class="input-field w-full px-4 rounded-xl font-mono-code font-extrabold text-sm text-purple-800">
+                    <input type="text" id="m2_target" disabled onblur="formatearDecimalesLibres(this)" class="input-field w-full px-4 font-mono-code font-extrabold text-sm text-purple-800">
                 </div>
             </div>
             <div id="m2_btn_box" class="hidden pt-2">
@@ -410,11 +528,11 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
                         <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Fecha del Turno *</label>
-                        <input type="date" id="m3_fecha" class="input-field w-full px-3.5 rounded-xl text-xs font-bold">
+                        <input type="date" id="m3_fecha" class="input-field w-full px-3.5 text-xs font-bold">
                     </div>
                     <div>
                         <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Jornada *</label>
-                        <select id="m3_turno" class="input-field w-full px-3.5 rounded-xl text-xs font-bold">
+                        <select id="m3_turno" class="input-field w-full px-3.5 text-xs font-bold">
                             <option value="DIURNO">☀️ DIURNO</option>
                             <option value="NOCTURNO">🌙 NOCTURNO</option>
                         </select>
@@ -423,11 +541,11 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
                         <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Perforador *</label>
-                        <input type="text" id="m3_perforador" onblur="forzarMayusculas(this)" class="input-field w-full px-3.5 rounded-xl text-xs font-extrabold uppercase" placeholder="NOMBRE DEL PERFORADOR">
+                        <input type="text" id="m3_perforador" onblur="forzarMayusculas(this)" class="input-field w-full px-3.5 text-xs font-extrabold uppercase" placeholder="NOMBRE DEL PERFORADOR">
                     </div>
                     <div>
                         <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Supervisor GEÓLOGOS *</label>
-                        <input type="text" id="m3_geologo" onblur="forzarMayusculas(this)" class="input-field w-full px-3.5 rounded-xl text-xs font-extrabold uppercase" placeholder="NOMBRE DEL GEÓLOGO">
+                        <input type="text" id="m3_geologo" onblur="forzarMayusculas(this)" class="input-field w-full px-3.5 text-xs font-extrabold uppercase" placeholder="NOMBRE DEL GEÓLOGO">
                     </div>
                 </div>
 
@@ -437,11 +555,10 @@
                 </div>
             </div>
 
-            <!-- HISTORIAL E INSPECCIÓN -->
             <div class="bg-slate-50 p-4 sm:p-5 rounded-2xl border border-slate-200 space-y-3.5 shadow-sm">
                 <h3 class="text-xs font-black text-sky-800 uppercase tracking-wider">📂 Historial de Turnos & Auditoría de Avances</h3>
                 <div class="space-y-3">
-                    <select id="selectRetomarTurno" onchange="mostrarDetallesTurnoSeleccionado()" class="input-field w-full px-3.5 rounded-xl text-xs font-bold text-sky-900">
+                    <select id="selectRetomarTurno" onchange="mostrarDetallesTurnoSeleccionado()" class="input-field w-full px-3.5 text-xs font-bold text-sky-900">
                         <option value="">-- Seleccionar Turno del Historial --</option>
                     </select>
 
@@ -493,7 +610,7 @@
                 <div class="space-y-2 w-full sm:w-auto pt-2 sm:pt-0" id="boxControlesTurnoActivo">
                     <div class="space-y-1 bg-white p-2.5 rounded-xl border border-sky-200 shadow-sm">
                         <label class="block text-[10px] font-black text-sky-900 uppercase">📝 Observaciones Geotécnicas / Novedades al Cerrar Turno:</label>
-                        <textarea id="m3_observaciones" onblur="forzarMayusculas(this)" rows="2" class="input-field w-full p-2 rounded-lg text-xs uppercase font-medium" placeholder="Escriba aquí las novedades del turno al finalizar..."></textarea>
+                        <textarea id="m3_observaciones" onblur="forzarMayusculas(this)" rows="2" class="input-field w-full p-2 text-xs uppercase font-medium" placeholder="Escriba aquí las novedades del turno al finalizar..."></textarea>
                     </div>
                     <div class="flex gap-2">
                         <button type="button" onclick="finalizarTurnoActivo()" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-2 rounded-xl font-extrabold text-xs shadow-sm">💾 Finalizar y Guardar Turno</button>
@@ -546,33 +663,33 @@
                 <div id="boxFormAvance" class="grid grid-cols-1 sm:grid-cols-3 gap-3.5 bg-slate-50 p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-sm">
                     <div>
                         <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Longitud Maniobra *</label>
-                        <select id="m3_longitud" onchange="autoCalcularHasta()" class="input-field w-full px-3.5 rounded-xl text-xs font-bold">
+                        <select id="m3_longitud" onchange="autoCalcularHasta()" class="input-field w-full px-3.5 text-xs font-bold">
                             <option value="1.5">1.50 m</option>
                             <option value="3.0">3.00 m</option>
                         </select>
                     </div>
                     <div>
                         <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Desde (m)</label>
-                        <input type="text" id="m3_desde" readonly class="input-field w-full px-3.5 bg-slate-100 text-slate-600 rounded-xl text-xs font-mono-code font-black">
+                        <input type="text" id="m3_desde" readonly class="input-field w-full px-3.5 bg-slate-100 text-slate-600 text-xs font-mono-code font-black">
                     </div>
                     <div>
                         <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Hasta (m)</label>
-                        <input type="text" id="m3_hasta" readonly class="input-field w-full px-3.5 bg-slate-100 text-emerald-800 rounded-xl text-xs font-mono-code font-black">
+                        <input type="text" id="m3_hasta" readonly class="input-field w-full px-3.5 bg-slate-100 text-emerald-800 text-xs font-mono-code font-black">
                     </div>
                     <div>
                         <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Diámetro *</label>
-                        <select id="m3_diametro" class="input-field w-full px-3.5 rounded-xl text-xs font-bold text-sky-800">
+                        <select id="m3_diametro" class="input-field w-full px-3.5 text-xs font-bold text-sky-800">
                             <option value="HQ">HQ</option>
                             <option value="NQ">NQ</option>
                         </select>
                     </div>
                     <div>
                         <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Metros Recuperados *</label>
-                        <input type="text" id="m3_recuperado" class="input-field w-full px-3.5 rounded-xl text-xs font-mono-code font-extrabold text-emerald-900" placeholder="EJ: 2.85">
+                        <input type="text" id="m3_recuperado" class="input-field w-full px-3.5 text-xs font-mono-code font-extrabold text-emerald-900" placeholder="EJ: 2.85">
                     </div>
                     <div>
                         <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Litología / Meteorización *</label>
-                        <select id="m3_meteorizacion" class="input-field w-full px-3.5 rounded-xl text-xs font-bold">
+                        <select id="m3_meteorizacion" class="input-field w-full px-3.5 text-xs font-bold">
                             <option value="SUELO / RELLENO">a. Suelo / Relleno (Umbral &ge;70%)</option>
                             <option value="SAPROLITA">b. Saprolita (Umbral &ge;70%)</option>
                             <option value="SAPROCK">c. Saprock (Umbral &ge;70%)</option>
@@ -584,7 +701,7 @@
                     </div>
                     <div class="sm:col-span-3 flex gap-2 pt-1">
                         <button type="button" id="btnGuardarAvance" onclick="guardarAvance()" class="btn-field flex-1 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-extrabold shadow-emerald-600/20">➕ Guardar Avance Tramo</button>
-                        <button type="button" id="btnCancelarEdicion" onclick="cancelarEdicionAvance()" class="hidden bg-rose-600 hover:bg-rose-500 text-white px-5 rounded-xl font-extrabold text-xs shadow-sm">❌ Cancelar</button>
+                        <button type="button" id="btnCancelarEdicion" onclick="cancelarEdicionAvance()" class="hidden bg-rose-600 hover:bg-rose-500 text-white px-5 font-extrabold text-xs shadow-sm">❌ Cancelar</button>
                     </div>
                 </div>
 
@@ -608,7 +725,6 @@
 
             <div id="cierreResumenPozo" class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-3 text-xs shadow-sm"></div>
 
-            <!-- GRÁFICO DONUT DE METEORIZACIÓN (ORDENADO DE MAYOR A MENOR %) EN CIERRE -->
             <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-3 shadow-sm">
                 <div class="flex justify-between items-center text-xs font-extrabold">
                     <span class="text-amber-800 uppercase">📊 Distribución Lito-Meteorológica (Ordenado de Mayor a Menor %)</span>
@@ -634,7 +750,7 @@
             <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-4 shadow-sm" id="boxAccionesCierrePozo">
                 <div>
                     <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Motivo de Cierre *</label>
-                    <select id="m4_motivo" class="input-field w-full px-4 rounded-xl text-sm font-bold">
+                    <select id="m4_motivo" class="input-field w-full px-4 text-sm font-bold">
                         <option value="TARGET ALCANZADO">1. Target Geológico Alcanzado con Éxito</option>
                         <option value="CONDICIONES GEOTECNICAS ADVERSAS">2. Condiciones Geotécnicas Adversas (Falla / Colapso)</option>
                         <option value="REDIRECCIONAMIENTO OPERATIVO">3. Redireccionamiento Operativo Gerencial</option>
@@ -642,7 +758,7 @@
                 </div>
                 <div>
                     <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Observaciones Finales de Cierre</label>
-                    <textarea id="m4_obs" rows="3" onblur="forzarMayusculas(this)" class="input-field w-full p-3 rounded-xl text-xs uppercase" placeholder="EJ: SONDAJE FINALIZADO SIN NOVEDAD..."></textarea>
+                    <textarea id="m4_obs" rows="3" onblur="forzarMayusculas(this)" class="input-field w-full p-3 text-xs uppercase" placeholder="EJ: SONDAJE FINALIZADO SIN NOVEDAD..."></textarea>
                 </div>
                 <div class="flex gap-2">
                     <button type="button" id="btnCierrePozo" onclick="ejecutarCierrePozo()" class="btn-field flex-1 bg-rose-600 hover:bg-rose-500 text-white text-sm font-black shadow-rose-600/20">🔒 Ejecutar Cierre Definitivo del Sondaje</button>
@@ -664,7 +780,7 @@
             <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 flex items-center justify-between flex-wrap gap-3 shadow-sm">
                 <div class="w-full sm:w-auto">
                     <label class="block text-[10px] font-bold text-slate-600 uppercase mb-1">Seleccionar Tipo de Informe:</label>
-                    <select id="repModoVista" onchange="generarReporteDSR()" class="input-field px-3 py-1.5 rounded-xl text-xs font-bold text-amber-900">
+                    <select id="repModoVista" onchange="generarReporteDSR()" class="input-field px-3 py-1.5 text-xs font-bold text-amber-900">
                         <option value="TURNO">1. ⏱️ REPORTE DE TURNO</option>
                         <option value="ACUMULADO">2. 📈 REPORTE ACUMULADO DEL SONDAJE</option>
                         <option value="CULMINADO">3. 🏁 REPORTE SONDAJE CULMINADO</option>
@@ -672,19 +788,17 @@
                 </div>
                 <div id="boxSelectTurnoRepo" class="hidden w-full sm:w-auto">
                     <label class="block text-[10px] font-bold text-slate-600 uppercase mb-1">Seleccionar Turno Específico:</label>
-                    <select id="repTurnoSelect" onchange="generarReporteDSR()" class="input-field px-3 py-1.5 rounded-xl text-xs font-bold text-sky-900"></select>
+                    <select id="repTurnoSelect" onchange="generarReporteDSR()" class="input-field px-3 py-1.5 text-xs font-bold text-sky-900"></select>
                 </div>
             </div>
 
             <!-- DSR FORMATO OFICIAL CON MARCA DE AGUA, LOGO COMPLETO A LO LARGO EN ENCABEZADO Y TABLA INMEDIATA -->
             <div id="printable-area" class="bg-white p-6 rounded-2xl border border-slate-200 space-y-4 text-xs text-slate-900 shadow-xl relative overflow-hidden">
                 
-                <!-- MARCA DE AGUA GOTA DE AGUA -->
                 <div class="watermark-bg hidden print:flex">
                     <img src="1792941546023.jpg" alt="Watermark" class="w-96 h-96 object-contain opacity-10" onerror="this.src='https://images.unsplash.com/photo-1579783902614-a3fb3927b675?w=200&auto=format&fit=crop&q=60';">
                 </div>
 
-                <!-- ENCABEZADO / MEMBRETE CON EL LOGO COMPLETO A LO LARGO (REPETIDO EN CADA HOJA) -->
                 <div class="page-header-membrete border-b-3 border-slate-900 pb-3 flex justify-between items-center flex-wrap gap-3">
                     <div class="flex items-center gap-3">
                         <img src="1792941546023.jpg" alt="Complejo Jireth Logo" class="h-12 w-auto max-w-[160px] object-contain shrink-0" onerror="this.src='https://images.unsplash.com/photo-1579783902614-a3fb3927b675?w=150&auto=format&fit=crop&q=60';">
@@ -701,7 +815,6 @@
                     </div>
                 </div>
 
-                <!-- KPIS -->
                 <div class="grid grid-cols-4 gap-2 avoid-break pt-2">
                     <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 shadow-sm">
                         <p class="text-[9px] text-slate-500 uppercase font-black">PROF. PERFORADA</p>
@@ -745,7 +858,6 @@
                     </div>
                 </div>
 
-                <!-- LEYENDA INFORMATIVA DEL ESTÁNDAR DE METEORIZACIÓN Y PAGO (% RECUPERACIÓN DE TESTIGO) -->
                 <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 text-[10px] avoid-break shadow-sm">
                     <p class="font-black text-slate-900 uppercase mb-1">📐 Criterio Estándar de Meteorización y Pago (% Recuperación de Testigo):</p>
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-slate-700">
@@ -755,7 +867,6 @@
                     </div>
                 </div>
 
-                <!-- INMEDIATAMENTE DEBAJO: TABLA DE REGISTRO DETALLADO CON CABECERAS REPETIBLES EN CADA PÁGINA -->
                 <div>
                     <h4 class="text-xs font-black text-slate-900 uppercase tracking-wider mb-2">🪵 REGISTRO DETALLADO TRAMO A TRAMO (CON ESTÁNDAR DE PAGO)</h4>
                     <div class="overflow-x-auto border border-slate-200 rounded-xl shadow-sm">
@@ -784,7 +895,6 @@
                     <p class="text-slate-600 text-[10px] mt-1 font-bold" id="repMotivoCierreBox"></p>
                 </div>
 
-                <!-- BLOQUE OFICIAL DE FIRMAS: exactamente 2 firmas para Cierre, o 2 nombres para Turno -->
                 <div class="pt-6 border-t-2 border-slate-200 text-[10px] text-slate-800 avoid-break" id="contenedorFirmasDSR"></div>
             </div>
         </section>
@@ -797,7 +907,7 @@
                 <h3 class="text-xs font-black text-rose-600 uppercase tracking-wider">🗑️ Gestión y Eliminación Individual de Pozos</h3>
                 <p class="text-xs text-slate-600">Seleccione un sondaje registrado en el sistema para borrarlo permanentemente si es necesario.</p>
                 <div class="flex gap-2 flex-wrap items-center">
-                    <select id="adminSelectPozoBorrar" class="input-field flex-1 px-3.5 rounded-xl text-xs font-bold text-rose-900">
+                    <select id="adminSelectPozoBorrar" class="input-field flex-1 px-3.5 text-xs font-bold text-rose-900">
                         <option value="">-- Seleccionar Sondaje a Eliminar --</option>
                     </select>
                     <button type="button" onclick="eliminarPozoEspecifico()" class="bg-rose-50 hover:bg-rose-100 text-rose-900 border border-rose-300 px-4 py-2.5 rounded-xl text-xs font-black shadow-sm">❌ Eliminar Sondaje Seleccionado</button>
@@ -975,12 +1085,12 @@
                 const sec = document.getElementById(t);
                 if (sec) sec.classList.add('hidden');
                 const btn = document.getElementById('tab-' + t);
-                if (btn) btn.className = "py-3 px-2 rounded-xl font-extrabold text-xs bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 transition shadow-sm";
+                if (btn) btn.className = "menu-item-row";
             });
             const selSec = document.getElementById(tabId);
             if (selSec) selSec.classList.remove('hidden');
             const selBtn = document.getElementById('tab-' + tabId);
-            if (selBtn) selBtn.className = "py-3 px-2 rounded-xl font-extrabold text-xs bg-sky-600 text-white shadow-md shadow-sky-600/20 border border-sky-500";
+            if (selBtn) selBtn.className = "menu-item-row active";
 
             if (tabId === 'mod_sala') renderizarSalaSituacional();
             if (tabId === 'mod4') cargarResumenCierrePozo();
@@ -1014,7 +1124,7 @@
             pozosKeys.forEach(k => {
                 let p = pozosData[k];
                 if (p.estado === 'ABIERTO') {
-                    let metPozo = 0, recPozoAcc = 0, tramoCount = 0;
+                    let metPozo = 0, recPozoAcc = 0;
                     if (p.avances) {
                         p.avances.forEach(t => {
                             let met = parseFloat(t.hasta) - parseFloat(t.desde);
@@ -1040,7 +1150,6 @@
             document.getElementById('macroSondajesCulminados').innerText = pozosCulminadosKeys.length;
             document.getElementById('macroRecuperacionGlobal').innerText = recPromGral + "%";
 
-            // RENDERIZAR GRÁFICAS DE CHART.JS
             renderChartSituacionalAvance(chartLabels, chartAvances, chartPlan);
             renderChartSituacionalRecuperacion(chartLabels, chartRec);
 
@@ -1647,7 +1756,6 @@
                 </div>
             `;
 
-            // RENDERIZAR GRÁFICO DONUT DE METEORIZACIÓN (ORDENADO DE MAYOR A MENOR %)
             renderChartCierreMeteorizacion(p);
 
             if (p.estado === 'CULMINADO') {
@@ -1669,7 +1777,6 @@
                 totals[t.meteorizacion] = (totals[t.meteorizacion] || 0) + len;
             });
 
-            // Ordenar de mayor a menor porcentaje/metraje
             let sortedKeys = Object.keys(totals).sort((a, b) => totals[b] - totals[a]);
             let sortedData = sortedKeys.map(k => totals[k].toFixed(2));
 
@@ -1739,7 +1846,6 @@
             });
         }
 
-        // GENERACIÓN DE REPORTE DSR CON VALIDACIÓN ESTRICTA DE CULMINACIÓN Y FIRMAS OFICIALES
         function generarReporteDSR() {
             if (!pozoActivoId || !pozosData[pozoActivoId]) { alert("⚠️ Seleccione un sondaje activo primero."); return; }
             let p = pozosData[pozoActivoId];
@@ -1843,10 +1949,6 @@
             document.getElementById('repMetrosHQRep').innerText = totalHQMet.toFixed(2) + " m";
             document.getElementById('repMetrosNQRep').innerText = totalNQMet.toFixed(2) + " m";
 
-            let pHQ = targetNum > 0 ? (totalHQMet / targetNum) * 100 : 0;
-            let pNQ = targetNum > 0 ? (totalNQMet / targetNum) * 100 : 0;
-            let pPend = targetNum > 0 ? (Math.max(0, targetNum - totalMetros) / targetNum) * 100 : 100;
-
             document.getElementById('repObservacionesTexto').innerText = observacionesTurnoTexto;
             if (p.estado === 'CULMINADO') {
                 document.getElementById('repMotivoCierreBox').innerHTML = `<b>Motivo de Cierre:</b> ${p.motivoCierre || 'CULMINADO'}`;
@@ -1854,7 +1956,6 @@
                 document.getElementById('repMotivoCierreBox').innerHTML = `<b>Estado:</b> Sondaje Activo en Operación`;
             }
 
-            // BLOQUE DE FIRMAS OFICIALES: exactamente 2 firmas para Cierre, o 2 nombres para Turno
             const contenedorFirmas = document.getElementById('contenedorFirmasDSR');
             if (modo === 'CULMINADO' || modo === 'ACUMULADO') {
                 contenedorFirmas.innerHTML = `
