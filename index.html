@@ -1561,24 +1561,51 @@
             cargarDatosPozoEnFormularios(codigo);
         }
 
-        // FUNCIÓN HABILITAR EDICIÓN TOPOGRAFÍA CORREGIDA
+        // FUNCIÓN HABILITAR EDICIÓN TOPOGRAFÍA CORREGIDA Y ROBUSTA
         function habilitarEdicionTopo() {
-            if (perfilActual === 'GERENCIA') { alert("⚠️ Perfil de Gerencia: Solo lectura."); return; }
-            if (!pozoActivoId) { alert("⚠️ Seleccione un sondaje primero."); return; }
-            ['m2_maquina', 'm2_este', 'm2_norte', 'm2_cota', 'm2_azimut', 'm2_dip', 'm2_target', 'm2_otra_maquina'].forEach(id => {
+            if (perfilActual === 'GERENCIA') { 
+                alert("⚠️ Perfil de Gerencia: Solo lectura."); 
+                return; 
+            }
+            
+            if (!pozoActivoId) { 
+                const selectPozo = document.getElementById('m2_selectPozoActivo');
+                if (selectPozo && selectPozo.value) {
+                    pozoActivoId = selectPozo.value;
+                    localStorage.setItem('jireth_pozo_activo', pozoActivoId);
+                } else {
+                    alert("⚠️ Seleccione un sondaje primero en el selector superior."); 
+                    return; 
+                }
+            }
+
+            const camposTopo = ['m2_maquina', 'm2_este', 'm2_norte', 'm2_cota', 'm2_azimut', 'm2_dip', 'm2_target', 'm2_otra_maquina'];
+            camposTopo.forEach(id => {
                 let el = document.getElementById(id);
-                if (el) el.disabled = false;
+                if (el) {
+                    el.disabled = false;
+                    el.removeAttribute('disabled');
+                    el.style.backgroundColor = "#ffffff";
+                }
             });
-            document.getElementById('m2_btn_box').classList.remove('hidden');
-            alert("✏️ Edición habilitada. Modifique los campos y haga clic en Guardar.");
+
+            const boxBotones = document.getElementById('m2_btn_box');
+            if (boxBotones) {
+                boxBotones.classList.remove('hidden');
+            }
+
+            alert("✏️ Edición de Topografía habilitada para el sondaje: " + pozoActivoId + ". Ya puede modificar los campos.");
         }
 
         function cancelarEdicionTopo() {
             if (!pozoActivoId) { verificarSeleccionTopografiaModulo(); return; }
             cargarDatosPozoEnFormularios(pozoActivoId);
-            ['m2_maquina', 'm2_este', 'm2_norte', 'm2_cota', 'm2_azimut', 'm2_dip', 'm2_target', 'm2_otra_maquina'].forEach(id => document.getElementById(id).disabled = true);
+            ['m2_maquina', 'm2_este', 'm2_norte', 'm2_cota', 'm2_azimut', 'm2_dip', 'm2_target', 'm2_otra_maquina'].forEach(id => {
+                let el = document.getElementById(id);
+                if (el) { el.disabled = true; el.setAttribute('disabled', 'disabled'); }
+            });
             document.getElementById('m2_btn_box').classList.add('hidden');
-            alert("ℹ️ Edición cancelada. Se mantuvieron los datos previos.");
+            alert("ℹ️ Edición cancelada.");
         }
 
         async function guardarTopografia() {
@@ -1599,7 +1626,10 @@
             await guardarYPersistirTodo();
             alert("✅ Topografía guardada. Pasando a apertura de turnos.");
             document.getElementById('m2_btn_box').classList.add('hidden');
-            ['m2_maquina', 'm2_este', 'm2_norte', 'm2_cota', 'm2_azimut', 'm2_dip', 'm2_target', 'm2_otra_maquina'].forEach(id => document.getElementById(id).disabled = true);
+            ['m2_maquina', 'm2_este', 'm2_norte', 'm2_cota', 'm2_azimut', 'm2_dip', 'm2_target', 'm2_otra_maquina'].forEach(id => {
+                let el = document.getElementById(id);
+                if (el) { el.disabled = true; el.setAttribute('disabled', 'disabled'); }
+            });
             actualizarProgresoGrafico();
             renderizarSalaSituacional();
             switchTab('mod3_turno');
