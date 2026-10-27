@@ -6,6 +6,8 @@
     <title>Jireth GeoCore Lite | Complejo Jireth C.A.</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Chart.js para Gráficos Analíticos Pro -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap');
         
@@ -84,7 +86,6 @@
                 background: #ffffff !important; 
                 color: #0f172a !important; 
                 padding: 0 !important; 
-                /* SE AÑADE PADDING SUPERIOR DE SEGURIDAD PARA QUE EL MEMBRETE FIJO NO TAPE EL CONTENIDO */
                 padding-top: 95px !important; 
                 font-size: 11px !important;
                 -webkit-print-color-adjust: exact !important;
@@ -106,13 +107,8 @@
 
             .avoid-break { break-inside: avoid !important; page-break-inside: avoid !important; }
             
-            /* REPETIR CABECERA DE TABLA EN CADA PÁGINA AL IMPRIMIR */
             thead { display: table-header-group !important; }
             tr { break-inside: avoid !important; page-break-inside: avoid !important; }
-            
-            .print-bar-hq { background-color: #2563eb !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-            .print-bar-nq { background-color: #d97706 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-            .print-bar-pend { background-color: #cbd5e1 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
             
             .watermark-bg {
                 position: fixed; inset: 0; display: flex; align-items: center; justify-content: center;
@@ -133,7 +129,7 @@
                     <img src="1001007025.jpg" alt="Jireth Logo" class="w-12 h-12 rounded-xl object-cover border border-amber-500/40 shadow-inner shrink-0" onerror="this.src='https://images.unsplash.com/photo-1579783902614-a3fb3927b675?w=100&auto=format&fit=crop&q=60';">
                     <div class="text-left leading-tight">
                         <div class="text-base font-black tracking-wider text-white">JIRETH <span class="text-amber-400 text-xs">GEOCORE LITE</span></div>
-                        <div class="text-[10px] text-cyan-400 font-extrabold uppercase">Complejo Jireth C.A.[span_0](start_span)[span_0](end_span)</div>
+                        <div class="text-[10px] text-cyan-400 font-extrabold uppercase">Complejo Jireth C.A.</div>
                         <div class="text-[9px] text-slate-400 font-bold">Sistema de Integración & Control de Sondajes</div>
                     </div>
                 </div>
@@ -215,7 +211,7 @@
                         <span>Jireth GeoCore Lite</span>
                         <span class="text-amber-400 font-extrabold text-[10px] bg-amber-950/80 px-2 py-0.5 rounded border border-amber-800/60">Cloud Pro</span>
                     </h1>
-                    <p class="text-[11px] text-slate-400 font-medium">Complejo Jireth C.A.[span_1](start_span)[span_1](end_span) <span id="indicadorRed" class="text-emerald-400 font-bold pulse-live">(🟢 Sincronizado En Vivo)</span></p>
+                    <p class="text-[11px] text-slate-400 font-medium">Complejo Jireth C.A. <span id="indicadorRed" class="text-emerald-400 font-bold pulse-live">(🟢 Sincronizado En Vivo)</span></p>
                 </div>
             </div>
             
@@ -262,7 +258,7 @@
                         <span>📡 Sala Situacional & Dashboard Pro (Primera Línea)</span>
                         <span class="text-xs bg-emerald-950 text-emerald-300 px-2.5 py-0.5 rounded-full border border-emerald-800/60 font-mono-code pulse-live" id="contadorFrentesActivos">0 Activos</span>
                     </h2>
-                    <p class="text-xs text-slate-300 mt-0.5">Panel macro de control operativo en tiempo real con gráficos dinámicos de alta tecnología.</p>
+                    <p class="text-xs text-slate-300 mt-0.5">Panel macro de control operativo en tiempo real con gráficos analíticos de alta tecnología.</p>
                 </div>
                 <button type="button" onclick="renderizarSalaSituacional()" class="bg-slate-950 hover:bg-slate-800 text-cyan-300 border border-slate-800 px-3 py-2 rounded-xl text-xs font-bold transition">🔄 Actualizar En Vivo</button>
             </div>
@@ -291,6 +287,27 @@
                     <p class="text-[10px] text-slate-400 font-bold uppercase">Eficiencia Testigo</p>
                     <p class="text-base font-black text-sky-300 font-mono-code mt-0.5" id="macroRecuperacionGlobal">0.0%</p>
                     <p class="text-[9px] text-slate-500 font-bold">Recuperación Promedio</p>
+                </div>
+            </div>
+
+            <!-- GRÁFICAS ANALÍTICAS DE SALA SITUACIONAL (CHART.JS) -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 pt-2">
+                <div class="lg:col-span-2 bg-slate-950 p-4 rounded-2xl border border-slate-800">
+                    <h3 class="text-xs font-bold text-slate-200 mb-3 flex items-center justify-between">
+                        <span><i class="fa-solid fa-chart-column text-sky-400 mr-2"></i>Avance Acumulado por Sondaje Activo (m)</span>
+                        <span class="text-[10px] text-slate-400">Real vs Planificado</span>
+                    </h3>
+                    <div class="h-56 relative">
+                        <canvas id="chart-situacional-avances"></canvas>
+                    </div>
+                </div>
+                <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800">
+                    <h3 class="text-xs font-bold text-slate-200 mb-3 flex items-center">
+                        <i class="fa-solid fa-chart-pie text-amber-400 mr-2"></i>Rendimiento de Recuperación %
+                    </h3>
+                    <div class="h-56 relative">
+                        <canvas id="chart-situacional-recuperacion"></canvas>
+                    </div>
                 </div>
             </div>
 
@@ -585,9 +602,20 @@
         <!-- MÓDULO 4: CIERRE EXHAUSTIVO -->
         <section id="mod4" class="hidden space-y-4 bg-slate-900 p-5 sm:p-6 rounded-3xl border border-slate-800 shadow-xl">
             <h2 class="text-xl font-black text-amber-400 tracking-tight">🏁 Módulo 5: Cierre & Evaluación Exhaustiva del Sondaje</h2>
-            <p class="text-xs text-slate-300">Aquí se evalúa el sondaje con el 100% de los datos técnicos registrados (sin dejar nada por fuera) para su cierre o reactivación.</p>
+            <p class="text-xs text-slate-300">Aquí se evalúa el sondaje con el 100% de los datos técnicos registrados para su cierre o reactivación.</p>
 
             <div id="cierreResumenPozo" class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-3 text-xs"></div>
+
+            <!-- GRÁFICO DONUT DE METEORIZACIÓN (ORDENADO DE MAYOR A MENOR %) EN CIERRE -->
+            <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-3">
+                <div class="flex justify-between items-center text-xs font-extrabold">
+                    <span class="text-amber-400 uppercase">📊 Distribución Lito-Meteorológica (Ordenado de Mayor a Menor %)</span>
+                    <span class="text-[10px] text-slate-400">Basado en Metraje Acumulado</span>
+                </div>
+                <div class="h-56 relative">
+                    <canvas id="chart-cierre-meteorizacion"></canvas>
+                </div>
+            </div>
 
             <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-2">
                 <div class="flex justify-between items-center text-xs font-extrabold">
@@ -654,7 +682,7 @@
                     <img src="1001007025.jpg" alt="Watermark" class="w-96 h-96 object-contain opacity-10" onerror="this.src='https://images.unsplash.com/photo-1579783902614-a3fb3927b675?w=200&auto=format&fit=crop&q=60';">
                 </div>
 
-                <!-- MEMBRETE CON LOGO EXACTO (REPETIDO EN CADA HOJA) CON RESPALDO DE IMAGEN EXTERNA SI FALLA -->
+                <!-- MEMBRETE CON LOGO EXACTO (REPETIDO EN CADA HOJA) -->
                 <div class="page-header-membrete border-b-2 border-slate-900 pb-3 flex justify-between items-center flex-wrap gap-3">
                     <div class="flex items-center gap-3">
                         <img src="1001007025.jpg" alt="Logo" class="w-10 h-10 rounded-xl object-cover border border-slate-400 shadow-sm shrink-0" onerror="this.src='https://images.unsplash.com/photo-1579783902614-a3fb3927b675?w=100&auto=format&fit=crop&q=60';">
@@ -662,7 +690,7 @@
                             <h3 class="text-sm font-black text-slate-900 uppercase tracking-tight" id="repTituloPrincipalDSR">
                                 REPORTE DE TURNO
                             </h3>
-                            <p class="text-[10px] text-slate-700 font-extrabold uppercase">COMPLEJO JIRETH C.A.[span_2](start_span)[span_2](end_span) — COORDINACIÓN DE GEOLOGÍA</p>
+                            <p class="text-[10px] text-slate-700 font-extrabold uppercase">COMPLEJO JIRETH C.A. — COORDINACIÓN DE GEOLOGÍA</p>
                         </div>
                     </div>
                     <div class="text-right">
@@ -715,21 +743,13 @@
                     </div>
                 </div>
 
-                <!-- GRÁFICO PRO DE PROGRESO -->
-                <div class="space-y-1.5 bg-slate-50 p-3.5 rounded-xl border border-slate-300 avoid-break shadow-sm">
-                    <div class="flex justify-between text-[10px] font-black text-slate-900">
-                        <span class="uppercase">📈 Gráfico Pro — Progreso de Perforación por Diámetro</span>
-                        <span id="repBarraTexto" class="font-mono-code text-blue-700 font-bold">0.0 m / 100.0 m (0.0%)</span>
-                    </div>
-                    <div class="w-full bg-slate-200 h-4 rounded-lg overflow-hidden flex border border-slate-300 p-0.5 shadow-inner">
-                        <div id="repBarHQ" class="print-bar-hq bg-blue-600 h-full rounded-l transition-all duration-300" style="width: 0%"></div>
-                        <div id="repBarNQ" class="print-bar-nq bg-amber-600 h-full transition-all duration-300" style="width: 0%"></div>
-                        <div id="repBarPend" class="print-bar-pend bg-slate-300 h-full rounded-r transition-all duration-300" style="width: 100%"></div>
-                    </div>
-                    <div class="flex gap-4 text-[10px] text-slate-700 font-bold pt-1">
-                        <span><b class="text-blue-600">■</b> Tramo HQ</span>
-                        <span><b class="text-amber-600">■</b> Tramo NQ</span>
-                        <span><b class="text-slate-400">■</b> Pendiente Target</span>
+                <!-- LEYENDA INFORMATIVA DEL ESTÁNDAR DE METEORIZACIÓN Y PAGO (% RECUPERACIÓN DE TESTIGO) -->
+                <div class="bg-slate-50 p-3 rounded-xl border border-slate-300 text-[10px] avoid-break shadow-sm">
+                    <p class="font-black text-slate-900 uppercase mb-1">📐 Criterio Estándar de Meteorización y Pago (% Recuperación de Testigo):</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-slate-700">
+                        <div><b>Suelo / Saprolita:</b> Umbral de recuperación &ge; 70%</div>
+                        <div><b>Saprock / Roca Fract.:</b> Umbral de recuperación &ge; 70% - 80%</div>
+                        <div><b>Roca Fresca / Veta:</b> Umbral de recuperación &ge; 90%</div>
                     </div>
                 </div>
 
@@ -762,6 +782,7 @@
                     <p class="text-slate-600 text-[10px] mt-1 font-bold" id="repMotivoCierreBox"></p>
                 </div>
 
+                <!-- BLOQUE OFICIAL DE FIRMAS: exactamente 2 firmas para Cierre, o 2 nombres para Turno -->
                 <div class="pt-6 border-t-2 border-slate-300 text-[10px] text-slate-800 avoid-break" id="contenedorFirmasDSR"></div>
             </div>
         </section>
@@ -812,6 +833,10 @@
         let turnoActivoObj = JSON.parse(localStorage.getItem('jireth_turno_activo') || 'null');
         let indexEditandoAvance = null;
         let lastActivityTime = Date.now();
+
+        let chartSituacionalAvance = null;
+        let chartSituacionalRecuperacion = null;
+        let chartCierreMeteorizacion = null;
 
         if (!localStorage.getItem('jireth_clave_geo')) localStorage.setItem('jireth_clave_geo', 'Mina2628');
         localStorage.setItem('jireth_clave_ger', 'JIRETH2026');
@@ -982,23 +1007,40 @@
             if (contador) contador.innerText = pozosActivosKeys.length + " Activos";
 
             let totalMetrosGlobal = 0, totalRecGral = 0, cuentaTramosGral = 0;
+            let chartLabels = [], chartAvances = [], chartPlan = [], chartRec = [];
+
             pozosKeys.forEach(k => {
                 let p = pozosData[k];
-                if (p.avances) {
-                    p.avances.forEach(t => {
-                        let met = parseFloat(t.hasta) - parseFloat(t.desde);
-                        totalMetrosGlobal += met;
-                        totalRecGral += parseFloat(t.recuperado) || 0;
-                        cuentaTramosGral += met;
-                    });
+                if (p.estado === 'ABIERTO') {
+                    let metPozo = 0, recPozoAcc = 0, tramoCount = 0;
+                    if (p.avances) {
+                        p.avances.forEach(t => {
+                            let met = parseFloat(t.hasta) - parseFloat(t.desde);
+                            metPozo += met;
+                            recPozoAcc += parseFloat(t.recuperado) || 0;
+                            totalRecGral += parseFloat(t.recuperado) || 0;
+                            cuentaTramosGral += met;
+                        });
+                    }
+                    totalMetrosGlobal += metPozo;
+                    chartLabels.push(p.codigo);
+                    chartAvances.push(metPozo.toFixed(2));
+                    chartPlan.push(parseFloat(p.target) || 100);
+                    let recP = metPozo > 0 ? ((recPozoAcc / metPozo) * 100).toFixed(1) : 0;
+                    chartRec.push(recP);
                 }
             });
+
             let recPromGral = cuentaTramosGral > 0 ? ((totalRecGral / cuentaTramosGral) * 100).toFixed(1) : '0.0';
 
             document.getElementById('macroTotalMetros').innerText = totalMetrosGlobal.toFixed(2) + " m";
             document.getElementById('macroFrentesActivos').innerText = pozosActivosKeys.length;
             document.getElementById('macroSondajesCulminados').innerText = pozosCulminadosKeys.length;
             document.getElementById('macroRecuperacionGlobal').innerText = recPromGral + "%";
+
+            // RENDERIZAR GRÁFICAS DE CHART.JS
+            renderChartSituacionalAvance(chartLabels, chartAvances, chartPlan);
+            renderChartSituacionalRecuperacion(chartLabels, chartRec);
 
             if (pozosActivosKeys.length === 0) {
                 grid.innerHTML = `<div class="col-span-full bg-slate-950 p-8 rounded-2xl border border-slate-800 text-center space-y-3"><div class="text-3xl">📡</div><h3 class="text-base font-black text-amber-400 uppercase tracking-wider">SALA SITUACIONAL — SIN FRENTES ACTIVOS</h3><p class="text-xs text-slate-400 max-w-md mx-auto">Actualmente no hay sondajes abiertos en operación.</p></div>`;
@@ -1052,6 +1094,55 @@
                     </div>
                 `;
                 grid.appendChild(card);
+            });
+        }
+
+        function renderChartSituacionalAvance(labels, avances, plan) {
+            const ctx = document.getElementById('chart-situacional-avances');
+            if (!ctx) return;
+            if (chartSituacionalAvance) chartSituacionalAvance.destroy();
+
+            chartSituacionalAvance = new Chart(ctx.getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        { label: 'Metros Avanzados', data: avances, backgroundColor: '#38bdf8', borderRadius: 4 },
+                        { label: 'Prof. Planificada', data: plan, backgroundColor: '#334155', borderRadius: 4 }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { labels: { color: '#94a3b8', font: { size: 10 } } } },
+                    scales: {
+                        x: { ticks: { color: '#94a3b8' }, grid: { display: false } },
+                        y: { ticks: { color: '#94a3b8' }, grid: { color: '#1e293b' } }
+                    }
+                }
+            });
+        }
+
+        function renderChartSituacionalRecuperacion(labels, recuperacion) {
+            const ctx = document.getElementById('chart-situacional-recuperacion');
+            if (!ctx) return;
+            if (chartSituacionalRecuperacion) chartSituacionalRecuperacion.destroy();
+
+            chartSituacionalRecuperacion = new Chart(ctx.getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{ label: '% Rec. Testigo', data: recuperacion, backgroundColor: '#34d399', borderRadius: 4 }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { ticks: { color: '#94a3b8' }, font: { size: 10 }, grid: { display: false } },
+                        y: { max: 100, ticks: { color: '#94a3b8' }, grid: { color: '#1e293b' } }
+                    }
+                }
             });
         }
 
@@ -1551,14 +1642,11 @@
                         <div><b>Recuperación Gral:</b> <span class="font-mono-code text-cyan-300 font-bold">${recGralPozo}%</span></div>
                         <div><b>Total Metros a Pagar:</b> <span class="font-mono-code text-amber-300 font-bold">${totalPago.toFixed(2)} m</span></div>
                     </div>
-                    <div class="pt-2 border-t border-slate-800">
-                        <p class="text-slate-300 font-bold text-[10px] uppercase mb-1">Listado Completo de Tramos Registrados (${p.avances.length} tramos):</p>
-                        <div class="max-h-36 overflow-y-auto border border-slate-800 rounded-xl p-2 bg-slate-900 font-mono-code text-[10px]">
-                            ${p.avances.length > 0 ? p.avances.map((tr, i) => `#${i+1}: ${tr.desde}-${tr.hasta}m | ${tr.diametro} | Rec: ${tr.recuperado}m (${tr.porcentaje}%) | Pago: ${tr.pagoEstandar}m | ${tr.meteorizacion}`).join('<br>') : 'Sin tramos registrados todavía.'}
-                        </div>
-                    </div>
                 </div>
             `;
+
+            // RENDERIZAR GRÁFICO DONUT DE METEORIZACIÓN (ORDENADO DE MAYOR A MENOR %)
+            renderChartCierreMeteorizacion(p);
 
             if (p.estado === 'CULMINADO') {
                 document.getElementById('btnCierrePozo').classList.add('hidden');
@@ -1567,6 +1655,41 @@
                 document.getElementById('btnCierrePozo').classList.remove('hidden');
                 document.getElementById('btnReactivarPozo').classList.add('hidden');
             }
+        }
+
+        function renderChartCierreMeteorizacion(p) {
+            const ctx = document.getElementById('chart-cierre-meteorizacion');
+            if (!ctx) return;
+
+            let totals = {};
+            p.avances.forEach(t => {
+                let len = parseFloat(t.hasta) - parseFloat(t.desde);
+                totals[t.meteorizacion] = (totals[t.meteorizacion] || 0) + len;
+            });
+
+            // Ordenar de mayor a menor porcentaje/metraje
+            let sortedKeys = Object.keys(totals).sort((a, b) => totals[b] - totals[a]);
+            let sortedData = sortedKeys.map(k => totals[k].toFixed(2));
+
+            if (chartCierreMeteorizacion) chartCierreMeteorizacion.destroy();
+
+            chartCierreMeteorizacion = new Chart(ctx.getContext('2d'), {
+                type: 'doughnut',
+                data: {
+                    labels: sortedKeys,
+                    datasets: [{
+                        data: sortedData,
+                        backgroundColor: ['#f59e0b', '#38bdf8', '#34d399', '#64748b', '#a855f7', '#ec4899', '#6366f1']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'right', labels: { color: '#94a3b8', font: { size: 10 } } }
+                    }
+                }
+            });
         }
 
         async function ejecutarCierrePozo() {
@@ -1614,14 +1737,13 @@
             });
         }
 
-        // GENERACIÓN DE REPORTE DSR CON VALIDACIÓN ESTRICTA DE CULMINACIÓN
+        // GENERACIÓN DE REPORTE DSR CON VALIDACIÓN ESTRICTA DE CULMINACIÓN Y FIRMAS OFICIALES
         function generarReporteDSR() {
             if (!pozoActivoId || !pozosData[pozoActivoId]) { alert("⚠️ Seleccione un sondaje activo primero."); return; }
             let p = pozosData[pozoActivoId];
             let modo = document.getElementById('repModoVista').value;
             let boxTurno = document.getElementById('boxSelectTurnoRepo');
             
-            // VALIDACIÓN ESTRICTA PARA REPORTE DE POZO CULMINADO
             if (modo === 'CULMINADO' && p.estado !== 'CULMINADO') {
                 alert(`⚠️ ALERTA: El sondaje seleccionado (${p.codigo}) se encuentra en estado ACTIVO y no ha sido culminado. Debe proceder al Módulo de Cierre (Módulo 5) para culminarlo antes de emitir este reporte.`);
                 document.getElementById('repModoVista').value = 'ACUMULADO';
@@ -1735,11 +1857,38 @@
                 document.getElementById('repMotivoCierreBox').innerHTML = `<b>Estado:</b> Sondaje Activo en Operación`;
             }
 
+            // BLOQUE DE FIRMAS OFICIALES: 2 firmas exactas para Culminado (Supervisor de Perforación y Geología)
             const contenedorFirmas = document.getElementById('contenedorFirmasDSR');
-            if (modo === 'CULMINADO') {
-                contenedorFirmas.innerHTML = `<div class="grid grid-cols-2 gap-4 text-center pt-4"><div><p class="font-bold uppercase text-slate-900 mb-6">Geología & Supervisión General</p><p>_____________________________________</p><p class="mt-1 font-semibold text-slate-600">Firma / Sello Geología Complejo Jireth[span_3](start_span)[span_3](end_span)</p></div><div><p class="font-bold uppercase text-slate-900 mb-6">Supervisor Perforación</p><p>_____________________________________</p><p class="mt-1 font-semibold text-slate-600">Firma Supervisor Operativo</p></div></div>`;
+            if (modo === 'CULMINADO' || modo === 'ACUMULADO') {
+                contenedorFirmas.innerHTML = `
+                    <div class="grid grid-cols-2 gap-6 text-center pt-6">
+                        <div>
+                            <p class="font-bold uppercase text-slate-900 mb-8">Supervisor de Perforación</p>
+                            <p>_____________________________________</p>
+                            <p class="mt-1 font-semibold text-slate-600">Nombre y Apellido / Firma</p>
+                        </div>
+                        <div>
+                            <p class="font-bold uppercase text-slate-900 mb-8">Supervisor de Geología</p>
+                            <p>_____________________________________</p>
+                            <p class="mt-1 font-semibold text-slate-600">Firma y Sello Oficial</p>
+                        </div>
+                    </div>
+                `;
             } else {
-                contenedorFirmas.innerHTML = `<div class="grid grid-cols-2 gap-4 text-[11px] pt-2 text-slate-800 font-semibold"><div><b>Supervisor Turno (Geólogo):</b> ${geologoTurnoTexto}</div><div><b>Perforador Turno:</b> ${operadorTurnoTexto}</div></div>`;
+                contenedorFirmas.innerHTML = `
+                    <div class="grid grid-cols-2 gap-4 text-center pt-6">
+                        <div>
+                            <p class="font-bold uppercase text-slate-900 mb-6">Perforador de Turno</p>
+                            <p>_____________________________________</p>
+                            <p class="mt-1 font-semibold text-slate-600">${operadorTurnoTexto}</p>
+                        </div>
+                        <div>
+                            <p class="font-bold uppercase text-slate-900 mb-6">Supervisor de Geología</p>
+                            <p>_____________________________________</p>
+                            <p class="mt-1 font-semibold text-slate-600">${geologoTurnoTexto}</p>
+                        </div>
+                    </div>
+                `;
             }
         }
 
@@ -1776,7 +1925,7 @@
         function copiarReportePortapapeles() {
             if (!pozoActivoId || !pozosData[pozoActivoId]) { alert("⚠️ Seleccione un sondaje."); return; }
             let p = pozosData[pozoActivoId];
-            let texto = "=== COMPLEJO JIRETH C.A.[span_4](start_span)[span_4](end_span) — REPORTE DIARIO DE GEOLOGÍA (DSR) ===\nSondaje: " + p.codigo + " | Proyecto: " + p.proyecto + "\nEmpresa: " + p.empresa + " | Máquina: " + p.maquina + "\n===========================================================\n";
+            let texto = "=== COMPLEJO JIRETH C.A. — REPORTE DIARIO DE GEOLOGÍA (DSR) ===\nSondaje: " + p.codigo + " | Proyecto: " + p.proyecto + "\nEmpresa: " + p.empresa + " | Máquina: " + p.maquina + "\n===========================================================\n";
             p.avances.forEach((t, i) => {
                 let lonM = parseFloat(t.hasta) - parseFloat(t.desde);
                 let pagVal = t.pagoEstandar ? t.pagoEstandar : calcularMetrosAPagar(lonM, parseFloat(t.recuperado), t.meteorizacion);
