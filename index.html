@@ -13,8 +13,8 @@
         
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: #020617;
-            color: #f8fafc;
+            background-color: #020617; /* Fondo industrial carbón oscuro */
+            color: #f8text-slate-50;
         }
         .font-mono-code { font-family: 'JetBrains Mono', monospace; }
         
@@ -24,7 +24,7 @@
             border-radius: 0.625rem; 
             letter-spacing: 0.025em;
             transition: all 0.15s ease-in-out;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
         }
         .btn-field:active { transform: scale(0.98); }
         
@@ -39,11 +39,11 @@
         .input-field:focus {
             border-color: #06b6d4;
             outline: none;
-            box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.2);
+            box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.25);
         }
 
         .bg-bienvenida-oficial {
-            background: linear-gradient(to bottom, rgba(2, 6, 23, 0.75), rgba(2, 6, 23, 0.95)), url('1001007083.jpg');
+            background: linear-gradient(to bottom, rgba(2, 6, 23, 0.82), rgba(2, 6, 23, 0.96)), url('1792941546023.jpg');
             background-size: cover;
             background-position: center;
             background-color: #020617;
@@ -72,7 +72,7 @@
         }
         .pulse-live { animation: pulseGlow 1.8s infinite ease-in-out; }
 
-        /* ESTILOS DE IMPRESIÓN Y PDF OFICIAL CORREGIDOS PARA EVITAR SOLAPAMIENTO */
+        /* ESTILOS DE IMPRESIÓN Y PDF OFICIAL CON COLORES CORPORATIVOS Y MEMBRETE */
         @media print {
             @page { size: portrait; margin: 12mm 10mm 10mm 10mm; }
             body * { visibility: hidden !important; }
@@ -86,7 +86,7 @@
                 background: #ffffff !important; 
                 color: #0f172a !important; 
                 padding: 0 !important; 
-                padding-top: 95px !important; 
+                padding-top: 100px !important; 
                 font-size: 11px !important;
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
@@ -99,8 +99,8 @@
                 left: 0 !important; 
                 right: 0 !important;
                 background: #ffffff !important; 
-                border-bottom: 2px solid #0f172a !important; 
-                padding-bottom: 8px !important; 
+                border-bottom: 2.5px solid #0f172a !important; 
+                padding-bottom: 10px !important; 
                 margin-bottom: 15px !important;
                 z-index: 1000 !important;
             }
@@ -117,7 +117,7 @@
         }
     </style>
 </head>
-<body class="min-h-screen p-2.5 sm:p-4 antialiased selection:bg-cyan-500 selection:text-slate-950">
+<body class="min-h-screen p-2.5 sm:p-4 antialiased selection:bg-cyan-500 selection:text-slate-950 text-slate-100">
 
     <!-- PANTALLA DE ACCESO Y BIENVENIDA -->
     <div id="pantallaLogin" class="fixed inset-0 bg-bienvenida-oficial z-50 flex items-center justify-center p-4 backdrop-blur-sm overflow-y-auto">
@@ -126,7 +126,7 @@
             
             <div class="text-center pt-2 space-y-2">
                 <div class="mx-auto flex items-center justify-center gap-3 bg-slate-950/90 p-3 rounded-2xl border border-slate-800 shadow-lg">
-                    <img src="1001007025.jpg" alt="Jireth Logo" class="w-12 h-12 rounded-xl object-cover border border-amber-500/40 shadow-inner shrink-0" onerror="this.src='https://images.unsplash.com/photo-1579783902614-a3fb3927b675?w=100&auto=format&fit=crop&q=60';">
+                    <img src="1792941546023.jpg" alt="Jireth Logo" class="w-12 h-12 rounded-xl object-cover border border-amber-500/40 shadow-inner shrink-0" onerror="this.src='https://images.unsplash.com/photo-1579783902614-a3fb3927b675?w=100&auto=format&fit=crop&q=60';">
                     <div class="text-left leading-tight">
                         <div class="text-base font-black tracking-wider text-white">JIRETH <span class="text-amber-400 text-xs">GEOCORE LITE</span></div>
                         <div class="text-[10px] text-cyan-400 font-extrabold uppercase">Complejo Jireth C.A.</div>
@@ -205,7 +205,7 @@
     <div id="appPrincipal" class="hidden space-y-3.5 max-w-7xl mx-auto">
         <header class="bg-slate-900/95 backdrop-blur p-3.5 rounded-2xl border border-slate-800 flex justify-between items-center flex-wrap gap-3 shadow-lg laser-line">
             <div class="flex items-center gap-3">
-                <img src="1001007025.jpg" alt="Logo" class="w-10 h-10 rounded-xl object-cover border border-blue-500/40 shadow" onerror="this.src='https://images.unsplash.com/photo-1579783902614-a3fb3927b675?w=100&auto=format&fit=crop&q=60';">
+                <img src="1792941546023.jpg" alt="Logo" class="w-10 h-10 rounded-xl object-cover border border-blue-500/40 shadow" onerror="this.src='https://images.unsplash.com/photo-1579783902614-a3fb3927b675?w=100&auto=format&fit=crop&q=60';">
                 <div>
                     <h1 class="text-base font-black text-white tracking-tight flex items-center gap-1.5">
                         <span>Jireth GeoCore Lite</span>
@@ -294,7 +294,7 @@
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 pt-2">
                 <div class="lg:col-span-2 bg-slate-950 p-4 rounded-2xl border border-slate-800">
                     <h3 class="text-xs font-bold text-slate-200 mb-3 flex items-center justify-between">
-                        <span><i class="fa-solid fa-chart-column text-sky-400 mr-2"></i>Avance Acumulado por Sondaje Activo (m)</span>
+                        <span>📊 Avance Acumulado por Sondaje Activo (m)</span>
                         <span class="text-[10px] text-slate-400">Real vs Planificado</span>
                     </h3>
                     <div class="h-56 relative">
@@ -303,7 +303,7 @@
                 </div>
                 <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800">
                     <h3 class="text-xs font-bold text-slate-200 mb-3 flex items-center">
-                        <i class="fa-solid fa-chart-pie text-amber-400 mr-2"></i>Rendimiento de Recuperación %
+                        🥧 Rendimiento de Recuperación %
                     </h3>
                     <div class="h-56 relative">
                         <canvas id="chart-situacional-recuperacion"></canvas>
@@ -679,13 +679,13 @@
                 
                 <!-- MARCA DE AGUA GOTA DE AGUA -->
                 <div class="watermark-bg hidden print:flex">
-                    <img src="1001007025.jpg" alt="Watermark" class="w-96 h-96 object-contain opacity-10" onerror="this.src='https://images.unsplash.com/photo-1579783902614-a3fb3927b675?w=200&auto=format&fit=crop&q=60';">
+                    <img src="1792941546023.jpg" alt="Watermark" class="w-96 h-96 object-contain opacity-10" onerror="this.src='https://images.unsplash.com/photo-1579783902614-a3fb3927b675?w=200&auto=format&fit=crop&q=60';">
                 </div>
 
                 <!-- MEMBRETE CON LOGO EXACTO (REPETIDO EN CADA HOJA) -->
                 <div class="page-header-membrete border-b-2 border-slate-900 pb-3 flex justify-between items-center flex-wrap gap-3">
                     <div class="flex items-center gap-3">
-                        <img src="1001007025.jpg" alt="Logo" class="w-10 h-10 rounded-xl object-cover border border-slate-400 shadow-sm shrink-0" onerror="this.src='https://images.unsplash.com/photo-1579783902614-a3fb3927b675?w=100&auto=format&fit=crop&q=60';">
+                        <img src="1792941546023.jpg" alt="Logo" class="w-10 h-10 rounded-xl object-cover border border-slate-400 shadow-sm shrink-0" onerror="this.src='https://images.unsplash.com/photo-1579783902614-a3fb3927b675?w=100&auto=format&fit=crop&q=60';">
                         <div>
                             <h3 class="text-sm font-black text-slate-900 uppercase tracking-tight" id="repTituloPrincipalDSR">
                                 REPORTE DE TURNO
