@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jireth GeoCore Lite | Complejo Jireth C.A.</title>
-    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -131,7 +130,7 @@
                 background: #ffffff !important; 
                 color: #0f172a !important; 
                 padding: 0 !important; 
-                padding-top: 140px !important; /* Espacio exacto para que el membrete fijo no se monte */
+                padding-top: 140px !important;
                 font-size: 11px !important;
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
@@ -162,6 +161,7 @@
             }
         }
     </style>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="min-h-screen p-2.5 sm:p-4 antialiased selection:bg-slate-700 selection:text-white text-slate-800">
 
@@ -705,7 +705,7 @@
                     </div>
                     <div>
                         <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Metros Recuperados *</label>
-                        <input type="text" id="m3_recuperado" class="input-field w-full px-3.5 text-xs font-mono-code font-extrabold text-slate-900" placeholder="EJ: 2.85">
+                        <input type="text" id="m3_recuperado" class="input-field w-full px-3.5 text-xs font-mono-code font-extrabold text-slate-900" placeholder="0.00 (Ingrese metraje)">
                     </div>
                     <div>
                         <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Litología / Meteorización *</label>
@@ -1007,6 +1007,7 @@
             window.addEventListener(evt, () => { lastActivityTime = Date.now(); });
         });
 
+        // INICIALIZACIÓN 100% ROBUSTA OFFLINE (NO BLOQUEA SI NO HAY INTERNET)
         window.onload = async function() {
             document.getElementById('m3_fecha').valueAsDate = new Date();
             migrarRecalcularPagosEstandar();
@@ -1019,7 +1020,15 @@
             poblarSelectRetomarTurno();
             renderizarSalaSituacional();
 
-            if (supabaseClient) await sincronizarDesdeSupabaseCloud(false);
+            if (navigator.onLine && supabaseClient) {
+                sincronizarDesdeSupabaseCloud(false).catch(err => console.log("Modo offline activado automáticamente"));
+            } else {
+                const indRed = document.getElementById('indicadorRed');
+                if (indRed) {
+                    indRed.innerText = "(🟡 Modo Offline / Local)";
+                    indRed.className = "text-amber-600 font-bold";
+                }
+            }
         };
 
         function migrarRecalcularPagosEstandar() {
@@ -1174,7 +1183,6 @@
             let chartLabels = [], chartAvances = [], chartPlan = [], chartRec = [], chartPorcentajes = [];
             let meteorizacionTotales = {};
 
-            // EXCLUSIVAMENTE POZOS ACTIVOS PARA TODAS LAS GRÁFICAS DE LA SALA SITUACIONAL
             pozosActivosKeys.forEach(k => {
                 let p = pozosData[k];
                 let metPozo = 0, recPozoAcc = 0;
@@ -1762,7 +1770,8 @@
             let lon = parseFloat(document.getElementById('m3_longitud').value) || 1.5;
             let hasta = ultimoHasta + lon;
             document.getElementById('m3_hasta').value = hasta.toFixed(2);
-            document.getElementById('m3_recuperado').value = lon.toFixed(2);
+            // Dejar vacío para forzar la transcripción manual desde el teclado
+            document.getElementById('m3_recuperado').value = '';
         }
 
         async function guardarAvance() {
@@ -1778,7 +1787,7 @@
             let meteorizacion = document.getElementById('m3_meteorizacion').value;
             let lonManiobra = hasta - desde;
 
-            if (isNaN(recuperado) || recuperado < 0 || recuperado > lonManiobra) { alert("❌ Metros recuperados inválidos respecto a la longitud del tramo."); return; }
+            if (isNaN(recuperado) || recuperado < 0 || recuperado > lonManiobra) { alert("❌ Metros recuperados inválidos o campo vacío respecto a la longitud del tramo."); return; }
 
             let metrosPago = calcularMetrosAPagar(lonManiobra, recuperado, meteorizacion);
             let objTramo = {
@@ -2258,17 +2267,20 @@
             localStorage.setItem('jireth_pozos', JSON.stringify(pozosData));
             localStorage.setItem('jireth_turnos', JSON.stringify(turnosData));
             
-            if (supabaseClient) {
+            if (navigator.onLine && supabaseClient) {
                 try {
                     const payloadData = { pozos: pozosData, turnos: turnosData, actualizado: new Date().toISOString() };
                     const { error } = await supabaseClient.from('jireth_geocore').upsert({ id: 'db_principal', payload: payloadData });
                     if (error) console.error("Supabase Sync Warning:", error.message);
-                } catch(ex) { console.warn("Supabase Excepción controlada:", ex); }
+                } catch(ex) { console.warn("Supabase Excepción controlada offline:", ex); }
             }
         }
 
         async function sincronizarDesdeSupabaseCloud(mostrarAlerta = true) {
-            if (!supabaseClient) return;
+            if (!navigator.onLine || !supabaseClient) {
+                if (mostrarAlerta) alert("⚠️ Estás sin conexión a internet. Trabajando con datos locales.");
+                return;
+            }
             try {
                 const { data, error } = await supabaseClient.from('jireth_geocore').select('payload').eq('id', 'db_principal').maybeSingle();
                 if (error) { if (mostrarAlerta) alert("⚠️ No se pudo conectar con la nube, operando en modo local."); return; }
@@ -2292,7 +2304,13 @@
             } catch(e) { if (mostrarAlerta) alert("⚠️ Error de red al sincronizar con Supabase."); }
         }
 
-        async function sincronizarConSupabaseReal() { await sincronizarDesdeSupabaseCloud(true); }
+        async function sincronizarConSupabaseReal() { 
+            if (!navigator.onLine) {
+                alert("⚠️ No hay conexión a internet en este momento. El sistema está operando en Modo Local (Offline).");
+                return;
+            }
+            await sincronizarDesdeSupabaseCloud(true); 
+        }
     </script>
 </body>
 </html>
