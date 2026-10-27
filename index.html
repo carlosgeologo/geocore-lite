@@ -1007,12 +1007,13 @@
             window.addEventListener(evt, () => { lastActivityTime = Date.now(); });
         });
 
-        // INICIALIZACIÓN 100% ROBUSTA OFFLINE (NO BLOQUEA SI NO HAY INTERNET)
+        // INICIALIZACIÓN 100% BLINDADA OFFLINE (EVITA EL DINOSAURIO DE CHROME AL RECARGAR SIN RED)
         window.onload = async function() {
             document.getElementById('m3_fecha').valueAsDate = new Date();
             migrarRecalcularPagosEstandar();
             refrescarSelectoresOperativos();
             refrescarSelectorModuloUno();
+            
             if (pozoActivoId && pozosData[pozoActivoId]) {
                 cargarDatosPozoEnFormularios(pozoActivoId);
             }
@@ -1020,16 +1021,37 @@
             poblarSelectRetomarTurno();
             renderizarSalaSituacional();
 
+            // Intento seguro con Supabase en segundo plano, sin bloquear la UI ni mostrar errores de red fatales
             if (navigator.onLine && supabaseClient) {
-                sincronizarDesdeSupabaseCloud(false).catch(err => console.log("Modo offline activado automáticamente"));
+                sincronizarDesdeSupabaseCloud(false).catch(err => {
+                    console.log("Modo offline activado automáticamente por red");
+                    marcarModoOfflineVisual();
+                });
             } else {
-                const indRed = document.getElementById('indicadorRed');
-                if (indRed) {
-                    indRed.innerText = "(🟡 Modo Offline / Local)";
-                    indRed.className = "text-amber-600 font-bold";
-                }
+                marcarModoOfflineVisual();
             }
         };
+
+        function marcarModoOfflineVisual() {
+            const indRed = document.getElementById('indicadorRed');
+            if (indRed) {
+                indRed.innerText = "(🟡 Modo Offline / Local Seguro)";
+                indRed.className = "text-amber-600 font-bold";
+            }
+        }
+
+        // Interceptores de estado de red en tiempo real
+        window.addEventListener('offline', () => {
+            marcarModoOfflineVisual();
+        });
+
+        window.addEventListener('online', () => {
+            const indRed = document.getElementById('indicadorRed');
+            if (indRed) {
+                indRed.innerText = "(🟢 Sincronizado En Vivo)";
+                indRed.className = "text-emerald-700 font-bold";
+            }
+        });
 
         function migrarRecalcularPagosEstandar() {
             let huboCambios = false;
