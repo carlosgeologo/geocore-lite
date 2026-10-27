@@ -13,8 +13,8 @@
         
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: #020617; /* Fondo industrial carbón oscuro */
-            color: #f8text-slate-50;
+            background-color: #f1f5f9; /* Fondo general limpio y claro (Slate-100) */
+            color: #0f172a;
         }
         .font-mono-code { font-family: 'JetBrains Mono', monospace; }
         
@@ -24,29 +24,29 @@
             border-radius: 0.625rem; 
             letter-spacing: 0.025em;
             transition: all 0.15s ease-in-out;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
         }
         .btn-field:active { transform: scale(0.98); }
         
         .input-field { 
             min-height: 48px; 
-            border: 2px solid #334155; 
+            border: 2px solid #cbd5e1; 
             font-weight: 700;
-            background-color: #090d16;
-            color: #ffffff;
+            background-color: #ffffff;
+            color: #0f172a;
             transition: border-color 0.2s;
         }
         .input-field:focus {
-            border-color: #06b6d4;
+            border-color: #0284c7;
             outline: none;
-            box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.25);
+            box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
         }
 
         .bg-bienvenida-oficial {
-            background: linear-gradient(to bottom, rgba(2, 6, 23, 0.82), rgba(2, 6, 23, 0.96)), url('1792941546023.jpg');
+            background: linear-gradient(to bottom, rgba(15, 23, 42, 0.88), rgba(15, 23, 42, 0.96)), url('1792941546023.jpg');
             background-size: cover;
             background-position: center;
-            background-color: #020617;
+            background-color: #0f172a;
         }
 
         @keyframes laserMove {
@@ -62,17 +62,17 @@
             content: '';
             position: absolute;
             top: 0; left: 0; height: 100%; width: 60%;
-            background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.9), #38bdf8, transparent);
+            background: linear-gradient(90deg, transparent, rgba(2, 132, 199, 0.9), #0284c7, transparent);
             animation: laserMove 2.5s infinite linear;
         }
 
         @keyframes pulseGlow {
-            0%, 100% { opacity: 1; transform: scale(1); filter: drop-shadow(0 0 8px rgba(6, 182, 212, 0.8)); }
-            50% { opacity: 0.5; transform: scale(0.96); filter: drop-shadow(0 0 2px rgba(6, 182, 212, 0.2)); }
+            0%, 100% { opacity: 1; transform: scale(1); filter: drop-shadow(0 0 6px rgba(2, 132, 199, 0.5)); }
+            50% { opacity: 0.5; transform: scale(0.96); filter: drop-shadow(0 0 2px rgba(2, 132, 199, 0.2)); }
         }
         .pulse-live { animation: pulseGlow 1.8s infinite ease-in-out; }
 
-        /* ESTILOS DE IMPRESIÓN Y PDF OFICIAL CON COLORES CORPORATIVOS Y MEMBRETE */
+        /* ESTILOS DE IMPRESIÓN Y PDF OFICIAL CON LOGO COMPLETO A LO LARGO EN EL ENCABEZADO */
         @media print {
             @page { size: portrait; margin: 12mm 10mm 10mm 10mm; }
             body * { visibility: hidden !important; }
@@ -86,23 +86,25 @@
                 background: #ffffff !important; 
                 color: #0f172a !important; 
                 padding: 0 !important; 
-                padding-top: 100px !important; 
+                padding-top: 130px !important; /* Espacio para el membrete fijo con logo completo */
                 font-size: 11px !important;
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
             }
 
             .page-header-membrete {
-                display: block !important; 
+                display: flex !important; 
                 position: fixed !important; 
                 top: 0 !important; 
                 left: 0 !important; 
                 right: 0 !important;
                 background: #ffffff !important; 
-                border-bottom: 2.5px solid #0f172a !important; 
-                padding-bottom: 10px !important; 
+                border-bottom: 3px solid #0f172a !important; 
+                padding: 10px 15px !important; 
                 margin-bottom: 15px !important;
                 z-index: 1000 !important;
+                align-items: center !important;
+                justify-content: space-between !important;
             }
 
             .avoid-break { break-inside: avoid !important; page-break-inside: avoid !important; }
@@ -117,61 +119,61 @@
         }
     </style>
 </head>
-<body class="min-h-screen p-2.5 sm:p-4 antialiased selection:bg-cyan-500 selection:text-slate-950 text-slate-100">
+<body class="min-h-screen p-2.5 sm:p-4 antialiased selection:bg-sky-500 selection:text-white text-slate-800">
 
     <!-- PANTALLA DE ACCESO Y BIENVENIDA -->
     <div id="pantallaLogin" class="fixed inset-0 bg-bienvenida-oficial z-50 flex items-center justify-center p-4 backdrop-blur-sm overflow-y-auto">
-        <div class="bg-slate-900/95 p-5 sm:p-7 rounded-3xl border border-slate-800 w-full max-w-lg space-y-4 shadow-2xl relative overflow-hidden backdrop-blur-md my-auto">
-            <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-sky-600 via-cyan-400 to-sky-600 laser-line"></div>
+        <div class="bg-white p-5 sm:p-7 rounded-3xl border border-slate-200 w-full max-w-lg space-y-4 shadow-2xl relative overflow-hidden backdrop-blur-md my-auto text-slate-900">
+            <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-sky-600 via-cyan-500 to-sky-600 laser-line"></div>
             
             <div class="text-center pt-2 space-y-2">
-                <div class="mx-auto flex items-center justify-center gap-3 bg-slate-950/90 p-3 rounded-2xl border border-slate-800 shadow-lg">
+                <div class="mx-auto flex items-center justify-center gap-3 bg-slate-50 p-3 rounded-2xl border border-slate-200 shadow-sm">
                     <img src="1792941546023.jpg" alt="Jireth Logo" class="w-12 h-12 rounded-xl object-cover border border-amber-500/40 shadow-inner shrink-0" onerror="this.src='https://images.unsplash.com/photo-1579783902614-a3fb3927b675?w=100&auto=format&fit=crop&q=60';">
                     <div class="text-left leading-tight">
-                        <div class="text-base font-black tracking-wider text-white">JIRETH <span class="text-amber-400 text-xs">GEOCORE LITE</span></div>
-                        <div class="text-[10px] text-cyan-400 font-extrabold uppercase">Complejo Jireth C.A.</div>
-                        <div class="text-[9px] text-slate-400 font-bold">Sistema de Integración & Control de Sondajes</div>
+                        <div class="text-base font-black tracking-wider text-slate-900">JIRETH <span class="text-amber-700 text-xs">GEOCORE LITE</span></div>
+                        <div class="text-[10px] text-sky-700 font-extrabold uppercase">Complejo Jireth C.A.</div>
+                        <div class="text-[9px] text-slate-500 font-bold">Sistema de Integración & Control de Sondajes</div>
                     </div>
                 </div>
 
                 <div class="py-1 space-y-1">
-                    <span class="text-[10px] uppercase tracking-widest font-extrabold text-amber-400 bg-amber-950/80 px-3 py-1 rounded-full border border-amber-800/60">Módulo Operativo & Gerencial</span>
-                    <h2 class="text-3xl sm:text-4xl font-black text-white tracking-widest mt-2 uppercase drop-shadow-md">BIENVENIDOS</h2>
-                    <p class="text-xs text-slate-300 font-semibold">Sistema Integrado de Sondajes y Perforación Diamantina</p>
+                    <span class="text-[10px] uppercase tracking-widest font-extrabold text-amber-800 bg-amber-50 px-3 py-1 rounded-full border border-amber-300">Módulo Operativo & Gerencial</span>
+                    <h2 class="text-3xl sm:text-4xl font-black text-slate-900 tracking-widest mt-2 uppercase drop-shadow-sm">BIENVENIDOS</h2>
+                    <p class="text-xs text-slate-600 font-semibold">Sistema Integrado de Sondajes y Perforación Diamantina</p>
                 </div>
             </div>
             
             <div class="grid grid-cols-2 gap-2.5 pt-1">
-                <button type="button" onclick="seleccionarPerfil('GEOLOGOS')" id="btnPerfilGeo" class="py-3 px-2 rounded-2xl text-xs font-black border-2 border-amber-500 bg-amber-500/15 text-amber-300 transition-all shadow-inner">
+                <button type="button" onclick="seleccionarPerfil('GEOLOGOS')" id="btnPerfilGeo" class="py-3 px-2 rounded-2xl text-xs font-black border-2 border-amber-500 bg-amber-50 text-amber-900 transition-all shadow-inner">
                     👷 GEÓLOGOS
                 </button>
-                <button type="button" onclick="seleccionarPerfil('GERENCIA')" id="btnPerfilGer" class="py-3 px-2 rounded-2xl text-xs font-black border-2 border-slate-800 bg-slate-950 text-slate-400 transition-all">
+                <button type="button" onclick="seleccionarPerfil('GERENCIA')" id="btnPerfilGer" class="py-3 px-2 rounded-2xl text-xs font-black border-2 border-slate-200 bg-slate-100 text-slate-600 transition-all">
                     👔 GERENCIA (REPOSITORIO)
                 </button>
             </div>
 
             <div id="boxLoginGeologos" class="space-y-3.5">
                 <div>
-                    <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Contraseña de Geólogos</label>
+                    <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Contraseña de Geólogos</label>
                     <div class="relative flex items-center">
                         <input type="password" id="inputClaveGeo" autocomplete="current-password" placeholder="Ingrese clave..." class="input-field w-full px-3.5 pr-11 rounded-xl text-sm font-bold">
-                        <button type="button" onclick="togglePasswordVisibility('inputClaveGeo')" class="absolute right-3.5 text-slate-400 hover:text-white text-base">👁️</button>
+                        <button type="button" onclick="togglePasswordVisibility('inputClaveGeo')" class="absolute right-3.5 text-slate-500 hover:text-slate-800 text-base">👁️</button>
                     </div>
                 </div>
                 <button type="button" onclick="intentarLoginGeo()" class="btn-field w-full bg-amber-500 hover:bg-amber-400 text-slate-950 text-sm font-black shadow-amber-500/20">
                     🔐 Ingresar como Geólogos
                 </button>
                 <div class="text-center pt-1">
-                    <button type="button" onclick="mostrarBoxRescate()" class="text-xs text-cyan-400 hover:text-cyan-300 underline font-bold">🔑 ¿Olvidaste tu contraseña? (PIN Maestro)</button>
+                    <button type="button" onclick="mostrarBoxRescate()" class="text-xs text-sky-700 hover:text-sky-800 underline font-bold">🔑 ¿Olvidaste tu contraseña? (PIN Maestro)</button>
                 </div>
             </div>
 
             <div id="boxLoginGerencia" class="hidden space-y-3.5">
                 <div>
-                    <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Contraseña de Gerencia</label>
+                    <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Contraseña de Gerencia</label>
                     <div class="relative flex items-center">
                         <input type="password" id="inputClaveGer" autocomplete="current-password" placeholder="Ingrese clave..." class="input-field w-full px-3.5 pr-11 rounded-xl text-sm font-bold">
-                        <button type="button" onclick="togglePasswordVisibility('inputClaveGer')" class="absolute right-3.5 text-slate-400 hover:text-white text-base">👁️</button>
+                        <button type="button" onclick="togglePasswordVisibility('inputClaveGer')" class="absolute right-3.5 text-slate-500 hover:text-slate-800 text-base">👁️</button>
                     </div>
                 </div>
                 <button type="button" onclick="intentarLoginGer()" class="btn-field w-full bg-sky-600 hover:bg-sky-500 text-white text-sm font-black shadow-sky-600/20">
@@ -179,23 +181,23 @@
                 </button>
             </div>
 
-            <div id="boxLoginRescate" class="hidden space-y-3 pt-2 border-t border-slate-800">
-                <div class="bg-slate-950 p-2.5 rounded-xl border border-amber-500/30 text-amber-300 text-[11px]">
+            <div id="boxLoginRescate" class="hidden space-y-3 pt-2 border-t border-slate-200">
+                <div class="bg-amber-50 p-2.5 rounded-xl border border-amber-200 text-amber-900 text-[11px]">
                     🔑 <b>Restablecimiento:</b> Ingrese el PIN maestro para asignar nueva clave.
                 </div>
                 <div>
-                    <label class="block text-xs font-extrabold text-slate-300 mb-1 uppercase tracking-wider">PIN Maestro (4 dígitos)</label>
-                    <input type="password" maxlength="4" id="inputPinRescate" placeholder="----" class="input-field w-full px-3 bg-slate-950 text-white rounded-xl text-sm font-mono-code font-bold text-center tracking-widest">
+                    <label class="block text-xs font-extrabold text-slate-700 mb-1 uppercase tracking-wider">PIN Maestro (4 dígitos)</label>
+                    <input type="password" maxlength="4" id="inputPinRescate" placeholder="----" class="input-field w-full px-3 bg-white text-slate-900 rounded-xl text-sm font-mono-code font-bold text-center tracking-widest">
                 </div>
                 <div>
-                    <label class="block text-xs font-extrabold text-slate-300 mb-1 uppercase tracking-wider">Nueva Contraseña Geólogos</label>
+                    <label class="block text-xs font-extrabold text-slate-700 mb-1 uppercase tracking-wider">Nueva Contraseña Geólogos</label>
                     <input type="password" id="inputClaveNuevaRescate" placeholder="Nueva clave" class="input-field w-full px-3 rounded-xl text-sm font-bold">
                 </div>
                 <button type="button" onclick="ejecutarRescateClave()" class="btn-field w-full bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-black shadow-emerald-600/20">
                     🔄 Restablecer Clave e Ingresar
                 </button>
                 <div class="text-center pt-1">
-                    <button type="button" onclick="ocultarBoxRescate()" class="text-xs text-slate-400 hover:text-white underline font-semibold">Volver al inicio</button>
+                    <button type="button" onclick="ocultarBoxRescate()" class="text-xs text-slate-500 hover:text-slate-800 underline font-semibold">Volver al inicio</button>
                 </div>
             </div>
         </div>
@@ -203,106 +205,106 @@
 
     <!-- APLICACIÓN PRINCIPAL -->
     <div id="appPrincipal" class="hidden space-y-3.5 max-w-7xl mx-auto">
-        <header class="bg-slate-900/95 backdrop-blur p-3.5 rounded-2xl border border-slate-800 flex justify-between items-center flex-wrap gap-3 shadow-lg laser-line">
+        <header class="bg-white backdrop-blur p-3.5 rounded-2xl border border-slate-200 flex justify-between items-center flex-wrap gap-3 shadow-sm laser-line">
             <div class="flex items-center gap-3">
-                <img src="1792941546023.jpg" alt="Logo" class="w-10 h-10 rounded-xl object-cover border border-blue-500/40 shadow" onerror="this.src='https://images.unsplash.com/photo-1579783902614-a3fb3927b675?w=100&auto=format&fit=crop&q=60';">
+                <img src="1792941546023.jpg" alt="Logo" class="w-10 h-10 rounded-xl object-cover border border-slate-300 shadow-sm" onerror="this.src='https://images.unsplash.com/photo-1579783902614-a3fb3927b675?w=100&auto=format&fit=crop&q=60';">
                 <div>
-                    <h1 class="text-base font-black text-white tracking-tight flex items-center gap-1.5">
+                    <h1 class="text-base font-black text-slate-900 tracking-tight flex items-center gap-1.5">
                         <span>Jireth GeoCore Lite</span>
-                        <span class="text-amber-400 font-extrabold text-[10px] bg-amber-950/80 px-2 py-0.5 rounded border border-amber-800/60">Cloud Pro</span>
+                        <span class="text-amber-800 font-extrabold text-[10px] bg-amber-50 px-2 py-0.5 rounded border border-amber-300">Cloud Pro</span>
                     </h1>
-                    <p class="text-[11px] text-slate-400 font-medium">Complejo Jireth C.A. <span id="indicadorRed" class="text-emerald-400 font-bold pulse-live">(🟢 Sincronizado En Vivo)</span></p>
+                    <p class="text-[11px] text-slate-600 font-medium">Complejo Jireth C.A. <span id="indicadorRed" class="text-emerald-700 font-bold pulse-live">(🟢 Sincronizado En Vivo)</span></p>
                 </div>
             </div>
             
-            <div id="cardBienvenidaUsuario" class="hidden sm:flex items-center gap-3 bg-slate-950/80 px-3.5 py-1.5 rounded-xl border border-slate-800 text-xs">
-                <div class="w-7 h-7 rounded-lg bg-cyan-500/20 border border-cyan-500/40 flex items-center justify-center text-sm pulse-live">💎</div>
+            <div id="cardBienvenidaUsuario" class="hidden sm:flex items-center gap-3 bg-slate-50 px-3.5 py-1.5 rounded-xl border border-slate-200 text-xs shadow-sm">
+                <div class="w-7 h-7 rounded-lg bg-sky-100 border border-sky-300 flex items-center justify-center text-sm pulse-live">💎</div>
                 <div>
-                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Sesión Activa Pro</p>
-                    <p class="text-cyan-300 font-extrabold" id="lblNombreUsuarioLogueado">Operador Autorizado</p>
+                    <p class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Sesión Activa Pro</p>
+                    <p class="text-sky-800 font-extrabold" id="lblNombreUsuarioLogueado">Operador Autorizado</p>
                 </div>
             </div>
 
             <div class="flex gap-2 flex-wrap">
-                <button type="button" onclick="sincronizarConSupabaseReal()" class="text-xs bg-emerald-950 text-emerald-300 px-3 py-2 rounded-xl font-extrabold border border-emerald-800/60 hover:bg-emerald-900/50 transition">🔄 Sincronizar Cloud</button>
-                <button type="button" onclick="cerrarSesion()" class="text-xs bg-rose-950 text-rose-300 px-3 py-2 rounded-xl font-extrabold border border-rose-800/60 hover:bg-rose-900/50 transition">🚪 Salir</button>
+                <button type="button" onclick="sincronizarConSupabaseReal()" class="text-xs bg-emerald-50 text-emerald-800 px-3 py-2 rounded-xl font-extrabold border border-emerald-300 hover:bg-emerald-100 transition shadow-sm">🔄 Sincronizar Cloud</button>
+                <button type="button" onclick="cerrarSesion()" class="text-xs bg-rose-50 text-rose-800 px-3 py-2 rounded-xl font-extrabold border border-rose-300 hover:bg-rose-100 transition shadow-sm">🚪 Salir</button>
             </div>
         </header>
 
         <!-- SELECTOR GLOBAL DE POZOS -->
-        <div class="bg-slate-900/95 p-3.5 rounded-2xl border border-slate-800 shadow-md">
-            <label class="block text-xs font-extrabold text-amber-400 mb-1.5 uppercase tracking-wider flex items-center gap-1.5">
+        <div class="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-sm">
+            <label class="block text-xs font-extrabold text-amber-800 mb-1.5 uppercase tracking-wider flex items-center gap-1.5">
                 <span>🎯</span> Frente Activo / Sondaje Seleccionado en Sistema:
             </label>
-            <select id="globalWellSelect" onchange="seleccionarPozoGlobal(this.value)" class="input-field w-full rounded-xl px-3.5 text-sm font-bold text-amber-300">
+            <select id="globalWellSelect" onchange="seleccionarPozoGlobal(this.value)" class="input-field w-full rounded-xl px-3.5 text-sm font-bold text-amber-900">
                 <option value="">-- Seleccione un Sondaje --</option>
             </select>
         </div>
 
         <nav id="menuNavegacion" class="grid grid-cols-3 sm:flex gap-1.5 overflow-x-auto pb-1">
-            <button type="button" onclick="switchTab('mod_sala')" id="tab-mod_sala" class="py-3 px-2 rounded-xl font-extrabold text-xs bg-sky-600 text-white shadow-lg shadow-sky-600/25 border border-sky-500">📡 1. Sala Situacional Pro</button>
-            <button type="button" onclick="switchTab('mod1')" id="tab-mod1" class="py-3 px-2 rounded-xl font-extrabold text-xs bg-slate-900 text-slate-300 border border-slate-800 hover:border-slate-700 transition">🛠️ 2. Apertura</button>
-            <button type="button" onclick="switchTab('mod2')" id="tab-mod2" class="py-3 px-2 rounded-xl font-extrabold text-xs bg-slate-900 text-slate-300 border border-slate-800 hover:border-slate-700 transition">📍 3. Topo</button>
-            <button type="button" onclick="switchTab('mod3_turno')" id="tab-mod3_turno" class="py-3 px-2 rounded-xl font-extrabold text-xs bg-slate-900 text-slate-300 border border-slate-800 hover:border-slate-700 transition">⏱️ 4A. Turnos</button>
-            <button type="button" onclick="switchTab('mod3_logging')" id="tab-mod3_logging" class="py-3 px-2 rounded-xl font-extrabold text-xs bg-slate-900 text-slate-300 border border-slate-800 hover:border-slate-700 transition">🪵 4B. Logging</button>
-            <button type="button" onclick="switchTab('mod4')" id="tab-mod4" class="py-3 px-2 rounded-xl font-extrabold text-xs bg-slate-900 text-slate-300 border border-slate-800 hover:border-slate-700 transition">🏁 5. Cierre</button>
-            <button type="button" onclick="switchTab('mod5')" id="tab-mod5" class="py-3 px-2 rounded-xl font-extrabold text-xs bg-slate-900 text-slate-300 border border-slate-800 hover:border-slate-700 transition">📑 6. Repositorio / DSR</button>
-            <button type="button" onclick="switchTab('mod6')" id="tab-mod6" class="py-3 px-2 rounded-xl font-extrabold text-xs bg-slate-900 text-slate-300 border border-slate-800 hover:border-slate-700 transition">⚙️ Admin</button>
+            <button type="button" onclick="switchTab('mod_sala')" id="tab-mod_sala" class="py-3 px-2 rounded-xl font-extrabold text-xs bg-sky-600 text-white shadow-md shadow-sky-600/20 border border-sky-500">📡 1. Sala Situacional Pro</button>
+            <button type="button" onclick="switchTab('mod1')" id="tab-mod1" class="py-3 px-2 rounded-xl font-extrabold text-xs bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 transition shadow-sm">🛠️ 2. Apertura</button>
+            <button type="button" onclick="switchTab('mod2')" id="tab-mod2" class="py-3 px-2 rounded-xl font-extrabold text-xs bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 transition shadow-sm">📍 3. Topo</button>
+            <button type="button" onclick="switchTab('mod3_turno')" id="tab-mod3_turno" class="py-3 px-2 rounded-xl font-extrabold text-xs bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 transition shadow-sm">⏱️ 4A. Turnos</button>
+            <button type="button" onclick="switchTab('mod3_logging')" id="tab-mod3_logging" class="py-3 px-2 rounded-xl font-extrabold text-xs bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 transition shadow-sm">🪵 4B. Logging</button>
+            <button type="button" onclick="switchTab('mod4')" id="tab-mod4" class="py-3 px-2 rounded-xl font-extrabold text-xs bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 transition shadow-sm">🏁 5. Cierre</button>
+            <button type="button" onclick="switchTab('mod5')" id="tab-mod5" class="py-3 px-2 rounded-xl font-extrabold text-xs bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 transition shadow-sm">📑 6. Repositorio / DSR</button>
+            <button type="button" onclick="switchTab('mod6')" id="tab-mod6" class="py-3 px-2 rounded-xl font-extrabold text-xs bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 transition shadow-sm">⚙️ Admin</button>
         </nav>
 
         <!-- MÓDULO SALA SITUACIONAL -->
-        <section id="mod_sala" class="space-y-4 bg-slate-900 p-5 sm:p-6 rounded-3xl border border-slate-800 shadow-xl">
-            <div class="flex justify-between items-center flex-wrap gap-2 pb-2 border-b border-slate-800">
+        <section id="mod_sala" class="space-y-4 bg-white p-5 sm:p-6 rounded-3xl border border-slate-200 shadow-sm">
+            <div class="flex justify-between items-center flex-wrap gap-2 pb-2 border-b border-slate-200">
                 <div>
-                    <h2 class="text-xl font-black text-amber-400 tracking-tight flex items-center gap-2">
+                    <h2 class="text-xl font-black text-amber-800 tracking-tight flex items-center gap-2">
                         <span>📡 Sala Situacional & Dashboard Pro (Primera Línea)</span>
-                        <span class="text-xs bg-emerald-950 text-emerald-300 px-2.5 py-0.5 rounded-full border border-emerald-800/60 font-mono-code pulse-live" id="contadorFrentesActivos">0 Activos</span>
+                        <span class="text-xs bg-emerald-50 text-emerald-800 px-2.5 py-0.5 rounded-full border border-emerald-300 font-mono-code pulse-live" id="contadorFrentesActivos">0 Activos</span>
                     </h2>
-                    <p class="text-xs text-slate-300 mt-0.5">Panel macro de control operativo en tiempo real con gráficos analíticos de alta tecnología.</p>
+                    <p class="text-xs text-slate-600 mt-0.5">Panel macro de control operativo en tiempo real con gráficos analíticos de alta tecnología.</p>
                 </div>
-                <button type="button" onclick="renderizarSalaSituacional()" class="bg-slate-950 hover:bg-slate-800 text-cyan-300 border border-slate-800 px-3 py-2 rounded-xl text-xs font-bold transition">🔄 Actualizar En Vivo</button>
+                <button type="button" onclick="renderizarSalaSituacional()" class="bg-slate-50 hover:bg-slate-100 text-sky-800 border border-slate-200 px-3 py-2 rounded-xl text-xs font-bold transition shadow-sm">🔄 Actualizar En Vivo</button>
             </div>
 
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                <div class="bg-slate-950 p-3.5 rounded-2xl border border-slate-800 relative overflow-hidden">
-                    <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-500 to-cyan-400"></div>
-                    <p class="text-[10px] text-slate-400 font-bold uppercase">Total Metros Perforados</p>
-                    <p class="text-base font-black text-emerald-400 font-mono-code mt-0.5" id="macroTotalMetros">0.00 m</p>
+                <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 relative overflow-hidden shadow-sm">
+                    <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-500 to-cyan-500"></div>
+                    <p class="text-[10px] text-slate-500 font-bold uppercase">Total Metros Perforados</p>
+                    <p class="text-base font-black text-emerald-800 font-mono-code mt-0.5" id="macroTotalMetros">0.00 m</p>
                     <p class="text-[9px] text-slate-500 font-bold">Acumulado General</p>
                 </div>
-                <div class="bg-slate-950 p-3.5 rounded-2xl border border-slate-800 relative overflow-hidden">
-                    <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-cyan-400 to-blue-600"></div>
-                    <p class="text-[10px] text-slate-400 font-bold uppercase">Frentes Activos</p>
-                    <p class="text-base font-black text-cyan-400 font-mono-code mt-0.5" id="macroFrentesActivos">0</p>
+                <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 relative overflow-hidden shadow-sm">
+                    <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-cyan-500 to-sky-600"></div>
+                    <p class="text-[10px] text-slate-500 font-bold uppercase">Frentes Activos</p>
+                    <p class="text-base font-black text-sky-800 font-mono-code mt-0.5" id="macroFrentesActivos">0</p>
                     <p class="text-[9px] text-slate-500 font-bold">Sondajes Abiertos</p>
                 </div>
-                <div class="bg-slate-950 p-3.5 rounded-2xl border border-slate-800 relative overflow-hidden">
-                    <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-500 to-yellow-400"></div>
-                    <p class="text-[10px] text-slate-400 font-bold uppercase">Sondajes Culminados</p>
-                    <p class="text-base font-black text-amber-400 font-mono-code mt-0.5" id="macroSondajesCulminados">0</p>
+                <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 relative overflow-hidden shadow-sm">
+                    <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-500 to-yellow-500"></div>
+                    <p class="text-[10px] text-slate-500 font-bold uppercase">Sondajes Culminados</p>
+                    <p class="text-base font-black text-amber-800 font-mono-code mt-0.5" id="macroSondajesCulminados">0</p>
                     <p class="text-[9px] text-slate-500 font-bold">Histórico con Éxito</p>
                 </div>
-                <div class="bg-slate-950 p-3.5 rounded-2xl border border-slate-800 relative overflow-hidden">
-                    <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-sky-400 to-indigo-500"></div>
-                    <p class="text-[10px] text-slate-400 font-bold uppercase">Eficiencia Testigo</p>
-                    <p class="text-base font-black text-sky-300 font-mono-code mt-0.5" id="macroRecuperacionGlobal">0.0%</p>
+                <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 relative overflow-hidden shadow-sm">
+                    <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-sky-400 to-indigo-600"></div>
+                    <p class="text-[10px] text-slate-500 font-bold uppercase">Eficiencia Testigo</p>
+                    <p class="text-base font-black text-sky-800 font-mono-code mt-0.5" id="macroRecuperacionGlobal">0.0%</p>
                     <p class="text-[9px] text-slate-500 font-bold">Recuperación Promedio</p>
                 </div>
             </div>
 
             <!-- GRÁFICAS ANALÍTICAS DE SALA SITUACIONAL (CHART.JS) -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 pt-2">
-                <div class="lg:col-span-2 bg-slate-950 p-4 rounded-2xl border border-slate-800">
-                    <h3 class="text-xs font-bold text-slate-200 mb-3 flex items-center justify-between">
+                <div class="lg:col-span-2 bg-slate-50 p-4 rounded-2xl border border-slate-200 shadow-sm">
+                    <h3 class="text-xs font-bold text-slate-800 mb-3 flex items-center justify-between">
                         <span>📊 Avance Acumulado por Sondaje Activo (m)</span>
-                        <span class="text-[10px] text-slate-400">Real vs Planificado</span>
+                        <span class="text-[10px] text-slate-500">Real vs Planificado</span>
                     </h3>
                     <div class="h-56 relative">
                         <canvas id="chart-situacional-avances"></canvas>
                     </div>
                 </div>
-                <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800">
-                    <h3 class="text-xs font-bold text-slate-200 mb-3 flex items-center">
+                <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 shadow-sm">
+                    <h3 class="text-xs font-bold text-slate-800 mb-3 flex items-center">
                         🥧 Rendimiento de Recuperación %
                     </h3>
                     <div class="h-56 relative">
@@ -315,15 +317,15 @@
         </section>
 
         <!-- MÓDULO 1: APERTURA -->
-        <section id="mod1" class="hidden space-y-4 bg-slate-900 p-5 sm:p-6 rounded-3xl border border-slate-800 shadow-xl">
-            <h2 class="text-xl font-black text-amber-400 tracking-tight flex items-center gap-2">🛠️ Módulo 2: Apertura de Nuevo Sondaje</h2>
+        <section id="mod1" class="hidden space-y-4 bg-white p-5 sm:p-6 rounded-3xl border border-slate-200 shadow-sm">
+            <h2 class="text-xl font-black text-amber-800 tracking-tight flex items-center gap-2">🛠️ Módulo 2: Apertura de Nuevo Sondaje</h2>
             <div class="space-y-4">
                 <div>
-                    <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Código del Sondaje * (Ej: S0001-ET)</label>
+                    <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Código del Sondaje * (Ej: S0001-ET)</label>
                     <input type="text" id="m1_codigo" onblur="forzarMayusculas(this)" class="input-field w-full px-4 rounded-xl uppercase font-extrabold text-sm font-mono-code tracking-wider" placeholder="CÓDIGO ÚNICO">
                 </div>
                 <div>
-                    <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Empresa Titular / Cliente (Pagadora) *</label>
+                    <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Empresa Titular / Cliente (Pagadora) *</label>
                     <select id="m1_empresa" onchange="toggleOtraEmpresa()" class="input-field w-full px-4 rounded-xl text-sm font-bold">
                         <option value="IVM C.A.">IVM C.A.</option>
                         <option value="MINERÍA CARABOBO C.A.">MINERÍA CARABOBO C.A.</option>
@@ -333,28 +335,28 @@
                     </select>
                 </div>
                 <div id="m1_otra_empresa_box" class="hidden">
-                    <label class="block text-xs font-extrabold text-amber-300 mb-1.5 uppercase tracking-wider">Especifique Empresa Cliente *</label>
+                    <label class="block text-xs font-extrabold text-amber-800 mb-1.5 uppercase tracking-wider">Especifique Empresa Cliente *</label>
                     <input type="text" id="m1_otra_empresa" onblur="forzarMayusculas(this)" class="input-field w-full px-4 rounded-xl text-sm uppercase font-bold" placeholder="NOMBRE DE LA EMPRESA">
                 </div>
                 <div>
-                    <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Proyecto / Sector *</label>
+                    <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Proyecto / Sector *</label>
                     <input type="text" id="m1_proyecto" onblur="forzarMayusculas(this)" class="input-field w-full px-4 rounded-xl font-extrabold text-sm uppercase" placeholder="EJ: EL CALLAO / SECTOR NORTE">
                 </div>
-                <button type="button" id="btnCrearPozo" onclick="crearPozo()" class="btn-field w-full bg-amber-500 hover:bg-amber-400 text-slate-950 text-base font-black shadow-amber-500/25">
+                <button type="button" id="btnCrearPozo" onclick="crearPozo()" class="btn-field w-full bg-amber-500 hover:bg-amber-400 text-slate-950 text-base font-black shadow-amber-500/20">
                     💾 Crear y Abrir Sondaje con Sincronización en la Nube
                 </button>
             </div>
         </section>
 
         <!-- MÓDULO 2: TOPOGRAFÍA -->
-        <section id="mod2" class="hidden space-y-4 bg-slate-900 p-5 sm:p-6 rounded-3xl border border-slate-800 shadow-xl">
+        <section id="mod2" class="hidden space-y-4 bg-white p-5 sm:p-6 rounded-3xl border border-slate-200 shadow-sm">
             <div class="flex justify-between items-center flex-wrap gap-2">
-                <h2 class="text-xl font-black text-amber-400 tracking-tight">📍 Módulo 3: Ficha Topográfica</h2>
-                <button type="button" id="btnHabilitarTopo" onclick="habilitarEdicionTopo()" class="bg-sky-600 hover:bg-sky-500 text-white font-extrabold px-4 py-2 rounded-xl text-xs shadow transition">✏️ Habilitar Edición</button>
+                <h2 class="text-xl font-black text-amber-800 tracking-tight">📍 Módulo 3: Ficha Topográfica</h2>
+                <button type="button" id="btnHabilitarTopo" onclick="habilitarEdicionTopo()" class="bg-sky-600 hover:bg-sky-500 text-white font-extrabold px-4 py-2 rounded-xl text-xs shadow-sm transition">✏️ Habilitar Edición</button>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                    <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Perforadora / Máquina *</label>
+                    <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Perforadora / Máquina *</label>
                     <select id="m2_maquina" disabled onchange="toggleOtraMaquina()" class="input-field w-full px-4 rounded-xl text-sm font-bold">
                         <option value="GEOMAX">GEOMAX</option>
                         <option value="HENG WANG">HENG WANG</option>
@@ -363,55 +365,55 @@
                     </select>
                 </div>
                 <div id="m2_otra_maquina_box" class="hidden">
-                    <label class="block text-xs font-extrabold text-amber-300 mb-1.5 uppercase tracking-wider">Especifique Máquina *</label>
+                    <label class="block text-xs font-extrabold text-amber-800 mb-1.5 uppercase tracking-wider">Especifique Máquina *</label>
                     <input type="text" id="m2_otra_maquina" disabled onblur="forzarMayusculas(this)" class="input-field w-full px-4 rounded-xl text-sm uppercase font-bold" placeholder="NOMBRE MÁQUINA">
                 </div>
                 <div>
-                    <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Coordenada Este (m)</label>
-                    <input type="text" id="m2_este" disabled onblur="formatearUTM(this)" class="input-field w-full px-4 rounded-xl font-mono-code font-extrabold text-sm text-cyan-400">
+                    <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Coordenada Este (m)</label>
+                    <input type="text" id="m2_este" disabled onblur="formatearUTM(this)" class="input-field w-full px-4 rounded-xl font-mono-code font-extrabold text-sm text-sky-800">
                 </div>
                 <div>
-                    <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Coordenada Norte (m)</label>
-                    <input type="text" id="m2_norte" disabled onblur="formatearUTM(this)" class="input-field w-full px-4 rounded-xl font-mono-code font-extrabold text-sm text-cyan-400">
+                    <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Coordenada Norte (m)</label>
+                    <input type="text" id="m2_norte" disabled onblur="formatearUTM(this)" class="input-field w-full px-4 rounded-xl font-mono-code font-extrabold text-sm text-sky-800">
                 </div>
                 <div>
-                    <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Cota Z (m)</label>
-                    <input type="text" id="m2_cota" disabled onblur="formatearDecimalesLibres(this)" class="input-field w-full px-4 rounded-xl font-mono-code font-extrabold text-sm text-cyan-400">
+                    <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Cota Z (m)</label>
+                    <input type="text" id="m2_cota" disabled onblur="formatearDecimalesLibres(this)" class="input-field w-full px-4 rounded-xl font-mono-code font-extrabold text-sm text-sky-800">
                 </div>
                 <div>
-                    <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Azimut (°)</label>
-                    <input type="text" id="m2_azimut" disabled onblur="formatearDecimalesLibres(this)" class="input-field w-full px-4 rounded-xl font-mono-code font-extrabold text-sm text-amber-400">
+                    <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Azimut (°)</label>
+                    <input type="text" id="m2_azimut" disabled onblur="formatearDecimalesLibres(this)" class="input-field w-full px-4 rounded-xl font-mono-code font-extrabold text-sm text-amber-800">
                 </div>
                 <div>
-                    <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Inclinación (Dip °)</label>
-                    <input type="text" id="m2_dip" disabled oninput="forzarDipNegativo(this)" class="input-field w-full px-4 rounded-xl font-mono-code font-extrabold text-sm text-amber-400">
+                    <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Inclinación (Dip °)</label>
+                    <input type="text" id="m2_dip" disabled oninput="forzarDipNegativo(this)" class="input-field w-full px-4 rounded-xl font-mono-code font-extrabold text-sm text-amber-800">
                 </div>
                 <div>
-                    <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Profundidad Target (m)</label>
-                    <input type="text" id="m2_target" disabled onblur="formatearDecimalesLibres(this)" class="input-field w-full px-4 rounded-xl font-mono-code font-extrabold text-sm text-purple-400">
+                    <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Profundidad Target (m)</label>
+                    <input type="text" id="m2_target" disabled onblur="formatearDecimalesLibres(this)" class="input-field w-full px-4 rounded-xl font-mono-code font-extrabold text-sm text-purple-800">
                 </div>
             </div>
             <div id="m2_btn_box" class="hidden pt-2">
-                <button type="button" onclick="guardarTopografia()" class="btn-field w-full bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-bold shadow-emerald-600/25">💾 Guardar Ficha Topográfica Oficial</button>
+                <button type="button" onclick="guardarTopografia()" class="btn-field w-full bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-bold shadow-emerald-600/20">💾 Guardar Ficha Topográfica Oficial</button>
             </div>
         </section>
 
         <!-- MÓDULO 3A: TURNOS -->
-        <section id="mod3_turno" class="hidden space-y-4 bg-slate-900 p-5 sm:p-6 rounded-3xl border border-slate-800 shadow-xl">
-            <h2 class="text-xl font-black text-amber-400 tracking-tight">⏱️ Módulo 4A: Gestión, Inspección y Edición de Turnos</h2>
-            <p class="text-xs text-slate-300 font-medium leading-relaxed">Abre un turno operativo nuevo, edita los datos generales de un turno existente, o selecciona un turno del historial para inspeccionar detalladamente todos sus avances registrados.</p>
+        <section id="mod3_turno" class="hidden space-y-4 bg-white p-5 sm:p-6 rounded-3xl border border-slate-200 shadow-sm">
+            <h2 class="text-xl font-black text-amber-800 tracking-tight">⏱️ Módulo 4A: Gestión, Inspección y Edición de Turnos</h2>
+            <p class="text-xs text-slate-600 font-medium leading-relaxed">Abre un turno operativo nuevo, edita los datos generales de un turno existente, o selecciona un turno del historial para inspeccionar detalladamente todos sus avances registrados.</p>
 
-            <div class="bg-slate-950 p-4 sm:p-5 rounded-2xl border border-slate-800 space-y-3.5">
-                <h3 class="text-xs font-black text-amber-400 uppercase tracking-wider" id="tituloBoxTurno">🚀 Apertura de Turno Nuevo</h3>
+            <div class="bg-slate-50 p-4 sm:p-5 rounded-2xl border border-slate-200 space-y-3.5 shadow-sm">
+                <h3 class="text-xs font-black text-amber-800 uppercase tracking-wider" id="tituloBoxTurno">🚀 Apertura de Turno Nuevo</h3>
                 <input type="hidden" id="editTurnoId" value="">
                 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Fecha del Turno *</label>
+                        <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Fecha del Turno *</label>
                         <input type="date" id="m3_fecha" class="input-field w-full px-3.5 rounded-xl text-xs font-bold">
                     </div>
                     <div>
-                        <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Jornada *</label>
+                        <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Jornada *</label>
                         <select id="m3_turno" class="input-field w-full px-3.5 rounded-xl text-xs font-bold">
                             <option value="DIURNO">☀️ DIURNO</option>
                             <option value="NOCTURNO">🌙 NOCTURNO</option>
@@ -420,40 +422,40 @@
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Perforador *</label>
+                        <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Perforador *</label>
                         <input type="text" id="m3_perforador" onblur="forzarMayusculas(this)" class="input-field w-full px-3.5 rounded-xl text-xs font-extrabold uppercase" placeholder="NOMBRE DEL PERFORADOR">
                     </div>
                     <div>
-                        <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Supervisor GEÓLOGOS *</label>
+                        <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Supervisor GEÓLOGOS *</label>
                         <input type="text" id="m3_geologo" onblur="forzarMayusculas(this)" class="input-field w-full px-3.5 rounded-xl text-xs font-extrabold uppercase" placeholder="NOMBRE DEL GEÓLOGO">
                     </div>
                 </div>
 
                 <div class="flex gap-2.5 pt-2 flex-wrap">
-                    <button type="button" id="btnAccionTurno" onclick="guardarOIniciarTurno()" class="btn-field flex-1 bg-sky-600 hover:bg-sky-500 text-white text-xs font-extrabold shadow-sky-600/25">🚀 Abrir / Iniciar Turno Nuevo</button>
-                    <button type="button" id="btnCancelarEdicionTurno" onclick="cancelarEdicionTurno()" class="hidden bg-rose-600 hover:bg-rose-500 text-white px-4 py-2 rounded-xl text-xs font-bold">❌ Cancelar Edición</button>
+                    <button type="button" id="btnAccionTurno" onclick="guardarOIniciarTurno()" class="btn-field flex-1 bg-sky-600 hover:bg-sky-500 text-white text-xs font-extrabold shadow-sky-600/20">🚀 Abrir / Iniciar Turno Nuevo</button>
+                    <button type="button" id="btnCancelarEdicionTurno" onclick="cancelarEdicionTurno()" class="hidden bg-rose-600 hover:bg-rose-500 text-white px-4 py-2 rounded-xl text-xs font-bold shadow-sm">❌ Cancelar Edición</button>
                 </div>
             </div>
 
             <!-- HISTORIAL E INSPECCIÓN -->
-            <div class="bg-slate-950 p-4 sm:p-5 rounded-2xl border border-slate-800 space-y-3.5">
-                <h3 class="text-xs font-black text-cyan-400 uppercase tracking-wider">📂 Historial de Turnos & Auditoría de Avances</h3>
+            <div class="bg-slate-50 p-4 sm:p-5 rounded-2xl border border-slate-200 space-y-3.5 shadow-sm">
+                <h3 class="text-xs font-black text-sky-800 uppercase tracking-wider">📂 Historial de Turnos & Auditoría de Avances</h3>
                 <div class="space-y-3">
-                    <select id="selectRetomarTurno" onchange="mostrarDetallesTurnoSeleccionado()" class="input-field w-full px-3.5 rounded-xl text-xs font-bold text-cyan-300">
+                    <select id="selectRetomarTurno" onchange="mostrarDetallesTurnoSeleccionado()" class="input-field w-full px-3.5 rounded-xl text-xs font-bold text-sky-900">
                         <option value="">-- Seleccionar Turno del Historial --</option>
                     </select>
 
-                    <div id="contenedorDetalleTurnoSeleccionado" class="hidden space-y-2.5 pt-3 border-t border-slate-800">
-                        <div class="bg-slate-900 p-3.5 rounded-xl border border-slate-800 text-[11px] space-y-1.5 shadow-inner">
+                    <div id="contenedorDetalleTurnoSeleccionado" class="hidden space-y-2.5 pt-3 border-t border-slate-200">
+                        <div class="bg-white p-3.5 rounded-xl border border-slate-200 text-[11px] space-y-1.5 shadow-sm">
                             <div class="flex justify-between items-center flex-wrap gap-1">
-                                <span id="inspTurnoTitulo" class="text-cyan-300 font-black">Turno: --</span>
-                                <span id="inspTurnoMetraje" class="font-mono-code text-emerald-400 font-black">0.00 m perforados</span>
+                                <span id="inspTurnoTitulo" class="text-sky-900 font-black">Turno: --</span>
+                                <span id="inspTurnoMetraje" class="font-mono-code text-emerald-800 font-black">0.00 m perforados</span>
                             </div>
-                            <p class="text-slate-300 font-semibold" id="inspTurnoObs">📝 Observaciones: --</p>
+                            <p class="text-slate-600 font-semibold" id="inspTurnoObs">📝 Observaciones: --</p>
                         </div>
-                        <div class="overflow-x-auto border border-slate-800 rounded-xl shadow">
+                        <div class="overflow-x-auto border border-slate-200 rounded-xl shadow-sm bg-white">
                             <table class="w-full text-left text-[10px] border-collapse">
-                                <thead class="bg-slate-900 text-slate-300 uppercase font-extrabold border-b border-slate-800">
+                                <thead class="bg-slate-100 text-slate-700 uppercase font-extrabold border-b border-slate-200">
                                     <tr>
                                         <th class="p-2">Tramo</th>
                                         <th class="p-2">Diám</th>
@@ -461,115 +463,115 @@
                                         <th class="p-2">Recup</th>
                                         <th class="p-2">% Rec</th>
                                         <th class="p-2">Litología</th>
-                                        <th class="p-2 text-amber-400">Pago Estándar</th>
+                                        <th class="p-2 text-amber-800">Pago Estándar</th>
                                     </tr>
                                 </thead>
-                                <tbody id="inspTablaAvancesBody" class="divide-y divide-slate-800 font-mono-code text-slate-200"></tbody>
+                                <tbody id="inspTablaAvancesBody" class="divide-y divide-slate-100 font-mono-code text-slate-800"></tbody>
                             </table>
                         </div>
                     </div>
 
                     <div class="flex gap-2 flex-wrap pt-1">
-                        <button type="button" onclick="retomarTurnoSeleccionado()" class="btn-field flex-1 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-extrabold shadow-emerald-600/25">▶️ Retomar Turno Activo</button>
-                        <button type="button" onclick="cargarTurnoParaEditar()" class="bg-amber-600 hover:bg-amber-500 text-slate-950 px-4 py-2.5 rounded-xl font-extrabold text-xs shadow">✏️ Editar Datos Turno</button>
-                        <button type="button" onclick="eliminarTurnoSeleccionado()" class="bg-rose-950 hover:bg-rose-900 text-rose-300 border border-rose-800 px-4 py-2.5 rounded-xl font-extrabold text-xs shadow">🗑️ Borrar Turno</button>
+                        <button type="button" onclick="retomarTurnoSeleccionado()" class="btn-field flex-1 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-extrabold shadow-emerald-600/20">▶️ Retomar Turno Activo</button>
+                        <button type="button" onclick="cargarTurnoParaEditar()" class="bg-amber-600 hover:bg-amber-500 text-slate-950 px-4 py-2.5 rounded-xl font-extrabold text-xs shadow-sm">✏️ Editar Datos Turno</button>
+                        <button type="button" onclick="eliminarTurnoSeleccionado()" class="bg-rose-50 hover:bg-rose-100 text-rose-900 border border-rose-300 px-4 py-2.5 rounded-xl font-extrabold text-xs shadow-sm">🗑️ Borrar Turno</button>
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- MÓDULO 3B: CORE LOGGING -->
-        <section id="mod3_logging" class="hidden space-y-4 bg-slate-900 p-5 sm:p-6 rounded-3xl border border-slate-800 shadow-xl">
-            <h2 class="text-xl font-black text-amber-400 tracking-tight">🪵 Módulo 4B: Core Logging & Avances por Turno</h2>
+        <section id="mod3_logging" class="hidden space-y-4 bg-white p-5 sm:p-6 rounded-3xl border border-slate-200 shadow-sm">
+            <h2 class="text-xl font-black text-amber-800 tracking-tight">🪵 Módulo 4B: Core Logging & Avances por Turno</h2>
             
-            <div id="infoTurnoActivo" class="bg-sky-950/70 p-3.5 rounded-2xl border border-sky-800/60 flex justify-between items-center flex-wrap gap-2 text-xs backdrop-blur">
+            <div id="infoTurnoActivo" class="bg-sky-50 p-3.5 rounded-2xl border border-sky-200 flex justify-between items-center flex-wrap gap-2 text-xs shadow-sm">
                 <div>
-                    <span class="text-sky-300 font-extrabold">Turno Activo:</span> <span id="lblInfoTurno" class="text-white font-black">--</span> | 
-                    <span class="text-sky-300 font-extrabold">Perf:</span> <span id="lblInfoPerf" class="text-white font-black">--</span> | 
-                    <span class="text-sky-300 font-extrabold">Geo:</span> <span id="lblInfoGeo" class="text-white font-black">--</span>
+                    <span class="text-sky-900 font-extrabold">Turno Activo:</span> <span id="lblInfoTurno" class="text-slate-900 font-black">--</span> | 
+                    <span class="text-sky-900 font-extrabold">Perf:</span> <span id="lblInfoPerf" class="text-slate-900 font-black">--</span> | 
+                    <span class="text-sky-900 font-extrabold">Geo:</span> <span id="lblInfoGeo" class="text-slate-900 font-black">--</span>
                 </div>
                 <div class="space-y-2 w-full sm:w-auto pt-2 sm:pt-0" id="boxControlesTurnoActivo">
-                    <div class="space-y-1 bg-slate-950 p-2.5 rounded-xl border border-sky-700/50">
-                        <label class="block text-[10px] font-black text-cyan-400 uppercase">📝 Observaciones Geotécnicas / Novedades al Cerrar Turno:</label>
+                    <div class="space-y-1 bg-white p-2.5 rounded-xl border border-sky-200 shadow-sm">
+                        <label class="block text-[10px] font-black text-sky-900 uppercase">📝 Observaciones Geotécnicas / Novedades al Cerrar Turno:</label>
                         <textarea id="m3_observaciones" onblur="forzarMayusculas(this)" rows="2" class="input-field w-full p-2 rounded-lg text-xs uppercase font-medium" placeholder="Escriba aquí las novedades del turno al finalizar..."></textarea>
                     </div>
                     <div class="flex gap-2">
-                        <button type="button" onclick="finalizarTurnoActivo()" class="flex-1 bg-emerald-700 hover:bg-emerald-600 text-white px-3 py-2 rounded-xl font-extrabold text-xs shadow">💾 Finalizar y Guardar Turno</button>
-                        <button type="button" onclick="switchTab('mod3_turno')" class="bg-slate-900 text-sky-300 px-3 py-2 rounded-xl border border-sky-700/60 font-extrabold text-xs hover:bg-slate-800">Cambiar / Editar</button>
+                        <button type="button" onclick="finalizarTurnoActivo()" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-2 rounded-xl font-extrabold text-xs shadow-sm">💾 Finalizar y Guardar Turno</button>
+                        <button type="button" onclick="switchTab('mod3_turno')" class="bg-white text-sky-900 px-3 py-2 rounded-xl border border-sky-300 font-extrabold text-xs hover:bg-sky-50 shadow-sm">Cambiar / Editar</button>
                     </div>
                 </div>
             </div>
 
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                <div class="bg-slate-950 p-3.5 rounded-2xl border border-slate-800">
-                    <p class="text-[10px] text-slate-400 font-bold uppercase">Metraje Acumulado</p>
-                    <p class="text-sm sm:text-base font-black text-emerald-400 font-mono-code mt-0.5" id="cardMetrajeAcum">0.00 m</p>
+                <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 shadow-sm">
+                    <p class="text-[10px] text-slate-500 font-bold uppercase">Metraje Acumulado</p>
+                    <p class="text-sm sm:text-base font-black text-emerald-800 font-mono-code mt-0.5" id="cardMetrajeAcum">0.00 m</p>
                     <p class="text-[9px] text-slate-500 font-bold" id="cardTargetSub">Target: 100.00 m</p>
                 </div>
-                <div class="bg-slate-950 p-3.5 rounded-2xl border border-slate-800">
-                    <p class="text-[10px] text-slate-400 font-bold uppercase">Recuperación Global</p>
-                    <p class="text-sm sm:text-base font-black text-cyan-400 font-mono-code mt-0.5" id="cardRecGlobal">0.0%</p>
+                <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 shadow-sm">
+                    <p class="text-[10px] text-slate-500 font-bold uppercase">Recuperación Global</p>
+                    <p class="text-sm sm:text-base font-black text-sky-800 font-mono-code mt-0.5" id="cardRecGlobal">0.0%</p>
                     <p class="text-[9px] text-slate-500 font-bold">Promedio Testigo</p>
                 </div>
-                <div class="bg-slate-950 p-3.5 rounded-2xl border border-slate-800">
-                    <p class="text-[10px] text-slate-400 font-bold uppercase">Avance General</p>
-                    <p class="text-sm sm:text-base font-black text-amber-400 font-mono-code mt-0.5" id="cardAvanceGen">0.0%</p>
+                <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 shadow-sm">
+                    <p class="text-[10px] text-slate-500 font-bold uppercase">Avance General</p>
+                    <p class="text-sm sm:text-base font-black text-amber-800 font-mono-code mt-0.5" id="cardAvanceGen">0.0%</p>
                     <p class="text-[9px] text-slate-500 font-bold">Progreso del Pozo</p>
                 </div>
-                <div class="bg-slate-950 p-3.5 rounded-2xl border border-slate-800">
-                    <p class="text-[10px] text-slate-400 font-bold uppercase">Total Metros a Pagar</p>
-                    <p class="text-sm sm:text-base font-black text-amber-300 font-mono-code mt-0.5" id="cardMetrosPago">0.00 m</p>
+                <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 shadow-sm">
+                    <p class="text-[10px] text-slate-500 font-bold uppercase">Total Metros a Pagar</p>
+                    <p class="text-sm sm:text-base font-black text-amber-900 font-mono-code mt-0.5" id="cardMetrosPago">0.00 m</p>
                     <p class="text-[9px] text-slate-500 font-bold">Según Estándar de Pago</p>
                 </div>
             </div>
 
-            <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-2.5">
+            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-2.5 shadow-sm">
                 <div class="flex justify-between items-center text-xs font-extrabold">
-                    <span class="text-amber-400 uppercase tracking-wider">📈 Progreso Analítico por Diámetro (Dashboard Pro)</span>
-                    <span id="lblProgresoTexto" class="text-cyan-300 font-mono-code font-black">0.00 m / 100.00 m (0.0%)</span>
+                    <span class="text-amber-800 uppercase tracking-wider">📈 Progreso Analítico por Diámetro (Dashboard Pro)</span>
+                    <span id="lblProgresoTexto" class="text-sky-800 font-mono-code font-black">0.00 m / 100.00 m (0.0%)</span>
                 </div>
-                <div class="w-full bg-slate-900 h-4 rounded-xl overflow-hidden flex border border-slate-800 p-0.5 shadow-inner">
-                    <div id="barHQ" class="bg-gradient-to-r from-blue-600 to-cyan-500 h-full rounded-l-lg transition-all duration-300" title="Tramo HQ"></div>
-                    <div id="barNQ" class="bg-gradient-to-r from-amber-600 to-yellow-500 h-full transition-all duration-300" title="Tramo NQ"></div>
-                    <div id="barPendiente" class="bg-slate-800 h-full rounded-r-lg transition-all duration-300" title="Pendiente"></div>
+                <div class="w-full bg-slate-200 h-4 rounded-xl overflow-hidden flex border border-slate-300 p-0.5 shadow-inner">
+                    <div id="barHQ" class="bg-gradient-to-r from-sky-600 to-cyan-500 h-full rounded-l-lg transition-all duration-300" title="Tramo HQ"></div>
+                    <div id="barNQ" class="bg-gradient-to-r from-amber-500 to-yellow-500 h-full transition-all duration-300" title="Tramo NQ"></div>
+                    <div id="barPendiente" class="bg-slate-300 h-full rounded-r-lg transition-all duration-300" title="Pendiente"></div>
                 </div>
-                <div class="flex gap-4 text-[11px] text-slate-400 pt-1 font-bold">
-                    <span><b class="text-cyan-400">■</b> HQ (<span id="txtMetrosHQ">0.00</span>m)</span>
-                    <span><b class="text-amber-400">■</b> NQ (<span id="txtMetrosNQ">0.00</span>m)</span>
-                    <span><b class="text-slate-600">■</b> Pendiente (<span id="txtMetrosPend">100.00</span>m)</span>
+                <div class="flex gap-4 text-[11px] text-slate-600 pt-1 font-bold">
+                    <span><b class="text-sky-600">■</b> HQ (<span id="txtMetrosHQ">0.00</span>m)</span>
+                    <span><b class="text-amber-500">■</b> NQ (<span id="txtMetrosNQ">0.00</span>m)</span>
+                    <span><b class="text-slate-400">■</b> Pendiente (<span id="txtMetrosPend">100.00</span>m)</span>
                 </div>
             </div>
 
             <div class="space-y-4">
-                <div id="boxFormAvance" class="grid grid-cols-1 sm:grid-cols-3 gap-3.5 bg-slate-950 p-4 sm:p-5 rounded-2xl border border-slate-800">
+                <div id="boxFormAvance" class="grid grid-cols-1 sm:grid-cols-3 gap-3.5 bg-slate-50 p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-sm">
                     <div>
-                        <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Longitud Maniobra *</label>
+                        <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Longitud Maniobra *</label>
                         <select id="m3_longitud" onchange="autoCalcularHasta()" class="input-field w-full px-3.5 rounded-xl text-xs font-bold">
                             <option value="1.5">1.50 m</option>
                             <option value="3.0">3.00 m</option>
                         </select>
                     </div>
                     <div>
-                        <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Desde (m)</label>
-                        <input type="text" id="m3_desde" readonly class="input-field w-full px-3.5 bg-slate-900 text-slate-400 rounded-xl text-xs font-mono-code font-black">
+                        <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Desde (m)</label>
+                        <input type="text" id="m3_desde" readonly class="input-field w-full px-3.5 bg-slate-100 text-slate-600 rounded-xl text-xs font-mono-code font-black">
                     </div>
                     <div>
-                        <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Hasta (m)</label>
-                        <input type="text" id="m3_hasta" readonly class="input-field w-full px-3.5 bg-slate-900 text-emerald-400 rounded-xl text-xs font-mono-code font-black">
+                        <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Hasta (m)</label>
+                        <input type="text" id="m3_hasta" readonly class="input-field w-full px-3.5 bg-slate-100 text-emerald-800 rounded-xl text-xs font-mono-code font-black">
                     </div>
                     <div>
-                        <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Diámetro *</label>
-                        <select id="m3_diametro" class="input-field w-full px-3.5 rounded-xl text-xs font-bold text-sky-400">
+                        <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Diámetro *</label>
+                        <select id="m3_diametro" class="input-field w-full px-3.5 rounded-xl text-xs font-bold text-sky-800">
                             <option value="HQ">HQ</option>
                             <option value="NQ">NQ</option>
                         </select>
                     </div>
                     <div>
-                        <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Metros Recuperados *</label>
-                        <input type="text" id="m3_recuperado" class="input-field w-full px-3.5 rounded-xl text-xs font-mono-code font-extrabold text-emerald-300" placeholder="EJ: 2.85">
+                        <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Metros Recuperados *</label>
+                        <input type="text" id="m3_recuperado" class="input-field w-full px-3.5 rounded-xl text-xs font-mono-code font-extrabold text-emerald-900" placeholder="EJ: 2.85">
                     </div>
                     <div>
-                        <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Litología / Meteorización *</label>
+                        <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Litología / Meteorización *</label>
                         <select id="m3_meteorizacion" class="input-field w-full px-3.5 rounded-xl text-xs font-bold">
                             <option value="SUELO / RELLENO">a. Suelo / Relleno (Umbral &ge;70%)</option>
                             <option value="SAPROLITA">b. Saprolita (Umbral &ge;70%)</option>
@@ -581,57 +583,57 @@
                         </select>
                     </div>
                     <div class="sm:col-span-3 flex gap-2 pt-1">
-                        <button type="button" id="btnGuardarAvance" onclick="guardarAvance()" class="btn-field flex-1 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-extrabold shadow-emerald-600/25">➕ Guardar Avance Tramo</button>
-                        <button type="button" id="btnCancelarEdicion" onclick="cancelarEdicionAvance()" class="hidden bg-rose-600 hover:bg-rose-500 text-white px-5 rounded-xl font-extrabold text-xs shadow">❌ Cancelar</button>
+                        <button type="button" id="btnGuardarAvance" onclick="guardarAvance()" class="btn-field flex-1 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-extrabold shadow-emerald-600/20">➕ Guardar Avance Tramo</button>
+                        <button type="button" id="btnCancelarEdicion" onclick="cancelarEdicionAvance()" class="hidden bg-rose-600 hover:bg-rose-500 text-white px-5 rounded-xl font-extrabold text-xs shadow-sm">❌ Cancelar</button>
                     </div>
                 </div>
 
-                <div class="overflow-x-auto border border-slate-800 rounded-2xl shadow-lg">
+                <div class="overflow-x-auto border border-slate-200 rounded-2xl shadow-sm bg-white">
                     <table class="w-full text-left text-xs border-collapse">
-                        <thead class="bg-slate-950 text-slate-300 uppercase font-extrabold tracking-wider border-b border-slate-800">
+                        <thead class="bg-slate-100 text-slate-700 uppercase font-extrabold tracking-wider border-b border-slate-200">
                             <tr>
-                                <th class="p-3">#</th><th class="p-3">Tramo (m)</th><th class="p-3">Diám</th><th class="p-3">Rec (m)</th><th class="p-3">% Rec</th><th class="p-3">Meteorización</th><th class="p-3 text-amber-400">Pago Estándar</th><th class="p-3 text-center" id="thAccionTabla">Acción</th>
+                                <th class="p-3">#</th><th class="p-3">Tramo (m)</th><th class="p-3">Diám</th><th class="p-3">Rec (m)</th><th class="p-3">% Rec</th><th class="p-3">Meteorización</th><th class="p-3 text-amber-800">Pago Estándar</th><th class="p-3 text-center" id="thAccionTabla">Acción</th>
                             </tr>
                         </thead>
-                        <tbody id="tablaAvancesBody" class="divide-y divide-slate-800/60 font-mono-code"></tbody>
+                        <tbody id="tablaAvancesBody" class="divide-y divide-slate-100 font-mono-code text-slate-800"></tbody>
                     </table>
                 </div>
             </div>
         </section>
 
         <!-- MÓDULO 4: CIERRE EXHAUSTIVO -->
-        <section id="mod4" class="hidden space-y-4 bg-slate-900 p-5 sm:p-6 rounded-3xl border border-slate-800 shadow-xl">
-            <h2 class="text-xl font-black text-amber-400 tracking-tight">🏁 Módulo 5: Cierre & Evaluación Exhaustiva del Sondaje</h2>
-            <p class="text-xs text-slate-300">Aquí se evalúa el sondaje con el 100% de los datos técnicos registrados para su cierre o reactivación.</p>
+        <section id="mod4" class="hidden space-y-4 bg-white p-5 sm:p-6 rounded-3xl border border-slate-200 shadow-sm">
+            <h2 class="text-xl font-black text-amber-800 tracking-tight">🏁 Módulo 5: Cierre & Evaluación Exhaustiva del Sondaje</h2>
+            <p class="text-xs text-slate-600">Aquí se evalúa el sondaje con el 100% de los datos técnicos registrados para su cierre o reactivación.</p>
 
-            <div id="cierreResumenPozo" class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-3 text-xs"></div>
+            <div id="cierreResumenPozo" class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-3 text-xs shadow-sm"></div>
 
             <!-- GRÁFICO DONUT DE METEORIZACIÓN (ORDENADO DE MAYOR A MENOR %) EN CIERRE -->
-            <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-3">
+            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-3 shadow-sm">
                 <div class="flex justify-between items-center text-xs font-extrabold">
-                    <span class="text-amber-400 uppercase">📊 Distribución Lito-Meteorológica (Ordenado de Mayor a Menor %)</span>
-                    <span class="text-[10px] text-slate-400">Basado en Metraje Acumulado</span>
+                    <span class="text-amber-800 uppercase">📊 Distribución Lito-Meteorológica (Ordenado de Mayor a Menor %)</span>
+                    <span class="text-[10px] text-slate-500">Basado en Metraje Acumulado</span>
                 </div>
                 <div class="h-56 relative">
                     <canvas id="chart-cierre-meteorizacion"></canvas>
                 </div>
             </div>
 
-            <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-2">
+            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-2 shadow-sm">
                 <div class="flex justify-between items-center text-xs font-extrabold">
-                    <span class="text-amber-400 uppercase">📈 Gráfico Analítico Pro de Avance del Sondaje</span>
-                    <span id="cierreBarraTexto" class="text-cyan-300 font-mono-code">0.0%</span>
+                    <span class="text-amber-800 uppercase">📈 Gráfico Analítico Pro de Avance del Sondaje</span>
+                    <span id="cierreBarraTexto" class="text-sky-800 font-mono-code">0.0%</span>
                 </div>
-                <div class="w-full bg-slate-900 h-3.5 rounded-lg overflow-hidden flex border border-slate-800 p-0.5 shadow-inner">
-                    <div id="cierreBarHQ" class="bg-gradient-to-r from-blue-600 to-cyan-500 h-full rounded-l" style="width: 0%"></div>
-                    <div id="cierreBarNQ" class="bg-gradient-to-r from-amber-600 to-yellow-500 h-full" style="width: 0%"></div>
-                    <div id="cierreBarPend" class="bg-slate-800 h-full rounded-r" style="width: 100%"></div>
+                <div class="w-full bg-slate-200 h-3.5 rounded-lg overflow-hidden flex border border-slate-300 p-0.5 shadow-inner">
+                    <div id="cierreBarHQ" class="bg-gradient-to-r from-sky-600 to-cyan-500 h-full rounded-l" style="width: 0%"></div>
+                    <div id="cierreBarNQ" class="bg-gradient-to-r from-amber-500 to-yellow-500 h-full" style="width: 0%"></div>
+                    <div id="cierreBarPend" class="bg-slate-300 h-full rounded-r" style="width: 100%"></div>
                 </div>
             </div>
 
-            <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-4" id="boxAccionesCierrePozo">
+            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-4 shadow-sm" id="boxAccionesCierrePozo">
                 <div>
-                    <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Motivo de Cierre *</label>
+                    <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Motivo de Cierre *</label>
                     <select id="m4_motivo" class="input-field w-full px-4 rounded-xl text-sm font-bold">
                         <option value="TARGET ALCANZADO">1. Target Geológico Alcanzado con Éxito</option>
                         <option value="CONDICIONES GEOTECNICAS ADVERSAS">2. Condiciones Geotécnicas Adversas (Falla / Colapso)</option>
@@ -639,91 +641,91 @@
                     </select>
                 </div>
                 <div>
-                    <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Observaciones Finales de Cierre</label>
+                    <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Observaciones Finales de Cierre</label>
                     <textarea id="m4_obs" rows="3" onblur="forzarMayusculas(this)" class="input-field w-full p-3 rounded-xl text-xs uppercase" placeholder="EJ: SONDAJE FINALIZADO SIN NOVEDAD..."></textarea>
                 </div>
                 <div class="flex gap-2">
-                    <button type="button" id="btnCierrePozo" onclick="ejecutarCierrePozo()" class="btn-field flex-1 bg-rose-600 hover:bg-rose-500 text-white text-sm font-black shadow-rose-600/25">🔒 Ejecutar Cierre Definitivo del Sondaje</button>
+                    <button type="button" id="btnCierrePozo" onclick="ejecutarCierrePozo()" class="btn-field flex-1 bg-rose-600 hover:bg-rose-500 text-white text-sm font-black shadow-rose-600/20">🔒 Ejecutar Cierre Definitivo del Sondaje</button>
                     <button type="button" id="btnReactivarPozo" onclick="reactivarPozoActual()" class="hidden btn-field bg-amber-600 hover:bg-amber-500 text-slate-950 text-sm font-black px-6">🔓 Reactivar Sondaje a Activo</button>
                 </div>
             </div>
         </section>
 
         <!-- MÓDULO 5: REPOSITORIO & DSR -->
-        <section id="mod5" class="hidden space-y-4 bg-slate-900 p-5 sm:p-6 rounded-3xl border border-slate-800 shadow-xl">
+        <section id="mod5" class="hidden space-y-4 bg-white p-5 sm:p-6 rounded-3xl border border-slate-200 shadow-sm">
             <div class="flex justify-between items-center flex-wrap gap-2">
-                <h2 class="text-xl font-black text-amber-400 tracking-tight">📑 Módulo 6: Repositorio & Informes DSR Oficiales</h2>
+                <h2 class="text-xl font-black text-amber-800 tracking-tight">📑 Módulo 6: Repositorio & Informes DSR Oficiales</h2>
                 <div class="space-x-2">
-                    <button type="button" onclick="imprimirOExportarPDF()" class="bg-sky-600 hover:bg-sky-500 text-white font-black px-4 py-2 rounded-xl text-xs shadow transition">🖨️ Imprimir / Guardar PDF</button>
-                    <button type="button" onclick="copiarReportePortapapeles()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-black px-4 py-2 rounded-xl text-xs shadow transition">📋 Copiar Resumen</button>
+                    <button type="button" onclick="imprimirOExportarPDF()" class="bg-sky-600 hover:bg-sky-500 text-white font-black px-4 py-2 rounded-xl text-xs shadow-sm transition">🖨️ Imprimir / Guardar PDF</button>
+                    <button type="button" onclick="copiarReportePortapapeles()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-black px-4 py-2 rounded-xl text-xs shadow-sm transition">📋 Copiar Resumen</button>
                 </div>
             </div>
 
-            <div class="bg-slate-950 p-3.5 rounded-2xl border border-slate-800 flex items-center justify-between flex-wrap gap-3">
+            <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 flex items-center justify-between flex-wrap gap-3 shadow-sm">
                 <div class="w-full sm:w-auto">
-                    <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Seleccionar Tipo de Informe:</label>
-                    <select id="repModoVista" onchange="generarReporteDSR()" class="input-field px-3 py-1.5 rounded-xl text-xs font-bold text-amber-300">
+                    <label class="block text-[10px] font-bold text-slate-600 uppercase mb-1">Seleccionar Tipo de Informe:</label>
+                    <select id="repModoVista" onchange="generarReporteDSR()" class="input-field px-3 py-1.5 rounded-xl text-xs font-bold text-amber-900">
                         <option value="TURNO">1. ⏱️ REPORTE DE TURNO</option>
                         <option value="ACUMULADO">2. 📈 REPORTE ACUMULADO DEL SONDAJE</option>
                         <option value="CULMINADO">3. 🏁 REPORTE SONDAJE CULMINADO</option>
                     </select>
                 </div>
                 <div id="boxSelectTurnoRepo" class="hidden w-full sm:w-auto">
-                    <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Seleccionar Turno Específico:</label>
-                    <select id="repTurnoSelect" onchange="generarReporteDSR()" class="input-field px-3 py-1.5 rounded-xl text-xs font-bold text-cyan-300"></select>
+                    <label class="block text-[10px] font-bold text-slate-600 uppercase mb-1">Seleccionar Turno Específico:</label>
+                    <select id="repTurnoSelect" onchange="generarReporteDSR()" class="input-field px-3 py-1.5 rounded-xl text-xs font-bold text-sky-900"></select>
                 </div>
             </div>
 
-            <!-- DSR FORMATO OFICIAL CON MARCA DE AGUA, LOGO Y TABLA INMEDIATA -->
-            <div id="printable-area" class="bg-white p-6 rounded-2xl border border-slate-300 space-y-4 text-xs text-slate-900 shadow-xl relative overflow-hidden">
+            <!-- DSR FORMATO OFICIAL CON MARCA DE AGUA, LOGO COMPLETO A LO LARGO EN ENCABEZADO Y TABLA INMEDIATA -->
+            <div id="printable-area" class="bg-white p-6 rounded-2xl border border-slate-200 space-y-4 text-xs text-slate-900 shadow-xl relative overflow-hidden">
                 
                 <!-- MARCA DE AGUA GOTA DE AGUA -->
                 <div class="watermark-bg hidden print:flex">
                     <img src="1792941546023.jpg" alt="Watermark" class="w-96 h-96 object-contain opacity-10" onerror="this.src='https://images.unsplash.com/photo-1579783902614-a3fb3927b675?w=200&auto=format&fit=crop&q=60';">
                 </div>
 
-                <!-- MEMBRETE CON LOGO EXACTO (REPETIDO EN CADA HOJA) -->
-                <div class="page-header-membrete border-b-2 border-slate-900 pb-3 flex justify-between items-center flex-wrap gap-3">
+                <!-- ENCABEZADO / MEMBRETE CON EL LOGO COMPLETO A LO LARGO (REPETIDO EN CADA HOJA) -->
+                <div class="page-header-membrete border-b-3 border-slate-900 pb-3 flex justify-between items-center flex-wrap gap-3">
                     <div class="flex items-center gap-3">
-                        <img src="1792941546023.jpg" alt="Logo" class="w-10 h-10 rounded-xl object-cover border border-slate-400 shadow-sm shrink-0" onerror="this.src='https://images.unsplash.com/photo-1579783902614-a3fb3927b675?w=100&auto=format&fit=crop&q=60';">
-                        <div>
+                        <img src="1792941546023.jpg" alt="Complejo Jireth Logo" class="h-12 w-auto max-w-[160px] object-contain shrink-0" onerror="this.src='https://images.unsplash.com/photo-1579783902614-a3fb3927b675?w=150&auto=format&fit=crop&q=60';">
+                        <div class="border-l-2 border-slate-300 pl-3">
                             <h3 class="text-sm font-black text-slate-900 uppercase tracking-tight" id="repTituloPrincipalDSR">
                                 REPORTE DE TURNO
                             </h3>
-                            <p class="text-[10px] text-slate-700 font-extrabold uppercase">COMPLEJO JIRETH C.A. — COORDINACIÓN DE GEOLOGÍA</p>
+                            <p class="text-[9px] text-slate-600 font-extrabold uppercase">COMPLEJO JIRETH C.A. — COORDINACIÓN DE GEOLOGÍA</p>
                         </div>
                     </div>
                     <div class="text-right">
                         <p class="text-xs text-slate-900 font-black font-mono-code" id="repCodigoHeader">S0000-ET</p>
-                        <p class="text-[10px] text-slate-700 font-bold" id="repFechaEmision">Fecha: --/--/---- | Turno: --</p>
+                        <p class="text-[10px] text-slate-600 font-bold" id="repFechaEmision">Fecha: --/--/---- | Turno: --</p>
                     </div>
                 </div>
 
                 <!-- KPIS -->
                 <div class="grid grid-cols-4 gap-2 avoid-break pt-2">
-                    <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-300 shadow-sm">
-                        <p class="text-[9px] text-slate-600 uppercase font-black">PROF. PERFORADA</p>
-                        <p class="text-xs font-black text-blue-700 font-mono-code mt-0.5" id="repMetrajeTotal">0.00 m</p>
+                    <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 shadow-sm">
+                        <p class="text-[9px] text-slate-500 uppercase font-black">PROF. PERFORADA</p>
+                        <p class="text-xs font-black text-sky-800 font-mono-code mt-0.5" id="repMetrajeTotal">0.00 m</p>
                         <p class="text-[9px] text-slate-500 font-bold" id="repTargetSub">Target: 0.00 m</p>
                     </div>
-                    <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-300 shadow-sm">
-                        <p class="text-[9px] text-slate-600 uppercase font-black">RECUPERACIÓN</p>
-                        <p class="text-xs font-black text-emerald-700 font-mono-code mt-0.5" id="repRecPromedio">0.0%</p>
+                    <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 shadow-sm">
+                        <p class="text-[9px] text-slate-500 uppercase font-black">RECUPERACIÓN</p>
+                        <p class="text-xs font-black text-emerald-800 font-mono-code mt-0.5" id="repRecPromedio">0.0%</p>
                         <p class="text-[9px] text-slate-500 font-bold">Muestra en Testigo</p>
                     </div>
-                    <div class="bg-amber-50 p-2.5 rounded-xl border border-amber-300 shadow-sm">
-                        <p class="text-[9px] text-amber-800 uppercase font-black">METROS A PAGAR</p>
-                        <p class="text-xs font-black text-amber-900 font-mono-code mt-0.5" id="repMetrosPagoTotal">0.00 m</p>
-                        <p class="text-[9px] text-amber-700 font-bold">Según Estándar</p>
+                    <div class="bg-amber-50 p-2.5 rounded-xl border border-amber-200 shadow-sm">
+                        <p class="text-[9px] text-amber-900 uppercase font-black">METROS A PAGAR</p>
+                        <p class="text-xs font-black text-amber-950 font-mono-code mt-0.5" id="repMetrosPagoTotal">0.00 m</p>
+                        <p class="text-[9px] text-amber-800 font-bold">Según Estándar</p>
                     </div>
-                    <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-300 shadow-sm">
-                        <p class="text-[9px] text-slate-600 uppercase font-black">AVANCE GENERAL</p>
-                        <p class="text-xs font-black text-indigo-700 font-mono-code mt-0.5" id="repAvanceGen">0.0%</p>
+                    <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 shadow-sm">
+                        <p class="text-[9px] text-slate-500 uppercase font-black">AVANCE GENERAL</p>
+                        <p class="text-xs font-black text-indigo-800 font-mono-code mt-0.5" id="repAvanceGen">0.0%</p>
                         <p class="text-[9px] text-slate-500 font-bold">Progreso Pozo</p>
                     </div>
                 </div>
 
-                <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-300 grid grid-cols-1 sm:grid-cols-2 gap-3 text-[11px] avoid-break">
+                <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200 grid grid-cols-1 sm:grid-cols-2 gap-3 text-[11px] avoid-break shadow-sm">
                     <div class="space-y-1">
                         <p class="text-slate-900 font-black uppercase text-[10px] tracking-wider border-b border-slate-200 pb-1">DATOS DE PERFORACIÓN Y UBICACIÓN</p>
                         <div><b>Zona / Proyecto:</b> <span id="repProyecto" class="text-slate-800 font-bold">--</span></div>
@@ -738,13 +740,13 @@
                         <div><b>Inclinación (Dip) / Azimut:</b> <span id="repDipAzimut" class="font-mono-code text-slate-800">--</span></div>
                         <div><b>Operador Perforadora:</b> <span id="repPerforadorTurno" class="text-slate-800 font-bold">--</span></div>
                         <div><b>Geólogo Responsable:</b> <span id="repGeologoTurno" class="text-slate-800 font-bold">--</span></div>
-                        <div><b>Metros HQ / NQ:</b> <span id="repMetrosHQRep" class="font-mono-code text-blue-700 font-bold">0.00m</span> / <span id="repMetrosNQRep" class="font-mono-code text-amber-700 font-bold">0.00m</span></div>
+                        <div><b>Metros HQ / NQ:</b> <span id="repMetrosHQRep" class="font-mono-code text-sky-800 font-bold">0.00m</span> / <span id="repMetrosNQRep" class="font-mono-code text-amber-800 font-bold">0.00m</span></div>
                         <div><b>Estado Sondaje:</b> <span id="repEstadoPozo" class="font-bold text-slate-900">--</span></div>
                     </div>
                 </div>
 
                 <!-- LEYENDA INFORMATIVA DEL ESTÁNDAR DE METEORIZACIÓN Y PAGO (% RECUPERACIÓN DE TESTIGO) -->
-                <div class="bg-slate-50 p-3 rounded-xl border border-slate-300 text-[10px] avoid-break shadow-sm">
+                <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 text-[10px] avoid-break shadow-sm">
                     <p class="font-black text-slate-900 uppercase mb-1">📐 Criterio Estándar de Meteorización y Pago (% Recuperación de Testigo):</p>
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-slate-700">
                         <div><b>Suelo / Saprolita:</b> Umbral de recuperación &ge; 70%</div>
@@ -756,7 +758,7 @@
                 <!-- INMEDIATAMENTE DEBAJO: TABLA DE REGISTRO DETALLADO CON CABECERAS REPETIBLES EN CADA PÁGINA -->
                 <div>
                     <h4 class="text-xs font-black text-slate-900 uppercase tracking-wider mb-2">🪵 REGISTRO DETALLADO TRAMO A TRAMO (CON ESTÁNDAR DE PAGO)</h4>
-                    <div class="overflow-x-auto border border-slate-300 rounded-xl shadow-sm">
+                    <div class="overflow-x-auto border border-slate-200 rounded-xl shadow-sm">
                         <table class="w-full text-left text-[10px] border-collapse">
                             <thead class="bg-slate-800 text-white uppercase font-black border-b border-slate-300">
                                 <tr>
@@ -771,42 +773,42 @@
                                     <th class="p-2 text-amber-300 font-black">Pago Estándar</th>
                                 </tr>
                             </thead>
-                            <tbody id="repTablaBody" class="divide-y divide-slate-300 font-mono-code text-slate-900"></tbody>
+                            <tbody id="repTablaBody" class="divide-y divide-slate-200 font-mono-code text-slate-900"></tbody>
                         </table>
                     </div>
                 </div>
 
-                <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-300 space-y-1 avoid-break shadow-sm">
+                <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200 space-y-1 avoid-break shadow-sm">
                     <p class="text-[11px] font-black text-slate-900 uppercase tracking-wider">📝 Observación y Operaciones Principales del Turno:</p>
                     <p class="text-slate-800 text-[11px] uppercase font-semibold leading-relaxed" id="repObservacionesTexto">SIN NOVEDADES REGISTRADAS.</p>
                     <p class="text-slate-600 text-[10px] mt-1 font-bold" id="repMotivoCierreBox"></p>
                 </div>
 
                 <!-- BLOQUE OFICIAL DE FIRMAS: exactamente 2 firmas para Cierre, o 2 nombres para Turno -->
-                <div class="pt-6 border-t-2 border-slate-300 text-[10px] text-slate-800 avoid-break" id="contenedorFirmasDSR"></div>
+                <div class="pt-6 border-t-2 border-slate-200 text-[10px] text-slate-800 avoid-break" id="contenedorFirmasDSR"></div>
             </div>
         </section>
 
         <!-- MÓDULO 6: ADMIN -->
-        <section id="mod6" class="hidden space-y-4 bg-slate-900 p-5 sm:p-6 rounded-3xl border border-slate-800 shadow-xl">
-            <h2 class="text-xl font-black text-amber-400 tracking-tight">⚙️ Módulo 7: Administración, Respaldos & Seguridad</h2>
+        <section id="mod6" class="hidden space-y-4 bg-white p-5 sm:p-6 rounded-3xl border border-slate-200 shadow-sm">
+            <h2 class="text-xl font-black text-amber-800 tracking-tight">⚙️ Módulo 7: Administración, Respaldos & Seguridad</h2>
             
-            <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-3">
-                <h3 class="text-xs font-black text-rose-400 uppercase tracking-wider">🗑️ Gestión y Eliminación Individual de Pozos</h3>
-                <p class="text-xs text-slate-300">Seleccione un sondaje registrado en el sistema para borrarlo permanentemente si es necesario.</p>
+            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-3 shadow-sm">
+                <h3 class="text-xs font-black text-rose-600 uppercase tracking-wider">🗑️ Gestión y Eliminación Individual de Pozos</h3>
+                <p class="text-xs text-slate-600">Seleccione un sondaje registrado en el sistema para borrarlo permanentemente si es necesario.</p>
                 <div class="flex gap-2 flex-wrap items-center">
-                    <select id="adminSelectPozoBorrar" class="input-field flex-1 px-3.5 rounded-xl text-xs font-bold text-rose-300">
+                    <select id="adminSelectPozoBorrar" class="input-field flex-1 px-3.5 rounded-xl text-xs font-bold text-rose-900">
                         <option value="">-- Seleccionar Sondaje a Eliminar --</option>
                     </select>
-                    <button type="button" onclick="eliminarPozoEspecifico()" class="bg-rose-950 hover:bg-rose-900 text-rose-300 border border-rose-800 px-4 py-2.5 rounded-xl text-xs font-black shadow">❌ Eliminar Sondaje Seleccionado</button>
+                    <button type="button" onclick="eliminarPozoEspecifico()" class="bg-rose-50 hover:bg-rose-100 text-rose-900 border border-rose-300 px-4 py-2.5 rounded-xl text-xs font-black shadow-sm">❌ Eliminar Sondaje Seleccionado</button>
                 </div>
             </div>
 
-            <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-3">
-                <h3 class="text-xs font-black text-cyan-400 uppercase tracking-wider">☁️ Respaldos JSON Local / Nube</h3>
+            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-3 shadow-sm">
+                <h3 class="text-xs font-black text-sky-800 uppercase tracking-wider">☁️ Respaldos JSON Local / Nube</h3>
                 <div class="flex gap-2 flex-wrap pt-1">
-                    <button type="button" onclick="exportarBackupJSON()" class="bg-sky-600 hover:bg-sky-500 text-white px-4 py-2.5 rounded-xl text-xs font-black shadow">📥 Exportar JSON</button>
-                    <label class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2.5 rounded-xl text-xs font-black shadow cursor-pointer">
+                    <button type="button" onclick="exportarBackupJSON()" class="bg-sky-600 hover:bg-sky-500 text-white px-4 py-2.5 rounded-xl text-xs font-black shadow-sm">📥 Exportar JSON</button>
+                    <label class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2.5 rounded-xl text-xs font-black shadow-sm cursor-pointer">
                         📤 Importar JSON <input type="file" id="fileImportJSON" onchange="importarBackupJSON(event)" class="hidden" accept=".json">
                     </label>
                 </div>
@@ -895,14 +897,14 @@
         function seleccionarPerfil(perfil) {
             perfilActual = perfil;
             if (perfil === 'GEOLOGOS') {
-                document.getElementById('btnPerfilGeo').className = "py-3 px-2 rounded-2xl text-xs font-black border-2 border-amber-500 bg-amber-500/15 text-amber-300 transition-all shadow-inner";
-                document.getElementById('btnPerfilGer').className = "py-3 px-2 rounded-2xl text-xs font-black border-2 border-slate-800 bg-slate-950 text-slate-400 transition-all";
+                document.getElementById('btnPerfilGeo').className = "py-3 px-2 rounded-2xl text-xs font-black border-2 border-amber-500 bg-amber-50 text-amber-900 transition-all shadow-inner";
+                document.getElementById('btnPerfilGer').className = "py-3 px-2 rounded-2xl text-xs font-black border-2 border-slate-200 bg-slate-100 text-slate-600 transition-all";
                 document.getElementById('boxLoginGeologos').classList.remove('hidden');
                 document.getElementById('boxLoginGerencia').classList.add('hidden');
                 document.getElementById('boxLoginRescate').classList.add('hidden');
             } else {
-                document.getElementById('btnPerfilGer').className = "py-3 px-2 rounded-2xl text-xs font-black border-2 border-sky-500 bg-sky-500/15 text-sky-300 transition-all shadow-inner";
-                document.getElementById('btnPerfilGeo').className = "py-3 px-2 rounded-2xl text-xs font-black border-2 border-slate-800 bg-slate-950 text-slate-400 transition-all";
+                document.getElementById('btnPerfilGer').className = "py-3 px-2 rounded-2xl text-xs font-black border-2 border-sky-500 bg-sky-50 text-sky-900 transition-all shadow-inner";
+                document.getElementById('btnPerfilGeo').className = "py-3 px-2 rounded-2xl text-xs font-black border-2 border-slate-200 bg-slate-100 text-slate-600 transition-all";
                 document.getElementById('boxLoginGerencia').classList.remove('hidden');
                 document.getElementById('boxLoginGeologos').classList.add('hidden');
                 document.getElementById('boxLoginRescate').classList.add('hidden');
@@ -973,12 +975,12 @@
                 const sec = document.getElementById(t);
                 if (sec) sec.classList.add('hidden');
                 const btn = document.getElementById('tab-' + t);
-                if (btn) btn.className = "py-3 px-2 rounded-xl font-extrabold text-xs bg-slate-900 text-slate-300 border border-slate-800 hover:border-slate-700 transition";
+                if (btn) btn.className = "py-3 px-2 rounded-xl font-extrabold text-xs bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 transition shadow-sm";
             });
             const selSec = document.getElementById(tabId);
             if (selSec) selSec.classList.remove('hidden');
             const selBtn = document.getElementById('tab-' + tabId);
-            if (selBtn) selBtn.className = "py-3 px-2 rounded-xl font-extrabold text-xs bg-sky-600 text-white shadow-lg shadow-sky-600/25 border border-sky-500";
+            if (selBtn) selBtn.className = "py-3 px-2 rounded-xl font-extrabold text-xs bg-sky-600 text-white shadow-md shadow-sky-600/20 border border-sky-500";
 
             if (tabId === 'mod_sala') renderizarSalaSituacional();
             if (tabId === 'mod4') cargarResumenCierrePozo();
@@ -1043,7 +1045,7 @@
             renderChartSituacionalRecuperacion(chartLabels, chartRec);
 
             if (pozosActivosKeys.length === 0) {
-                grid.innerHTML = `<div class="col-span-full bg-slate-950 p-8 rounded-2xl border border-slate-800 text-center space-y-3"><div class="text-3xl">📡</div><h3 class="text-base font-black text-amber-400 uppercase tracking-wider">SALA SITUACIONAL — SIN FRENTES ACTIVOS</h3><p class="text-xs text-slate-400 max-w-md mx-auto">Actualmente no hay sondajes abiertos en operación.</p></div>`;
+                grid.innerHTML = `<div class="col-span-full bg-slate-50 p-8 rounded-2xl border border-slate-200 text-center space-y-3 shadow-sm"><div class="text-3xl">📡</div><h3 class="text-base font-black text-amber-800 uppercase tracking-wider">SALA SITUACIONAL — SIN FRENTES ACTIVOS</h3><p class="text-xs text-slate-500 max-w-md mx-auto">Actualmente no hay sondajes abiertos en operación.</p></div>`;
                 return;
             }
 
@@ -1066,31 +1068,31 @@
                 let recPozo = totalMetros > 0 ? ((totalRec / totalMetros) * 100).toFixed(1) : '0.0';
 
                 let card = document.createElement('div');
-                card.className = "bg-slate-950 p-4.5 rounded-2xl border border-slate-800 space-y-3.5 shadow-2xl relative overflow-hidden flex flex-col justify-between";
+                card.className = "bg-slate-50 p-4.5 rounded-2xl border border-slate-200 space-y-3.5 shadow-sm relative overflow-hidden flex flex-col justify-between";
                 card.innerHTML = `
-                    <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-cyan-500 via-indigo-500 to-emerald-400"></div>
+                    <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-sky-500 via-indigo-500 to-emerald-500"></div>
                     <div class="space-y-2">
                         <div class="flex justify-between items-center">
-                            <span class="text-[10px] font-black uppercase tracking-wider bg-cyan-950 text-cyan-300 px-2.5 py-1 rounded-full border border-cyan-800/60 flex items-center gap-1.5">
-                                <span class="w-2 h-2 rounded-full bg-cyan-400 pulse-live inline-block"></span>
+                            <span class="text-[10px] font-black uppercase tracking-wider bg-sky-50 text-sky-800 px-2.5 py-1 rounded-full border border-sky-200 flex items-center gap-1.5">
+                                <span class="w-2 h-2 rounded-full bg-sky-500 pulse-live inline-block"></span>
                                 Máquina: ${p.maquina || 'GEOMAX'}
                             </span>
-                            <span class="text-xs font-mono-code font-black text-amber-400">${p.codigo}</span>
+                            <span class="text-xs font-mono-code font-black text-amber-800">${p.codigo}</span>
                         </div>
                         <div class="grid grid-cols-2 gap-2 pt-1 text-[11px]">
-                            <div class="bg-slate-900/80 p-2.5 rounded-xl border border-slate-800"><span class="text-slate-400 text-[9px] block uppercase font-bold">Cliente</span><span class="text-white font-extrabold truncate block">${p.empresa}</span></div>
-                            <div class="bg-slate-900/80 p-2.5 rounded-xl border border-slate-800"><span class="text-slate-400 text-[9px] block uppercase font-bold">Proyecto</span><span class="text-cyan-300 font-extrabold truncate block">${p.proyecto}</span></div>
+                            <div class="bg-white p-2.5 rounded-xl border border-slate-200"><span class="text-slate-500 text-[9px] block uppercase font-bold">Cliente</span><span class="text-slate-900 font-extrabold truncate block">${p.empresa}</span></div>
+                            <div class="bg-white p-2.5 rounded-xl border border-slate-200"><span class="text-slate-500 text-[9px] block uppercase font-bold">Proyecto</span><span class="text-sky-800 font-extrabold truncate block">${p.proyecto}</span></div>
                         </div>
                     </div>
-                    <div class="space-y-3 pt-2 border-t border-slate-800/80">
-                        <div class="flex justify-between items-center text-xs font-extrabold"><span class="text-slate-300">Progreso Gráfico Pro:</span><span class="text-emerald-400 font-mono-code">${totalMetros.toFixed(2)}m / ${target.toFixed(2)}m (${pct.toFixed(1)}%)</span></div>
-                        <div class="w-full bg-slate-900 h-3.5 rounded-full overflow-hidden flex border border-slate-800 p-0.5 shadow-inner">
-                            <div class="bg-gradient-to-r from-blue-600 to-cyan-500 h-full rounded-l" style="width: ${target > 0 ? (totalHQ/target)*100 : 0}%"></div>
-                            <div class="bg-gradient-to-r from-amber-600 to-yellow-500 h-full" style="width: ${target > 0 ? (totalNQ/target)*100 : 0}%"></div>
-                            <div class="bg-slate-800 h-full rounded-r" style="width: ${Math.max(0, 100 - pct)}%"></div>
+                    <div class="space-y-3 pt-2 border-t border-slate-200">
+                        <div class="flex justify-between items-center text-xs font-extrabold"><span class="text-slate-700">Progreso Gráfico Pro:</span><span class="text-emerald-800 font-mono-code">${totalMetros.toFixed(2)}m / ${target.toFixed(2)}m (${pct.toFixed(1)}%)</span></div>
+                        <div class="w-full bg-slate-200 h-3.5 rounded-full overflow-hidden flex border border-slate-300 p-0.5 shadow-inner">
+                            <div class="bg-gradient-to-r from-sky-600 to-cyan-500 h-full rounded-l" style="width: ${target > 0 ? (totalHQ/target)*100 : 0}%"></div>
+                            <div class="bg-gradient-to-r from-amber-500 to-yellow-500 h-full" style="width: ${target > 0 ? (totalNQ/target)*100 : 0}%"></div>
+                            <div class="bg-slate-300 h-full rounded-r" style="width: ${Math.max(0, 100 - pct)}%"></div>
                         </div>
-                        <div class="flex justify-between text-[10px] text-slate-300 font-bold px-1 bg-slate-900/50 p-2 rounded-xl border border-slate-800/50"><span>Recup: <b class="text-cyan-400 font-mono-code">${recPozo}%</b></span><span>A Pagar: <b class="text-amber-400 font-mono-code">${totalPago.toFixed(2)}m</b></span></div>
-                        <button type="button" onclick="seleccionarPozoDesdeSala('${p.codigo}')" class="w-full mt-1 bg-slate-900 hover:bg-slate-800 text-sky-300 border border-slate-800 py-2.5 rounded-xl text-xs font-extrabold transition shadow">🔍 Inspeccionar Sondaje / DSR</button>
+                        <div class="flex justify-between text-[10px] text-slate-700 font-bold px-1 bg-white p-2 rounded-xl border border-slate-200"><span>Recup: <b class="text-sky-800 font-mono-code">${recPozo}%</b></span><span>A Pagar: <b class="text-amber-800 font-mono-code">${totalPago.toFixed(2)}m</b></span></div>
+                        <button type="button" onclick="seleccionarPozoDesdeSala('${p.codigo}')" class="w-full mt-1 bg-white hover:bg-slate-100 text-sky-800 border border-slate-200 py-2.5 rounded-xl text-xs font-extrabold transition shadow-sm">🔍 Inspeccionar Sondaje / DSR</button>
                     </div>
                 `;
                 grid.appendChild(card);
@@ -1107,17 +1109,17 @@
                 data: {
                     labels: labels,
                     datasets: [
-                        { label: 'Metros Avanzados', data: avances, backgroundColor: '#38bdf8', borderRadius: 4 },
-                        { label: 'Prof. Planificada', data: plan, backgroundColor: '#334155', borderRadius: 4 }
+                        { label: 'Metros Avanzados', data: avances, backgroundColor: '#0284c7', borderRadius: 4 },
+                        { label: 'Prof. Planificada', data: plan, backgroundColor: '#cbd5e1', borderRadius: 4 }
                     ]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: { legend: { labels: { color: '#94a3b8', font: { size: 10 } } } },
+                    plugins: { legend: { labels: { color: '#475569', font: { size: 10 } } } },
                     scales: {
-                        x: { ticks: { color: '#94a3b8' }, grid: { display: false } },
-                        y: { ticks: { color: '#94a3b8' }, grid: { color: '#1e293b' } }
+                        x: { ticks: { color: '#475569' }, grid: { display: false } },
+                        y: { ticks: { color: '#475569' }, grid: { color: '#e2e8f0' } }
                     }
                 }
             });
@@ -1132,15 +1134,15 @@
                 type: 'bar',
                 data: {
                     labels: labels,
-                    datasets: [{ label: '% Rec. Testigo', data: recuperacion, backgroundColor: '#34d399', borderRadius: 4 }]
+                    datasets: [{ label: '% Rec. Testigo', data: recuperacion, backgroundColor: '#10b981', borderRadius: 4 }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: { legend: { display: false } },
                     scales: {
-                        x: { ticks: { color: '#94a3b8' }, font: { size: 10 }, grid: { display: false } },
-                        y: { max: 100, ticks: { color: '#94a3b8' }, grid: { color: '#1e293b' } }
+                        x: { ticks: { color: '#475569' }, font: { size: 10 }, grid: { display: false } },
+                        y: { max: 100, ticks: { color: '#475569' }, grid: { color: '#e2e8f0' } }
                     }
                 }
             });
@@ -1434,12 +1436,12 @@
                 let met = parseFloat(av.hasta) - parseFloat(av.desde);
                 totalMetrosTurno += met;
                 let tr = document.createElement('tr');
-                tr.className = "hover:bg-slate-900/40 transition";
-                tr.innerHTML = `<td class="p-2">#${idx + 1}</td><td class="p-2 text-sky-300 font-bold">${av.diametro}</td><td class="p-2 text-cyan-400 font-bold">${av.desde} - ${av.hasta}</td><td class="p-2 text-emerald-300">${av.recuperado}m</td><td class="p-2 font-bold ${parseFloat(av.porcentaje) < 70 ? 'text-amber-400' : 'text-emerald-400'}">${av.porcentaje}%</td><td class="p-2 text-slate-300">${av.meteorizacion}</td><td class="p-2 text-amber-400 font-bold">${av.pagoEstandar || '0.00'}m</td>`;
+                tr.className = "hover:bg-slate-50 transition";
+                tr.innerHTML = `<td class="p-2">#${idx + 1}</td><td class="p-2 text-sky-800 font-bold">${av.diametro}</td><td class="p-2 text-sky-900 font-bold">${av.desde} - ${av.hasta}</td><td class="p-2 text-emerald-800">${av.recuperado}m</td><td class="p-2 font-bold ${parseFloat(av.porcentaje) < 70 ? 'text-amber-800' : 'text-emerald-800'}">${av.porcentaje}%</td><td class="p-2 text-slate-700">${av.meteorizacion}</td><td class="p-2 text-amber-800 font-bold">${av.pagoEstandar || '0.00'}m</td>`;
                 tbody.appendChild(tr);
             });
 
-            if (tramosturno.length === 0) tbody.innerHTML = `<tr><td colspan="7" class="p-3 text-center text-slate-500 font-bold">No hay tramos de avance registrados en este turno.</td></tr>`;
+            if (tramosturno.length === 0) tbody.innerHTML = `<tr><td colspan="7" class="p-3 text-center text-slate-400 font-bold">No hay tramos de avance registrados en este turno.</td></tr>`;
             document.getElementById('inspTurnoMetraje').innerText = `${totalMetrosTurno.toFixed(2)} m perforados (${tramosturno.length} tramos)`;
         }
 
@@ -1522,9 +1524,9 @@
                 let pagVal = t.pagoEstandar ? parseFloat(t.pagoEstandar) : calcularMetrosAPagar(lonM, parseFloat(t.recuperado), t.meteorizacion);
 
                 let tr = document.createElement('tr');
-                tr.className = "hover:bg-slate-900/50 transition";
-                let tdAccion = perfilActual === 'GERENCIA' ? `<td class="p-3 text-center text-slate-500">Solo Lectura</td>` : `<td class="p-3 text-center space-x-1"><button onclick="editarTramo(${idxOriginal})" class="text-xs bg-sky-950 text-sky-300 px-2 py-1 rounded border border-sky-800">✏️</button><button onclick="eliminarTramo(${idxOriginal})" class="text-xs bg-rose-950 text-rose-300 px-2 py-1 rounded border border-rose-800">🗑️</button></td>`;
-                tr.innerHTML = `<td class="p-3">#${idxOriginal + 1}</td><td class="p-3 text-cyan-400 font-bold">${t.desde} - ${t.hasta}</td><td class="p-3 text-sky-300 font-bold">${t.diametro}</td><td class="p-3 text-emerald-300">${t.recuperado}</td><td class="p-3 font-bold ${parseFloat(t.porcentaje) < 70 ? 'text-amber-400' : 'text-emerald-400'}">${t.porcentaje}%</td><td class="p-3 text-slate-300">${t.meteorizacion}</td><td class="p-3 text-amber-400 font-bold">${pagVal.toFixed(2)}m</td>${tdAccion}`;
+                tr.className = "hover:bg-slate-50 transition";
+                let tdAccion = perfilActual === 'GERENCIA' ? `<td class="p-3 text-center text-slate-400">Solo Lectura</td>` : `<td class="p-3 text-center space-x-1"><button onclick="editarTramo(${idxOriginal})" class="text-xs bg-sky-50 text-sky-800 px-2 py-1 rounded border border-sky-200 shadow-sm">✏️</button><button onclick="eliminarTramo(${idxOriginal})" class="text-xs bg-rose-50 text-rose-800 px-2 py-1 rounded border border-rose-200 shadow-sm">🗑️</button></td>`;
+                tr.innerHTML = `<td class="p-3">#${idxOriginal + 1}</td><td class="p-3 text-sky-800 font-bold">${t.desde} - ${t.hasta}</td><td class="p-3 text-sky-700 font-bold">${t.diametro}</td><td class="p-3 text-emerald-800">${t.recuperado}</td><td class="p-3 font-bold ${parseFloat(t.porcentaje) < 70 ? 'text-amber-800' : 'text-emerald-800'}">${t.porcentaje}%</td><td class="p-3 text-slate-700">${t.meteorizacion}</td><td class="p-3 text-amber-800 font-bold">${pagVal.toFixed(2)}m</td>${tdAccion}`;
                 tbody.appendChild(tr);
             });
         }
@@ -1608,7 +1610,7 @@
             let container = document.getElementById('cierreResumenPozo');
             if (!container) return;
             if (!pozoActivoId || !pozosData[pozoActivoId]) {
-                container.innerHTML = '<p class="text-rose-400 font-bold">No hay sondaje seleccionado.</p>';
+                container.innerHTML = '<p class="text-rose-600 font-bold">No hay sondaje seleccionado.</p>';
                 return;
             }
             let p = pozosData[pozoActivoId];
@@ -1625,22 +1627,22 @@
 
             container.innerHTML = `
                 <div class="space-y-3">
-                    <p class="text-amber-400 font-black uppercase text-xs tracking-wider border-b border-slate-800 pb-1">📋 Ficha Técnica Consolidada para Evaluación y Cierre (100% de Trazabilidad)</p>
+                    <p class="text-amber-800 font-black uppercase text-xs tracking-wider border-b border-slate-200 pb-1">📋 Ficha Técnica Consolidada para Evaluación y Cierre (100% de Trazabilidad)</p>
                     <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[11px]">
-                        <div><b>Código Sondaje:</b> <span class="text-amber-300 font-bold">${p.codigo}</span></div>
-                        <div><b>Proyecto / Sector:</b> <span class="text-white font-bold">${p.proyecto}</span></div>
-                        <div><b>Empresa Cliente:</b> <span class="text-cyan-300 font-bold">${p.empresa}</span></div>
-                        <div><b>Estado Actual:</b> <span class="text-emerald-400 font-bold">${p.estado}</span></div>
-                        <div><b>Máquina Perf.:</b> <span class="text-sky-300 font-bold">${p.maquina || 'GEOMAX'}</span></div>
-                        <div><b>Coordenada Este:</b> <span class="font-mono-code text-cyan-400">${p.este || '0.00'} m</span></div>
-                        <div><b>Coordenada Norte:</b> <span class="font-mono-code text-cyan-400">${p.norte || '0.00'} m</span></div>
-                        <div><b>Cota Z (m):</b> <span class="font-mono-code text-cyan-400">${p.cota || '0.00'} m</span></div>
-                        <div><b>Inclinación (Dip):</b> <span class="font-mono-code text-amber-400">${p.dip || '-'}°</span></div>
-                        <div><b>Azimut (°):</b> <span class="font-mono-code text-amber-400">${p.azimut || '0'}°</span></div>
-                        <div><b>Prof. Target:</b> <span class="font-mono-code text-purple-400">${target} m</span></div>
-                        <div><b>Total Perforado:</b> <span class="font-mono-code text-emerald-400 font-bold">${totalMetros.toFixed(2)} m</span></div>
-                        <div><b>Recuperación Gral:</b> <span class="font-mono-code text-cyan-300 font-bold">${recGralPozo}%</span></div>
-                        <div><b>Total Metros a Pagar:</b> <span class="font-mono-code text-amber-300 font-bold">${totalPago.toFixed(2)} m</span></div>
+                        <div><b>Código Sondaje:</b> <span class="text-amber-900 font-bold">${p.codigo}</span></div>
+                        <div><b>Proyecto / Sector:</b> <span class="text-slate-900 font-bold">${p.proyecto}</span></div>
+                        <div><b>Empresa Cliente:</b> <span class="text-sky-800 font-bold">${p.empresa}</span></div>
+                        <div><b>Estado Actual:</b> <span class="text-emerald-800 font-bold">${p.estado}</span></div>
+                        <div><b>Máquina Perf.:</b> <span class="text-sky-700 font-bold">${p.maquina || 'GEOMAX'}</span></div>
+                        <div><b>Coordenada Este:</b> <span class="font-mono-code text-sky-800">${p.este || '0.00'} m</span></div>
+                        <div><b>Coordenada Norte:</b> <span class="font-mono-code text-sky-800">${p.norte || '0.00'} m</span></div>
+                        <div><b>Cota Z (m):</b> <span class="font-mono-code text-sky-800">${p.cota || '0.00'} m</span></div>
+                        <div><b>Inclinación (Dip):</b> <span class="font-mono-code text-amber-800">${p.dip || '-'}°</span></div>
+                        <div><b>Azimut (°):</b> <span class="font-mono-code text-amber-800">${p.azimut || '0'}°</span></div>
+                        <div><b>Prof. Target:</b> <span class="font-mono-code text-purple-800">${target} m</span></div>
+                        <div><b>Total Perforado:</b> <span class="font-mono-code text-emerald-800 font-bold">${totalMetros.toFixed(2)} m</span></div>
+                        <div><b>Recuperación Gral:</b> <span class="font-mono-code text-sky-900 font-bold">${recGralPozo}%</span></div>
+                        <div><b>Total Metros a Pagar:</b> <span class="font-mono-code text-amber-900 font-bold">${totalPago.toFixed(2)} m</span></div>
                     </div>
                 </div>
             `;
@@ -1679,14 +1681,14 @@
                     labels: sortedKeys,
                     datasets: [{
                         data: sortedData,
-                        backgroundColor: ['#f59e0b', '#38bdf8', '#34d399', '#64748b', '#a855f7', '#ec4899', '#6366f1']
+                        backgroundColor: ['#d97706', '#0284c7', '#10b981', '#64748b', '#9333ea', '#db2777', '#4f46e5']
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: { position: 'right', labels: { color: '#94a3b8', font: { size: 10 } } }
+                        legend: { position: 'right', labels: { color: '#475569', font: { size: 10 } } }
                     }
                 }
             });
@@ -1824,8 +1826,8 @@
                 if (t.diametro === 'HQ') totalHQMet += met; else totalNQMet += met;
 
                 let tr = document.createElement('tr');
-                tr.className = "border-b border-slate-300 hover:bg-slate-100";
-                tr.innerHTML = `<td class="p-2 border-r border-slate-300 font-bold">#${idx + 1}</td><td class="p-2 border-r border-slate-300">${t.desde}</td><td class="p-2 border-r border-slate-300">${t.hasta}</td><td class="p-2 border-r border-slate-300 font-bold">${met.toFixed(2)}</td><td class="p-2 border-r border-slate-300 font-bold text-blue-700">${t.diametro}</td><td class="p-2 border-r border-slate-300">${t.recuperado}</td><td class="p-2 border-r border-slate-300 font-bold ${parseFloat(t.porcentaje) < 70 ? 'text-amber-700' : 'text-emerald-700'}">${t.porcentaje}%</td><td class="p-2 border-r border-slate-300">${t.meteorizacion}</td><td class="p-2 font-black text-amber-900 bg-amber-50">${pagoTramo.toFixed(2)} m</td>`;
+                tr.className = "border-b border-slate-200 hover:bg-slate-50";
+                tr.innerHTML = `<td class="p-2 border-r border-slate-200 font-bold">#${idx + 1}</td><td class="p-2 border-r border-slate-200">${t.desde}</td><td class="p-2 border-r border-slate-200">${t.hasta}</td><td class="p-2 border-r border-slate-200 font-bold">${met.toFixed(2)}</td><td class="p-2 border-r border-slate-200 font-bold text-sky-800">${t.diametro}</td><td class="p-2 border-r border-slate-200">${t.recuperado}</td><td class="p-2 border-r border-slate-200 font-bold ${parseFloat(t.porcentaje) < 70 ? 'text-amber-800' : 'text-emerald-800'}">${t.porcentaje}%</td><td class="p-2 border-r border-slate-200">${t.meteorizacion}</td><td class="p-2 font-black text-amber-950 bg-amber-50">${pagoTramo.toFixed(2)} m</td>`;
                 tbody.appendChild(tr);
             });
 
@@ -1845,11 +1847,6 @@
             let pNQ = targetNum > 0 ? (totalNQMet / targetNum) * 100 : 0;
             let pPend = targetNum > 0 ? (Math.max(0, targetNum - totalMetros) / targetNum) * 100 : 100;
 
-            document.getElementById('repBarHQ').style.width = pHQ + '%';
-            document.getElementById('repBarNQ').style.width = pNQ + '%';
-            document.getElementById('repBarPend').style.width = pPend + '%';
-            document.getElementById('repBarraTexto').innerText = totalMetros.toFixed(2) + " m / " + targetNum.toFixed(2) + " m (" + avGen.toFixed(1) + "%)";
-
             document.getElementById('repObservacionesTexto').innerText = observacionesTurnoTexto;
             if (p.estado === 'CULMINADO') {
                 document.getElementById('repMotivoCierreBox').innerHTML = `<b>Motivo de Cierre:</b> ${p.motivoCierre || 'CULMINADO'}`;
@@ -1857,7 +1854,7 @@
                 document.getElementById('repMotivoCierreBox').innerHTML = `<b>Estado:</b> Sondaje Activo en Operación`;
             }
 
-            // BLOQUE DE FIRMAS OFICIALES: 2 firmas exactas para Culminado (Supervisor de Perforación y Geología)
+            // BLOQUE DE FIRMAS OFICIALES: exactamente 2 firmas para Cierre, o 2 nombres para Turno
             const contenedorFirmas = document.getElementById('contenedorFirmasDSR');
             if (modo === 'CULMINADO' || modo === 'ACUMULADO') {
                 contenedorFirmas.innerHTML = `
