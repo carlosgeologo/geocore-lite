@@ -354,7 +354,7 @@
                 <button type="button" onclick="renderizarSalaSituacional()" class="bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 px-3 py-2 rounded-xl text-xs font-bold transition shadow-sm">🔄 Actualizar En Vivo</button>
             </div>
 
-            <!-- 1. FICHAS INDIVIDUALES DE POZOS ACTIVOS (AHORA ARRIBA) -->
+            <!-- 1. FICHAS INDIVIDUALES DE POZOS ACTIVOS (ARRIBA) -->
             <div class="space-y-2">
                 <h3 class="text-xs font-black text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
                     <span>📌 Fichas Individuales de Sondajes Activos</span>
@@ -493,49 +493,52 @@
                 </div>
             </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Perforadora / Máquina *</label>
-                    <select id="m2_maquina" disabled onchange="toggleOtraMaquina()" class="input-field w-full px-4 text-sm font-bold">
-                        <option value="GEOMAX">GEOMAX</option>
-                        <option value="HENG WANG">HENG WANG</option>
-                        <option value="LONGYEAR">LONGYEAR</option>
-                        <option value="OTRA">Otra (Especificar)</option>
-                    </select>
+            <!-- CONTENEDOR OCULTO HASTA SELECCIONAR POZO -->
+            <div id="contenedorTopografia" class="hidden space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Perforadora / Máquina *</label>
+                        <select id="m2_maquina" disabled onchange="toggleOtraMaquina()" class="input-field w-full px-4 text-sm font-bold">
+                            <option value="GEOMAX">GEOMAX</option>
+                            <option value="HENG WANG">HENG WANG</option>
+                            <option value="LONGYEAR">LONGYEAR</option>
+                            <option value="OTRA">Otra (Especificar)</option>
+                        </select>
+                    </div>
+                    <div id="m2_otra_maquina_box" class="hidden">
+                        <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Especifique Máquina *</label>
+                        <input type="text" id="m2_otra_maquina" disabled onblur="forzarMayusculas(this)" class="input-field w-full px-4 text-sm uppercase font-bold" placeholder="NOMBRE MÁQUINA">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Coordenada Este (m)</label>
+                        <input type="text" id="m2_este" disabled onblur="formatearUTM(this)" class="input-field w-full px-4 font-mono-code font-extrabold text-sm text-slate-900">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Coordenada Norte (m)</label>
+                        <input type="text" id="m2_norte" disabled onblur="formatearUTM(this)" class="input-field w-full px-4 font-mono-code font-extrabold text-sm text-slate-900">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Cota Z (m)</label>
+                        <input type="text" id="m2_cota" disabled onblur="formatearDecimalesLibres(this)" class="input-field w-full px-4 font-mono-code font-extrabold text-sm text-slate-900">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Azimut (°)</label>
+                        <input type="text" id="m2_azimut" disabled onblur="formatearDecimalesLibres(this)" class="input-field w-full px-4 font-mono-code font-extrabold text-sm text-slate-900">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Inclinación (Dip °)</label>
+                        <input type="text" id="m2_dip" disabled oninput="forzarDipNegativo(this)" class="input-field w-full px-4 font-mono-code font-extrabold text-sm text-slate-900">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Profundidad Target (m)</label>
+                        <input type="text" id="m2_target" disabled onblur="formatearDecimalesLibres(this)" class="input-field w-full px-4 font-mono-code font-extrabold text-sm text-slate-900">
+                    </div>
                 </div>
-                <div id="m2_otra_maquina_box" class="hidden">
-                    <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Especifique Máquina *</label>
-                    <input type="text" id="m2_otra_maquina" disabled onblur="forzarMayusculas(this)" class="input-field w-full px-4 text-sm uppercase font-bold" placeholder="NOMBRE MÁQUINA">
+                
+                <div id="m2_btn_box" class="hidden pt-2 flex gap-2">
+                    <button type="button" onclick="guardarTopografia()" class="btn-field flex-1 bg-slate-900 hover:bg-slate-800 text-white text-sm font-bold shadow-slate-900/20">💾 Guardar Topografía y Continuar a Aperturar Turno</button>
+                    <button type="button" onclick="cancelarEdicionTopo()" class="bg-rose-50 hover:bg-rose-100 text-rose-900 border border-rose-300 px-5 py-2.5 rounded-xl text-xs font-black shadow-sm">❌ Cancelar Edición</button>
                 </div>
-                <div>
-                    <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Coordenada Este (m)</label>
-                    <input type="text" id="m2_este" disabled onblur="formatearUTM(this)" class="input-field w-full px-4 font-mono-code font-extrabold text-sm text-slate-900">
-                </div>
-                <div>
-                    <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Coordenada Norte (m)</label>
-                    <input type="text" id="m2_norte" disabled onblur="formatearUTM(this)" class="input-field w-full px-4 font-mono-code font-extrabold text-sm text-slate-900">
-                </div>
-                <div>
-                    <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Cota Z (m)</label>
-                    <input type="text" id="m2_cota" disabled onblur="formatearDecimalesLibres(this)" class="input-field w-full px-4 font-mono-code font-extrabold text-sm text-slate-900">
-                </div>
-                <div>
-                    <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Azimut (°)</label>
-                    <input type="text" id="m2_azimut" disabled onblur="formatearDecimalesLibres(this)" class="input-field w-full px-4 font-mono-code font-extrabold text-sm text-slate-900">
-                </div>
-                <div>
-                    <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Inclinación (Dip °)</label>
-                    <input type="text" id="m2_dip" disabled oninput="forzarDipNegativo(this)" class="input-field w-full px-4 font-mono-code font-extrabold text-sm text-slate-900">
-                </div>
-                <div>
-                    <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Profundidad Target (m)</label>
-                    <input type="text" id="m2_target" disabled onblur="formatearDecimalesLibres(this)" class="input-field w-full px-4 font-mono-code font-extrabold text-sm text-slate-900">
-                </div>
-            </div>
-            
-            <div id="m2_btn_box" class="hidden pt-2 flex gap-2">
-                <button type="button" onclick="guardarTopografia()" class="btn-field flex-1 bg-slate-900 hover:bg-slate-800 text-white text-sm font-bold shadow-slate-900/20">💾 Guardar Topografía y Continuar a Aperturar Turno</button>
-                <button type="button" onclick="cancelarEdicionTopo()" class="bg-rose-50 hover:bg-rose-100 text-rose-900 border border-rose-300 px-5 py-2.5 rounded-xl text-xs font-black shadow-sm">❌ Cancelar Edición</button>
             </div>
         </section>
 
@@ -551,7 +554,7 @@
                 </select>
             </div>
 
-            <!-- CONTENEDOR QUE SE MANTIENE OCULTO HASTA SELECCIONAR POZO -->
+            <!-- CONTENEDOR OCULTO HASTA SELECCIONAR POZO -->
             <div id="contenedorFormTurnos" class="hidden space-y-4">
                 <div class="bg-slate-50 p-4 sm:p-5 rounded-2xl border border-slate-200 space-y-3.5 shadow-sm">
                     <h3 class="text-xs font-black text-slate-900 uppercase tracking-wider" id="tituloBoxTurno">🚀 Apertura de Turno Nuevo</h3>
@@ -641,175 +644,181 @@
                 </select>
             </div>
 
-            <div id="infoTurnoActivo" class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 flex justify-between items-center flex-wrap gap-2 text-xs shadow-sm">
-                <div>
-                    <span class="text-slate-900 font-extrabold">Turno Activo:</span> <span id="lblInfoTurno" class="text-slate-900 font-black">--</span> | 
-                    <span class="text-slate-900 font-extrabold">Perf:</span> <span id="lblInfoPerf" class="text-slate-900 font-black">--</span> | 
-                    <span class="text-slate-900 font-extrabold">Geo:</span> <span id="lblInfoGeo" class="text-slate-900 font-black">--</span>
-                </div>
-                <div class="space-y-2 w-full sm:w-auto pt-2 sm:pt-0" id="boxControlesTurnoActivo">
-                    <div class="space-y-1 bg-white p-2.5 rounded-xl border border-slate-200 shadow-sm">
-                        <label class="block text-[10px] font-black text-slate-900 uppercase">📝 Observaciones Geotécnicas / Novedades al Cerrar Turno:</label>
-                        <textarea id="m3_observaciones" onblur="forzarMayusculas(this)" rows="2" class="input-field w-full p-2 text-xs uppercase font-medium" placeholder="Escriba aquí las novedades del turno al finalizar..."></textarea>
-                    </div>
-                    <div class="flex gap-2">
-                        <button type="button" onclick="finalizarTurnoActivo()" class="flex-1 bg-slate-900 hover:bg-slate-800 text-white px-3 py-2 rounded-xl font-extrabold text-xs shadow-sm">💾 Finalizar y Guardar Turno</button>
-                        <button type="button" onclick="switchTab('mod3_turno')" class="bg-white text-slate-900 px-3 py-2 rounded-xl border border-slate-300 font-extrabold text-xs hover:bg-slate-50 shadow-sm">Cambiar / Editar</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                <div class="bg-indigo-50 p-3.5 rounded-2xl border border-indigo-200 shadow-sm">
-                    <p class="text-[10px] text-indigo-800 font-bold uppercase">Metraje Acumulado</p>
-                    <p class="text-sm sm:text-base font-black text-indigo-950 font-mono-code mt-0.5" id="cardMetrajeAcum">0.00 m</p>
-                    <p class="text-[9px] text-indigo-700 font-bold" id="cardTargetSub">Target: 100.00 m</p>
-                </div>
-                <div class="bg-purple-50 p-3.5 rounded-2xl border border-purple-200 shadow-sm">
-                    <p class="text-[10px] text-purple-800 font-bold uppercase">Recuperación Global</p>
-                    <p class="text-sm sm:text-base font-black text-purple-950 font-mono-code mt-0.5" id="cardRecGlobal">0.0%</p>
-                    <p class="text-[9px] text-purple-700 font-bold">Promedio Testigo</p>
-                </div>
-                <div class="bg-emerald-50 p-3.5 rounded-2xl border border-emerald-200 shadow-sm">
-                    <p class="text-[10px] text-emerald-800 font-bold uppercase">Avance General</p>
-                    <p class="text-sm sm:text-base font-black text-emerald-950 font-mono-code mt-0.5" id="cardAvanceGen">0.0%</p>
-                    <p class="text-[9px] text-emerald-700 font-bold">Progreso del Pozo</p>
-                </div>
-                <div class="bg-amber-50 p-3.5 rounded-2xl border border-amber-200 shadow-sm">
-                    <p class="text-[10px] text-amber-800 font-bold uppercase">Total Metros a Pagar</p>
-                    <p class="text-sm sm:text-base font-black text-amber-950 font-mono-code mt-0.5" id="cardMetrosPago">0.00 m</p>
-                    <p class="text-[9px] text-amber-700 font-bold">Según Estándar de Pago</p>
-                </div>
-            </div>
-
-            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-2.5 shadow-sm">
-                <div class="flex justify-between items-center text-xs font-extrabold">
-                    <span class="text-slate-800 uppercase tracking-wider">📈 Progreso Analítico por Diámetro (Dashboard Pro)</span>
-                    <span id="lblProgresoTexto" class="text-slate-900 font-mono-code font-black">0.00 m / 100.00 m (0.0%)</span>
-                </div>
-                <div class="w-full bg-slate-200 h-4 rounded-xl overflow-hidden flex border border-slate-300 p-0.5 shadow-inner">
-                    <div id="barHQ" class="bg-indigo-700 h-full rounded-l-lg transition-all duration-300" title="Tramo HQ"></div>
-                    <div id="barNQ" class="bg-amber-600 h-full transition-all duration-300" title="Tramo NQ"></div>
-                    <div id="barPendiente" class="bg-slate-300 h-full rounded-r-lg transition-all duration-300" title="Pendiente"></div>
-                </div>
-                <div class="flex gap-4 text-[11px] text-slate-600 pt-1 font-bold">
-                    <span><b class="text-indigo-700">■</b> HQ (<span id="txtMetrosHQ">0.00</span>m)</span>
-                    <span><b class="text-amber-600">■</b> NQ (<span id="txtMetrosNQ">0.00</span>m)</span>
-                    <span><b class="text-slate-400">■</b> Pendiente (<span id="txtMetrosPend">100.00</span>m)</span>
-                </div>
-            </div>
-
-            <div class="space-y-4">
-                <div id="boxFormAvance" class="grid grid-cols-1 sm:grid-cols-3 gap-3.5 bg-slate-50 p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-sm">
+            <!-- CONTENEDOR OCULTO HASTA SELECCIONAR POZO -->
+            <div id="contenedorCoreLogging" class="hidden space-y-4">
+                <div id="infoTurnoActivo" class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 flex justify-between items-center flex-wrap gap-2 text-xs shadow-sm">
                     <div>
-                        <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Longitud Maniobra *</label>
-                        <select id="m3_longitud" onchange="autoCalcularHasta()" class="input-field w-full px-3.5 text-xs font-bold">
-                            <option value="1.5">1.50 m</option>
-                            <option value="3.0">3.00 m</option>
-                        </select>
+                        <span class="text-slate-900 font-extrabold">Turno Activo:</span> <span id="lblInfoTurno" class="text-slate-900 font-black">--</span> | 
+                        <span class="text-slate-900 font-extrabold">Perf:</span> <span id="lblInfoPerf" class="text-slate-900 font-black">--</span> | 
+                        <span class="text-slate-900 font-extrabold">Geo:</span> <span id="lblInfoGeo" class="text-slate-900 font-black">--</span>
                     </div>
-                    <div>
-                        <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Desde (m)</label>
-                        <input type="text" id="m3_desde" readonly class="input-field w-full px-3.5 bg-slate-100 text-slate-600 text-xs font-mono-code font-black">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Hasta (m)</label>
-                        <input type="text" id="m3_hasta" readonly class="input-field w-full px-3.5 bg-slate-100 text-slate-900 text-xs font-mono-code font-black">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Diámetro *</label>
-                        <select id="m3_diametro" class="input-field w-full px-3.5 text-xs font-bold text-slate-900">
-                            <option value="HQ">HQ</option>
-                            <option value="NQ">NQ</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Metros Recuperados *</label>
-                        <input type="text" id="m3_recuperado" class="input-field w-full px-3.5 text-xs font-mono-code font-extrabold text-slate-900" placeholder="0.00 (Ingrese metraje)">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Litología / Meteorización *</label>
-                        <select id="m3_meteorizacion" class="input-field w-full px-3.5 text-xs font-bold">
-                            <option value="SUELO / RELLENO">a. Suelo / Relleno (Umbral &ge;70%)</option>
-                            <option value="SAPROLITA">b. Saprolita (Umbral &ge;70%)</option>
-                            <option value="SAPROCK">c. Saprock (Umbral &ge;70%)</option>
-                            <option value="ROCA OXIDADA">d. Roca Oxidada (Umbral &ge;80%)</option>
-                            <option value="ROCA FRACTURADA">e. Roca Fracturada (Umbral &ge;70%)</option>
-                            <option value="ROCA FRESCA">f. Roca Fresca (Umbral &ge;90%)</option>
-                            <option value="ZONA DE VETA">g. Zona de Veta (Umbral &ge;90%)</option>
-                        </select>
-                    </div>
-                    <div class="sm:col-span-3 flex gap-2 pt-1">
-                        <button type="button" id="btnGuardarAvance" onclick="guardarAvance()" class="btn-field flex-1 bg-slate-900 hover:bg-slate-800 text-white text-xs font-extrabold shadow-slate-900/20">➕ Guardar Avance Tramo</button>
-                        <button type="button" id="btnCancelarEdicion" onclick="cancelarEdicionAvance()" class="hidden bg-rose-600 hover:bg-rose-500 text-white px-5 font-extrabold text-xs shadow-sm">❌ Cancelar</button>
+                    <div class="space-y-2 w-full sm:w-auto pt-2 sm:pt-0" id="boxControlesTurnoActivo">
+                        <div class="space-y-1 bg-white p-2.5 rounded-xl border border-slate-200 shadow-sm">
+                            <label class="block text-[10px] font-black text-slate-900 uppercase">📝 Observaciones Geotécnicas / Novedades al Cerrar Turno:</label>
+                            <textarea id="m3_observaciones" onblur="forzarMayusculas(this)" rows="2" class="input-field w-full p-2 text-xs uppercase font-medium" placeholder="Escriba aquí las novedades del turno al finalizar..."></textarea>
+                        </div>
+                        <div class="flex gap-2">
+                            <button type="button" onclick="finalizarTurnoActivo()" class="flex-1 bg-slate-900 hover:bg-slate-800 text-white px-3 py-2 rounded-xl font-extrabold text-xs shadow-sm">💾 Finalizar y Guardar Turno</button>
+                            <button type="button" onclick="switchTab('mod3_turno')" class="bg-white text-slate-900 px-3 py-2 rounded-xl border border-slate-300 font-extrabold text-xs hover:bg-slate-50 shadow-sm">Cambiar / Editar</button>
+                        </div>
                     </div>
                 </div>
 
-                <div class="overflow-x-auto border border-slate-200 rounded-2xl shadow-sm bg-white">
-                    <table class="w-full text-left text-xs border-collapse">
-                        <thead class="bg-slate-100 text-slate-700 uppercase font-extrabold tracking-wider border-b border-slate-200">
-                            <tr>
-                                <th class="p-3">#</th><th class="p-3">Tramo (m)</th><th class="p-3">Diám</th><th class="p-3">Rec (m)</th><th class="p-3">% Rec</th><th class="p-3">Meteorización</th><th class="p-3 text-slate-900">Pago Estándar</th><th class="p-3 text-center" id="thAccionTabla">Acción</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tablaAvancesBody" class="divide-y divide-slate-100 font-mono-code text-slate-800"></tbody>
-                    </table>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    <div class="bg-indigo-50 p-3.5 rounded-2xl border border-indigo-200 shadow-sm">
+                        <p class="text-[10px] text-indigo-800 font-bold uppercase">Metraje Acumulado</p>
+                        <p class="text-sm sm:text-base font-black text-indigo-950 font-mono-code mt-0.5" id="cardMetrajeAcum">0.00 m</p>
+                        <p class="text-[9px] text-indigo-700 font-bold" id="cardTargetSub">Target: 100.00 m</p>
+                    </div>
+                    <div class="bg-purple-50 p-3.5 rounded-2xl border border-purple-200 shadow-sm">
+                        <p class="text-[10px] text-purple-800 font-bold uppercase">Recuperación Global</p>
+                        <p class="text-sm sm:text-base font-black text-purple-950 font-mono-code mt-0.5" id="cardRecGlobal">0.0%</p>
+                        <p class="text-[9px] text-purple-700 font-bold">Promedio Testigo</p>
+                    </div>
+                    <div class="bg-emerald-50 p-3.5 rounded-2xl border border-emerald-200 shadow-sm">
+                        <p class="text-[10px] text-emerald-800 font-bold uppercase">Avance General</p>
+                        <p class="text-sm sm:text-base font-black text-emerald-950 font-mono-code mt-0.5" id="cardAvanceGen">0.0%</p>
+                        <p class="text-[9px] text-emerald-700 font-bold">Progreso del Pozo</p>
+                    </div>
+                    <div class="bg-amber-50 p-3.5 rounded-2xl border border-amber-200 shadow-sm">
+                        <p class="text-[10px] text-amber-800 font-bold uppercase">Total Metros a Pagar</p>
+                        <p class="text-sm sm:text-base font-black text-amber-950 font-mono-code mt-0.5" id="cardMetrosPago">0.00 m</p>
+                        <p class="text-[9px] text-amber-700 font-bold">Según Estándar de Pago</p>
+                    </div>
+                </div>
+
+                <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-2.5 shadow-sm">
+                    <div class="flex justify-between items-center text-xs font-extrabold">
+                        <span class="text-slate-800 uppercase tracking-wider">📈 Progreso Analítico por Diámetro (Dashboard Pro)</span>
+                        <span id="lblProgresoTexto" class="text-slate-900 font-mono-code font-black">0.00 m / 100.00 m (0.0%)</span>
+                    </div>
+                    <div class="w-full bg-slate-200 h-4 rounded-xl overflow-hidden flex border border-slate-300 p-0.5 shadow-inner">
+                        <div id="barHQ" class="bg-indigo-700 h-full rounded-l-lg transition-all duration-300" title="Tramo HQ"></div>
+                        <div id="barNQ" class="bg-amber-600 h-full transition-all duration-300" title="Tramo NQ"></div>
+                        <div id="barPendiente" class="bg-slate-300 h-full rounded-r-lg transition-all duration-300" title="Pendiente"></div>
+                    </div>
+                    <div class="flex gap-4 text-[11px] text-slate-600 pt-1 font-bold">
+                        <span><b class="text-indigo-700">■</b> HQ (<span id="txtMetrosHQ">0.00</span>m)</span>
+                        <span><b class="text-amber-600">■</b> NQ (<span id="txtMetrosNQ">0.00</span>m)</span>
+                        <span><b class="text-slate-400">■</b> Pendiente (<span id="txtMetrosPend">100.00</span>m)</span>
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <div id="boxFormAvance" class="grid grid-cols-1 sm:grid-cols-3 gap-3.5 bg-slate-50 p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-sm">
+                        <div>
+                            <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Longitud Maniobra *</label>
+                            <select id="m3_longitud" onchange="autoCalcularHasta()" class="input-field w-full px-3.5 text-xs font-bold">
+                                <option value="1.5">1.50 m</option>
+                                <option value="3.0">3.00 m</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Desde (m)</label>
+                            <input type="text" id="m3_desde" readonly class="input-field w-full px-3.5 bg-slate-100 text-slate-600 text-xs font-mono-code font-black">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Hasta (m)</label>
+                            <input type="text" id="m3_hasta" readonly class="input-field w-full px-3.5 bg-slate-100 text-slate-900 text-xs font-mono-code font-black">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Diámetro *</label>
+                            <select id="m3_diametro" class="input-field w-full px-3.5 text-xs font-bold text-slate-900">
+                                <option value="HQ">HQ</option>
+                                <option value="NQ">NQ</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Metros Recuperados *</label>
+                            <input type="text" id="m3_recuperado" class="input-field w-full px-3.5 text-xs font-mono-code font-extrabold text-slate-900" placeholder="0.00 (Ingrese metraje)">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Litología / Meteorización *</label>
+                            <select id="m3_meteorizacion" class="input-field w-full px-3.5 text-xs font-bold">
+                                <option value="SUELO / RELLENO">a. Suelo / Relleno (Umbral &ge;70%)</option>
+                                <option value="SAPROLITA">b. Saprolita (Umbral &ge;70%)</option>
+                                <option value="SAPROCK">c. Saprock (Umbral &ge;70%)</option>
+                                <option value="ROCA OXIDADA">d. Roca Oxidada (Umbral &ge;80%)</option>
+                                <option value="ROCA FRACTURADA">e. Roca Fracturada (Umbral &ge;70%)</option>
+                                <option value="ROCA FRESCA">f. Roca Fresca (Umbral &ge;90%)</option>
+                                <option value="ZONA DE VETA">g. Zona de Veta (Umbral &ge;90%)</option>
+                            </select>
+                        </div>
+                        <div class="sm:col-span-3 flex gap-2 pt-1">
+                            <button type="button" id="btnGuardarAvance" onclick="guardarAvance()" class="btn-field flex-1 bg-slate-900 hover:bg-slate-800 text-white text-xs font-extrabold shadow-slate-900/20">➕ Guardar Avance Tramo</button>
+                            <button type="button" id="btnCancelarEdicion" onclick="cancelarEdicionAvance()" class="hidden bg-rose-600 hover:bg-rose-500 text-white px-5 font-extrabold text-xs shadow-sm">❌ Cancelar</button>
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto border border-slate-200 rounded-2xl shadow-sm bg-white">
+                        <table class="w-full text-left text-xs border-collapse">
+                            <thead class="bg-slate-100 text-slate-700 uppercase font-extrabold tracking-wider border-b border-slate-200">
+                                <tr>
+                                    <th class="p-3">#</th><th class="p-3">Tramo (m)</th><th class="p-3">Diám</th><th class="p-3">Rec (m)</th><th class="p-3">% Rec</th><th class="p-3">Meteorización</th><th class="p-3 text-slate-900">Pago Estándar</th><th class="p-3 text-center" id="thAccionTabla">Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tablaAvancesBody" class="divide-y divide-slate-100 font-mono-code text-slate-800"></tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- MÓDULO 4: CIERRE EXHAUSTIVO -->
+        <!-- MÓDULO 4: CIERRE EXHAUSTIVO (CON REACTIVACIÓN Y SELECTOR AMBOS ESTADOS) -->
         <section id="mod4" class="hidden space-y-4 bg-white p-5 sm:p-6 rounded-3xl border border-slate-200 shadow-sm">
             <h2 class="text-xl font-black text-slate-900 tracking-tight">🏁 Módulo: Cierre & Evaluación Exhaustiva del Sondaje</h2>
             <p class="text-xs text-slate-600">Aquí se evalúa el sondaje con el 100% de los datos técnicos registrados para su cierre o reactivación.</p>
 
             <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 shadow-sm">
-                <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">🎯 Seleccionar Sondaje Activo a Evaluar/Cerrar:</label>
-                <select id="wellSelectCierre" onchange="seleccionarPozoOperativo(this.value)" class="input-field w-full px-3.5 text-sm font-bold text-slate-900">
-                    <option value="">-- Seleccione Sondaje Activo --</option>
+                <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">🎯 Seleccionar Sondaje (Activos y Culminados):</label>
+                <select id="wellSelectCierre" onchange="seleccionarPozoCierre(this.value)" class="input-field w-full px-3.5 text-sm font-bold text-slate-900">
+                    <option value="">-- Seleccione Sondaje --</option>
                 </select>
             </div>
 
-            <div id="cierreResumenPozo" class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-3 text-xs shadow-sm"></div>
+            <!-- CONTENEDOR OCULTO HASTA SELECCIONAR POZO -->
+            <div id="contenedorCierrePozo" class="hidden space-y-4">
+                <div id="cierreResumenPozo" class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-3 text-xs shadow-sm"></div>
 
-            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-3 shadow-sm">
-                <div class="flex justify-between items-center text-xs font-extrabold">
-                    <span class="text-slate-800 uppercase">📊 Distribución Lito-Meteorológica (Ordenado de Mayor a Menor %)</span>
-                    <span class="text-[10px] text-slate-500">Basado en Metraje Acumulado</span>
+                <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-3 shadow-sm">
+                    <div class="flex justify-between items-center text-xs font-extrabold">
+                        <span class="text-slate-800 uppercase">📊 Distribución Lito-Meteorológica (Ordenado de Mayor a Menor %)</span>
+                        <span class="text-[10px] text-slate-500">Basado en Metraje Acumulado</span>
+                    </div>
+                    <div class="h-56 relative">
+                        <canvas id="chart-cierre-meteorizacion"></canvas>
+                    </div>
                 </div>
-                <div class="h-56 relative">
-                    <canvas id="chart-cierre-meteorizacion"></canvas>
-                </div>
-            </div>
 
-            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-2 shadow-sm">
-                <div class="flex justify-between items-center text-xs font-extrabold">
-                    <span class="text-slate-800 uppercase">📈 Gráfico Analítico Pro de Avance del Sondaje</span>
-                    <span id="cierreBarraTexto" class="text-slate-900 font-mono-code">0.0%</span>
+                <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-2 shadow-sm">
+                    <div class="flex justify-between items-center text-xs font-extrabold">
+                        <span class="text-slate-800 uppercase">📈 Gráfico Analítico Pro de Avance del Sondaje</span>
+                        <span id="cierreBarraTexto" class="text-slate-900 font-mono-code">0.0%</span>
+                    </div>
+                    <div class="w-full bg-slate-200 h-3.5 rounded-lg overflow-hidden flex border border-slate-300 p-0.5 shadow-inner">
+                        <div id="cierreBarHQ" class="bg-indigo-700 h-full rounded-l" style="width: 0%"></div>
+                        <div id="cierreBarNQ" class="bg-amber-600 h-full" style="width: 0%"></div>
+                        <div id="cierreBarPend" class="bg-slate-300 h-full rounded-r" style="width: 100%"></div>
+                    </div>
                 </div>
-                <div class="w-full bg-slate-200 h-3.5 rounded-lg overflow-hidden flex border border-slate-300 p-0.5 shadow-inner">
-                    <div id="cierreBarHQ" class="bg-indigo-700 h-full rounded-l" style="width: 0%"></div>
-                    <div id="cierreBarNQ" class="bg-amber-600 h-full" style="width: 0%"></div>
-                    <div id="cierreBarPend" class="bg-slate-300 h-full rounded-r" style="width: 100%"></div>
-                </div>
-            </div>
 
-            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-4 shadow-sm" id="boxAccionesCierrePozo">
-                <div>
-                    <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Motivo de Cierre *</label>
-                    <select id="m4_motivo" class="input-field w-full px-4 text-sm font-bold">
-                        <option value="TARGET ALCANZADO">1. Target Geológico Alcanzado con Éxito</option>
-                        <option value="CONDICIONES GEOTECNICAS ADVERSAS">2. Condiciones Geotécnicas Adversas (Falla / Colapso)</option>
-                        <option value="REDIRECCIONAMIENTO OPERATIVO">3. Redireccionamiento Operativo Gerencial</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Observaciones Finales de Cierre</label>
-                    <textarea id="m4_obs" rows="3" onblur="forzarMayusculas(this)" class="input-field w-full p-3 text-xs uppercase" placeholder="EJ: SONDAJE FINALIZADO SIN NOVEDAD..."></textarea>
-                </div>
-                <div class="flex gap-2">
-                    <button type="button" id="btnCierrePozo" onclick="ejecutarCierrePozo()" class="btn-field flex-1 bg-rose-600 hover:bg-rose-500 text-white text-sm font-black shadow-rose-600/20">🔒 Ejecutar Cierre Definitivo del Sondaje</button>
-                    <button type="button" id="btnReactivarPozo" onclick="reactivarPozoActual()" class="hidden btn-field bg-slate-800 hover:bg-slate-700 text-white text-sm font-black px-6">🔓 Reactivar Sondaje a Activo</button>
+                <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-4 shadow-sm" id="boxAccionesCierrePozo">
+                    <div id="divMotivoCierreBox">
+                        <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Motivo de Cierre *</label>
+                        <select id="m4_motivo" class="input-field w-full px-4 text-sm font-bold">
+                            <option value="TARGET ALCANZADO">1. Target Geológico Alcanzado con Éxito</option>
+                            <option value="CONDICIONES GEOTECNICAS ADVERSAS">2. Condiciones Geotécnicas Adversas (Falla / Colapso)</option>
+                            <option value="REDIRECCIONAMIENTO OPERATIVO">3. Redireccionamiento Operativo Gerencial</option>
+                        </select>
+                    </div>
+                    <div id="divObsCierreBox">
+                        <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Observaciones Finales de Cierre</label>
+                        <textarea id="m4_obs" rows="3" onblur="forzarMayusculas(this)" class="input-field w-full p-3 text-xs uppercase" placeholder="EJ: SONDAJE FINALIZADO SIN NOVEDAD..."></textarea>
+                    </div>
+                    <div class="flex gap-2">
+                        <button type="button" id="btnCierrePozo" onclick="ejecutarCierrePozo()" class="btn-field flex-1 bg-rose-600 hover:bg-rose-500 text-white text-sm font-black shadow-rose-600/20">🔒 Ejecutar Cierre Definitivo del Sondaje</button>
+                        <button type="button" id="btnReactivarPozo" onclick="reactivarPozoActual()" class="hidden btn-field bg-slate-800 hover:bg-slate-700 text-white text-sm font-black px-6 w-full">🔓 Reactivar Sondaje a Activo</button>
+                    </div>
                 </div>
             </div>
         </section>
@@ -831,123 +840,126 @@
                 </select>
             </div>
 
-            <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 flex items-center justify-between flex-wrap gap-3 shadow-sm">
-                <div class="w-full sm:w-auto">
-                    <label class="block text-[10px] font-bold text-slate-600 uppercase mb-1">Seleccionar Tipo de Informe:</label>
-                    <select id="repModoVista" onchange="generarReporteDSR()" class="input-field px-3 py-1.5 text-xs font-bold text-slate-900">
-                        <option value="TURNO">1. ⏱️ REPORTE DE TURNO</option>
-                        <option value="ACUMULADO">2. 📈 REPORTE ACUMULADO DEL SONDAJE</option>
-                        <option value="CULMINADO">3. 🏁 REPORTE SONDAJE CULMINADO</option>
-                    </select>
-                </div>
-                <div id="boxSelectTurnoRepo" class="hidden w-full sm:w-auto">
-                    <label class="block text-[10px] font-bold text-slate-600 uppercase mb-1">Seleccionar Turno Específico:</label>
-                    <select id="repTurnoSelect" onchange="generarReporteDSR()" class="input-field px-3 py-1.5 text-xs font-bold text-slate-900"></select>
-                </div>
-            </div>
-
-            <div id="printable-area" class="bg-white p-6 rounded-2xl border border-slate-200 space-y-4 text-xs text-slate-900 shadow-xl relative overflow-hidden">
-                <div class="watermark-bg hidden print:flex">
-                    <img src="1792941546023.jpg" alt="Watermark" class="w-96 h-96 object-contain opacity-10" onerror="this.src='https://images.unsplash.com/photo-1579783902614-a3fb3927b675?w=200&auto=format&fit=crop&q=60';">
+            <!-- CONTENEDOR OCULTO HASTA SELECCIONAR POZO -->
+            <div id="contenedorRepositorioReporte" class="hidden space-y-4">
+                <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 flex items-center justify-between flex-wrap gap-3 shadow-sm">
+                    <div class="w-full sm:w-auto">
+                        <label class="block text-[10px] font-bold text-slate-600 uppercase mb-1">Seleccionar Tipo de Informe:</label>
+                        <select id="repModoVista" onchange="generarReporteDSR()" class="input-field px-3 py-1.5 text-xs font-bold text-slate-900">
+                            <option value="TURNO">1. ⏱️ REPORTE DE TURNO</option>
+                            <option value="ACUMULADO">2. 📈 REPORTE ACUMULADO DEL SONDAJE</option>
+                            <option value="CULMINADO">3. 🏁 REPORTE SONDAJE CULMINADO</option>
+                        </select>
+                    </div>
+                    <div id="boxSelectTurnoRepo" class="hidden w-full sm:w-auto">
+                        <label class="block text-[10px] font-bold text-slate-600 uppercase mb-1">Seleccionar Turno Específico:</label>
+                        <select id="repTurnoSelect" onchange="generarReporteDSR()" class="input-field px-3 py-1.5 text-xs font-bold text-slate-900"></select>
+                    </div>
                 </div>
 
-                <div class="page-header-membrete border-b-3 border-slate-900 pb-3 flex justify-between items-center flex-wrap gap-3">
-                    <div class="flex items-center gap-3">
-                        <img src="1792941546023.jpg" alt="Complejo Jireth Logo" class="h-12 w-auto max-w-[160px] object-contain shrink-0" onerror="this.src='https://images.unsplash.com/photo-1579783902614-a3fb3927b675?w=150&auto=format&fit=crop&q=60';">
-                        <div class="border-l-2 border-slate-300 pl-3">
-                            <h3 class="text-sm font-black text-slate-900 uppercase tracking-tight" id="repTituloPrincipalDSR">
-                                REPORTE DE TURNO
-                            </h3>
-                            <p class="text-[9px] text-slate-600 font-extrabold uppercase">COMPLEJO JIRETH C.A. — COORDINACIÓN DE GEOLOGÍA</p>
+                <div id="printable-area" class="bg-white p-6 rounded-2xl border border-slate-200 space-y-4 text-xs text-slate-900 shadow-xl relative overflow-hidden">
+                    <div class="watermark-bg hidden print:flex">
+                        <img src="1792941546023.jpg" alt="Watermark" class="w-96 h-96 object-contain opacity-10" onerror="this.src='https://images.unsplash.com/photo-1579783902614-a3fb3927b675?w=200&auto=format&fit=crop&q=60';">
+                    </div>
+
+                    <div class="page-header-membrete border-b-3 border-slate-900 pb-3 flex justify-between items-center flex-wrap gap-3">
+                        <div class="flex items-center gap-3">
+                            <img src="1792941546023.jpg" alt="Complejo Jireth Logo" class="h-12 w-auto max-w-[160px] object-contain shrink-0" onerror="this.src='https://images.unsplash.com/photo-1579783902614-a3fb3927b675?w=150&auto=format&fit=crop&q=60';">
+                            <div class="border-l-2 border-slate-300 pl-3">
+                                <h3 class="text-sm font-black text-slate-900 uppercase tracking-tight" id="repTituloPrincipalDSR">
+                                    REPORTE DE TURNO
+                                </h3>
+                                <p class="text-[9px] text-slate-600 font-extrabold uppercase">COMPLEJO JIRETH C.A. — COORDINACIÓN DE GEOLOGÍA</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-xs text-slate-900 font-black font-mono-code" id="repCodigoHeader">S0000-ET</p>
+                            <p class="text-[10px] text-slate-600 font-bold" id="repFechaEmision">Fecha: --/--/---- | Turno: --</p>
                         </div>
                     </div>
-                    <div class="text-right">
-                        <p class="text-xs text-slate-900 font-black font-mono-code" id="repCodigoHeader">S0000-ET</p>
-                        <p class="text-[10px] text-slate-600 font-bold" id="repFechaEmision">Fecha: --/--/---- | Turno: --</p>
-                    </div>
-                </div>
 
-                <div class="grid grid-cols-4 gap-2 avoid-break pt-2">
-                    <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 shadow-sm">
-                        <p class="text-[9px] text-slate-500 uppercase font-black">PROF. PERFORADA</p>
-                        <p class="text-xs font-black text-slate-900 font-mono-code mt-0.5" id="repMetrajeTotal">0.00 m</p>
-                        <p class="text-[9px] text-slate-500 font-bold" id="repTargetSub">Target: 0.00 m</p>
+                    <div class="grid grid-cols-4 gap-2 avoid-break pt-2">
+                        <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 shadow-sm">
+                            <p class="text-[9px] text-slate-500 uppercase font-black">PROF. PERFORADA</p>
+                            <p class="text-xs font-black text-slate-900 font-mono-code mt-0.5" id="repMetrajeTotal">0.00 m</p>
+                            <p class="text-[9px] text-slate-500 font-bold" id="repTargetSub">Target: 0.00 m</p>
+                        </div>
+                        <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 shadow-sm">
+                            <p class="text-[9px] text-slate-500 uppercase font-black">RECUPERACIÓN</p>
+                            <p class="text-xs font-black text-slate-900 font-mono-code mt-0.5" id="repRecPromedio">0.0%</p>
+                            <p class="text-[9px] text-slate-500 font-bold">Muestra en Testigo</p>
+                        </div>
+                        <div class="bg-slate-100 p-2.5 rounded-xl border border-slate-200 shadow-sm">
+                            <p class="text-[9px] text-slate-700 uppercase font-black">METROS A PAGAR</p>
+                            <p class="text-xs font-black text-slate-950 font-mono-code mt-0.5" id="repMetrosPagoTotal">0.00 m</p>
+                            <p class="text-[9px] text-slate-700 font-bold">Según Estándar</p>
+                        </div>
+                        <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 shadow-sm">
+                            <p class="text-[9px] text-slate-500 uppercase font-black">AVANCE GENERAL</p>
+                            <p class="text-xs font-black text-slate-900 font-mono-code mt-0.5" id="repAvanceGen">0.0%</p>
+                            <p class="text-[9px] text-slate-500 font-bold">Progreso Pozo</p>
+                        </div>
                     </div>
-                    <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 shadow-sm">
-                        <p class="text-[9px] text-slate-500 uppercase font-black">RECUPERACIÓN</p>
-                        <p class="text-xs font-black text-slate-900 font-mono-code mt-0.5" id="repRecPromedio">0.0%</p>
-                        <p class="text-[9px] text-slate-500 font-bold">Muestra en Testigo</p>
-                    </div>
-                    <div class="bg-slate-100 p-2.5 rounded-xl border border-slate-200 shadow-sm">
-                        <p class="text-[9px] text-slate-700 uppercase font-black">METROS A PAGAR</p>
-                        <p class="text-xs font-black text-slate-950 font-mono-code mt-0.5" id="repMetrosPagoTotal">0.00 m</p>
-                        <p class="text-[9px] text-slate-700 font-bold">Según Estándar</p>
-                    </div>
-                    <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 shadow-sm">
-                        <p class="text-[9px] text-slate-500 uppercase font-black">AVANCE GENERAL</p>
-                        <p class="text-xs font-black text-slate-900 font-mono-code mt-0.5" id="repAvanceGen">0.0%</p>
-                        <p class="text-[9px] text-slate-500 font-bold">Progreso Pozo</p>
-                    </div>
-                </div>
 
-                <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200 grid grid-cols-1 sm:grid-cols-2 gap-3 text-[11px] avoid-break shadow-sm">
-                    <div class="space-y-1">
-                        <p class="text-slate-900 font-black uppercase text-[10px] tracking-wider border-b border-slate-200 pb-1">DATOS DE PERFORACIÓN Y UBICACIÓN</p>
-                        <div><b>Zona / Proyecto:</b> <span id="repProyecto" class="text-slate-800 font-bold">--</span></div>
-                        <div><b>Empresa Perforadora:</b> <span id="repEmpresa" class="text-slate-800 font-bold">--</span></div>
-                        <div><b>Máquina:</b> <span id="repMaquina" class="text-slate-800 font-semibold">--</span></div>
-                        <div><b>Coordenada Este:</b> <span id="repEste" class="font-mono-code text-slate-800">--</span></div>
-                        <div><b>Coordenada Norte:</b> <span id="repNorte" class="font-mono-code text-slate-800">--</span></div>
-                        <div><b>Cota Z (m):</b> <span id="repCota" class="font-mono-code text-slate-800">--</span></div>
+                    <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200 grid grid-cols-1 sm:grid-cols-2 gap-3 text-[11px] avoid-break shadow-sm">
+                        <div class="space-y-1">
+                            <p class="text-slate-900 font-black uppercase text-[10px] tracking-wider border-b border-slate-200 pb-1">DATOS DE PERFORACIÓN Y UBICACIÓN</p>
+                            <div><b>Zona / Proyecto:</b> <span id="repProyecto" class="text-slate-800 font-bold">--</span></div>
+                            <div><b>Empresa Perforadora:</b> <span id="repEmpresa" class="text-slate-800 font-bold">--</span></div>
+                            <div><b>Máquina:</b> <span id="repMaquina" class="text-slate-800 font-semibold">--</span></div>
+                            <div><b>Coordenada Este:</b> <span id="repEste" class="font-mono-code text-slate-800">--</span></div>
+                            <div><b>Coordenada Norte:</b> <span id="repNorte" class="font-mono-code text-slate-800">--</span></div>
+                            <div><b>Cota Z (m):</b> <span id="repCota" class="font-mono-code text-slate-800">--</span></div>
+                        </div>
+                        <div class="space-y-1">
+                            <p class="text-slate-900 font-black uppercase text-[10px] tracking-wider border-b border-slate-200 pb-1">SUPERVISIÓN Y DIÁMETROS</p>
+                            <div><b>Inclinación (Dip) / Azimut:</b> <span id="repDipAzimut" class="font-mono-code text-slate-800">--</span></div>
+                            <div><b>Operador Perforadora:</b> <span id="repPerforadorTurno" class="text-slate-800 font-bold">--</span></div>
+                            <div><b>Geólogo Responsable:</b> <span id="repGeologoTurno" class="text-slate-800 font-bold">--</span></div>
+                            <div><b>Metros HQ / NQ:</b> <span id="repMetrosHQRep" class="font-mono-code text-slate-800 font-bold">0.00m</span> / <span id="repMetrosNQRep" class="font-mono-code text-slate-700 font-bold">0.00m</span></div>
+                            <div><b>Estado Sondaje:</b> <span id="repEstadoPozo" class="font-bold text-slate-900">--</span></div>
+                        </div>
                     </div>
-                    <div class="space-y-1">
-                        <p class="text-slate-900 font-black uppercase text-[10px] tracking-wider border-b border-slate-200 pb-1">SUPERVISIÓN Y DIÁMETROS</p>
-                        <div><b>Inclinación (Dip) / Azimut:</b> <span id="repDipAzimut" class="font-mono-code text-slate-800">--</span></div>
-                        <div><b>Operador Perforadora:</b> <span id="repPerforadorTurno" class="text-slate-800 font-bold">--</span></div>
-                        <div><b>Geólogo Responsable:</b> <span id="repGeologoTurno" class="text-slate-800 font-bold">--</span></div>
-                        <div><b>Metros HQ / NQ:</b> <span id="repMetrosHQRep" class="font-mono-code text-slate-800 font-bold">0.00m</span> / <span id="repMetrosNQRep" class="font-mono-code text-slate-700 font-bold">0.00m</span></div>
-                        <div><b>Estado Sondaje:</b> <span id="repEstadoPozo" class="font-bold text-slate-900">--</span></div>
+
+                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 text-[10px] avoid-break shadow-sm">
+                        <p class="font-black text-slate-900 uppercase mb-1">📐 Criterio Estándar de Meteorización y Pago (% Recuperación de Testigo):</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-slate-700">
+                            <div><b>Suelo / Saprolita:</b> Umbral de recuperación &ge; 70%</div>
+                            <div><b>Saprock / Roca Fract.:</b> Umbral de recuperación &ge; 70% - 80%</div>
+                            <div><b>Roca Fresca / Veta:</b> Umbral de recuperación &ge; 90%</div>
+                        </div>
                     </div>
-                </div>
 
-                <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 text-[10px] avoid-break shadow-sm">
-                    <p class="font-black text-slate-900 uppercase mb-1">📐 Criterio Estándar de Meteorización y Pago (% Recuperación de Testigo):</p>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-slate-700">
-                        <div><b>Suelo / Saprolita:</b> Umbral de recuperación &ge; 70%</div>
-                        <div><b>Saprock / Roca Fract.:</b> Umbral de recuperación &ge; 70% - 80%</div>
-                        <div><b>Roca Fresca / Veta:</b> Umbral de recuperación &ge; 90%</div>
+                    <div>
+                        <h4 class="text-xs font-black text-slate-900 uppercase tracking-wider mb-2">🪵 REGISTRO DETALLADO TRAMO A TRAMO (CON ESTÁNDAR DE PAGO)</h4>
+                        <div class="overflow-x-auto border border-slate-200 rounded-xl shadow-sm">
+                            <table class="w-full text-left text-[10px] border-collapse">
+                                <thead class="bg-slate-800 text-white uppercase font-black border-b border-slate-300">
+                                    <tr>
+                                        <th class="p-2 border-r border-slate-700">Corrida</th>
+                                        <th class="p-2 border-r border-slate-700">Desde</th>
+                                        <th class="p-2 border-r border-slate-700">Hasta</th>
+                                        <th class="p-2 border-r border-slate-700">Avance</th>
+                                        <th class="p-2 border-r border-slate-700">Diám</th>
+                                        <th class="p-2 border-r border-slate-700">Recup</th>
+                                        <th class="p-2 border-r border-slate-700">% Rec</th>
+                                        <th class="p-2 border-r border-slate-700">Litología</th>
+                                        <th class="p-2 text-slate-200 font-black">Pago Estándar</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="repTablaBody" class="divide-y divide-slate-200 font-mono-code text-slate-900"></tbody>
+                            </table>
+                        </div>
                     </div>
-                </div>
 
-                <div>
-                    <h4 class="text-xs font-black text-slate-900 uppercase tracking-wider mb-2">🪵 REGISTRO DETALLADO TRAMO A TRAMO (CON ESTÁNDAR DE PAGO)</h4>
-                    <div class="overflow-x-auto border border-slate-200 rounded-xl shadow-sm">
-                        <table class="w-full text-left text-[10px] border-collapse">
-                            <thead class="bg-slate-800 text-white uppercase font-black border-b border-slate-300">
-                                <tr>
-                                    <th class="p-2 border-r border-slate-700">Corrida</th>
-                                    <th class="p-2 border-r border-slate-700">Desde</th>
-                                    <th class="p-2 border-r border-slate-700">Hasta</th>
-                                    <th class="p-2 border-r border-slate-700">Avance</th>
-                                    <th class="p-2 border-r border-slate-700">Diám</th>
-                                    <th class="p-2 border-r border-slate-700">Recup</th>
-                                    <th class="p-2 border-r border-slate-700">% Rec</th>
-                                    <th class="p-2 border-r border-slate-700">Litología</th>
-                                    <th class="p-2 text-slate-200 font-black">Pago Estándar</th>
-                                </tr>
-                            </thead>
-                            <tbody id="repTablaBody" class="divide-y divide-slate-200 font-mono-code text-slate-900"></tbody>
-                        </table>
+                    <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200 space-y-1 avoid-break shadow-sm">
+                        <p class="text-[11px] font-black text-slate-900 uppercase tracking-wider">📝 Observación y Operaciones Principales del Turno:</p>
+                        <p class="text-slate-800 text-[11px] uppercase font-semibold leading-relaxed" id="repObservacionesTexto">SIN NOVEDADES REGISTRADAS.</p>
+                        <p class="text-slate-600 text-[10px] mt-1 font-bold" id="repMotivoCierreBox"></p>
                     </div>
-                </div>
 
-                <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200 space-y-1 avoid-break shadow-sm">
-                    <p class="text-[11px] font-black text-slate-900 uppercase tracking-wider">📝 Observación y Operaciones Principales del Turno:</p>
-                    <p class="text-slate-800 text-[11px] uppercase font-semibold leading-relaxed" id="repObservacionesTexto">SIN NOVEDADES REGISTRADAS.</p>
-                    <p class="text-slate-600 text-[10px] mt-1 font-bold" id="repMotivoCierreBox"></p>
+                    <div class="pt-6 border-t-2 border-slate-200 text-[10px] text-slate-800 avoid-break" id="contenedorFirmasDSR"></div>
                 </div>
-
-                <div class="pt-6 border-t-2 border-slate-200 text-[10px] text-slate-800 avoid-break" id="contenedorFirmasDSR"></div>
             </div>
         </section>
 
@@ -1195,9 +1207,10 @@
             if (tabId === 'mod1') refrescarSelectorModuloUno();
             if (tabId === 'mod2') poblarSelectTopografia();
             if (tabId === 'mod3_turno') verificarSeleccionTurnosModulo();
+            if (tabId === 'mod3_logging') verificarSeleccionCoreLoggingModulo();
+            if (tabId === 'mod4') poblarSelectCierre();
             if (tabId === 'mod3_turno' || tabId === 'mod3_logging' || tabId === 'mod4') refrescarSelectoresOperativos();
-            if (tabId === 'mod4') cargarResumenCierrePozo();
-            if (tabId === 'mod5') { poblarSelectRepositorioTodos(); poblarSelectTurnosRepo(); generarReporteDSR(); }
+            if (tabId === 'mod5') { poblarSelectRepositorioTodos(); }
             if (tabId === 'mod6') poblarSelectAdminBorrar();
         }
 
@@ -1529,37 +1542,35 @@
                     sel.appendChild(opt);
                 }
             });
+            verificarSeleccionTopografiaModulo();
+        }
+
+        function verificarSeleccionTopografiaModulo() {
+            const selTopo = document.getElementById('m2_selectPozoActivo');
+            const contTopo = document.getElementById('contenedorTopografia');
+            if (!selTopo || !contTopo) return;
+            if (!selTopo.value) {
+                contTopo.classList.add('hidden');
+            } else {
+                contTopo.classList.remove('hidden');
+            }
         }
 
         function seleccionarPozoTopografia(codigo) {
             if (!codigo) {
-                limpiarFormularioTopografia();
+                pozoActivoId = '';
+                localStorage.removeItem('jireth_pozo_activo');
+                verificarSeleccionTopografiaModulo();
                 return;
             }
             pozoActivoId = codigo;
             localStorage.setItem('jireth_pozo_activo', pozoActivoId);
+            verificarSeleccionTopografiaModulo();
             cargarDatosPozoEnFormularios(codigo);
         }
 
-        function limpiarFormularioTopografia() {
-            ['m2_maquina', 'm2_este', 'm2_norte', 'm2_cota', 'm2_azimut', 'm2_dip', 'm2_target', 'm2_otra_maquina'].forEach(id => {
-                let el = document.getElementById(id);
-                if (el) el.value = '';
-            });
-            ['m2_maquina', 'm2_este', 'm2_norte', 'm2_cota', 'm2_azimut', 'm2_dip', 'm2_target'].forEach(id => document.getElementById(id).disabled = true);
-            document.getElementById('m2_btn_box').classList.add('hidden');
-        }
-
-        function habilitarEdicionTopo() {
-            if (perfilActual === 'GERENCIA') { alert("⚠️ Solo lectura."); return; }
-            if (!pozoActivoId) { alert("⚠️ Seleccione un sondaje de la lista desplegable primero."); return; }
-            ['m2_maquina', 'm2_este', 'm2_norte', 'm2_cota', 'm2_azimut', 'm2_dip', 'm2_target'].forEach(id => document.getElementById(id).disabled = false);
-            document.getElementById('m2_btn_box').classList.remove('hidden');
-            toggleOtraMaquina();
-        }
-
         function cancelarEdicionTopo() {
-            if (!pozoActivoId) { limpiarFormularioTopografia(); return; }
+            if (!pozoActivoId) { verificarSeleccionTopografiaModulo(); return; }
             cargarDatosPozoEnFormularios(pozoActivoId);
             ['m2_maquina', 'm2_este', 'm2_norte', 'm2_cota', 'm2_azimut', 'm2_dip', 'm2_target', 'm2_otra_maquina'].forEach(id => document.getElementById(id).disabled = true);
             document.getElementById('m2_btn_box').classList.add('hidden');
@@ -1591,7 +1602,7 @@
         }
 
         function refrescarSelectoresOperativos() {
-            ['wellSelectTurno', 'wellSelectLogging', 'wellSelectCierre'].forEach(id => {
+            ['wellSelectTurno', 'wellSelectLogging'].forEach(id => {
                 const sel = document.getElementById(id);
                 if (!sel) return;
                 sel.innerHTML = '<option value="">-- Seleccione Sondaje Activo --</option>';
@@ -1607,6 +1618,7 @@
                 });
             });
             verificarSeleccionTurnosModulo();
+            verificarSeleccionCoreLoggingModulo();
         }
 
         function verificarSeleccionTurnosModulo() {
@@ -1627,11 +1639,23 @@
             }
         }
 
+        function verificarSeleccionCoreLoggingModulo() {
+            const selLog = document.getElementById('wellSelectLogging');
+            const contLog = document.getElementById('contenedorCoreLogging');
+            if (!selLog || !contLog) return;
+            if (!selLog.value) {
+                contLog.classList.add('hidden');
+            } else {
+                contLog.classList.remove('hidden');
+            }
+        }
+
         function seleccionarPozoOperativo(val) {
             if (!val) {
                 pozoActivoId = '';
                 localStorage.removeItem('jireth_pozo_activo');
                 verificarSeleccionTurnosModulo();
+                verificarSeleccionCoreLoggingModulo();
                 return;
             }
             pozoActivoId = val;
@@ -1639,6 +1663,48 @@
             refrescarSelectoresOperativos();
             cargarDatosPozoEnFormularios(val);
             verificarSeleccionTurnosModulo();
+            verificarSeleccionCoreLoggingModulo();
+        }
+
+        // CIERRE: MOSTRAR TANTO ACTIVOS COMO CULMINADOS
+        function poblarSelectCierre() {
+            const sel = document.getElementById('wellSelectCierre');
+            if (!sel) return;
+            sel.innerHTML = '<option value="">-- Seleccione Sondaje (Activos y Culminados) --</option>';
+            Object.keys(pozosData).forEach(k => {
+                let p = pozosData[k];
+                let opt = document.createElement('option');
+                opt.value = k;
+                opt.text = "Sondaje: " + k + " (" + p.proyecto + ") - [" + p.estado + "]";
+                if (k === pozoActivoId) opt.selected = true;
+                sel.appendChild(opt);
+            });
+            verificarSeleccionCierreModulo();
+        }
+
+        function verificarSeleccionCierreModulo() {
+            const selCierre = document.getElementById('wellSelectCierre');
+            const contCierre = document.getElementById('contenedorCierrePozo');
+            if (!selCierre || !contCierre) return;
+            if (!selCierre.value) {
+                contCierre.classList.add('hidden');
+            } else {
+                contCierre.classList.remove('hidden');
+            }
+        }
+
+        function seleccionarPozoCierre(val) {
+            if (!val) {
+                pozoActivoId = '';
+                localStorage.removeItem('jireth_pozo_activo');
+                verificarSeleccionCierreModulo();
+                return;
+            }
+            pozoActivoId = val;
+            localStorage.setItem('jireth_pozo_activo', pozoActivoId);
+            verificarSeleccionCierreModulo();
+            cargarDatosPozoEnFormularios(val);
+            cargarResumenCierrePozo();
         }
 
         function poblarSelectRepositorioTodos() {
@@ -1653,12 +1719,30 @@
                 if (k === pozoActivoId) opt.selected = true;
                 sel.appendChild(opt);
             });
+            verificarSeleccionRepositorioModulo();
+        }
+
+        function verificarSeleccionRepositorioModulo() {
+            const selRepo = document.getElementById('wellSelectRepositorio');
+            const contRepo = document.getElementById('contenedorRepositorioReporte');
+            if (!selRepo || !contRepo) return;
+            if (!selRepo.value) {
+                contRepo.classList.add('hidden');
+            } else {
+                contRepo.classList.remove('hidden');
+            }
         }
 
         function seleccionarPozoRepositorio(val) {
-            if (!val) return;
+            if (!val) {
+                pozoActivoId = '';
+                localStorage.removeItem('jireth_pozo_activo');
+                verificarSeleccionRepositorioModulo();
+                return;
+            }
             pozoActivoId = val;
             localStorage.setItem('jireth_pozo_activo', pozoActivoId);
+            verificarSeleccionRepositorioModulo();
             cargarDatosPozoEnFormularios(val);
             poblarSelectTurnosRepo();
             generarReporteDSR();
@@ -1686,18 +1770,25 @@
             } else { document.getElementById('m2_otra_maquina_box').classList.add('hidden'); }
 
             const selTopo = document.getElementById('m2_selectPozoActivo');
-            if (selTopo) selTopo.value = codigo;
+            if (selTopo) { selTopo.value = codigo; verificarSeleccionTopografiaModulo(); }
 
-            ['wellSelectTurno', 'wellSelectLogging', 'wellSelectCierre', 'wellSelectRepositorio'].forEach(id => {
+            const selCierre = document.getElementById('wellSelectCierre');
+            if (selCierre) { selCierre.value = codigo; verificarSeleccionCierreModulo(); }
+
+            const selRepo = document.getElementById('wellSelectRepositorio');
+            if (selRepo) { selRepo.value = codigo; verificarSeleccionRepositorioModulo(); }
+
+            ['wellSelectTurno', 'wellSelectLogging'].forEach(id => {
                 let el = document.getElementById(id);
                 if (el) el.value = codigo;
             });
+            verificarSeleccionTurnosModulo();
+            verificarSeleccionCoreLoggingModulo();
 
             actualizarTablaAvances();
             actualizarProgresoGrafico();
             autoCalcularHasta();
             poblarSelectRetomarTurno();
-            verificarSeleccionTurnosModulo();
             
             if (!document.getElementById('mod4').classList.contains('hidden')) cargarResumenCierrePozo();
             if (!document.getElementById('mod5').classList.contains('hidden')) { poblarSelectRepositorioTodos(); poblarSelectTurnosRepo(); generarReporteDSR(); }
@@ -2080,9 +2171,13 @@
 
             if (p.estado === 'CULMINADO') {
                 document.getElementById('btnCierrePozo').classList.add('hidden');
+                document.getElementById('divMotivoCierreBox').classList.add('hidden');
+                document.getElementById('divObsCierreBox').classList.add('hidden');
                 document.getElementById('btnReactivarPozo').classList.remove('hidden');
             } else {
                 document.getElementById('btnCierrePozo').classList.remove('hidden');
+                document.getElementById('divMotivoCierreBox').classList.remove('hidden');
+                document.getElementById('divObsCierreBox').classList.remove('hidden');
                 document.getElementById('btnReactivarPozo').classList.add('hidden');
             }
         }
@@ -2133,6 +2228,7 @@
             refrescarSelectoresOperativos();
             refrescarSelectorModuloUno();
             poblarSelectTopografia();
+            poblarSelectCierre();
             renderizarSalaSituacional();
             cargarResumenCierrePozo();
             alert("🔒 Sondaje " + pozoActivoId + " cerrado con éxito.");
@@ -2149,6 +2245,7 @@
                 refrescarSelectoresOperativos();
                 refrescarSelectorModuloUno();
                 poblarSelectTopografia();
+                poblarSelectCierre();
                 renderizarSalaSituacional();
                 cargarResumenCierrePozo();
                 alert("✅ Sondaje reactivado a estado ABIERTO.");
@@ -2339,6 +2436,7 @@
                 refrescarSelectoresOperativos();
                 refrescarSelectorModuloUno();
                 poblarSelectTopografia();
+                poblarSelectCierre();
                 poblarSelectAdminBorrar();
                 renderizarSalaSituacional();
                 alert("✅ Sondaje eliminado.");
@@ -2384,6 +2482,7 @@
                         refrescarSelectoresOperativos();
                         refrescarSelectorModuloUno();
                         poblarSelectTopografia();
+                        poblarSelectCierre();
                         renderizarSalaSituacional();
                         if (pozoActivoId) cargarDatosPozoEnFormularios(pozoActivoId);
                         alert("✅ Importado con éxito.");
@@ -2427,6 +2526,7 @@
                     refrescarSelectoresOperativos();
                     refrescarSelectorModuloUno();
                     poblarSelectTopografia();
+                    poblarSelectCierre();
                     renderizarSalaSituacional();
                     if (pozoActivoId && pozosData[pozoActivoId]) cargarDatosPozoEnFormularios(pozoActivoId);
                     if (mostrarAlerta) alert("✅ Sincronizado con Supabase correctamente.");
