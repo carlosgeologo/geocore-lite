@@ -69,7 +69,6 @@
         }
         .pulse-live { animation: pulseGlow 1.8s infinite ease-in-out; }
 
-        /* Estilo vectorial para el logotipo JJ corporativo */
         .logo-jj-badge {
             width: 38px;
             height: 38px;
@@ -94,7 +93,6 @@
             letter-spacing: -0.05em;
         }
 
-        /* Sidebar Menú Lateral */
         #sidebarMenu {
             transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
@@ -271,7 +269,7 @@
 
             <nav class="space-y-1.5 text-xs">
                 <button type="button" onclick="switchTab('mod_sala'); toggleSidebar();" id="sidebar-mod_sala" class="sidebar-item active">
-                    <span class="text-base">📡</span> Sala Situacional (Principal)
+                    <span class="text-base">🏠</span> Sala Situacional (Inicio)
                 </button>
                 <button type="button" onclick="switchTab('mod1'); toggleSidebar();" id="sidebar-mod1" class="sidebar-item">
                     <span class="text-base">🛠️</span> Lista de Pozos / Registrar Pozo
@@ -313,6 +311,10 @@
                 <button type="button" onclick="toggleSidebar()" class="w-10 h-10 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-300 flex items-center justify-center text-slate-800 font-black shadow-sm transition relative z-20" title="Menú Principal">
                     ☰
                 </button>
+                <!-- BOTÓN DE INICIO (CASA) QUE LLEVA DIRECTO A SALA SITUACIONAL -->
+                <button type="button" onclick="switchTab('mod_sala')" class="w-10 h-10 rounded-xl bg-slate-900 hover:bg-slate-800 text-white flex items-center justify-center font-black shadow-sm transition" title="Ir a Sala Situacional (Inicio)">
+                    🏠
+                </button>
                 <div class="logo-jj-badge"></div>
                 <div>
                     <h1 class="text-base font-black text-slate-900 tracking-tight flex items-center gap-1.5">
@@ -337,22 +339,12 @@
             </div>
         </header>
 
-        <!-- SELECTOR GLOBAL DE POZOS -->
-        <div class="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-sm">
-            <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider flex items-center gap-1.5">
-                <span>🎯</span> Frente Activo / Sondaje Seleccionado en Sistema:
-            </label>
-            <select id="globalWellSelect" onchange="seleccionarPozoGlobal(this.value)" class="input-field w-full px-3.5 text-sm font-bold text-slate-900">
-                <option value="">-- Seleccione un Sondaje --</option>
-            </select>
-        </div>
-
         <!-- MÓDULO SALA SITUACIONAL (PANTALLA PRINCIPAL POR DEFECTO) -->
         <section id="mod_sala" class="space-y-4 bg-white p-5 sm:p-6 rounded-3xl border border-slate-200 shadow-sm">
             <div class="flex justify-between items-center flex-wrap gap-2 pb-2 border-b border-slate-200">
                 <div>
                     <h2 class="text-xl font-black text-slate-900 tracking-tight flex items-center gap-2">
-                        <span>📡 Sala Situacional & Dashboard Pro (Pantalla Principal)</span>
+                        <span>🏠 Sala Situacional & Dashboard Pro (Pantalla Principal)</span>
                         <span class="text-xs bg-slate-100 text-slate-800 px-2.5 py-0.5 rounded-full border border-slate-300 font-mono-code pulse-live" id="contadorFrentesActivos">0 Activos</span>
                     </h2>
                     <p class="text-xs text-slate-600 mt-0.5">Panel macro de control operativo en tiempo real. Haga clic en cualquier pozo para gestionarlo de forma inteligente.</p>
@@ -410,7 +402,7 @@
             <div id="gridSalaSituacional" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pt-2"></div>
         </section>
 
-        <!-- MÓDULO 1: APERTURA & LISTA DE POZOS (ACTUALIZADO A FLUJO LIMPIO Y SELECTOR DE ACTIVOS / REGISTRAR NUEVO) -->
+        <!-- MÓDULO 1: APERTURA & LISTA DE POZOS -->
         <section id="mod1" class="hidden space-y-4 bg-white p-5 sm:p-6 rounded-3xl border border-slate-200 shadow-sm">
             <h2 class="text-xl font-black text-slate-900 tracking-tight flex items-center gap-2">🛠️ Módulo: Lista de Pozos & Apertura de Nuevo Sondaje</h2>
             <p class="text-xs text-slate-600 font-medium">Seleccione un sondaje activo de la lista para ir directamente a la gestión de turnos, o seleccione la opción de registrar un nuevo sondaje para desplegar el formulario.</p>
@@ -511,6 +503,14 @@
             <h2 class="text-xl font-black text-slate-900 tracking-tight">⏱️ Módulo: Gestión, Apertura & Edición de Turnos (Paso 3)</h2>
             <p class="text-xs text-slate-600 font-medium leading-relaxed">Abre un turno operativo nuevo, o selecciona un turno del historial para ir directo al Core Logging.</p>
 
+            <!-- SELECTOR DE POZOS ACTIVOS EN TURNOS -->
+            <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 shadow-sm">
+                <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">🎯 Seleccionar Sondaje Activo a Gestionar:</label>
+                <select id="wellSelectTurno" onchange="seleccionarPozoOperativo(this.value)" class="input-field w-full px-3.5 text-sm font-bold text-slate-900">
+                    <option value="">-- Seleccione Sondaje Activo --</option>
+                </select>
+            </div>
+
             <div class="bg-slate-50 p-4 sm:p-5 rounded-2xl border border-slate-200 space-y-3.5 shadow-sm">
                 <h3 class="text-xs font-black text-slate-900 uppercase tracking-wider" id="tituloBoxTurno">🚀 Apertura de Turno Nuevo</h3>
                 <input type="hidden" id="editTurnoId" value="">
@@ -591,6 +591,14 @@
         <section id="mod3_logging" class="hidden space-y-4 bg-white p-5 sm:p-6 rounded-3xl border border-slate-200 shadow-sm">
             <h2 class="text-xl font-black text-slate-900 tracking-tight">🪵 Módulo: Core Logging & Avances (Paso 4)</h2>
             
+            <!-- SELECTOR DE POZOS ACTIVOS EN LOGGING -->
+            <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 shadow-sm">
+                <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">🎯 Seleccionar Sondaje Activo a Registrar:</label>
+                <select id="wellSelectLogging" onchange="seleccionarPozoOperativo(this.value)" class="input-field w-full px-3.5 text-sm font-bold text-slate-900">
+                    <option value="">-- Seleccione Sondaje Activo --</option>
+                </select>
+            </div>
+
             <div id="infoTurnoActivo" class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 flex justify-between items-center flex-wrap gap-2 text-xs shadow-sm">
                 <div>
                     <span class="text-slate-900 font-extrabold">Turno Activo:</span> <span id="lblInfoTurno" class="text-slate-900 font-black">--</span> | 
@@ -713,6 +721,14 @@
             <h2 class="text-xl font-black text-slate-900 tracking-tight">🏁 Módulo: Cierre & Evaluación Exhaustiva del Sondaje</h2>
             <p class="text-xs text-slate-600">Aquí se evalúa el sondaje con el 100% de los datos técnicos registrados para su cierre o reactivación.</p>
 
+            <!-- SELECTOR DE POZOS ACTIVOS EN CIERRE -->
+            <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 shadow-sm">
+                <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">🎯 Seleccionar Sondaje Activo a Evaluar/Cerrar:</label>
+                <select id="wellSelectCierre" onchange="seleccionarPozoOperativo(this.value)" class="input-field w-full px-3.5 text-sm font-bold text-slate-900">
+                    <option value="">-- Seleccione Sondaje Activo --</option>
+                </select>
+            </div>
+
             <div id="cierreResumenPozo" class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-3 text-xs shadow-sm"></div>
 
             <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-3 shadow-sm">
@@ -757,7 +773,7 @@
             </div>
         </section>
 
-        <!-- MÓDULO 5: REPOSITORIO & DSR -->
+        <!-- MÓDULO 5: REPOSITORIO & DSR (MUESTRA TODOS LOS POZOS: ACTIVOS Y CULMINADOS) -->
         <section id="mod5" class="hidden space-y-4 bg-white p-5 sm:p-6 rounded-3xl border border-slate-200 shadow-sm">
             <div class="flex justify-between items-center flex-wrap gap-2">
                 <h2 class="text-xl font-black text-slate-900 tracking-tight">📑 Módulo: Repositorio & Informes DSR Oficiales</h2>
@@ -765,6 +781,14 @@
                     <button type="button" onclick="imprimirOExportarPDF()" class="bg-slate-900 hover:bg-slate-800 text-white font-black px-4 py-2 rounded-xl text-xs shadow-sm transition">🖨️ Imprimir / Guardar PDF</button>
                     <button type="button" onclick="copiarReportePortapapeles()" class="bg-slate-700 hover:bg-slate-600 text-white font-black px-4 py-2 rounded-xl text-xs shadow-sm transition">📋 Copiar Resumen</button>
                 </div>
+            </div>
+
+            <!-- SELECTOR DE TODOS LOS POZOS (ACTIVOS Y CULMINADOS) EN REPOSITORIO -->
+            <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 shadow-sm">
+                <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">🎯 Seleccionar Sondaje en Repositorio (Activos y Culminados):</label>
+                <select id="wellSelectRepositorio" onchange="seleccionarPozoRepositorio(this.value)" class="input-field w-full px-3.5 text-sm font-bold text-slate-900">
+                    <option value="">-- Seleccione un Sondaje --</option>
+                </select>
             </div>
 
             <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 flex items-center justify-between flex-wrap gap-3 shadow-sm">
@@ -962,10 +986,9 @@
         window.onload = async function() {
             document.getElementById('m3_fecha').valueAsDate = new Date();
             migrarRecalcularPagosEstandar();
-            refrescarSelectorPozos();
+            refrescarSelectoresOperativos();
             refrescarSelectorModuloUno();
             if (pozoActivoId && pozosData[pozoActivoId]) {
-                document.getElementById('globalWellSelect').value = pozoActivoId;
                 cargarDatosPozoEnFormularios(pozoActivoId);
             }
             if (turnoActivoObj) actualizarBannerTurnoActivo();
@@ -1097,8 +1120,9 @@
 
             if (tabId === 'mod_sala') renderizarSalaSituacional();
             if (tabId === 'mod1') refrescarSelectorModuloUno();
+            if (tabId === 'mod3_turno' || tabId === 'mod3_logging' || tabId === 'mod4') refrescarSelectoresOperativos();
             if (tabId === 'mod4') cargarResumenCierrePozo();
-            if (tabId === 'mod5') { poblarSelectTurnosRepo(); generarReporteDSR(); }
+            if (tabId === 'mod5') { poblarSelectRepositorioTodos(); poblarSelectTurnosRepo(); generarReporteDSR(); }
             if (tabId === 'mod6') poblarSelectAdminBorrar();
         }
 
@@ -1264,7 +1288,6 @@
         function seleccionarPozoInteligente(codigo) {
             pozoActivoId = codigo;
             localStorage.setItem('jireth_pozo_activo', pozoActivoId);
-            document.getElementById('globalWellSelect').value = codigo;
             cargarDatosPozoEnFormularios(codigo);
 
             let p = pozosData[codigo];
@@ -1337,7 +1360,6 @@
                 formNuevo.classList.add('hidden');
                 pozoActivoId = val;
                 localStorage.setItem('jireth_pozo_activo', pozoActivoId);
-                document.getElementById('globalWellSelect').value = val;
                 cargarDatosPozoEnFormularios(val);
                 switchTab('mod3_turno');
             }
@@ -1357,7 +1379,7 @@
             await guardarYPersistirTodo();
             pozoActivoId = codigo;
             localStorage.setItem('jireth_pozo_activo', pozoActivoId);
-            refrescarSelectorPozos();
+            refrescarSelectoresOperativos();
             refrescarSelectorModuloUno();
 
             cargarDatosPozoEnFormularios(codigo);
@@ -1397,23 +1419,53 @@
             switchTab('mod3_turno');
         }
 
-        function refrescarSelectorPozos() {
-            const sel = document.getElementById('globalWellSelect');
+        function refrescarSelectoresOperativos() {
+            ['wellSelectTurno', 'wellSelectLogging', 'wellSelectCierre'].forEach(id => {
+                const sel = document.getElementById(id);
+                if (!sel) return;
+                sel.innerHTML = '<option value="">-- Seleccione Sondaje Activo --</option>';
+                Object.keys(pozosData).forEach(k => {
+                    let p = pozosData[k];
+                    if (p.estado === 'ABIERTO') {
+                        let opt = document.createElement('option');
+                        opt.value = k;
+                        opt.text = "Sondaje Activo: " + k + " (" + p.proyecto + ")";
+                        if (k === pozoActivoId) opt.selected = true;
+                        sel.appendChild(opt);
+                    }
+                });
+            });
+        }
+
+        function seleccionarPozoOperativo(val) {
+            if (!val) return;
+            pozoActivoId = val;
+            localStorage.setItem('jireth_pozo_activo', pozoActivoId);
+            refrescarSelectoresOperativos();
+            cargarDatosPozoEnFormularios(val);
+        }
+
+        function poblarSelectRepositorioTodos() {
+            const sel = document.getElementById('wellSelectRepositorio');
             if (!sel) return;
-            sel.innerHTML = '<option value="">-- Seleccione un Sondaje --</option>';
+            sel.innerHTML = '<option value="">-- Seleccione un Sondaje (Activos y Culminados) --</option>';
             Object.keys(pozosData).forEach(k => {
+                let p = pozosData[k];
                 let opt = document.createElement('option');
                 opt.value = k;
-                opt.text = "Sondaje: " + k + " (" + pozosData[k].proyecto + ") - [" + pozosData[k].estado + "]";
+                opt.text = "Sondaje: " + k + " (" + p.proyecto + ") - [" + p.estado + "]";
                 if (k === pozoActivoId) opt.selected = true;
                 sel.appendChild(opt);
             });
         }
 
-        function seleccionarPozoGlobal(val) {
+        function seleccionarPozoRepositorio(val) {
+            if (!val) return;
             pozoActivoId = val;
             localStorage.setItem('jireth_pozo_activo', pozoActivoId);
-            if (val && pozosData[val]) cargarDatosPozoEnFormularios(val);
+            cargarDatosPozoEnFormularios(val);
+            poblarSelectTurnosRepo();
+            generarReporteDSR();
         }
 
         function cargarDatosPozoEnFormularios(codigo) {
@@ -1441,9 +1493,10 @@
             actualizarProgresoGrafico();
             autoCalcularHasta();
             poblarSelectRetomarTurno();
+            refrescarSelectoresOperativos();
             
             if (!document.getElementById('mod4').classList.contains('hidden')) cargarResumenCierrePozo();
-            if (!document.getElementById('mod5').classList.contains('hidden')) { poblarSelectTurnosRepo(); generarReporteDSR(); }
+            if (!document.getElementById('mod5').classList.contains('hidden')) { poblarSelectRepositorioTodos(); poblarSelectTurnosRepo(); generarReporteDSR(); }
         }
 
         async function guardarOIniciarTurno() {
@@ -1614,7 +1667,6 @@
             localStorage.setItem('jireth_turno_activo', JSON.stringify(turnoActivoObj));
             pozoActivoId = turnoActivoObj.pozo;
             localStorage.setItem('jireth_pozo_activo', pozoActivoId);
-            document.getElementById('globalWellSelect').value = pozoActivoId;
             cargarDatosPozoEnFormularios(pozoActivoId);
             actualizarBannerTurnoActivo();
             alert("▶️ Turno retomado con éxito.");
@@ -1863,7 +1915,7 @@
             pozosData[pozoActivoId].motivoCierre = motivo;
             pozosData[pozoActivoId].obsCierre = obs;
             await guardarYPersistirTodo();
-            refrescarSelectorPozos();
+            refrescarSelectoresOperativos();
             refrescarSelectorModuloUno();
             renderizarSalaSituacional();
             cargarResumenCierrePozo();
@@ -1878,7 +1930,7 @@
                 delete pozosData[pozoActivoId].motivoCierre;
                 delete pozosData[pozoActivoId].obsCierre;
                 await guardarYPersistirTodo();
-                refrescarSelectorPozos();
+                refrescarSelectoresOperativos();
                 refrescarSelectorModuloUno();
                 renderizarSalaSituacional();
                 cargarResumenCierrePozo();
@@ -1902,13 +1954,13 @@
         }
 
         function generarReporteDSR() {
-            if (!pozoActivoId || !pozosData[pozoActivoId]) { alert("⚠️ Seleccione un sondaje activo primero."); return; }
+            if (!pozoActivoId || !pozosData[pozoActivoId]) { alert("⚠️ Seleccione un sondaje en el repositorio primero."); return; }
             let p = pozosData[pozoActivoId];
             let modo = document.getElementById('repModoVista').value;
             let boxTurno = document.getElementById('boxSelectTurnoRepo');
             
             if (modo === 'CULMINADO' && p.estado !== 'CULMINADO') {
-                alert(`⚠️ ALERTA: El sondaje seleccionado (${p.codigo}) se encuentra en estado ACTIVO y no ha sido culminado. Debe proceder al Módulo de Cierre (Módulo 5) para culminarlo antes de emitir este reporte.`);
+                alert(`⚠️ ALERTA: El sondaje seleccionado (${p.codigo}) se encuentra en estado ACTIVO y no ha sido culminado. Debe proceder al Módulo de Cierre (Módulo 4) para culminarlo antes de emitir este reporte.`);
                 document.getElementById('repModoVista').value = 'ACUMULADO';
                 generarReporteDSR();
                 return;
@@ -2067,7 +2119,7 @@
                 delete pozosData[codigo];
                 if (pozoActivoId === codigo) { pozoActivoId = ''; localStorage.removeItem('jireth_pozo_activo'); }
                 await guardarYPersistirTodo();
-                refrescarSelectorPozos();
+                refrescarSelectoresOperativos();
                 refrescarSelectorModuloUno();
                 poblarSelectAdminBorrar();
                 renderizarSalaSituacional();
@@ -2111,7 +2163,7 @@
                         pozoActivoId = imp.activo || '';
                         migrarRecalcularPagosEstandar();
                         await guardarYPersistirTodo();
-                        refrescarSelectorPozos();
+                        refrescarSelectoresOperativos();
                         refrescarSelectorModuloUno();
                         renderizarSalaSituacional();
                         if (pozoActivoId) cargarDatosPozoEnFormularios(pozoActivoId);
@@ -2151,7 +2203,7 @@
                         localStorage.setItem('jireth_turnos', JSON.stringify(turnosData));
                     }
                     migrarRecalcularPagosEstandar();
-                    refrescarSelectorPozos();
+                    refrescarSelectoresOperativos();
                     refrescarSelectorModuloUno();
                     renderizarSalaSituacional();
                     if (pozoActivoId && pozosData[pozoActivoId]) cargarDatosPozoEnFormularios(pozoActivoId);
