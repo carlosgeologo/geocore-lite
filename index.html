@@ -5,17 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jireth GeoCore Lite | Complejo Jireth C.A.</title>
     
-    <!-- ENLACE AL MANIFIESTO PWA (ESTA ES LA LÍNEA QUE DEBES ASEGURAR) -->
+    <!-- ENLACE AL MANIFIESTO PWA PARA FUNCIONAMIENTO OFFLINE EN TODOS LOS DISPOSITIVOS -->
     <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0f172a">
     
-    <!-- Aquí continúan tus librerías de estilos, Tailwind, Supabase, etc. -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- ... demás etiquetas de tu cabecera ... -->
-</head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jireth GeoCore Lite | Complejo Jireth C.A.</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -1019,7 +1012,7 @@
             window.addEventListener(evt, () => { lastActivityTime = Date.now(); });
         });
 
-        // INICIALIZACIÓN 100% BLINDADA OFFLINE (EVITA EL DINOSAURIO DE CHROME AL RECARGAR SIN RED)
+        // INICIALIZACIÓN OFFLINE-FIRST
         window.onload = async function() {
             document.getElementById('m3_fecha').valueAsDate = new Date();
             migrarRecalcularPagosEstandar();
@@ -1033,10 +1026,8 @@
             poblarSelectRetomarTurno();
             renderizarSalaSituacional();
 
-            // Intento seguro con Supabase en segundo plano, sin bloquear la UI ni mostrar errores de red fatales
             if (navigator.onLine && supabaseClient) {
                 sincronizarDesdeSupabaseCloud(false).catch(err => {
-                    console.log("Modo offline activado automáticamente por red");
                     marcarModoOfflineVisual();
                 });
             } else {
@@ -1047,43 +1038,30 @@
         function marcarModoOfflineVisual() {
             const indRed = document.getElementById('indicadorRed');
             if (indRed) {
-                indRed.innerText = "(🟡 Modo Offline / Local Seguro)";
+                indRed.innerText = "(🟡 Modo Campo - Guardado Local Seguro)";
                 indRed.className = "text-amber-600 font-bold";
             }
         }
 
-        // Interceptores de estado de red en tiempo real
         window.addEventListener('offline', () => {
             marcarModoOfflineVisual();
         });
 
-        window.addEventListener('online', () => {
+        window.addEventListener('online', async () => {
             const indRed = document.getElementById('indicadorRed');
             if (indRed) {
-                indRed.innerText = "(🟢 Sincronizado En Vivo)";
-                indRed.className = "text-emerald-700 font-bold";
+                indRed.innerText = "(🟢 En línea - Sincronizando con Oficina)";
+                indRed.className = "text-emerald-700 font-bold pulse-live";
             }
+            await sincronizarConSupabaseReal();
         });
 
-        // SERVICE WORKER AUTOMÁTICO PARA EVITAR EL DINOSAURIO DE CHROME OFFLINE
+        // REGISTRO DEL SERVICE WORKER EXTERNO (sw.js)
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                const swCode = `
-                    self.addEventListener('install', (e) => { self.skipWaiting(); });
-                    self.addEventListener('activate', (e) => { e.waitUntil(clients.claim()); });
-                    self.addEventListener('fetch', (e) => {
-                        e.respondWith(
-                            fetch(e.request).catch(() => {
-                                return caches.match(e.request).then((response) => {
-                                    return response || caches.match('./') || new Response("Jireth GeoCore Lite - Offline", { headers: {'Content-Type': 'text/html'} });
-                                });
-                            })
-                        );
-                    });
-                `;
-                const blob = new Blob([swCode], { type: 'text/javascript' });
-                const swUrl = URL.createObjectURL(blob);
-                navigator.serviceWorker.register(swUrl).catch(err => console.log("SW local init:", err));
+                navigator.serviceWorker.register('./sw.js')
+                    .then(reg => console.log('Service Worker PWA Registrado:', reg.scope))
+                    .catch(err => console.log('Fallo SW:', err));
             });
         }
 
@@ -1149,6 +1127,10 @@
         }
 
         function intentarLoginGer() {
+            if (!navigator.onLine) {
+                alert("⚠️ El acceso a Gerencia requiere conexión a internet para cargar los datos sincronizados de la oficina.");
+                return;
+            }
             const val = document.getElementById('inputClaveGer').value.trim();
             if (val === claveGerencia) { entrarAlSistema("GERENCIA / AUDITORÍA (REPOSITORIO)"); aplicarModoLecturaGerencia(); }
             else { alert("❌ Contraseña de Gerencia incorrecta."); document.getElementById('inputClaveGer').value = ''; }
@@ -1826,7 +1808,6 @@
             let lon = parseFloat(document.getElementById('m3_longitud').value) || 1.5;
             let hasta = ultimoHasta + lon;
             document.getElementById('m3_hasta').value = hasta.toFixed(2);
-            // Dejar vacío para forzar la transcripción manual desde el teclado
             document.getElementById('m3_recuperado').value = '';
         }
 
@@ -2334,7 +2315,7 @@
 
         async function sincronizarDesdeSupabaseCloud(mostrarAlerta = true) {
             if (!navigator.onLine || !supabaseClient) {
-                if (mostrarAlerta) alert("⚠️ Estás sin conexión a internet. Trabajando con datos locales.");
+                if (mostrarAlerta) alert("⚠️ Estás sin conexión a internet. Trabajando con datos locales de campo.");
                 return;
             }
             try {
