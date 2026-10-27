@@ -354,7 +354,6 @@
                 <button type="button" onclick="renderizarSalaSituacional()" class="bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 px-3 py-2 rounded-xl text-xs font-bold transition shadow-sm">🔄 Actualizar En Vivo</button>
             </div>
 
-            <!-- 1. FICHAS INDIVIDUALES DE POZOS ACTIVOS (ARRIBA) -->
             <div class="space-y-2">
                 <h3 class="text-xs font-black text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
                     <span>📌 Fichas Individuales de Sondajes Activos</span>
@@ -485,7 +484,6 @@
             <div class="flex justify-between items-center flex-wrap gap-2">
                 <h2 class="text-xl font-black text-slate-900 tracking-tight">📍 Módulo: Ficha Topográfica (Paso 2)</h2>
                 <div class="flex items-center gap-2">
-                    <!-- LISTA DESPLEGABLE PARA SELECCIONAR POZO A EDITAR -->
                     <select id="m2_selectPozoActivo" onchange="seleccionarPozoTopografia(this.value)" class="input-field px-3 py-1.5 text-xs font-bold text-slate-900 bg-slate-50">
                         <option value="">-- Seleccionar Sondaje a Editar --</option>
                     </select>
@@ -493,7 +491,6 @@
                 </div>
             </div>
             
-            <!-- CONTENEDOR OCULTO HASTA SELECCIONAR POZO -->
             <div id="contenedorTopografia" class="hidden space-y-4">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
@@ -554,7 +551,6 @@
                 </select>
             </div>
 
-            <!-- CONTENEDOR OCULTO HASTA SELECCIONAR POZO -->
             <div id="contenedorFormTurnos" class="hidden space-y-4">
                 <div class="bg-slate-50 p-4 sm:p-5 rounded-2xl border border-slate-200 space-y-3.5 shadow-sm">
                     <h3 class="text-xs font-black text-slate-900 uppercase tracking-wider" id="tituloBoxTurno">🚀 Apertura de Turno Nuevo</h3>
@@ -644,7 +640,6 @@
                 </select>
             </div>
 
-            <!-- CONTENEDOR OCULTO HASTA SELECCIONAR POZO -->
             <div id="contenedorCoreLogging" class="hidden space-y-4">
                 <div id="infoTurnoActivo" class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 flex justify-between items-center flex-wrap gap-2 text-xs shadow-sm">
                     <div>
@@ -764,7 +759,7 @@
             </div>
         </section>
 
-        <!-- MÓDULO 4: CIERRE EXHAUSTIVO (CON REACTIVACIÓN Y SELECTOR AMBOS ESTADOS) -->
+        <!-- MÓDULO 4: CIERRE EXHAUSTIVO -->
         <section id="mod4" class="hidden space-y-4 bg-white p-5 sm:p-6 rounded-3xl border border-slate-200 shadow-sm">
             <h2 class="text-xl font-black text-slate-900 tracking-tight">🏁 Módulo: Cierre & Evaluación Exhaustiva del Sondaje</h2>
             <p class="text-xs text-slate-600">Aquí se evalúa el sondaje con el 100% de los datos técnicos registrados para su cierre o reactivación.</p>
@@ -776,7 +771,6 @@
                 </select>
             </div>
 
-            <!-- CONTENEDOR OCULTO HASTA SELECCIONAR POZO -->
             <div id="contenedorCierrePozo" class="hidden space-y-4">
                 <div id="cierreResumenPozo" class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-3 text-xs shadow-sm"></div>
 
@@ -840,7 +834,6 @@
                 </select>
             </div>
 
-            <!-- CONTENEDOR OCULTO HASTA SELECCIONAR POZO -->
             <div id="contenedorRepositorioReporte" class="hidden space-y-4">
                 <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 flex items-center justify-between flex-wrap gap-3 shadow-sm">
                     <div class="w-full sm:w-auto">
@@ -990,7 +983,6 @@
         </section>
     </div>
 
-    <!-- SCRIPT TÉCNICO COMPLETO REPARADO -->
     <script>
         const SUPABASE_URL = "https://cjtseuctrbdvgagudyyr.supabase.co";
         const SUPABASE_KEY = "sb_publishable_4ElaI13qIakKqei9_-OiNA__PpbBBjX";
@@ -1569,6 +1561,18 @@
             cargarDatosPozoEnFormularios(codigo);
         }
 
+        // FUNCIÓN HABILITAR EDICIÓN TOPOGRAFÍA CORREGIDA
+        function habilitarEdicionTopo() {
+            if (perfilActual === 'GERENCIA') { alert("⚠️ Perfil de Gerencia: Solo lectura."); return; }
+            if (!pozoActivoId) { alert("⚠️ Seleccione un sondaje primero."); return; }
+            ['m2_maquina', 'm2_este', 'm2_norte', 'm2_cota', 'm2_azimut', 'm2_dip', 'm2_target', 'm2_otra_maquina'].forEach(id => {
+                let el = document.getElementById(id);
+                if (el) el.disabled = false;
+            });
+            document.getElementById('m2_btn_box').classList.remove('hidden');
+            alert("✏️ Edición habilitada. Modifique los campos y haga clic en Guardar.");
+        }
+
         function cancelarEdicionTopo() {
             if (!pozoActivoId) { verificarSeleccionTopografiaModulo(); return; }
             cargarDatosPozoEnFormularios(pozoActivoId);
@@ -1666,7 +1670,6 @@
             verificarSeleccionCoreLoggingModulo();
         }
 
-        // CIERRE: MOSTRAR TANTO ACTIVOS COMO CULMINADOS
         function poblarSelectCierre() {
             const sel = document.getElementById('wellSelectCierre');
             if (!sel) return;
