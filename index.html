@@ -246,6 +246,11 @@
                     <button type="button" onclick="ocultarBoxRescate()" class="text-xs text-slate-500 hover:text-slate-800 underline font-semibold">Volver al inicio</button>
                 </div>
             </div>
+
+            <!-- FIRMA DEL DESARROLLADOR -->
+            <div class="text-center pt-3 border-t border-slate-100">
+                <span class="text-[10px] font-mono-code text-slate-400 font-bold uppercase tracking-wider">by: carlosgeologo — 2026</span>
+            </div>
         </div>
     </div>
 
@@ -293,15 +298,16 @@
             </nav>
         </div>
 
-        <div class="pt-4 border-t border-slate-200 text-center space-y-2">
+        <div class="pt-4 border-t border-slate-200 text-center space-y-1">
             <p class="text-[10px] text-slate-500 font-bold uppercase">Complejo Jireth C.A.</p>
-            <button type="button" onclick="cerrarSesion()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-800 py-2.5 rounded-xl font-bold text-xs">🚪 Cerrar Sesión</button>
+            <p class="text-[9px] font-mono-code text-slate-400 font-extrabold uppercase">by: carlosgeologo — 2026</p>
+            <button type="button" onclick="cerrarSesion()" class="w-full mt-2 bg-slate-100 hover:bg-slate-200 text-slate-800 py-2.5 rounded-xl font-bold text-xs">🚪 Cerrar Sesión</button>
         </div>
     </aside>
 
     <!-- APLICACIÓN PRINCIPAL -->
     <div id="appPrincipal" class="hidden space-y-3.5 max-w-7xl mx-auto pb-16 sm:pb-4">
-        <!-- HEADER PRINCIPAL (SIN LA LÚZ LASER SUPERIOR PARA EVITAR INTERFERENCIA CON EL BOTÓN) -->
+        <!-- HEADER PRINCIPAL -->
         <header class="bg-white backdrop-blur p-3.5 rounded-2xl border border-slate-200 flex justify-between items-center flex-wrap gap-3 shadow-sm">
             <div class="flex items-center gap-3">
                 <button type="button" onclick="toggleSidebar()" class="w-10 h-10 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-300 flex items-center justify-center text-slate-800 font-black shadow-sm transition relative z-20" title="Menú Principal">
@@ -404,35 +410,49 @@
             <div id="gridSalaSituacional" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pt-2"></div>
         </section>
 
-        <!-- MÓDULO 1: APERTURA & LISTA DE POZOS -->
+        <!-- MÓDULO 1: APERTURA & LISTA DE POZOS (ACTUALIZADO A FLUJO LIMPIO Y SELECTOR DE ACTIVOS / REGISTRAR NUEVO) -->
         <section id="mod1" class="hidden space-y-4 bg-white p-5 sm:p-6 rounded-3xl border border-slate-200 shadow-sm">
             <h2 class="text-xl font-black text-slate-900 tracking-tight flex items-center gap-2">🛠️ Módulo: Lista de Pozos & Apertura de Nuevo Sondaje</h2>
+            <p class="text-xs text-slate-600 font-medium">Seleccione un sondaje activo de la lista para ir directamente a la gestión de turnos, o seleccione la opción de registrar un nuevo sondaje para desplegar el formulario.</p>
+            
             <div class="space-y-4">
                 <div>
-                    <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Código del Sondaje * (Ej: S0001-ET)</label>
-                    <input type="text" id="m1_codigo" onblur="forzarMayusculas(this)" class="input-field w-full px-4 uppercase font-extrabold text-sm font-mono-code tracking-wider" placeholder="CÓDIGO ÚNICO">
-                </div>
-                <div>
-                    <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Empresa Titular / Cliente (Pagadora) *</label>
-                    <select id="m1_empresa" onchange="toggleOtraEmpresa()" class="input-field w-full px-4 text-sm font-bold">
-                        <option value="IVM C.A.">IVM C.A.</option>
-                        <option value="MINERÍA CARABOBO C.A.">MINERÍA CARABOBO C.A.</option>
-                        <option value="INDUSTRIAS AUDIT">INDUSTRIAS AUDIT</option>
-                        <option value="HAVILA 318">HAVILA 318</option>
-                        <option value="OTRA">Otra (Especificar)</option>
+                    <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Seleccionar de la Lista / Acción *</label>
+                    <select id="m1_selectSelector" onchange="manejarSeleccionModoPozo(this.value)" class="input-field w-full px-4 text-sm font-bold text-slate-900">
+                        <option value="">-- Seleccione un Pozo Activo o Registrar Nuevo --</option>
+                        <option value="REGISTRAR_NUEVO" class="font-black text-slate-900 bg-slate-100">➕ Registrar Nuevo Sondaje</option>
                     </select>
                 </div>
-                <div id="m1_otra_empresa_box" class="hidden">
-                    <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Especifique Empresa Cliente *</label>
-                    <input type="text" id="m1_otra_empresa" onblur="forzarMayusculas(this)" class="input-field w-full px-4 text-sm uppercase font-bold" placeholder="NOMBRE DE LA EMPRESA">
+
+                <!-- CONTENEDOR DE DATOS BÁSICOS (APARECE SOLO SI SE SELECCIONA REGISTRAR NUEVO) -->
+                <div id="m1_formularioNuevoPozo" class="hidden space-y-4 pt-4 border-t border-slate-200 bg-slate-50 p-4 rounded-2xl border border-slate-200 shadow-sm">
+                    <h3 class="text-xs font-black text-slate-900 uppercase tracking-wider">📝 Datos Básicos del Nuevo Sondaje</h3>
+                    <div>
+                        <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Código del Sondaje * (Ej: S0001-ET)</label>
+                        <input type="text" id="m1_codigo" onblur="forzarMayusculas(this)" class="input-field w-full px-4 uppercase font-extrabold text-sm font-mono-code tracking-wider bg-white" placeholder="CÓDIGO ÚNICO">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Empresa Titular / Cliente (Pagadora) *</label>
+                        <select id="m1_empresa" onchange="toggleOtraEmpresa()" class="input-field w-full px-4 text-sm font-bold bg-white">
+                            <option value="IVM C.A.">IVM C.A.</option>
+                            <option value="MINERÍA CARABOBO C.A.">MINERÍA CARABOBO C.A.</option>
+                            <option value="INDUSTRIAS AUDIT">INDUSTRIAS AUDIT</option>
+                            <option value="HAVILA 318">HAVILA 318</option>
+                            <option value="OTRA">Otra (Especificar)</option>
+                        </select>
+                    </div>
+                    <div id="m1_otra_empresa_box" class="hidden">
+                        <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Especifique Empresa Cliente *</label>
+                        <input type="text" id="m1_otra_empresa" onblur="forzarMayusculas(this)" class="input-field w-full px-4 text-sm uppercase font-bold bg-white" placeholder="NOMBRE DE LA EMPRESA">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Proyecto / Sector *</label>
+                        <input type="text" id="m1_proyecto" onblur="forzarMayusculas(this)" class="input-field w-full px-4 font-extrabold text-sm uppercase bg-white" placeholder="EJ: EL CALLAO / SECTOR NORTE">
+                    </div>
+                    <button type="button" id="btnCrearPozo" onclick="crearPozo()" class="btn-field w-full bg-slate-900 hover:bg-slate-800 text-white text-base font-black shadow-slate-900/20">
+                        💾 Crear Pozo y Continuar a Ficha Topográfica (Paso a Paso)
+                    </button>
                 </div>
-                <div>
-                    <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Proyecto / Sector *</label>
-                    <input type="text" id="m1_proyecto" onblur="forzarMayusculas(this)" class="input-field w-full px-4 font-extrabold text-sm uppercase" placeholder="EJ: EL CALLAO / SECTOR NORTE">
-                </div>
-                <button type="button" id="btnCrearPozo" onclick="crearPozo()" class="btn-field w-full bg-slate-900 hover:bg-slate-800 text-white text-base font-black shadow-slate-900/20">
-                    💾 Crear Pozo y Continuar a Ficha Topográfica (Paso a Paso)
-                </button>
             </div>
         </section>
 
@@ -762,7 +782,7 @@
                 </div>
             </div>
 
-            <!-- DSR FORMATO OFICIAL (USA LA IMAGEN ADJUNTA EN EL MEMBRETE Y MARCA DE AGUA) -->
+            <!-- DSR FORMATO OFICIAL -->
             <div id="printable-area" class="bg-white p-6 rounded-2xl border border-slate-200 space-y-4 text-xs text-slate-900 shadow-xl relative overflow-hidden">
                 
                 <div class="watermark-bg hidden print:flex">
@@ -943,6 +963,7 @@
             document.getElementById('m3_fecha').valueAsDate = new Date();
             migrarRecalcularPagosEstandar();
             refrescarSelectorPozos();
+            refrescarSelectorModuloUno();
             if (pozoActivoId && pozosData[pozoActivoId]) {
                 document.getElementById('globalWellSelect').value = pozoActivoId;
                 cargarDatosPozoEnFormularios(pozoActivoId);
@@ -1075,6 +1096,7 @@
             if (selBtn) selBtn.className = "sidebar-item active";
 
             if (tabId === 'mod_sala') renderizarSalaSituacional();
+            if (tabId === 'mod1') refrescarSelectorModuloUno();
             if (tabId === 'mod4') cargarResumenCierrePozo();
             if (tabId === 'mod5') { poblarSelectTurnosRepo(); generarReporteDSR(); }
             if (tabId === 'mod6') poblarSelectAdminBorrar();
@@ -1274,6 +1296,53 @@
             if (sel === 'OTRA') box.classList.remove('hidden'); else box.classList.add('hidden');
         }
 
+        function refrescarSelectorModuloUno() {
+            const sel = document.getElementById('m1_selectSelector');
+            if (!sel) return;
+            sel.innerHTML = '<option value="">-- Seleccione un Pozo Activo o Registrar Nuevo --</option>';
+            
+            Object.keys(pozosData).forEach(k => {
+                let p = pozosData[k];
+                if (p.estado === 'ABIERTO') {
+                    let opt = document.createElement('option');
+                    opt.value = k;
+                    opt.text = "Sondaje Activo: " + k + " (" + p.proyecto + ")";
+                    sel.appendChild(opt);
+                }
+            });
+
+            let optNuevo = document.createElement('option');
+            optNuevo.value = "REGISTRAR_NUEVO";
+            optNuevo.text = "➕ Registrar Nuevo Sondaje";
+            optNuevo.className = "font-black text-slate-900 bg-slate-100";
+            sel.appendChild(optNuevo);
+
+            document.getElementById('m1_formularioNuevoPozo').classList.add('hidden');
+        }
+
+        function manejarSeleccionModoPozo(val) {
+            const formNuevo = document.getElementById('m1_formularioNuevoPozo');
+            if (!val) {
+                formNuevo.classList.add('hidden');
+                return;
+            }
+            if (val === 'REGISTRAR_NUEVO') {
+                formNuevo.classList.remove('hidden');
+                document.getElementById('m1_codigo').value = '';
+                document.getElementById('m1_proyecto').value = '';
+                document.getElementById('m1_otra_empresa').value = '';
+                document.getElementById('m1_empresa').selectedIndex = 0;
+                document.getElementById('m1_otra_empresa_box').classList.add('hidden');
+            } else {
+                formNuevo.classList.add('hidden');
+                pozoActivoId = val;
+                localStorage.setItem('jireth_pozo_activo', pozoActivoId);
+                document.getElementById('globalWellSelect').value = val;
+                cargarDatosPozoEnFormularios(val);
+                switchTab('mod3_turno');
+            }
+        }
+
         async function crearPozo() {
             if (perfilActual === 'GERENCIA') { alert("⚠️ Perfil de Gerencia: Solo lectura."); return; }
             let codigo = document.getElementById('m1_codigo').value.trim().toUpperCase();
@@ -1289,12 +1358,7 @@
             pozoActivoId = codigo;
             localStorage.setItem('jireth_pozo_activo', pozoActivoId);
             refrescarSelectorPozos();
-
-            document.getElementById('m1_codigo').value = '';
-            document.getElementById('m1_proyecto').value = '';
-            document.getElementById('m1_otra_empresa').value = '';
-            document.getElementById('m1_empresa').selectedIndex = 0;
-            document.getElementById('m1_otra_empresa_box').classList.add('hidden');
+            refrescarSelectorModuloUno();
 
             cargarDatosPozoEnFormularios(codigo);
             alert("✅ Sondaje " + codigo + " creado. Ahora complete la Ficha Topográfica.");
@@ -1800,6 +1864,7 @@
             pozosData[pozoActivoId].obsCierre = obs;
             await guardarYPersistirTodo();
             refrescarSelectorPozos();
+            refrescarSelectorModuloUno();
             renderizarSalaSituacional();
             cargarResumenCierrePozo();
             alert("🔒 Sondaje " + pozoActivoId + " cerrado con éxito.");
@@ -1814,6 +1879,7 @@
                 delete pozosData[pozoActivoId].obsCierre;
                 await guardarYPersistirTodo();
                 refrescarSelectorPozos();
+                refrescarSelectorModuloUno();
                 renderizarSalaSituacional();
                 cargarResumenCierrePozo();
                 alert("✅ Sondaje reactivado a estado ABIERTO.");
@@ -2002,6 +2068,7 @@
                 if (pozoActivoId === codigo) { pozoActivoId = ''; localStorage.removeItem('jireth_pozo_activo'); }
                 await guardarYPersistirTodo();
                 refrescarSelectorPozos();
+                refrescarSelectorModuloUno();
                 poblarSelectAdminBorrar();
                 renderizarSalaSituacional();
                 alert("✅ Sondaje eliminado.");
@@ -2045,6 +2112,7 @@
                         migrarRecalcularPagosEstandar();
                         await guardarYPersistirTodo();
                         refrescarSelectorPozos();
+                        refrescarSelectorModuloUno();
                         renderizarSalaSituacional();
                         if (pozoActivoId) cargarDatosPozoEnFormularios(pozoActivoId);
                         alert("✅ Importado con éxito.");
@@ -2084,6 +2152,7 @@
                     }
                     migrarRecalcularPagosEstandar();
                     refrescarSelectorPozos();
+                    refrescarSelectorModuloUno();
                     renderizarSalaSituacional();
                     if (pozoActivoId && pozosData[pozoActivoId]) cargarDatosPozoEnFormularios(pozoActivoId);
                     if (mostrarAlerta) alert("✅ Sincronizado con Supabase correctamente.");
