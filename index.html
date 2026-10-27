@@ -1053,6 +1053,28 @@
             }
         });
 
+        // SERVICE WORKER AUTOMÁTICO PARA EVITAR EL DINOSAURIO DE CHROME OFFLINE
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                const swCode = `
+                    self.addEventListener('install', (e) => { self.skipWaiting(); });
+                    self.addEventListener('activate', (e) => { e.waitUntil(clients.claim()); });
+                    self.addEventListener('fetch', (e) => {
+                        e.respondWith(
+                            fetch(e.request).catch(() => {
+                                return caches.match(e.request).then((response) => {
+                                    return response || caches.match('./') || new Response("Jireth GeoCore Lite - Offline", { headers: {'Content-Type': 'text/html'} });
+                                });
+                            })
+                        );
+                    });
+                `;
+                const blob = new Blob([swCode], { type: 'text/javascript' });
+                const swUrl = URL.createObjectURL(blob);
+                navigator.serviceWorker.register(swUrl).catch(err => console.log("SW local init:", err));
+            });
+        }
+
         function migrarRecalcularPagosEstandar() {
             let huboCambios = false;
             Object.keys(pozosData).forEach(k => {
