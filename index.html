@@ -350,14 +350,14 @@
                         <span>🏠 Sala Situacional & Dashboard Pro (Solo Frentes Activos)</span>
                         <span class="text-xs bg-sky-100 text-sky-800 px-2.5 py-0.5 rounded-full border border-sky-300 font-mono-code pulse-live" id="contadorFrentesActivos">0 Activos</span>
                     </h2>
-                    <p class="text-xs text-slate-600 mt-0.5">Fichas individuales de pozos activos arriba; métricas, avances y gráficos analíticos independientes abajo.</p>
+                    <p class="text-xs text-slate-600 mt-0.5">Fichas individuales de pozos activos con perfil 2D incorporado arriba; métricas, avances y gráficos analíticos independientes abajo.</p>
                 </div>
                 <button type="button" onclick="renderizarSalaSituacional()" class="bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 px-3 py-2 rounded-xl text-xs font-bold transition shadow-sm">🔄 Actualizar En Vivo</button>
             </div>
 
             <div class="space-y-2">
                 <h3 class="text-xs font-black text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
-                    <span>📌 Fichas Individuales de Sondajes Activos</span>
+                    <span>📌 Fichas Individuales & Perfil 2D de Sondajes Activos</span>
                 </h3>
                 <div id="gridSalaSituacional" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
             </div>
@@ -683,7 +683,7 @@
                     </div>
                 </div>
 
-                <!-- NUEVA SECCIÓN: VISUALIZADOR DE PERFIL 2D (CANVAS) Y LOG LITOLÓGICO -->
+                <!-- VISUALIZADOR DE PERFIL 2D (CANVAS) Y LOG LITOLÓGICO -->
                 <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-3 shadow-sm">
                     <div class="flex justify-between items-center flex-wrap gap-2">
                         <h3 class="text-xs font-black text-slate-900 uppercase tracking-wider flex items-center gap-2">
@@ -933,6 +933,14 @@
                             <div><b>Geólogo Responsable:</b> <span id="repGeologoTurno" class="text-slate-800 font-bold">--</span></div>
                             <div><b>Metros HQ / NQ:</b> <span id="repMetrosHQRep" class="font-mono-code text-slate-800 font-bold">0.00m</span> / <span id="repMetrosNQRep" class="font-mono-code text-slate-700 font-bold">0.00m</span></div>
                             <div><b>Estado Sondaje:</b> <span id="repEstadoPozo" class="font-bold text-slate-900">--</span></div>
+                        </div>
+                    </div>
+
+                    <!-- NUEVO: VISUALIZADOR DE PERFIL 2D INTEGRADO EN REPORTE DSR -->
+                    <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200 space-y-2 avoid-break shadow-sm">
+                        <p class="text-[11px] font-black text-slate-900 uppercase tracking-wider">📐 Perfil Topográfico 2D & Log Litológico del Sondaje:</p>
+                        <div class="flex justify-center bg-slate-950 p-2 rounded-lg">
+                            <canvas id="canvasReporte2D" width="750" height="260" class="max-w-full h-auto bg-slate-950 rounded"></canvas>
                         </div>
                     </div>
 
@@ -1343,6 +1351,10 @@
                             <div class="bg-purple-50 p-2.5 rounded-xl border border-purple-200"><span class="text-purple-800 text-[9px] block uppercase font-bold">Proyecto</span><span class="text-purple-950 font-extrabold truncate block">${p.proyecto}</span></div>
                         </div>
                     </div>
+                    <!-- Miniatura de Perfil 2D Integrada en Sala Situacional -->
+                    <div class="bg-slate-950 p-1.5 rounded-xl border border-slate-800 shadow-inner">
+                        <canvas id="canvas-mini-${p.codigo}" width="340" height="120" class="w-full h-auto rounded"></canvas>
+                    </div>
                     <div class="space-y-3 pt-2 border-t border-slate-200">
                         <div class="flex justify-between items-center text-xs font-extrabold"><span class="text-slate-700">Progreso:</span><span class="text-indigo-950 font-mono-code font-black">${totalMetros.toFixed(2)}m / ${target.toFixed(2)}m (${pct.toFixed(1)}%)</span></div>
                         <div class="w-full bg-slate-200 h-3.5 rounded-full overflow-hidden flex border border-slate-300 p-0.5 shadow-inner">
@@ -1358,6 +1370,9 @@
                     </div>
                 `;
                 grid.appendChild(card);
+                
+                // Renderizar perfil miniatura en el canvas correspondiente
+                setTimeout(() => { renderizarPerfilMiniatura(p, `canvas-mini-${p.codigo}`); }, 50);
             });
         }
 
@@ -2092,7 +2107,6 @@
                 return;
             }
 
-            // Validación Geométrica de Inviolabilidad
             let resValidacion = validarGeometriaTramo(p, desde, hasta, indexEditandoAvance);
             if (!resValidacion.valido) {
                 alert(resValidacion.mensaje);
@@ -2121,7 +2135,6 @@
                 document.getElementById('btnCancelarEdicion').classList.add('hidden');
             } else { p.avances.push(objTramo); }
 
-            // Ordenar avances cromatográficamente por metraje 'Desde'
             p.avances.sort((a, b) => parseFloat(a.desde) - parseFloat(b.desde));
 
             await guardarYPersistirTodo();
@@ -2229,7 +2242,7 @@
             document.getElementById('barPendiente').style.width = pPend + '%';
         }
 
-        // MOTOR RENDERIZADOR 2D DEL PERFIL Y LOG LITOLÓGICO (CANVAS)
+        // MOTOR RENDERIZADOR 2D DEL PERFIL Y LOG LITOLÓGICO (CANVAS PRINCIPAL)
         function renderizarPerfil2D() {
             const canvas = document.getElementById('canvasPerfil2D');
             if (!canvas) return;
@@ -2237,7 +2250,6 @@
             const w = canvas.width;
             const h = canvas.height;
 
-            // Limpieza del Canvas con fondo oscuro geológico
             ctx.fillStyle = '#020617';
             ctx.fillRect(0, 0, w, h);
 
@@ -2250,44 +2262,61 @@
             }
 
             let p = pozosData[pozoActivoId];
-            let dipVal = Math.abs(parseFloat(p.dip) || 90); // Inclinación en grados
+            dibujarPerfilEnCanvas(ctx, p, w, h, false);
+        }
+
+        // MOTOR RENDERIZADOR 2D MINIATURA (SALA SITUACIONAL)
+        function renderizarPerfilMiniatura(p, canvasId) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width;
+            const h = canvas.height;
+
+            ctx.fillStyle = '#020617';
+            ctx.fillRect(0, 0, w, h);
+
+            dibujarPerfilEnCanvas(ctx, p, w, h, true);
+        }
+
+        // FUNCIÓN GENERALIZADA DE DIBUJO GEOLÓGICO 2D
+        function dibujarPerfilEnCanvas(ctx, p, w, h, esMiniatura = false) {
+            let dipVal = Math.abs(parseFloat(p.dip) || 90);
             let dipRad = (dipVal * Math.PI) / 180;
             let targetNum = parseFloat(p.target) || 100.0;
 
-            // Coordenadas de origen del brocal (collar)
-            let startX = 100;
-            let startY = 60;
-            let maxDrawLength = Math.min(w - 250, h - 120);
-            let scale = maxDrawLength / Math.max(targetNum, 20); // Escala píxeles por metro
+            let startX = esMiniatura ? 50 : 100;
+            let startY = esMiniatura ? 35 : 60;
+            let maxDrawLength = esMiniatura ? Math.min(w - 90, h - 50) : Math.min(w - 250, h - 120);
+            let scale = maxDrawLength / Math.max(targetNum, 20);
 
-            // Dibujar Terreno / Superficie Topográfica
+            // Superficie
             ctx.strokeStyle = '#1e293b';
-            ctx.lineWidth = 3;
+            ctx.lineWidth = esMiniatura ? 2 : 3;
             ctx.beginPath();
-            ctx.moveTo(20, startY);
-            ctx.lineTo(w - 20, startY);
+            ctx.moveTo(10, startY);
+            ctx.lineTo(w - 10, startY);
             ctx.stroke();
 
-            ctx.fillStyle = '#334155';
-            ctx.font = 'bold 10px "JetBrains Mono"';
-            ctx.textAlign = 'left';
-            ctx.fillText('SUPERFICIE (BROCAL z=' + (p.cota || '0m') + ')', 20, startY - 12);
-            ctx.fillText('DIP: -' + dipVal + '° | AZ: ' + (p.azimut || '0') + '°', 20, startY + 20);
+            if (!esMiniatura) {
+                ctx.fillStyle = '#334155';
+                ctx.font = 'bold 10px "JetBrains Mono"';
+                ctx.textAlign = 'left';
+                ctx.fillText('SUPERFICIE (BROCAL z=' + (p.cota || '0m') + ')', 20, startY - 12);
+                ctx.fillText('DIP: -' + dipVal + '° | AZ: ' + (p.azimut || '0') + '°', 20, startY + 20);
+            }
 
-            // Calcular trayectoria del pozo
             let endX = startX + Math.cos(dipRad) * targetNum * scale;
             let endY = startY + Math.sin(dipRad) * targetNum * scale;
 
-            // Dibujar línea guía de Target Planificado
             ctx.strokeStyle = '#334155';
-            ctx.lineWidth = 10;
+            ctx.lineWidth = esMiniatura ? 6 : 10;
             ctx.lineCap = 'round';
             ctx.beginPath();
             ctx.moveTo(startX, startY);
             ctx.lineTo(endX, endY);
             ctx.stroke();
 
-            // Mapa de Colores por Meteorización/Litología Estándar Geológica
             const colorMap = {
                 'SUELO / RELLENO': '#fef08a',
                 'SAPROLITA': '#fde047',
@@ -2298,32 +2327,30 @@
                 'ZONA DE VETA': '#eab308'
             };
 
-            // Dibujar Tramos Perforados con Colores Geológicos
             if (p.avances && p.avances.length > 0) {
                 p.avances.forEach((av, idx) => {
                     let d = parseFloat(av.desde);
-                    let h = parseFloat(av.hasta);
+                    let hTramo = parseFloat(av.hasta);
                     let diam = av.diametro;
 
                     let segStartX = startX + Math.cos(dipRad) * d * scale;
                     let segStartY = startY + Math.sin(dipRad) * d * scale;
-                    let segEndX = startX + Math.cos(dipRad) * h * scale;
-                    let segEndY = startY + Math.sin(dipRad) * h * scale;
+                    let segEndX = startX + Math.cos(dipRad) * hTramo * scale;
+                    let segEndY = startY + Math.sin(dipRad) * hTramo * scale;
 
                     ctx.strokeStyle = colorMap[av.meteorizacion] || '#94a3b8';
-                    ctx.lineWidth = diam === 'HQ' ? 14 : 9; // Grosor diferenciado HQ vs NQ
+                    ctx.lineWidth = esMiniatura ? (diam === 'HQ' ? 8 : 5) : (diam === 'HQ' ? 14 : 9);
                     ctx.lineCap = 'butt';
                     ctx.beginPath();
                     ctx.moveTo(segStartX, segStartY);
                     ctx.lineTo(segEndX, segEndY);
                     ctx.stroke();
 
-                    // Etiqueta de Metraje y Recuperación a la derecha
-                    if (idx % 2 === 0 || p.avances.length <= 8) {
+                    if (!esMiniatura && (idx % 2 === 0 || p.avances.length <= 8)) {
                         ctx.fillStyle = '#f8fafc';
                         ctx.font = '9px "JetBrains Mono"';
                         ctx.textAlign = 'left';
-                        ctx.fillText(`${h.toFixed(1)}m (${av.porcentaje}%)`, segEndX + 15, segEndY + 3);
+                        ctx.fillText(`${hTramo.toFixed(1)}m (${av.porcentaje}%)`, segEndX + 15, segEndY + 3);
 
                         ctx.strokeStyle = 'rgba(148, 163, 184, 0.3)';
                         ctx.lineWidth = 1;
@@ -2335,21 +2362,22 @@
                 });
             }
 
-            // Marcador del Brocal (Collar)
+            // Brocal
             ctx.fillStyle = '#ef4444';
             ctx.beginPath();
-            ctx.arc(startX, startY, 6, 0, Math.PI * 2);
+            ctx.arc(startX, startY, esMiniatura ? 4 : 6, 0, Math.PI * 2);
             ctx.fill();
 
-            // Leyenda de Código y Avance Total
-            let metAcum = p.avances ? p.avances.reduce((acc, curr) => acc + (parseFloat(curr.hasta) - parseFloat(curr.desde)), 0) : 0;
-            ctx.fillStyle = '#38bdf8';
-            ctx.font = 'bold 12px "Plus Jakarta Sans"';
-            ctx.textAlign = 'right';
-            ctx.fillText(p.codigo, w - 20, 30);
-            ctx.fillStyle = '#f8fafc';
-            ctx.font = '10px "JetBrains Mono"';
-            ctx.fillText(`Perforado: ${metAcum.toFixed(2)}m / ${targetNum.toFixed(2)}m`, w - 20, 48);
+            if (!esMiniatura) {
+                let metAcum = p.avances ? p.avances.reduce((acc, curr) => acc + (parseFloat(curr.hasta) - parseFloat(curr.desde)), 0) : 0;
+                ctx.fillStyle = '#38bdf8';
+                ctx.font = 'bold 12px "Plus Jakarta Sans"';
+                ctx.textAlign = 'right';
+                ctx.fillText(p.codigo, w - 20, 30);
+                ctx.fillStyle = '#f8fafc';
+                ctx.font = '10px "JetBrains Mono"';
+                ctx.fillText(`Perforado: ${metAcum.toFixed(2)}m / ${targetNum.toFixed(2)}m`, w - 20, 48);
+            }
         }
 
         function cargarResumenCierrePozo() {
@@ -2603,6 +2631,17 @@
                 document.getElementById('repMotivoCierreBox').innerHTML = `<b>Estado:</b> Sondaje Activo en Operación`;
             }
 
+            // Renderizar Perfil 2D en el Reporte Impreso
+            setTimeout(() => {
+                const canvasRep = document.getElementById('canvasReporte2D');
+                if (canvasRep) {
+                    const ctxR = canvasRep.getContext('2d');
+                    ctxR.fillStyle = '#020617';
+                    ctxR.fillRect(0, 0, canvasRep.width, canvasRep.height);
+                    dibujarPerfilEnCanvas(ctxR, p, canvasRep.width, canvasRep.height, false);
+                }
+            }, 100);
+
             const contenedorFirmas = document.getElementById('contenedorFirmasDSR');
             if (modo === 'CULMINADO' || modo === 'ACUMULADO') {
                 contenedorFirmas.innerHTML = `
@@ -2718,7 +2757,6 @@
             reader.readAsText(file);
         }
 
-        // SISTEMA ROBUSTO DE PERSISTENCIA Y COLA DE SINCRONIZACIÓN (SYNC QUEUE)
         async function guardarYPersistirTodo() {
             localStorage.setItem('jireth_pozos', JSON.stringify(pozosData));
             localStorage.setItem('jireth_turnos', JSON.stringify(turnosData));
@@ -2728,7 +2766,6 @@
 
             if (navigator.onLine && supabaseClient) {
                 try {
-                    // Intentar vaciar cola de sincronización pendiente antes del envío
                     await procesarColaSincronizacion();
 
                     const { error } = await supabaseClient.from('jireth_geocore').upsert({ id: 'db_principal', payload: payloadData });
@@ -2761,12 +2798,11 @@
             if (!navigator.onLine || !supabaseClient || syncQueue.length === 0) return;
 
             try {
-                // Tomar el registro más reciente de la cola para sincronización en lote
                 const ultimoCambio = syncQueue[syncQueue.length - 1];
                 const { error } = await supabaseClient.from('jireth_geocore').upsert({ id: ultimoCambio.id, payload: ultimoCambio.payload });
 
                 if (!error) {
-                    syncQueue = []; // Vaciar cola tras éxito
+                    syncQueue = [];
                     localStorage.setItem('jireth_sync_queue', JSON.stringify(syncQueue));
                     actualizarBadgeSyncQueue();
                 }
@@ -2781,7 +2817,6 @@
                 return;
             }
             try {
-                // Primero procesamos cualquier cola local acumulada
                 await procesarColaSincronizacion();
 
                 const { data, error } = await supabaseClient.from('jireth_geocore').select('payload').eq('id', 'db_principal').maybeSingle();
