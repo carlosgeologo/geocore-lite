@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jireth GeoCore Lite | Complejo Jireth C.A.</title>
     
-    <!-- ENLACE AL MANIFIESTO PWA PARA FUNCIONAMIENTO OFFLINE UNIVERSAL -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#0f172a">
     
@@ -123,7 +122,7 @@
         }
 
         @media print {
-            @page { size: portrait; margin: 15mm 10mm 15mm 10mm; }
+            @page { size: portrait; margin: 10mm; }
             body * { visibility: hidden !important; }
             #printable-area, #printable-area * { visibility: visible !important; }
             
@@ -135,23 +134,18 @@
                 background: #ffffff !important; 
                 color: #0f172a !important; 
                 padding: 0 !important; 
-                padding-top: 140px !important;
-                font-size: 11px !important;
+                font-size: 12px !important;
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
             }
 
             .page-header-membrete {
                 display: flex !important; 
-                position: fixed !important; 
-                top: 0 !important; 
-                left: 0 !important; 
-                right: 0 !important;
+                position: relative !important; 
                 background: #ffffff !important; 
                 border-bottom: 3px solid #0f172a !important; 
-                padding: 12px 15px !important; 
-                margin-bottom: 20px !important;
-                z-index: 1000 !important;
+                padding: 10px 0 !important; 
+                margin-bottom: 15px !important;
                 align-items: center !important;
                 justify-content: space-between !important;
             }
@@ -159,11 +153,6 @@
             .avoid-break { break-inside: avoid !important; page-break-inside: avoid !important; }
             thead { display: table-header-group !important; }
             tr { break-inside: avoid !important; page-break-inside: avoid !important; }
-            
-            .watermark-bg {
-                position: fixed; inset: 0; display: flex; align-items: center; justify-content: center;
-                opacity: 0.04; z-index: 0; pointer-events: none;
-            }
         }
     </style>
     <script src="https://cdn.tailwindcss.com"></script>
@@ -350,14 +339,14 @@
                         <span>🏠 Sala Situacional & Dashboard Pro (Solo Frentes Activos)</span>
                         <span class="text-xs bg-sky-100 text-sky-800 px-2.5 py-0.5 rounded-full border border-sky-300 font-mono-code pulse-live" id="contadorFrentesActivos">0 Activos</span>
                     </h2>
-                    <p class="text-xs text-slate-600 mt-0.5">Fichas individuales de pozos activos con perfil 2D incorporado arriba; métricas, avances y gráficos analíticos independientes abajo.</p>
+                    <p class="text-xs text-slate-600 mt-0.5">Fichas de pozos activos, métricas globales, gráficos analíticos y el Perfil 2D completo ubicado abajo.</p>
                 </div>
                 <button type="button" onclick="renderizarSalaSituacional()" class="bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 px-3 py-2 rounded-xl text-xs font-bold transition shadow-sm">🔄 Actualizar En Vivo</button>
             </div>
 
             <div class="space-y-2">
                 <h3 class="text-xs font-black text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
-                    <span>📌 Fichas Individuales & Perfil 2D de Sondajes Activos</span>
+                    <span>📌 Fichas Individuales de Sondajes Activos</span>
                 </h3>
                 <div id="gridSalaSituacional" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
             </div>
@@ -416,7 +405,7 @@
                     <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 shadow-sm">
                         <h3 class="text-xs font-bold text-slate-800 mb-3 flex items-center justify-between">
                             <span>🍩 Distribución Lito-Meteorológica Global (Pozos Activos)</span>
-                            <span class="text-[10px] text-amber-700 font-extrabold">Torta Multicollor</span>
+                            <span class="text-[10px] text-amber-700 font-extrabold">Torta Multicolor</span>
                         </h3>
                         <div class="h-56 relative">
                             <canvas id="chart-situacional-meteorizacion"></canvas>
@@ -430,6 +419,24 @@
                         <div class="h-56 relative">
                             <canvas id="chart-situacional-porcentajes"></canvas>
                         </div>
+                    </div>
+                </div>
+
+                <!-- PERFIL 2D INTEGRADO ABAJO EN LA SALA SITUACIONAL -->
+                <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-3 shadow-sm pt-4">
+                    <div class="flex justify-between items-center flex-wrap gap-2">
+                        <h3 class="text-xs font-black text-slate-900 uppercase tracking-wider flex items-center gap-2">
+                            <span>📐 Visualizador de Perfil 2D & Log Litológico General (Sala Situacional)</span>
+                        </h3>
+                        <div class="flex items-center gap-2">
+                            <select id="selectPozoPerfilSala" onchange="renderizarPerfilSalaSituacionalCompleto()" class="input-field px-3 py-1.5 text-xs font-bold text-slate-900 bg-white">
+                                <option value="">-- Seleccionar Sondaje a Visualizar --</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white p-3 rounded-xl border border-slate-200 overflow-x-auto shadow-inner flex justify-center">
+                        <canvas id="canvasSalaSituacionalGrande" width="900" height="380" class="max-w-full h-auto bg-slate-950 rounded-lg shadow-md"></canvas>
                     </div>
                 </div>
             </div>
@@ -872,53 +879,55 @@
                     </div>
                 </div>
 
+                <!-- ÁREA IMPRIMIBLE DSR (FUENTES AMPLIADAS Y LOGO GRANDE VISIBLE) -->
                 <div id="printable-area" class="bg-white p-6 rounded-2xl border border-slate-200 space-y-4 text-xs text-slate-900 shadow-xl relative overflow-hidden">
                     <div class="watermark-bg hidden print:flex">
                         <img src="1792941546023.jpg" alt="Watermark" class="w-96 h-96 object-contain opacity-10" onerror="this.src='https://images.unsplash.com/photo-1579783902614-a3fb3927b675?w=200&auto=format&fit=crop&q=60';">
                     </div>
 
-                    <div class="page-header-membrete border-b-3 border-slate-900 pb-3 flex justify-between items-center flex-wrap gap-3">
-                        <div class="flex items-center gap-3">
-                            <img src="1792941546023.jpg" alt="Complejo Jireth Logo" class="h-12 w-auto max-w-[160px] object-contain shrink-0" onerror="this.src='https://images.unsplash.com/photo-1579783902614-a3fb3927b675?w=150&auto=format&fit=crop&q=60';">
+                    <!-- MEMBRETE CON LOGO GRANDE Y VISIBLE -->
+                    <div class="page-header-membrete border-b-3 border-slate-900 pb-4 flex justify-between items-center flex-wrap gap-3">
+                        <div class="flex items-center gap-4">
+                            <img src="1792941546023.jpg" alt="Complejo Jireth Logo" class="h-16 w-auto max-w-[200px] object-contain shrink-0" onerror="this.src='https://images.unsplash.com/photo-1579783902614-a3fb3927b675?w=180&auto=format&fit=crop&q=60';">
                             <div class="border-l-2 border-slate-300 pl-3">
-                                <h3 class="text-sm font-black text-slate-900 uppercase tracking-tight" id="repTituloPrincipalDSR">
+                                <h3 class="text-base font-black text-slate-900 uppercase tracking-tight" id="repTituloPrincipalDSR">
                                     REPORTE DE TURNO
                                 </h3>
-                                <p class="text-[9px] text-slate-600 font-extrabold uppercase">COMPLEJO JIRETH C.A. — COORDINACIÓN DE GEOLOGÍA</p>
+                                <p class="text-[10px] text-slate-600 font-extrabold uppercase">COMPLEJO JIRETH C.A. — COORDINACIÓN DE GEOLOGÍA</p>
                             </div>
                         </div>
                         <div class="text-right">
-                            <p class="text-xs text-slate-900 font-black font-mono-code" id="repCodigoHeader">S0000-ET</p>
-                            <p class="text-[10px] text-slate-600 font-bold" id="repFechaEmision">Fecha: --/--/---- | Turno: --</p>
+                            <p class="text-sm font-mono-code text-slate-900 font-black" id="repCodigoHeader">S0000-ET</p>
+                            <p class="text-[11px] text-slate-600 font-bold" id="repFechaEmision">Fecha: --/--/---- | Turno: --</p>
                         </div>
                     </div>
 
                     <div class="grid grid-cols-4 gap-2 avoid-break pt-2">
-                        <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 shadow-sm">
-                            <p class="text-[9px] text-slate-500 uppercase font-black">PROF. PERFORADA</p>
-                            <p class="text-xs font-black text-slate-900 font-mono-code mt-0.5" id="repMetrajeTotal">0.00 m</p>
-                            <p class="text-[9px] text-slate-500 font-bold" id="repTargetSub">Target: 0.00 m</p>
+                        <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 shadow-sm">
+                            <p class="text-[10px] text-slate-500 uppercase font-black">PROF. PERFORADA</p>
+                            <p class="text-sm font-black text-slate-900 font-mono-code mt-0.5" id="repMetrajeTotal">0.00 m</p>
+                            <p class="text-[10px] text-slate-500 font-bold" id="repTargetSub">Target: 0.00 m</p>
                         </div>
-                        <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 shadow-sm">
-                            <p class="text-[9px] text-slate-500 uppercase font-black">RECUPERACIÓN</p>
-                            <p class="text-xs font-black text-slate-900 font-mono-code mt-0.5" id="repRecPromedio">0.0%</p>
-                            <p class="text-[9px] text-slate-500 font-bold">Muestra en Testigo</p>
+                        <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 shadow-sm">
+                            <p class="text-[10px] text-slate-500 uppercase font-black">RECUPERACIÓN</p>
+                            <p class="text-sm font-black text-slate-900 font-mono-code mt-0.5" id="repRecPromedio">0.0%</p>
+                            <p class="text-[10px] text-slate-500 font-bold">Muestra en Testigo</p>
                         </div>
-                        <div class="bg-slate-100 p-2.5 rounded-xl border border-slate-200 shadow-sm">
-                            <p class="text-[9px] text-slate-700 uppercase font-black">METROS A PAGAR</p>
-                            <p class="text-xs font-black text-slate-950 font-mono-code mt-0.5" id="repMetrosPagoTotal">0.00 m</p>
-                            <p class="text-[9px] text-slate-700 font-bold">Según Estándar</p>
+                        <div class="bg-slate-100 p-3 rounded-xl border border-slate-200 shadow-sm">
+                            <p class="text-[10px] text-slate-700 uppercase font-black">METROS A PAGAR</p>
+                            <p class="text-sm font-black text-slate-950 font-mono-code mt-0.5" id="repMetrosPagoTotal">0.00 m</p>
+                            <p class="text-[10px] text-slate-700 font-bold">Según Estándar</p>
                         </div>
-                        <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 shadow-sm">
-                            <p class="text-[9px] text-slate-500 uppercase font-black">AVANCE GENERAL</p>
-                            <p class="text-xs font-black text-slate-900 font-mono-code mt-0.5" id="repAvanceGen">0.0%</p>
-                            <p class="text-[9px] text-slate-500 font-bold">Progreso Pozo</p>
+                        <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 shadow-sm">
+                            <p class="text-[10px] text-slate-500 uppercase font-black">AVANCE GENERAL</p>
+                            <p class="text-sm font-black text-slate-900 font-mono-code mt-0.5" id="repAvanceGen">0.0%</p>
+                            <p class="text-[10px] text-slate-500 font-bold">Progreso Pozo</p>
                         </div>
                     </div>
 
-                    <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200 grid grid-cols-1 sm:grid-cols-2 gap-3 text-[11px] avoid-break shadow-sm">
-                        <div class="space-y-1">
-                            <p class="text-slate-900 font-black uppercase text-[10px] tracking-wider border-b border-slate-200 pb-1">DATOS DE PERFORACIÓN Y UBICACIÓN</p>
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs avoid-break shadow-sm">
+                        <div class="space-y-1.5">
+                            <p class="text-slate-900 font-black uppercase text-xs tracking-wider border-b border-slate-200 pb-1">DATOS DE PERFORACIÓN Y UBICACIÓN</p>
                             <div><b>Zona / Proyecto:</b> <span id="repProyecto" class="text-slate-800 font-bold">--</span></div>
                             <div><b>Empresa Perforadora:</b> <span id="repEmpresa" class="text-slate-800 font-bold">--</span></div>
                             <div><b>Máquina:</b> <span id="repMaquina" class="text-slate-800 font-semibold">--</span></div>
@@ -926,8 +935,8 @@
                             <div><b>Coordenada Norte:</b> <span id="repNorte" class="font-mono-code text-slate-800">--</span></div>
                             <div><b>Cota Z (m):</b> <span id="repCota" class="font-mono-code text-slate-800">--</span></div>
                         </div>
-                        <div class="space-y-1">
-                            <p class="text-slate-900 font-black uppercase text-[10px] tracking-wider border-b border-slate-200 pb-1">SUPERVISIÓN Y DIÁMETROS</p>
+                        <div class="space-y-1.5">
+                            <p class="text-slate-900 font-black uppercase text-xs tracking-wider border-b border-slate-200 pb-1">SUPERVISIÓN Y DIÁMETROS</p>
                             <div><b>Inclinación (Dip) / Azimut:</b> <span id="repDipAzimut" class="font-mono-code text-slate-800">--</span></div>
                             <div><b>Operador Perforadora:</b> <span id="repPerforadorTurno" class="text-slate-800 font-bold">--</span></div>
                             <div><b>Geólogo Responsable:</b> <span id="repGeologoTurno" class="text-slate-800 font-bold">--</span></div>
@@ -936,38 +945,54 @@
                         </div>
                     </div>
 
-                    <!-- NUEVO: VISUALIZADOR DE PERFIL 2D INTEGRADO EN REPORTE DSR -->
-                    <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200 space-y-2 avoid-break shadow-sm">
-                        <p class="text-[11px] font-black text-slate-900 uppercase tracking-wider">📐 Perfil Topográfico 2D & Log Litológico del Sondaje:</p>
-                        <div class="flex justify-center bg-slate-950 p-2 rounded-lg">
-                            <canvas id="canvasReporte2D" width="750" height="260" class="max-w-full h-auto bg-slate-950 rounded"></canvas>
+                    <!-- VISUALIZADOR DE PERFIL 2D FILTRADO (TURNO VS ACUMULADO) EN REPORTE DSR -->
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2 avoid-break shadow-sm">
+                        <p class="text-xs font-black text-slate-900 uppercase tracking-wider" id="repTituloPerfil2D">📐 Perfil Topográfico 2D & Log Litológico (Tramos del Turno):</p>
+                        <div class="flex justify-center bg-slate-950 p-3 rounded-lg">
+                            <canvas id="canvasReporte2D" width="800" height="280" class="max-w-full h-auto bg-slate-950 rounded"></canvas>
                         </div>
                     </div>
 
-                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 text-[10px] avoid-break shadow-sm">
+                    <!-- GRÁFICAS ANALÍTICAS INTEGRADAS EN EL REPORTE -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 avoid-break">
+                        <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 shadow-sm">
+                            <p class="text-[11px] font-black text-slate-900 uppercase mb-2">🥧 Recuperación y Estándar de Testigo</p>
+                            <div class="h-40 relative">
+                                <canvas id="chart-reporte-recuperacion"></canvas>
+                            </div>
+                        </div>
+                        <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 shadow-sm">
+                            <p class="text-[11px] font-black text-slate-900 uppercase mb-2">🍩 Distribución Lito-Meteorológica</p>
+                            <div class="h-40 relative">
+                                <canvas id="chart-reporte-litologia"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200 text-xs avoid-break shadow-sm">
                         <p class="font-black text-slate-900 uppercase mb-1">📐 Criterio Estándar de Meteorización y Pago (% Recuperación de Testigo):</p>
                         <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-slate-700">
-                            <div><b>Suelo / Saprolita:</b> Umbral de recuperación &ge; 70%</div>
-                            <div><b>Saprock / Roca Fract.:</b> Umbral de recuperación &ge; 70% - 80%</div>
-                            <div><b>Roca Fresca / Veta:</b> Umbral de recuperación &ge; 90%</div>
+                            <div><b>Suelo / Saprolita:</b> Umbral &ge; 70%</div>
+                            <div><b>Saprock / Roca Fract.:</b> Umbral &ge; 70% - 80%</div>
+                            <div><b>Roca Fresca / Veta:</b> Umbral &ge; 90%</div>
                         </div>
                     </div>
 
                     <div>
                         <h4 class="text-xs font-black text-slate-900 uppercase tracking-wider mb-2">🪵 REGISTRO DETALLADO TRAMO A TRAMO (CON ESTÁNDAR DE PAGO)</h4>
                         <div class="overflow-x-auto border border-slate-200 rounded-xl shadow-sm">
-                            <table class="w-full text-left text-[10px] border-collapse">
+                            <table class="w-full text-left text-xs border-collapse">
                                 <thead class="bg-slate-800 text-white uppercase font-black border-b border-slate-300">
                                     <tr>
-                                        <th class="p-2 border-r border-slate-700">Corrida</th>
-                                        <th class="p-2 border-r border-slate-700">Desde</th>
-                                        <th class="p-2 border-r border-slate-700">Hasta</th>
-                                        <th class="p-2 border-r border-slate-700">Avance</th>
-                                        <th class="p-2 border-r border-slate-700">Diám</th>
-                                        <th class="p-2 border-r border-slate-700">Recup</th>
-                                        <th class="p-2 border-r border-slate-700">% Rec</th>
-                                        <th class="p-2 border-r border-slate-700">Litología</th>
-                                        <th class="p-2 text-slate-200 font-black">Pago Estándar</th>
+                                        <th class="p-2.5 border-r border-slate-700">Corrida</th>
+                                        <th class="p-2.5 border-r border-slate-700">Desde</th>
+                                        <th class="p-2.5 border-r border-slate-700">Hasta</th>
+                                        <th class="p-2.5 border-r border-slate-700">Avance</th>
+                                        <th class="p-2.5 border-r border-slate-700">Diám</th>
+                                        <th class="p-2.5 border-r border-slate-700">Recup</th>
+                                        <th class="p-2.5 border-r border-slate-700">% Rec</th>
+                                        <th class="p-2.5 border-r border-slate-700">Litología</th>
+                                        <th class="p-2.5 text-slate-200 font-black">Pago Estándar</th>
                                     </tr>
                                 </thead>
                                 <tbody id="repTablaBody" class="divide-y divide-slate-200 font-mono-code text-slate-900"></tbody>
@@ -975,13 +1000,13 @@
                         </div>
                     </div>
 
-                    <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200 space-y-1 avoid-break shadow-sm">
-                        <p class="text-[11px] font-black text-slate-900 uppercase tracking-wider">📝 Observación y Operaciones Principales del Turno:</p>
-                        <p class="text-slate-800 text-[11px] uppercase font-semibold leading-relaxed" id="repObservacionesTexto">SIN NOVEDADES REGISTRADAS.</p>
-                        <p class="text-slate-600 text-[10px] mt-1 font-bold" id="repMotivoCierreBox"></p>
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-1 avoid-break shadow-sm">
+                        <p class="text-xs font-black text-slate-900 uppercase tracking-wider">📝 Observación y Operaciones Principales del Turno:</p>
+                        <p class="text-slate-800 text-xs uppercase font-semibold leading-relaxed" id="repObservacionesTexto">SIN NOVEDADES REGISTRADAS.</p>
+                        <p class="text-slate-600 text-xs mt-1 font-bold" id="repMotivoCierreBox"></p>
                     </div>
 
-                    <div class="pt-6 border-t-2 border-slate-200 text-[10px] text-slate-800 avoid-break" id="contenedorFirmasDSR"></div>
+                    <div class="pt-6 border-t-2 border-slate-200 text-xs text-slate-800 avoid-break" id="contenedorFirmasDSR"></div>
                 </div>
             </div>
         </section>
@@ -1038,6 +1063,8 @@
         let chartSituacionalMeteorizacion = null;
         let chartSituacionalPorcentajes = null;
         let chartCierreMeteorizacion = null;
+        let chartReporteRecuperacion = null;
+        let chartReporteLitologia = null;
 
         if (!localStorage.getItem('jireth_clave_geo')) localStorage.setItem('jireth_clave_geo', 'Mina2628');
         localStorage.setItem('jireth_clave_ger', 'JIRETH2026');
@@ -1273,6 +1300,20 @@
             let chartLabels = [], chartAvances = [], chartPlan = [], chartRec = [], chartPorcentajes = [];
             let meteorizacionTotales = {};
 
+            // Poblar selector del Perfil 2D grande en Sala Situacional
+            const selPerfilSala = document.getElementById('selectPozoPerfilSala');
+            if (selPerfilSala) {
+                let valActual = selPerfilSala.value;
+                selPerfilSala.innerHTML = '<option value="">-- Seleccionar Sondaje Activo --</option>';
+                pozosActivosKeys.forEach(k => {
+                    let opt = document.createElement('option');
+                    opt.value = k;
+                    opt.text = "Sondaje: " + k;
+                    if (k === valActual || (!valActual && k === pozosActivosKeys[0])) opt.selected = true;
+                    selPerfilSala.appendChild(opt);
+                });
+            }
+
             pozosActivosKeys.forEach(k => {
                 let p = pozosData[k];
                 let metPozo = 0, recPozoAcc = 0;
@@ -1310,6 +1351,8 @@
             renderChartSituacionalRecuperacion(chartLabels, chartRec);
             renderChartSituacionalMeteorizacion(meteorizacionTotales);
             renderChartSituacionalPorcentajes(chartLabels, chartPorcentajes);
+
+            renderizarPerfilSalaSituacionalCompleto();
 
             if (pozosActivosKeys.length === 0) {
                 grid.innerHTML = `<div class="col-span-full bg-slate-50 p-8 rounded-2xl border border-slate-200 text-center space-y-3 shadow-sm"><div class="text-3xl">📡</div><h3 class="text-base font-black text-slate-900 uppercase tracking-wider">SALA SITUACIONAL — SIN SONDAJES ACTIVOS</h3><p class="text-xs text-slate-500 max-w-md mx-auto">No hay sondajes activos en este momento.</p></div>`;
@@ -1351,10 +1394,6 @@
                             <div class="bg-purple-50 p-2.5 rounded-xl border border-purple-200"><span class="text-purple-800 text-[9px] block uppercase font-bold">Proyecto</span><span class="text-purple-950 font-extrabold truncate block">${p.proyecto}</span></div>
                         </div>
                     </div>
-                    <!-- Miniatura de Perfil 2D Integrada en Sala Situacional -->
-                    <div class="bg-slate-950 p-1.5 rounded-xl border border-slate-800 shadow-inner">
-                        <canvas id="canvas-mini-${p.codigo}" width="340" height="120" class="w-full h-auto rounded"></canvas>
-                    </div>
                     <div class="space-y-3 pt-2 border-t border-slate-200">
                         <div class="flex justify-between items-center text-xs font-extrabold"><span class="text-slate-700">Progreso:</span><span class="text-indigo-950 font-mono-code font-black">${totalMetros.toFixed(2)}m / ${target.toFixed(2)}m (${pct.toFixed(1)}%)</span></div>
                         <div class="w-full bg-slate-200 h-3.5 rounded-full overflow-hidden flex border border-slate-300 p-0.5 shadow-inner">
@@ -1370,10 +1409,36 @@
                     </div>
                 `;
                 grid.appendChild(card);
-                
-                // Renderizar perfil miniatura en el canvas correspondiente
-                setTimeout(() => { renderizarPerfilMiniatura(p, `canvas-mini-${p.codigo}`); }, 50);
             });
+        }
+
+        function renderizarPerfilSalaSituacionalCompleto() {
+            const canvas = document.getElementById('canvasSalaSituacionalGrande');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width;
+            const h = canvas.height;
+
+            ctx.fillStyle = '#020617';
+            ctx.fillRect(0, 0, w, h);
+
+            const sel = document.getElementById('selectPozoPerfilSala');
+            let pozoKey = sel ? sel.value : '';
+            if (!pozoKey) {
+                let activos = Object.keys(pozosData).filter(k => pozosData[k].estado === 'ABIERTO');
+                if (activos.length > 0) pozoKey = activos[0];
+            }
+
+            if (!pozoKey || !pozosData[pozoKey]) {
+                ctx.fillStyle = '#64748b';
+                ctx.font = 'bold 14px "Plus Jakarta Sans"';
+                ctx.textAlign = 'center';
+                ctx.fillText('NO HAY SONDAJES ACTIVOS DISPONIBLES', w / 2, h / 2);
+                return;
+            }
+
+            let p = pozosData[pozoKey];
+            dibujarPerfilEnCanvas(ctx, p, w, h, false, p.avances);
         }
 
         function irARepositorioSondaje(codigo) {
@@ -2063,7 +2128,6 @@
             document.getElementById('m3_recuperado').value = '';
         }
 
-        // VALIDACIÓN GEOMÉTRICA DE TRAMOS (SIN OVERLAPS NI GAPS)
         function validarGeometriaTramo(p, desde, hasta, idxExcluir = null) {
             if (desde >= hasta) {
                 return { valido: false, mensaje: "❌ Error Geométrico: El metraje 'Hasta' debe ser estrictamente mayor que 'Desde'." };
@@ -2078,7 +2142,6 @@
                 let tDesde = parseFloat(t.desde);
                 let tHasta = parseFloat(t.hasta);
 
-                // Solapamiento (Overlap)
                 if ((desde >= tDesde && desde < tHasta) || (hasta > tDesde && hasta <= tHasta) || (desde <= tDesde && hasta >= tHasta)) {
                     return { 
                         valido: false, 
@@ -2242,7 +2305,7 @@
             document.getElementById('barPendiente').style.width = pPend + '%';
         }
 
-        // MOTOR RENDERIZADOR 2D DEL PERFIL Y LOG LITOLÓGICO (CANVAS PRINCIPAL)
+        // MOTOR RENDERIZADOR 2D DEL PERFIL Y LOG LITOLÓGICO (FLEXIBLE PARA FILTRAR TRAMOS)
         function renderizarPerfil2D() {
             const canvas = document.getElementById('canvasPerfil2D');
             if (!canvas) return;
@@ -2262,25 +2325,10 @@
             }
 
             let p = pozosData[pozoActivoId];
-            dibujarPerfilEnCanvas(ctx, p, w, h, false);
+            dibujarPerfilEnCanvas(ctx, p, w, h, false, p.avances);
         }
 
-        // MOTOR RENDERIZADOR 2D MINIATURA (SALA SITUACIONAL)
-        function renderizarPerfilMiniatura(p, canvasId) {
-            const canvas = document.getElementById(canvasId);
-            if (!canvas) return;
-            const ctx = canvas.getContext('2d');
-            const w = canvas.width;
-            const h = canvas.height;
-
-            ctx.fillStyle = '#020617';
-            ctx.fillRect(0, 0, w, h);
-
-            dibujarPerfilEnCanvas(ctx, p, w, h, true);
-        }
-
-        // FUNCIÓN GENERALIZADA DE DIBUJO GEOLÓGICO 2D
-        function dibujarPerfilEnCanvas(ctx, p, w, h, esMiniatura = false) {
+        function dibujarPerfilEnCanvas(ctx, p, w, h, esMiniatura = false, listaTramos = null) {
             let dipVal = Math.abs(parseFloat(p.dip) || 90);
             let dipRad = (dipVal * Math.PI) / 180;
             let targetNum = parseFloat(p.target) || 100.0;
@@ -2290,7 +2338,6 @@
             let maxDrawLength = esMiniatura ? Math.min(w - 90, h - 50) : Math.min(w - 250, h - 120);
             let scale = maxDrawLength / Math.max(targetNum, 20);
 
-            // Superficie
             ctx.strokeStyle = '#1e293b';
             ctx.lineWidth = esMiniatura ? 2 : 3;
             ctx.beginPath();
@@ -2327,8 +2374,10 @@
                 'ZONA DE VETA': '#eab308'
             };
 
-            if (p.avances && p.avances.length > 0) {
-                p.avances.forEach((av, idx) => {
+            let tramosARenderizar = listaTramos !== null ? listaTramos : (p.avances || []);
+
+            if (tramosARenderizar && tramosARenderizar.length > 0) {
+                tramosARenderizar.forEach((av, idx) => {
                     let d = parseFloat(av.desde);
                     let hTramo = parseFloat(av.hasta);
                     let diam = av.diametro;
@@ -2346,7 +2395,7 @@
                     ctx.lineTo(segEndX, segEndY);
                     ctx.stroke();
 
-                    if (!esMiniatura && (idx % 2 === 0 || p.avances.length <= 8)) {
+                    if (!esMiniatura && (idx % 2 === 0 || tramosARenderizar.length <= 8)) {
                         ctx.fillStyle = '#f8fafc';
                         ctx.font = '9px "JetBrains Mono"';
                         ctx.textAlign = 'left';
@@ -2362,21 +2411,20 @@
                 });
             }
 
-            // Brocal
             ctx.fillStyle = '#ef4444';
             ctx.beginPath();
             ctx.arc(startX, startY, esMiniatura ? 4 : 6, 0, Math.PI * 2);
             ctx.fill();
 
             if (!esMiniatura) {
-                let metAcum = p.avances ? p.avances.reduce((acc, curr) => acc + (parseFloat(curr.hasta) - parseFloat(curr.desde)), 0) : 0;
+                let metAcum = tramosARenderizar ? tramosARenderizar.reduce((acc, curr) => acc + (parseFloat(curr.hasta) - parseFloat(curr.desde)), 0) : 0;
                 ctx.fillStyle = '#38bdf8';
                 ctx.font = 'bold 12px "Plus Jakarta Sans"';
                 ctx.textAlign = 'right';
                 ctx.fillText(p.codigo, w - 20, 30);
                 ctx.fillStyle = '#f8fafc';
                 ctx.font = '10px "JetBrains Mono"';
-                ctx.fillText(`Perforado: ${metAcum.toFixed(2)}m / ${targetNum.toFixed(2)}m`, w - 20, 48);
+                ctx.fillText(`Metraje Visualizado: ${metAcum.toFixed(2)}m`, w - 20, 48);
             }
         }
 
@@ -2537,12 +2585,15 @@
             if (modo === 'TURNO') {
                 boxTurno.classList.remove('hidden');
                 document.getElementById('repTituloPrincipalDSR').innerText = "REPORTE DE TURNO";
+                document.getElementById('repTituloPerfil2D').innerText = "📐 Perfil Topográfico 2D & Log Litológico (Tramos del Turno Seleccionado):";
             } else if (modo === 'ACUMULADO') {
                 boxTurno.classList.add('hidden');
                 document.getElementById('repTituloPrincipalDSR').innerText = "REPORTE ACUMULADO DEL SONDAJE";
+                document.getElementById('repTituloPerfil2D').innerText = "📐 Perfil Topográfico 2D & Log Litológico (Acumulado General):";
             } else if (modo === 'CULMINADO') {
                 boxTurno.classList.add('hidden');
                 document.getElementById('repTituloPrincipalDSR').innerText = "REPORTE SONDAJE CULMINADO";
+                document.getElementById('repTituloPerfil2D').innerText = "📐 Perfil Topográfico 2D & Log Litológico (Sondaje Culminado):";
             }
 
             let listaAvancesFiltrada = [];
@@ -2608,7 +2659,7 @@
 
                 let tr = document.createElement('tr');
                 tr.className = "border-b border-slate-200 hover:bg-slate-50";
-                tr.innerHTML = `<td class="p-2 border-r border-slate-200 font-bold">#${idx + 1}</td><td class="p-2 border-r border-slate-200">${t.desde}</td><td class="p-2 border-r border-slate-200">${t.hasta}</td><td class="p-2 border-r border-slate-200 font-bold">${met.toFixed(2)}</td><td class="p-2 border-r border-slate-200 font-bold text-slate-800">${t.diametro}</td><td class="p-2 border-r border-slate-200">${t.recuperado}</td><td class="p-2 border-r border-slate-200 font-bold ${parseFloat(t.porcentaje) < 70 ? 'text-amber-800' : 'text-slate-900'}">${t.porcentaje}%</td><td class="p-2 border-r border-slate-200">${t.meteorizacion}</td><td class="p-2 font-black text-slate-950 bg-slate-100">${pagoTramo.toFixed(2)} m</td>`;
+                tr.innerHTML = `<td class="p-2.5 border-r border-slate-200 font-bold">#${idx + 1}</td><td class="p-2.5 border-r border-slate-200">${t.desde}</td><td class="p-2.5 border-r border-slate-200">${t.hasta}</td><td class="p-2.5 border-r border-slate-200 font-bold">${met.toFixed(2)}</td><td class="p-2.5 border-r border-slate-200 font-bold text-slate-800">${t.diametro}</td><td class="p-2.5 border-r border-slate-200">${t.recuperado}</td><td class="p-2.5 border-r border-slate-200 font-bold ${parseFloat(t.porcentaje) < 70 ? 'text-amber-800' : 'text-slate-900'}">${t.porcentaje}%</td><td class="p-2.5 border-r border-slate-200">${t.meteorizacion}</td><td class="p-2.5 font-black text-slate-950 bg-slate-100">${pagoTramo.toFixed(2)} m</td>`;
                 tbody.appendChild(tr);
             });
 
@@ -2631,15 +2682,19 @@
                 document.getElementById('repMotivoCierreBox').innerHTML = `<b>Estado:</b> Sondaje Activo en Operación`;
             }
 
-            // Renderizar Perfil 2D en el Reporte Impreso
+            // Renderizar Perfil 2D filtrado en el Reporte (Solo tramos del turno o acumulados según selección)
             setTimeout(() => {
                 const canvasRep = document.getElementById('canvasReporte2D');
                 if (canvasRep) {
                     const ctxR = canvasRep.getContext('2d');
                     ctxR.fillStyle = '#020617';
                     ctxR.fillRect(0, 0, canvasRep.width, canvasRep.height);
-                    dibujarPerfilEnCanvas(ctxR, p, canvasRep.width, canvasRep.height, false);
+                    dibujarPerfilEnCanvas(ctxR, p, canvasRep.width, canvasRep.height, false, listaAvancesFiltrada);
                 }
+
+                // Renderizar gráficos dentro del reporte
+                renderChartReporteRecuperacion(listaAvancesFiltrada);
+                renderChartReporteLitologia(listaAvancesFiltrada);
             }, 100);
 
             const contenedorFirmas = document.getElementById('contenedorFirmasDSR');
@@ -2674,6 +2729,62 @@
                     </div>
                 `;
             }
+        }
+
+        function renderChartReporteRecuperacion(tramos) {
+            const ctx = document.getElementById('chart-reporte-recuperacion');
+            if (!ctx) return;
+            if (chartReporteRecuperacion) chartReporteRecuperacion.destroy();
+
+            let labels = tramos.map((t, i) => `#${i+1} (${t.desde}-${t.hasta}m)`);
+            let data = tramos.map(t => parseFloat(t.porcentaje) || 0);
+
+            chartReporteRecuperacion = new Chart(ctx.getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: labels.length > 0 ? labels : ['Sin tramos'],
+                    datasets: [{ label: '% Recuperación', data: data.length > 0 ? data : [0], backgroundColor: '#7e22ce', borderRadius: 4 }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { ticks: { color: '#1e293b', font: { size: 9, weight: 'bold' } }, grid: { display: false } },
+                        y: { max: 100, ticks: { color: '#1e293b', font: { size: 9 } }, grid: { color: '#e2e8f0' } }
+                    }
+                }
+            });
+        }
+
+        function renderChartReporteLitologia(tramos) {
+            const ctx = document.getElementById('chart-reporte-litologia');
+            if (!ctx) return;
+            if (chartReporteLitologia) chartReporteLitologia.destroy();
+
+            let totals = {};
+            tramos.forEach(t => {
+                let len = parseFloat(t.hasta) - parseFloat(t.desde);
+                totals[t.meteorizacion] = (totals[t.meteorizacion] || 0) + len;
+            });
+            let keys = Object.keys(totals);
+            let vals = keys.map(k => totals[k].toFixed(2));
+
+            chartReporteLitologia = new Chart(ctx.getContext('2d'), {
+                type: 'doughnut',
+                data: {
+                    labels: keys.length > 0 ? keys : ['Sin datos'],
+                    datasets: [{
+                        data: vals.length > 0 ? vals : [1],
+                        backgroundColor: ['#312e81', '#7e22ce', '#047857', '#b45309', '#0284c7', '#db2777', '#475569']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'right', labels: { color: '#1e293b', font: { size: 9, weight: 'bold' } } } }
+                }
+            });
         }
 
         function imprimirOExportarPDF() { window.print(); }
