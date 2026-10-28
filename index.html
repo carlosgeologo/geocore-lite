@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jireth GeoCore Lite | Complejo Jireth C.A.</title>
     
-    <!-- ENLACE AL MANIFIESTO PWA PARA FUNCIONAMIENTO OFFLINE UNIVERSAL -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#0f172a">
     
@@ -129,7 +128,7 @@
             right: 20px;
             z-index: 9999;
             display: flex;
-            flex-col: column;
+            flex-direction: column;
             gap: 10px;
             pointer-events: none;
         }
@@ -154,6 +153,15 @@
             opacity: 1;
             transform: translateY(0);
         }
+
+        /* LITOLOGÍA VISUAL PATTERNS */
+        .litho-suelo { background-color: #fef08a; border-left: 4px solid #ca8a04; }
+        .litho-saprolita { background-color: #fde047; border-left: 4px solid #b45309; }
+        .litho-saprock { background-color: #fed7aa; border-left: 4px solid #c2410c; }
+        .litho-oxidada { background-color: #fca5a5; border-left: 4px solid #b91c1c; }
+        .litho-fracturada { background-color: #cbd5e1; border-left: 4px solid #334155; }
+        .litho-fresca { background-color: #94a3b8; border-left: 4px solid #0f172a; }
+        .litho-veta { background-color: #f43f5e; border-left: 4px solid #ffe4e6; }
 
         @media print {
             @page { size: portrait; margin: 15mm 10mm 15mm 10mm; }
@@ -203,10 +211,9 @@
 </head>
 <body class="min-h-screen p-2.5 sm:p-4 antialiased selection:bg-slate-700 selection:text-white text-slate-800">
 
-    <!-- CONTENEDOR TOAST FLOTANTE PARA AVISOS DE ÉXITO -->
     <div id="toastContainer"></div>
 
-    <!-- PANTALLA DE ACCESO Y BIENVENIDA -->
+    <!-- PANTALLA LOGIN -->
     <div id="pantallaLogin" class="fixed inset-0 bg-bienvenida-oficial z-50 flex items-center justify-center p-4 backdrop-blur-sm overflow-y-auto">
         <div class="bg-white p-5 sm:p-7 rounded-3xl border border-slate-200 w-full max-w-lg space-y-4 shadow-2xl relative overflow-hidden backdrop-blur-md my-auto text-slate-900">
             <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-slate-700 via-slate-500 to-slate-700 laser-line"></div>
@@ -292,7 +299,7 @@
         </div>
     </div>
 
-    <!-- PANEL LATERAL DESPLEGABLE (SIDEBAR MENU) -->
+    <!-- SIDEBAR MENU -->
     <div id="sidebarOverlay" class="fixed inset-0 bg-slate-950/50 z-50 hidden backdrop-blur-sm transition-opacity" onclick="toggleSidebar()"></div>
     <aside id="sidebarMenu" class="fixed top-0 left-0 bottom-0 w-80 bg-white z-50 shadow-2xl p-5 flex flex-col justify-between -translate-x-full border-r border-slate-200 overflow-y-auto">
         <div class="space-y-6">
@@ -572,10 +579,10 @@
             </div>
         </section>
 
-        <!-- MÓDULO 3: UNIFICADO (GESTIÓN DE TURNOS & CORE LOGGING CONTINUO) -->
+        <!-- MÓDULO 3: UNIFICADO (TURNOS, OBSERVACIONES EDITABLES, LOG VISUAL & TENDENCIAS) -->
         <section id="mod3_unificado" class="hidden space-y-4 bg-white p-5 sm:p-6 rounded-3xl border border-slate-200 shadow-sm">
-            <h2 class="text-xl font-black text-slate-900 tracking-tight flex items-center gap-2">🪵 Módulo: Gestión de Turnos & Core Logging en Vivo</h2>
-            <p class="text-xs text-slate-600 font-medium">Seleccione el sondaje activo. Gestione el turno operativo en la sección superior y registre los tramos tramo a tramo en la sección inferior.</p>
+            <h2 class="text-xl font-black text-slate-900 tracking-tight flex items-center gap-2">🪵 Módulo: Gestión de Turnos & Core Logging en Vivo (Con Arquitectura Visual)</h2>
+            <p class="text-xs text-slate-600 font-medium">Seleccione el sondaje activo. Gestione el turno operativo (incluyendo sus observaciones y novedades) en la sección superior y registre los tramos en la sección inferior.</p>
 
             <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 shadow-sm">
                 <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">🎯 Seleccionar Sondaje Activo a Operar:</label>
@@ -585,7 +592,7 @@
             </div>
 
             <div id="contenedorUnificado" class="hidden space-y-5">
-                <!-- SECCIÓN SUPERIOR: FORMULARIO Y CONTROL DEL TURNO -->
+                <!-- SECCIÓN SUPERIOR: FORMULARIO Y CONTROL DEL TURNO CON OBSERVACIONES EDITABLES -->
                 <div class="bg-slate-50 p-4 sm:p-5 rounded-2xl border border-slate-200 space-y-3.5 shadow-sm">
                     <div class="flex justify-between items-center flex-wrap gap-2 border-b border-slate-200 pb-2">
                         <h3 class="text-xs font-black text-slate-900 uppercase tracking-wider" id="tituloBoxTurno">🚀 Control & Apertura de Turno</h3>
@@ -616,6 +623,10 @@
                             <input type="text" id="m3_geologo" onblur="forzarMayusculas(this)" class="input-field w-full px-3.5 text-xs font-extrabold uppercase" placeholder="NOMBRE DEL GEÓLOGO">
                         </div>
                     </div>
+                    <div>
+                        <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Observaciones / Novedades del Turno</label>
+                        <textarea id="m3_turno_obs" onblur="forzarMayusculas(this)" rows="2" class="input-field w-full p-2.5 text-xs uppercase font-medium bg-white" placeholder="Novedades geotécnicas o operativas de este turno..."></textarea>
+                    </div>
 
                     <div class="flex gap-2.5 pt-1 flex-wrap">
                         <button type="button" id="btnAccionTurno" onclick="guardarOIniciarTurno()" class="btn-field flex-1 bg-slate-900 hover:bg-slate-800 text-white text-xs font-extrabold shadow-slate-900/20">🚀 Iniciar / Activar Turno para Logging</button>
@@ -631,13 +642,13 @@
                         
                         <div class="flex gap-2 flex-wrap pt-1">
                             <button type="button" onclick="retomarTurnoSeleccionado()" class="btn-field flex-1 bg-slate-800 hover:bg-slate-700 text-white text-xs font-extrabold shadow-slate-800/20">▶️ Retomar Turno Seleccionado</button>
-                            <button type="button" onclick="cargarTurnoParaEditar()" class="bg-slate-200 hover:bg-slate-300 text-slate-900 px-3.5 py-2 rounded-xl font-extrabold text-xs shadow-sm">✏️ Editar Datos Turno</button>
+                            <button type="button" onclick="cargarTurnoParaEditar()" class="bg-slate-200 hover:bg-slate-300 text-slate-900 px-3.5 py-2 rounded-xl font-extrabold text-xs shadow-sm">✏️ Editar Datos y Observaciones del Turno</button>
                             <button type="button" onclick="eliminarTurnoSeleccionado()" class="bg-rose-50 hover:bg-rose-100 text-rose-900 border border-rose-300 px-3.5 py-2 rounded-xl font-extrabold text-xs shadow-sm">🗑️ Borrar</button>
                         </div>
                     </div>
                 </div>
 
-                <!-- SECCIÓN INFERIOR: CORE LOGGING & REGISTRO DE TRAMOS -->
+                <!-- SECCIÓN INFERIOR: CORE LOGGING, PERFIL LITOLÓGICO GRÁFICO & TENDENCIAS -->
                 <div id="contenedorCoreLogging" class="space-y-4 pt-2 border-t-2 border-slate-200">
                     <div id="infoTurnoActivo" class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 flex justify-between items-center flex-wrap gap-2 text-xs shadow-sm">
                         <div>
@@ -645,11 +656,7 @@
                             <span class="text-slate-900 font-extrabold">Perf:</span> <span id="lblInfoPerf" class="text-slate-900 font-black">--</span> | 
                             <span class="text-slate-900 font-extrabold">Geo:</span> <span id="lblInfoGeo" class="text-slate-900 font-black">--</span>
                         </div>
-                        <div class="space-y-2 w-full sm:w-auto pt-2 sm:pt-0" id="boxControlesTurnoActivo">
-                            <div class="space-y-1 bg-white p-2.5 rounded-xl border border-slate-200 shadow-sm">
-                                <label class="block text-[10px] font-black text-slate-900 uppercase">📝 Observaciones Geotécnicas / Novedades al Cerrar Turno:</label>
-                                <textarea id="m3_observaciones" onblur="forzarMayusculas(this)" rows="2" class="input-field w-full p-2 text-xs uppercase font-medium" placeholder="Escriba aquí las novedades del turno al finalizar..."></textarea>
-                            </div>
+                        <div class="space-y-2 w-full sm:w-auto pt-2 sm:pt-0">
                             <button type="button" onclick="finalizarTurnoActivo()" class="w-full bg-slate-900 hover:bg-slate-800 text-white px-3 py-2 rounded-xl font-extrabold text-xs shadow-sm">💾 Finalizar y Guardar Turno Activo</button>
                         </div>
                     </div>
@@ -674,6 +681,28 @@
                             <p class="text-[10px] text-amber-800 font-bold uppercase">Total Metros a Pagar</p>
                             <p class="text-sm sm:text-base font-black text-amber-950 font-mono-code mt-0.5" id="cardMetrosPago">0.00 m</p>
                             <p class="text-[9px] text-amber-700 font-bold">Según Estándar de Pago</p>
+                        </div>
+                    </div>
+
+                    <!-- ARQUITECTURA COMPLEMENTARIA GLOBAL: CURVA DE TENDENCIA Y PERFIL LITOLÓGICO -->
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                        <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 shadow-sm">
+                            <h3 class="text-xs font-black text-slate-800 uppercase mb-2 flex items-center justify-between">
+                                <span>🎨 Perfil Litológico Gráfico</span>
+                                <span class="text-[9px] text-indigo-700 font-bold">Log Visual Testigo</span>
+                            </h3>
+                            <div id="perfilLitologicoGrafico" class="space-y-1.5 max-h-56 overflow-y-auto p-2 bg-white rounded-xl border border-slate-300 font-mono-code text-[10px]">
+                                <p class="text-slate-400 italic text-center py-6">Sin tramos registrados aún</p>
+                            </div>
+                        </div>
+                        <div class="lg:col-span-2 bg-slate-50 p-4 rounded-2xl border border-slate-200 shadow-sm">
+                            <h3 class="text-xs font-black text-slate-800 uppercase mb-2 flex items-center justify-between">
+                                <span>📈 Curva de Tendencia de Recuperación vs Profundidad</span>
+                                <span class="text-[9px] text-purple-700 font-bold">% Recup vs Tramo</span>
+                            </h3>
+                            <div class="h-48 relative">
+                                <canvas id="chart-tendencia-recuperacion"></canvas>
+                            </div>
                         </div>
                     </div>
 
@@ -947,7 +976,7 @@
                         <p class="text-slate-600 text-[10px] mt-1 font-bold" id="repMotivoCierreBox"></p>
                     </div>
 
-                    <!-- FIRMAS ABIERTAS EN BLANCO PARA Llenar A MANO AL IMPRIMIR -->
+                    <!-- FIRMAS ABIERTAS EN BLANCO PARA LLENAR A MANO AL IMPRIMIR -->
                     <div class="pt-6 border-t-2 border-slate-200 text-[10px] text-slate-800 avoid-break" id="contenedorFirmasDSR">
                         <div class="grid grid-cols-2 gap-6 text-center pt-6">
                             <div>
@@ -1017,6 +1046,7 @@
         let chartSituacionalMeteorizacion = null;
         let chartSituacionalPorcentajes = null;
         let chartCierreMeteorizacion = null;
+        let chartTendenciaRecuperacion = null;
 
         if (!localStorage.getItem('jireth_clave_geo')) localStorage.setItem('jireth_clave_geo', 'Mina2628');
         localStorage.setItem('jireth_clave_ger', 'JIRETH2026');
@@ -1024,7 +1054,6 @@
         let claveGerencia = 'JIRETH2026';
         const PIN_MAESTRO = "2628";
 
-        // FUNCIÓN GLOBAL DE NOTIFICACIÓN FLOTANTE (TOAST DE ÉXITO)
         function notifySuccess(mensaje) {
             const container = document.getElementById('toastContainer');
             if (!container) return;
@@ -1085,7 +1114,6 @@
         }
 
         window.addEventListener('offline', () => { marcarModoOfflineVisual(); });
-
         window.addEventListener('online', async () => {
             const indRed = document.getElementById('indicadorRed');
             if (indRed) {
@@ -1367,7 +1395,6 @@
             const ctx = document.getElementById('chart-situacional-avances');
             if (!ctx) return;
             if (chartSituacionalAvance) chartSituacionalAvance.destroy();
-
             chartSituacionalAvance = new Chart(ctx.getContext('2d'), {
                 type: 'bar',
                 data: {
@@ -1378,8 +1405,7 @@
                     ]
                 },
                 options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
+                    responsive: true, maintainAspectRatio: false,
                     plugins: { legend: { labels: { color: '#1e293b', font: { size: 10, weight: 'bold' } } } },
                     scales: {
                         x: { ticks: { color: '#1e293b', font: { weight: 'bold' } }, grid: { display: false } },
@@ -1393,16 +1419,11 @@
             const ctx = document.getElementById('chart-situacional-recuperacion');
             if (!ctx) return;
             if (chartSituacionalRecuperacion) chartSituacionalRecuperacion.destroy();
-
             chartSituacionalRecuperacion = new Chart(ctx.getContext('2d'), {
                 type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [{ label: '% Rec. Testigo', data: recuperacion, backgroundColor: '#7e22ce', borderRadius: 4 }]
-                },
+                data: { labels: labels, datasets: [{ label: '% Rec. Testigo', data: recuperacion, backgroundColor: '#7e22ce', borderRadius: 4 }] },
                 options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
+                    responsive: true, maintainAspectRatio: false,
                     plugins: { legend: { display: false } },
                     scales: {
                         x: { ticks: { color: '#1e293b', font: { weight: 'bold' } }, grid: { display: false } },
@@ -1417,23 +1438,14 @@
             if (!ctx) return;
             let keys = Object.keys(totalsObj);
             let vals = keys.map(k => totalsObj[k].toFixed(2));
-
             if (chartSituacionalMeteorizacion) chartSituacionalMeteorizacion.destroy();
-
             chartSituacionalMeteorizacion = new Chart(ctx.getContext('2d'), {
                 type: 'doughnut',
                 data: {
                     labels: keys.length > 0 ? keys : ['SIN DATOS'],
-                    datasets: [{
-                        data: vals.length > 0 ? vals : [1],
-                        backgroundColor: ['#312e81', '#7e22ce', '#047857', '#b45309', '#0284c7', '#db2777', '#475569']
-                    }]
+                    datasets: [{ data: vals.length > 0 ? vals : [1], backgroundColor: ['#312e81', '#7e22ce', '#047857', '#b45309', '#0284c7', '#db2777', '#475569'] }]
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { position: 'right', labels: { color: '#1e293b', font: { size: 9, weight: 'bold' } } } }
-                }
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { color: '#1e293b', font: { size: 9, weight: 'bold' } } } } }
             });
         }
 
@@ -1441,16 +1453,11 @@
             const ctx = document.getElementById('chart-situacional-porcentajes');
             if (!ctx) return;
             if (chartSituacionalPorcentajes) chartSituacionalPorcentajes.destroy();
-
             chartSituacionalPorcentajes = new Chart(ctx.getContext('2d'), {
                 type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [{ label: '% Progreso vs Target', data: porcentajes, backgroundColor: '#047857', borderRadius: 4 }]
-                },
+                data: { labels: labels, datasets: [{ label: '% Progreso vs Target', data: porcentajes, backgroundColor: '#047857', borderRadius: 4 }] },
                 options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
+                    responsive: true, maintainAspectRatio: false,
                     plugins: { legend: { display: false } },
                     scales: {
                         x: { ticks: { color: '#1e293b', font: { weight: 'bold' } }, grid: { display: false } },
@@ -1458,6 +1465,80 @@
                     }
                 }
             });
+        }
+
+        // RENDERIZAR ARQUITECTURA COMPLEMENTARIA GLOBAL (PERFIL LITOLÓGICO Y CURVA TENDENCIA)
+        function renderizarArquitecturaComplementariaGlobal(p) {
+            const perfilDiv = document.getElementById('perfilLitologicoGrafico');
+            if (!perfilDiv) return;
+            
+            if (!p.avances || p.avances.length === 0) {
+                perfilDiv.innerHTML = '<p class="text-slate-400 italic text-center py-6">Sin tramos registrados aún</p>';
+                if (chartTendenciaRecuperacion) { chartTendenciaRecuperacion.destroy(); chartTendenciaRecuperacion = null; }
+                return;
+            }
+
+            perfilDiv.innerHTML = '';
+            let labelTramos = [];
+            let dataRecup = [];
+
+            p.avances.forEach((t, idx) => {
+                let litUpper = (t.meteorizacion || '').toUpperCase();
+                let cssClass = 'litho-saprolita';
+                if (litUpper.includes('SUELO')) cssClass = 'litho-suelo';
+                else if (litUpper.includes('SAPROCK')) cssClass = 'litho-saprock';
+                else if (litUpper.includes('OXIDADA')) cssClass = 'litho-oxidada';
+                else if (litUpper.includes('FRACTURADA')) cssClass = 'litho-fracturada';
+                else if (litUpper.includes('FRESCA')) cssClass = 'litho-fresca';
+                else if (litUpper.includes('VETA')) cssClass = 'litho-veta';
+
+                let item = document.createElement('div');
+                item.className = `p-2 rounded-lg shadow-sm border border-slate-200 ${cssClass} flex justify-between items-center`;
+                item.innerHTML = `
+                    <div>
+                        <span class="font-black text-slate-900">#${idx+1} [${t.desde}-${t.hasta}m]</span>
+                        <div class="text-[9px] text-slate-700 font-bold">${t.meteorizacion} (${t.diametro})</div>
+                    </div>
+                    <div class="text-right font-black ${parseFloat(t.porcentaje) < 70 ? 'text-rose-700' : 'text-emerald-800'}">
+                        ${t.porcentaje}% Rec
+                    </div>
+                `;
+                perfilDiv.appendChild(item);
+
+                labelTramos.push(`${t.desde}-${t.hasta}m`);
+                dataRecup.push(parseFloat(t.porcentaje));
+            });
+
+            // Renderizar Gráfico de Tendencia de Recuperación vs Profundidad
+            const ctxTendencia = document.getElementById('chart-tendencia-recuperacion');
+            if (ctxTendencia) {
+                if (chartTendenciaRecuperacion) chartTendenciaRecuperacion.destroy();
+                chartTendenciaRecuperacion = new Chart(ctxTendencia.getContext('2d'), {
+                    type: 'line',
+                    data: {
+                        labels: labelTramos,
+                        datasets: [{
+                            label: '% Recuperación por Tramo',
+                            data: dataRecup,
+                            borderColor: '#7e22ce',
+                            backgroundColor: 'rgba(126, 34, 206, 0.1)',
+                            borderWidth: 2.5,
+                            fill: true,
+                            tension: 0.2,
+                            pointRadius: 4,
+                            pointBackgroundColor: '#312e81'
+                        }]
+                    },
+                    options: {
+                        responsive: true, maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            x: { ticks: { color: '#1e293b', font: { size: 9, weight: 'bold' } }, grid: { display: false } },
+                            y: { max: 100, min: 0, ticks: { color: '#1e293b' }, grid: { color: '#e2e8f0' } }
+                        }
+                    }
+                });
+            }
         }
 
         function forzarMayusculas(el) { if (el && el.value) el.value = el.value.toUpperCase(); }
@@ -1485,7 +1566,6 @@
             const sel = document.getElementById('m1_selectSelector');
             if (!sel) return;
             sel.innerHTML = '<option value="">-- Seleccione un Pozo Activo o Registrar Nuevo --</option>';
-            
             Object.keys(pozosData).forEach(k => {
                 let p = pozosData[k];
                 if (p.estado === 'ABIERTO') {
@@ -1495,22 +1575,17 @@
                     sel.appendChild(opt);
                 }
             });
-
             let optNuevo = document.createElement('option');
             optNuevo.value = "REGISTRAR_NUEVO";
             optNuevo.text = "➕ Registrar Nuevo Sondaje";
             optNuevo.className = "font-black text-slate-900 bg-slate-100";
             sel.appendChild(optNuevo);
-
             document.getElementById('m1_formularioNuevoPozo').classList.add('hidden');
         }
 
         function manejarSeleccionModoPozo(val) {
             const formNuevo = document.getElementById('m1_formularioNuevoPozo');
-            if (!val) {
-                formNuevo.classList.add('hidden');
-                return;
-            }
+            if (!val) { formNuevo.classList.add('hidden'); return; }
             if (val === 'REGISTRAR_NUEVO') {
                 formNuevo.classList.remove('hidden');
                 document.getElementById('m1_codigo').value = '';
@@ -1544,7 +1619,6 @@
             refrescarSelectoresOperativos();
             refrescarSelectorModuloUno();
             poblarSelectTopografia();
-
             cargarDatosPozoEnFormularios(codigo);
             notifySuccess("Sondaje " + codigo + " creado con éxito");
             switchTab('mod2');
@@ -1571,59 +1645,29 @@
             const selTopo = document.getElementById('m2_selectPozoActivo');
             const contTopo = document.getElementById('contenedorTopografia');
             if (!selTopo || !contTopo) return;
-            if (!selTopo.value) {
-                contTopo.classList.add('hidden');
-            } else {
-                contTopo.classList.remove('hidden');
-            }
+            if (!selTopo.value) contTopo.classList.add('hidden'); else contTopo.classList.remove('hidden');
         }
 
         function seleccionarPozoTopografia(codigo) {
-            if (!codigo) {
-                pozoActivoId = '';
-                localStorage.removeItem('jireth_pozo_activo');
-                verificarSeleccionTopografiaModulo();
-                return;
-            }
+            if (!codigo) { pozoActivoId = ''; localStorage.removeItem('jireth_pozo_activo'); verificarSeleccionTopografiaModulo(); return; }
             pozoActivoId = codigo;
             localStorage.setItem('jireth_pozo_activo', pozoActivoId);
             verificarSeleccionTopografiaModulo();
             cargarDatosPozoEnFormularios(codigo);
         }
 
-        // HABILITAR EDICIÓN DE TOPOGRAFÍA CORREGIDO Y BLINDADO
         function habilitarEdicionTopo() {
-            if (perfilActual === 'GERENCIA') { 
-                alert("⚠️ Perfil de Gerencia: Solo lectura."); 
-                return; 
-            }
-            
+            if (perfilActual === 'GERENCIA') { alert("⚠️ Perfil de Gerencia: Solo lectura."); return; }
             if (!pozoActivoId) { 
                 const selectPozo = document.getElementById('m2_selectPozoActivo');
-                if (selectPozo && selectPozo.value) {
-                    pozoActivoId = selectPozo.value;
-                    localStorage.setItem('jireth_pozo_activo', pozoActivoId);
-                } else {
-                    alert("⚠️ Seleccione un sondaje primero en el selector superior."); 
-                    return; 
-                }
+                if (selectPozo && selectPozo.value) { pozoActivoId = selectPozo.value; localStorage.setItem('jireth_pozo_activo', pozoActivoId); }
+                else { alert("⚠️ Seleccione un sondaje primero en el selector superior."); return; }
             }
-
-            const camposTopo = ['m2_maquina', 'm2_este', 'm2_norte', 'm2_cota', 'm2_azimut', 'm2_dip', 'm2_target', 'm2_otra_maquina'];
-            camposTopo.forEach(id => {
+            ['m2_maquina', 'm2_este', 'm2_norte', 'm2_cota', 'm2_azimut', 'm2_dip', 'm2_target', 'm2_otra_maquina'].forEach(id => {
                 let el = document.getElementById(id);
-                if (el) {
-                    el.disabled = false;
-                    el.removeAttribute('disabled');
-                    el.style.backgroundColor = "#ffffff";
-                }
+                if (el) { el.disabled = false; el.removeAttribute('disabled'); el.style.backgroundColor = "#ffffff"; }
             });
-
-            const boxBotones = document.getElementById('m2_btn_box');
-            if (boxBotones) {
-                boxBotones.classList.remove('hidden');
-            }
-
+            document.getElementById('m2_btn_box').classList.remove('hidden');
             notifySuccess("Edición de Topografía habilitada");
         }
 
@@ -1685,21 +1729,11 @@
             const selUni = document.getElementById('wellSelectUnificado');
             const contUni = document.getElementById('contenedorUnificado');
             if (!selUni || !contUni) return;
-
-            if (!selUni.value) {
-                contUni.classList.add('hidden');
-            } else {
-                contUni.classList.remove('hidden');
-            }
+            if (!selUni.value) contUni.classList.add('hidden'); else contUni.classList.remove('hidden');
         }
 
         function seleccionarPozoOperativo(val) {
-            if (!val) {
-                pozoActivoId = '';
-                localStorage.removeItem('jireth_pozo_activo');
-                verificarSeleccionUnificadoModulo();
-                return;
-            }
+            if (!val) { pozoActivoId = ''; localStorage.removeItem('jireth_pozo_activo'); verificarSeleccionUnificadoModulo(); return; }
             pozoActivoId = val;
             localStorage.setItem('jireth_pozo_activo', pozoActivoId);
             refrescarSelectoresOperativos();
@@ -1726,20 +1760,11 @@
             const selCierre = document.getElementById('wellSelectCierre');
             const contCierre = document.getElementById('contenedorCierrePozo');
             if (!selCierre || !contCierre) return;
-            if (!selCierre.value) {
-                contCierre.classList.add('hidden');
-            } else {
-                contCierre.classList.remove('hidden');
-            }
+            if (!selCierre.value) contCierre.classList.add('hidden'); else contCierre.classList.remove('hidden');
         }
 
         function seleccionarPozoCierre(val) {
-            if (!val) {
-                pozoActivoId = '';
-                localStorage.removeItem('jireth_pozo_activo');
-                verificarSeleccionCierreModulo();
-                return;
-            }
+            if (!val) { pozoActivoId = ''; localStorage.removeItem('jireth_pozo_activo'); verificarSeleccionCierreModulo(); return; }
             pozoActivoId = val;
             localStorage.setItem('jireth_pozo_activo', pozoActivoId);
             verificarSeleccionCierreModulo();
@@ -1766,20 +1791,11 @@
             const selRepo = document.getElementById('wellSelectRepositorio');
             const contRepo = document.getElementById('contenedorRepositorioReporte');
             if (!selRepo || !contRepo) return;
-            if (!selRepo.value) {
-                contRepo.classList.add('hidden');
-            } else {
-                contRepo.classList.remove('hidden');
-            }
+            if (!selRepo.value) contRepo.classList.add('hidden'); else contRepo.classList.remove('hidden');
         }
 
         function seleccionarPozoRepositorio(val) {
-            if (!val) {
-                pozoActivoId = '';
-                localStorage.removeItem('jireth_pozo_activo');
-                verificarSeleccionRepositorioModulo();
-                return;
-            }
+            if (!val) { pozoActivoId = ''; localStorage.removeItem('jireth_pozo_activo'); verificarSeleccionRepositorioModulo(); return; }
             pozoActivoId = val;
             localStorage.setItem('jireth_pozo_activo', pozoActivoId);
             verificarSeleccionRepositorioModulo();
@@ -1823,6 +1839,7 @@
 
             actualizarTablaAvances();
             actualizarProgresoGrafico();
+            renderizarArquitecturaComplementariaGlobal(p);
             autoCalcularHasta();
             poblarSelectRetomarTurno();
             
@@ -1838,6 +1855,7 @@
             let jornada = document.getElementById('m3_turno').value;
             let perforador = document.getElementById('m3_perforador').value.trim().toUpperCase();
             let geologo = document.getElementById('m3_geologo').value.trim().toUpperCase();
+            let turnoObs = document.getElementById('m3_turno_obs').value.trim().toUpperCase();
             let turnoEditId = document.getElementById('editTurnoId').value;
 
             if (!fecha || !perforador || !geologo) { alert("❌ Complete Fecha, Perforador y Geólogo."); return; }
@@ -1850,6 +1868,7 @@
                 turnosData[turnoEditId].jornada = jornada;
                 turnosData[turnoEditId].perforador = perforador;
                 turnosData[turnoEditId].geologo = geologo;
+                turnosData[turnoEditId].observaciones = turnoObs;
 
                 if (turnoActivoObj && turnoActivoObj.id === turnoEditId) {
                     turnoActivoObj = turnosData[turnoEditId];
@@ -1859,11 +1878,11 @@
 
                 await guardarYPersistirTodo();
                 poblarSelectRetomarTurno();
-                notifySuccess("Datos del turno actualizados");
+                notifySuccess("Datos y observaciones del turno actualizados");
                 cancelarEdicionTurno();
             } else {
                 let nuevoId = 'TURNO_' + Date.now();
-                turnoActivoObj = { id: nuevoId, pozo: pozoActivoId, fecha: fecha, jornada: jornada, perforador: perforador, geologo: geologo, observaciones: "" };
+                turnoActivoObj = { id: nuevoId, pozo: pozoActivoId, fecha: fecha, jornada: jornada, perforador: perforador, geologo: geologo, observaciones: turnoObs };
                 turnosData[nuevoId] = turnoActivoObj;
                 localStorage.setItem('jireth_turnos', JSON.stringify(turnosData));
                 localStorage.setItem('jireth_turno_activo', JSON.stringify(turnoActivoObj));
@@ -1883,7 +1902,8 @@
             document.getElementById('m3_turno').value = t.jornada;
             document.getElementById('m3_perforador').value = t.perforador;
             document.getElementById('m3_geologo').value = t.geologo;
-            document.getElementById('tituloBoxTurno').innerText = "✏️ Editando Datos del Turno (" + t.pozo + ")";
+            document.getElementById('m3_turno_obs').value = t.observaciones || '';
+            document.getElementById('tituloBoxTurno').innerText = "✏️ Editando Turno & Observaciones (" + t.pozo + ")";
             document.getElementById('btnAccionTurno').innerText = "💾 Guardar Cambios del Turno";
             document.getElementById('btnCancelarEdicionTurno').classList.remove('hidden');
         }
@@ -1893,6 +1913,7 @@
             document.getElementById('m3_fecha').valueAsDate = new Date();
             document.getElementById('m3_perforador').value = '';
             document.getElementById('m3_geologo').value = '';
+            document.getElementById('m3_turno_obs').value = '';
             document.getElementById('tituloBoxTurno').innerText = "🚀 Control & Apertura de Turno";
             document.getElementById('btnAccionTurno').innerText = "🚀 Iniciar / Activar Turno para Logging";
             document.getElementById('btnCancelarEdicionTurno').classList.add('hidden');
@@ -1920,7 +1941,7 @@
         async function finalizarTurnoActivo() {
             if (perfilActual === 'GERENCIA') return;
             if (!turnoActivoObj) { alert("⚠️ No hay turno activo."); return; }
-            let obs = document.getElementById('m3_observaciones').value.trim().toUpperCase();
+            let obs = document.getElementById('m3_turno_obs').value.trim().toUpperCase();
             turnoActivoObj.observaciones = obs || "SIN NOVEDAD";
             turnosData[turnoActivoObj.id] = turnoActivoObj;
             localStorage.setItem('jireth_turnos', JSON.stringify(turnosData));
@@ -1932,7 +1953,7 @@
             document.getElementById('lblInfoTurno').innerText = "--";
             document.getElementById('lblInfoPerf').innerText = "--";
             document.getElementById('lblInfoGeo').innerText = "--";
-            document.getElementById('m3_observaciones').value = '';
+            document.getElementById('m3_turno_obs').value = '';
             document.getElementById('lblEstadoTurnoBadge').className = "text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 border border-amber-300";
             document.getElementById('lblEstadoTurnoBadge').innerText = "Turno Pendiente";
         }
@@ -1942,7 +1963,7 @@
             document.getElementById('lblInfoTurno').innerText = turnoActivoObj.pozo + " (" + turnoActivoObj.fecha + " - " + turnoActivoObj.jornada + ")";
             document.getElementById('lblInfoPerf').innerText = turnoActivoObj.perforador;
             document.getElementById('lblInfoGeo').innerText = turnoActivoObj.geologo;
-            document.getElementById('m3_observaciones').value = turnoActivoObj.observaciones || '';
+            document.getElementById('m3_turno_obs').value = turnoActivoObj.observaciones || '';
             document.getElementById('lblEstadoTurnoBadge').className = "text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-900 border border-emerald-300";
             document.getElementById('lblEstadoTurnoBadge').innerText = "Turno Activo En Vivo";
         }
@@ -1966,7 +1987,7 @@
             let id = document.getElementById('selectRetomarTurno').value;
             if (!id || !turnosData[id]) return;
             let t = turnosData[id];
-            notifySuccess("Turno cargado: " + t.fecha + " (" + t.jornada + ")");
+            notifySuccess("Turno seleccionado: " + t.fecha + " (" + t.jornada + ")");
         }
 
         function retomarTurnoSeleccionado() {
@@ -2035,6 +2056,7 @@
 
             actualizarTablaAvances();
             actualizarProgresoGrafico();
+            renderizarArquitecturaComplementariaGlobal(p);
             autoCalcularHasta();
 
             if (navigator.onLine && supabaseClient) {
@@ -2097,6 +2119,7 @@
                 await guardarYPersistirTodo();
                 actualizarTablaAvances();
                 actualizarProgresoGrafico();
+                renderizarArquitecturaComplementariaGlobal(pozosData[pozoActivoId]);
                 autoCalcularHasta();
                 notifySuccess("Tramo eliminado");
             }
@@ -2203,34 +2226,22 @@
         function renderChartCierreMeteorizacion(p) {
             const ctx = document.getElementById('chart-cierre-meteorizacion');
             if (!ctx) return;
-
             let totals = {};
             p.avances.forEach(t => {
                 let len = parseFloat(t.hasta) - parseFloat(t.desde);
                 totals[t.meteorizacion] = (totals[t.meteorizacion] || 0) + len;
             });
-
             let sortedKeys = Object.keys(totals).sort((a, b) => totals[b] - totals[a]);
             let sortedData = sortedKeys.map(k => totals[k].toFixed(2));
 
             if (chartCierreMeteorizacion) chartCierreMeteorizacion.destroy();
-
             chartCierreMeteorizacion = new Chart(ctx.getContext('2d'), {
                 type: 'doughnut',
                 data: {
                     labels: sortedKeys,
-                    datasets: [{
-                        data: sortedData,
-                        backgroundColor: ['#312e81', '#7e22ce', '#047857', '#b45309', '#0284c7', '#db2777', '#475569']
-                    }]
+                    datasets: [{ data: sortedData, backgroundColor: ['#312e81', '#7e22ce', '#047857', '#b45309', '#0284c7', '#db2777', '#475569'] }]
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { position: 'right', labels: { color: '#1e293b', font: { size: 10, weight: 'bold' } } }
-                    }
-                }
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { color: '#1e293b', font: { size: 10, weight: 'bold' } } } } }
             });
         }
 
@@ -2343,7 +2354,6 @@
             document.getElementById('repEstadoPozo').innerText = p.estado;
             document.getElementById('repTargetSub').innerText = "Target: " + (p.target || '100.00') + " m";
 
-            // PARA IMPRESIÓN SE DEJAN LÍNEAS SUBRAYADAS PARA ESCRIBIR A MANO AL FIRMAR
             document.getElementById('repPerforadorTurno').innerText = "___________________________";
             document.getElementById('repGeologoTurno').innerText = "___________________________";
 
@@ -2377,11 +2387,10 @@
             document.getElementById('repRecPromedio').innerText = recProm + "%";
             document.getElementById('repMetrosPagoTotal').innerText = totalPagoFinal.toFixed(2) + " m";
             document.getElementById('repAvanceGen').innerText = avGen.toFixed(1) + "%";
-
             document.getElementById('repMetrosHQRep').innerText = totalHQMet.toFixed(2) + " m";
             document.getElementById('repMetrosNQRep').innerText = totalNQMet.toFixed(2) + " m";
-
             document.getElementById('repObservacionesTexto').innerText = observacionesTurnoTexto;
+            
             if (p.estado === 'CULMINADO') {
                 document.getElementById('repMotivoCierreBox').innerHTML = `<b>Motivo de Cierre:</b> ${p.motivoCierre || 'CULMINADO'}`;
             } else {
