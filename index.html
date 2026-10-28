@@ -153,15 +153,6 @@
             transform: translateY(0);
         }
 
-        /* LITOLOGÍA VISUAL PATTERNS */
-        .litho-suelo { background-color: #fef08a; border-left: 4px solid #ca8a04; }
-        .litho-saprolita { background-color: #fde047; border-left: 4px solid #b45309; }
-        .litho-saprock { background-color: #fed7aa; border-left: 4px solid #c2410c; }
-        .litho-oxidada { background-color: #fca5a5; border-left: 4px solid #b91c1c; }
-        .litho-fracturada { background-color: #cbd5e1; border-left: 4px solid #334155; }
-        .litho-fresca { background-color: #94a3b8; border-left: 4px solid #0f172a; }
-        .litho-veta { background-color: #f43f5e; border-left: 4px solid #ffe4e6; }
-
         @media print {
             @page { size: portrait; margin: 15mm 10mm 15mm 10mm; }
             body * { visibility: hidden !important; }
@@ -247,7 +238,7 @@
                 <div>
                     <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Contraseña de Geólogos</label>
                     <div class="relative flex items-center">
-                        <input type="password" id="inputClaveGeo" autocomplete="current-password" placeholder="Ingrese clave..." class="input-field w-full px-3.5 pr-11 text-sm font-bold">
+                        <input type="password" id="inputClaveGeo" autocomplete="current-password" placeholder="Ingrese clave (Mina2628)..." class="input-field w-full px-3.5 pr-11 text-sm font-bold" onkeydown="if(event.key==='Enter')intentarLoginGeo()">
                         <button type="button" onclick="togglePasswordVisibility('inputClaveGeo')" class="absolute right-3.5 text-slate-500 hover:text-slate-800 text-base">👁️</button>
                     </div>
                 </div>
@@ -263,7 +254,7 @@
                 <div>
                     <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Contraseña de Gerencia</label>
                     <div class="relative flex items-center">
-                        <input type="password" id="inputClaveGer" autocomplete="current-password" placeholder="Ingrese clave..." class="input-field w-full px-3.5 pr-11 text-sm font-bold">
+                        <input type="password" id="inputClaveGer" autocomplete="current-password" placeholder="Ingrese clave (JIRETH2026)..." class="input-field w-full px-3.5 pr-11 text-sm font-bold" onkeydown="if(event.key==='Enter')intentarLoginGer()">
                         <button type="button" onclick="togglePasswordVisibility('inputClaveGer')" class="absolute right-3.5 text-slate-500 hover:text-slate-800 text-base">👁️</button>
                     </div>
                 </div>
@@ -388,7 +379,7 @@
                         <span>🏠 Sala Situacional & Dashboard Pro (Solo Frentes Activos)</span>
                         <span class="text-xs bg-sky-100 text-sky-800 px-2.5 py-0.5 rounded-full border border-sky-300 font-mono-code pulse-live" id="contadorFrentesActivos">0 Activos</span>
                     </h2>
-                    <p class="text-xs text-slate-600 mt-0.5">Fichas individuales de pozos activos arriba; métricas, avances, perfiles litológicos y gráficos analíticos abajo.</p>
+                    <p class="text-xs text-slate-600 mt-0.5">Fichas individuales de pozos activos arriba; métricas, avances y gráficos analíticos independientes abajo.</p>
                 </div>
                 <button type="button" onclick="renderizarSalaSituacional()" class="bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 px-3 py-2 rounded-xl text-xs font-bold transition shadow-sm">🔄 Actualizar En Vivo</button>
             </div>
@@ -401,7 +392,7 @@
             </div>
 
             <div class="border-t border-slate-200 pt-4 space-y-4">
-                <h3 class="text-xs font-black text-slate-900 uppercase tracking-wider">📊 Resúmenes Globales, Métricas & Gráficos Analíticos Avanzados</h3>
+                <h3 class="text-xs font-black text-slate-900 uppercase tracking-wider">📊 Resúmenes Globales, Métricas & Gráficos Comparativos</h3>
                 
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
                     <div class="bg-indigo-50 p-3.5 rounded-2xl border border-indigo-200 relative overflow-hidden shadow-sm">
@@ -427,28 +418,6 @@
                         <p class="text-[10px] text-purple-800 font-bold uppercase">Eficiencia Testigo</p>
                         <p class="text-base font-black text-purple-950 font-mono-code mt-0.5" id="macroRecuperacionGlobal">0.0%</p>
                         <p class="text-[9px] text-purple-700 font-bold">Recuperación (Activos)</p>
-                    </div>
-                </div>
-
-                <!-- SECCIÓN DE GRÁFICOS AVANZADOS REUBICADA AQUÍ EN LA SALA SITUACIONAL -->
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 pt-2">
-                    <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 shadow-sm">
-                        <h3 class="text-xs font-black text-slate-800 uppercase mb-2 flex items-center justify-between">
-                            <span>🎨 Perfil Litológico Gráfico</span>
-                            <span class="text-[9px] text-indigo-700 font-bold">Log Visual Global</span>
-                        </h3>
-                        <div id="perfilLitologicoGraficoSala" class="space-y-1.5 max-h-56 overflow-y-auto p-2 bg-white rounded-xl border border-slate-300 font-mono-code text-[10px]">
-                            <p class="text-slate-400 italic text-center py-6">Seleccione o mantenga pozos activos</p>
-                        </div>
-                    </div>
-                    <div class="lg:col-span-2 bg-slate-50 p-4 rounded-2xl border border-slate-200 shadow-sm">
-                        <h3 class="text-xs font-black text-slate-800 uppercase mb-2 flex items-center justify-between">
-                            <span>📈 Curva de Tendencia de Recuperación Global vs Profundidad</span>
-                            <span class="text-[9px] text-purple-700 font-bold">% Recup vs Tramo</span>
-                        </h3>
-                        <div class="h-48 relative">
-                            <canvas id="chart-tendencia-recuperacion"></canvas>
-                        </div>
                     </div>
                 </div>
 
@@ -600,7 +569,7 @@
             </div>
         </section>
 
-        <!-- MÓDULO 3: UNIFICADO (TURNOS, OBSERVACIONES EDITABLES & LOGGING LIMPIO) -->
+        <!-- MÓDULO 3: UNIFICADO (TURNOS, OBSERVACIONES EDITABLES, CORE LOGGING) -->
         <section id="mod3_unificado" class="hidden space-y-4 bg-white p-5 sm:p-6 rounded-3xl border border-slate-200 shadow-sm">
             <h2 class="text-xl font-black text-slate-900 tracking-tight flex items-center gap-2">🪵 Módulo: Gestión de Turnos & Core Logging en Vivo</h2>
             <p class="text-xs text-slate-600 font-medium">Seleccione el sondaje activo. Gestione el turno operativo (incluyendo sus observaciones y novedades) en la sección superior y registre los tramos en la sección inferior.</p>
@@ -613,7 +582,7 @@
             </div>
 
             <div id="contenedorUnificado" class="hidden space-y-5">
-                <!-- SECCIÓN SUPERIOR: FORMULARIO Y CONTROL DEL TURNO CON OBSERVACIONES EDITABLES -->
+                <!-- SECCIÓN SUPERIOR: FORMULARIO Y CONTROL DEL TURNO -->
                 <div class="bg-slate-50 p-4 sm:p-5 rounded-2xl border border-slate-200 space-y-3.5 shadow-sm">
                     <div class="flex justify-between items-center flex-wrap gap-2 border-b border-slate-200 pb-2">
                         <h3 class="text-xs font-black text-slate-900 uppercase tracking-wider" id="tituloBoxTurno">🚀 Control & Apertura de Turno</h3>
@@ -669,7 +638,7 @@
                     </div>
                 </div>
 
-                <!-- SECCIÓN INFERIOR: CORE LOGGING Y CUADROS CONSOLIDADOS (TAL COMO TU IMAGEN) -->
+                <!-- SECCIÓN INFERIOR: CORE LOGGING Y CUADROS CONSOLIDADOS EXACTAMENTE COMO EN TU IMAGEN -->
                 <div id="contenedorCoreLogging" class="space-y-4 pt-2 border-t-2 border-slate-200">
                     <div id="infoTurnoActivo" class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 flex justify-between items-center flex-wrap gap-2 text-xs shadow-sm">
                         <div>
@@ -682,6 +651,7 @@
                         </div>
                     </div>
 
+                    <!-- TARJETAS CONSOLIDADAS DE KPIs -->
                     <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
                         <div class="bg-indigo-50 p-3.5 rounded-2xl border border-indigo-200 shadow-sm">
                             <p class="text-[10px] text-indigo-800 font-bold uppercase">Metraje Acumulado</p>
@@ -1045,7 +1015,6 @@
         let chartSituacionalMeteorizacion = null;
         let chartSituacionalPorcentajes = null;
         let chartCierreMeteorizacion = null;
-        let chartTendenciaRecuperacion = null;
 
         if (!localStorage.getItem('jireth_clave_geo')) localStorage.setItem('jireth_clave_geo', 'Mina2628');
         localStorage.setItem('jireth_clave_ger', 'JIRETH2026');
@@ -1188,7 +1157,7 @@
             if (val === claveGeologos) {
                 entrarAlSistema("GEÓLOGOS (COMPLEJO JIRETH C.A.)");
                 notifySuccess("Acceso concedido como Geólogo");
-            } else { alert("❌ Contraseña de Geólogos incorrecta."); document.getElementById('inputClaveGeo').value = ''; }
+            } else { alert("❌ Contraseña de Geólogos incorrecta (la clave por defecto es Mina2628)."); document.getElementById('inputClaveGeo').value = ''; }
         }
 
         function intentarLoginGer() {
@@ -1197,7 +1166,7 @@
                 entrarAlSistema("GERENCIA / AUDITORÍA (REPOSITORIO)");
                 aplicarModoLecturaGerencia();
                 notifySuccess("Acceso concedido como Gerencia");
-            } else { alert("❌ Contraseña de Gerencia incorrecta."); document.getElementById('inputClaveGer').value = ''; }
+            } else { alert("❌ Contraseña de Gerencia incorrecta (la clave por defecto es JIRETH2026)."); document.getElementById('inputClaveGer').value = ''; }
         }
 
         function mostrarBoxRescate() {
@@ -1220,7 +1189,8 @@
                 document.getElementById('inputPinRescate').value = '';
                 document.getElementById('inputClaveNuevaRescate').value = '';
                 ocultarBoxRescate();
-            } else { alert("❌ PIN Maestro incorrecto (es 2628) o contraseña muy corta."); }
+                entrarAlSistema("GEÓLOGOS (COMPLEJO JIRETH C.A.)");
+            } else { alert("❌ PIN Maestro incorrecto (es 2628) o la nueva contraseña debe tener al menos 4 caracteres."); }
         }
 
         function entrarAlSistema(rolTexto) {
@@ -1286,7 +1256,6 @@
             let totalMetrosGlobal = 0, totalRecGral = 0, cuentaTramosGral = 0;
             let chartLabels = [], chartAvances = [], chartPlan = [], chartRec = [], chartPorcentajes = [];
             let meteorizacionTotales = {};
-            let allAvancesGlobal = [];
 
             pozosActivosKeys.forEach(k => {
                 let p = pozosData[k];
@@ -1302,7 +1271,6 @@
 
                         let lit = t.meteorizacion || 'OTRO';
                         meteorizacionTotales[lit] = (meteorizacionTotales[lit] || 0) + met;
-                        allAvancesGlobal.push({ pozo: p.codigo, ...t });
                     });
                 }
                 totalMetrosGlobal += metPozo;
@@ -1326,7 +1294,6 @@
             renderChartSituacionalRecuperacion(chartLabels, chartRec);
             renderChartSituacionalMeteorizacion(meteorizacionTotales);
             renderChartSituacionalPorcentajes(chartLabels, chartPorcentajes);
-            renderizarArquitecturaVisualSala(allAvancesGlobal);
 
             if (pozosActivosKeys.length === 0) {
                 grid.innerHTML = `<div class="col-span-full bg-slate-50 p-8 rounded-2xl border border-slate-200 text-center space-y-3 shadow-sm"><div class="text-3xl">📡</div><h3 class="text-base font-black text-slate-900 uppercase tracking-wider">SALA SITUACIONAL — SIN SONDAJES ACTIVOS</h3><p class="text-xs text-slate-500 max-w-md mx-auto">No hay sondajes activos en este momento.</p></div>`;
@@ -1384,78 +1351,6 @@
                 `;
                 grid.appendChild(card);
             });
-        }
-
-        function renderizarArquitecturaVisualSala(avancesArray) {
-            const perfilDiv = document.getElementById('perfilLitologicoGraficoSala');
-            if (!perfilDiv) return;
-
-            if (!avancesArray || avancesArray.length === 0) {
-                perfilDiv.innerHTML = '<p class="text-slate-400 italic text-center py-6">Sin tramos registrados en frentes activos</p>';
-                if (chartTendenciaRecuperacion) { chartTendenciaRecuperacion.destroy(); chartTendenciaRecuperacion = null; }
-                return;
-            }
-
-            perfilDiv.innerHTML = '';
-            let labelTramos = [];
-            let dataRecup = [];
-
-            avancesArray.forEach((t, idx) => {
-                let litUpper = (t.meteorizacion || '').toUpperCase();
-                let cssClass = 'litho-saprolita';
-                if (litUpper.includes('SUELO')) cssClass = 'litho-suelo';
-                else if (litUpper.includes('SAPROCK')) cssClass = 'litho-saprock';
-                else if (litUpper.includes('OXIDADA')) cssClass = 'litho-oxidada';
-                else if (litUpper.includes('FRACTURADA')) cssClass = 'litho-fracturada';
-                else if (litUpper.includes('FRESCA')) cssClass = 'litho-fresca';
-                else if (litUpper.includes('VETA')) cssClass = 'litho-veta';
-
-                let item = document.createElement('div');
-                item.className = `p-2 rounded-lg shadow-sm border border-slate-200 ${cssClass} flex justify-between items-center`;
-                item.innerHTML = `
-                    <div>
-                        <span class="font-black text-slate-900">[${t.pozo}] #${idx+1} [${t.desde}-${t.hasta}m]</span>
-                        <div class="text-[9px] text-slate-700 font-bold">${t.meteorizacion} (${t.diametro})</div>
-                    </div>
-                    <div class="text-right font-black ${parseFloat(t.porcentaje) < 70 ? 'text-rose-700' : 'text-emerald-800'}">
-                        ${t.porcentaje}% Rec
-                    </div>
-                `;
-                perfilDiv.appendChild(item);
-
-                labelTramos.push(`${t.pozo}: ${t.desde}-${t.hasta}m`);
-                dataRecup.push(parseFloat(t.porcentaje));
-            });
-
-            const ctxTendencia = document.getElementById('chart-tendencia-recuperacion');
-            if (ctxTendencia) {
-                if (chartTendenciaRecuperacion) chartTendenciaRecuperacion.destroy();
-                chartTendenciaRecuperacion = new Chart(ctxTendencia.getContext('2d'), {
-                    type: 'line',
-                    data: {
-                        labels: labelTramos,
-                        datasets: [{
-                            label: '% Recuperación por Tramo',
-                            data: dataRecup,
-                            borderColor: '#7e22ce',
-                            backgroundColor: 'rgba(126, 34, 206, 0.1)',
-                            borderWidth: 2.5,
-                            fill: true,
-                            tension: 0.2,
-                            pointRadius: 4,
-                            pointBackgroundColor: '#312e81'
-                        }]
-                    },
-                    options: {
-                        responsive: true, maintainAspectRatio: false,
-                        plugins: { legend: { display: false } },
-                        scales: {
-                            x: { ticks: { color: '#1e293b', font: { size: 9, weight: 'bold' } }, grid: { display: false } },
-                            y: { max: 100, min: 0, ticks: { color: '#1e293b' }, grid: { color: '#e2e8f0' } }
-                        }
-                    }
-                });
-            }
         }
 
         function irARepositorioSondaje(codigo) {
@@ -1812,452 +1707,4 @@
             document.getElementById('m2_cota').value = p.cota || '';
             document.getElementById('m2_azimut').value = p.azimut || '';
             document.getElementById('m2_dip').value = p.dip || '-';
-            document.getElementById('m2_target').value = p.target || '';
-            
-            const maqSel = document.getElementById('m2_maquina');
-            let encontrado = false;
-            for (let i = 0; i < maqSel.options.length; i++) {
-                if (maqSel.options[i].value === p.maquina) { maqSel.selectedIndex = i; encontrado = true; break; }
-            }
-            if (!encontrado) {
-                maqSel.value = 'OTRA';
-                document.getElementById('m2_otra_maquina_box').classList.remove('hidden');
-                document.getElementById('m2_otra_maquina').value = p.maquina;
-            } else { document.getElementById('m2_otra_maquina_box').classList.add('hidden'); }
-
-            const selTopo = document.getElementById('m2_selectPozoActivo');
-            if (selTopo) { selTopo.value = codigo; verificarSeleccionTopografiaModulo(); }
-
-            const selCierre = document.getElementById('wellSelectCierre');
-            if (selCierre) { selCierre.value = codigo; verificarSeleccionCierreModulo(); }
-
-            const selRepo = document.getElementById('wellSelectRepositorio');
-            if (selRepo) { selRepo.value = codigo; verificarSeleccionRepositorioModulo(); }
-
-            const selUni = document.getElementById('wellSelectUnificado');
-            if (selUni) { selUni.value = codigo; verificarSeleccionUnificadoModulo(); }
-
-            actualizarTablaAvances();
-            actualizarProgresoGrafico();
-            autoCalcularHasta();
-            poblarSelectRetomarTurno();
-            
-            if (!document.getElementById('mod4').classList.contains('hidden')) cargarResumenCierrePozo();
-            if (!document.getElementById('mod5').classList.contains('hidden')) { poblarSelectRepositorioTodos(); poblarSelectTurnosRepo(); generarReporteDSR(); }
-        }
-
-        async function guardarOIniciarTurno() {
-            if (perfilActual === 'GERENCIA') { alert("⚠️ Solo lectura."); return; }
-            if (!pozoActivoId) { alert("⚠️ Seleccione un sondaje primero."); switchTab('mod1'); return; }
-            
-            let fecha = document.getElementById('m3_fecha').value;
-            let jornada = document.getElementById('m3_turno').value;
-            let perforador = document.getElementById('m3_perforador').value.trim().toUpperCase();
-            let geologo = document.getElementById('m3_geologo').value.trim().toUpperCase();
-            let turnoObs = document.getElementById('m3_turno_obs').value.trim().toUpperCase();
-            let turnoEditId = document.getElementById('editTurnoId').value;
-
-            if (!fecha || !perforador || !geologo) { alert("❌ Complete Fecha, Perforador y Geólogo."); return; }
-
-            let duplicado = Object.values(turnosData).some(t => t.pozo === pozoActivoId && t.fecha === fecha && t.jornada === jornada && t.id !== turnoEditId);
-            if (duplicado) { alert(`⚠️ Ya existe un turno ${jornada} para la fecha ${fecha} en el sondaje ${pozoActivoId}.`); return; }
-
-            if (turnoEditId && turnosData[turnoEditId]) {
-                turnosData[turnoEditId].fecha = fecha;
-                turnosData[turnoEditId].jornada = jornada;
-                turnosData[turnoEditId].perforador = perforador;
-                turnosData[turnoEditId].geologo = geologo;
-                turnosData[turnoEditId].observaciones = turnoObs;
-
-                if (turnoActivoObj && turnoActivoObj.id === turnoEditId) {
-                    turnoActivoObj = turnosData[turnoEditId];
-                    localStorage.setItem('jireth_turno_activo', JSON.stringify(turnoActivoObj));
-                    actualizarBannerTurnoActivo();
-                }
-
-                await guardarYPersistirTodo();
-                poblarSelectRetomarTurno();
-                notifySuccess("Datos y observaciones del turno actualizados");
-                cancelarEdicionTurno();
-            } else {
-                let nuevoId = 'TURNO_' + Date.now();
-                turnoActivoObj = { id: nuevoId, pozo: pozoActivoId, fecha: fecha, jornada: jornada, perforador: perforador, geologo: geologo, observaciones: turnoObs };
-                turnosData[nuevoId] = turnoActivoObj;
-                localStorage.setItem('jireth_turnos', JSON.stringify(turnosData));
-                localStorage.setItem('jireth_turno_activo', JSON.stringify(turnoActivoObj));
-                
-                actualizarBannerTurnoActivo();
-                poblarSelectRetomarTurno();
-                notifySuccess("🚀 Turno " + jornada + " iniciado correctamente");
-            }
-        }
-
-        function cargarTurnoParaEditar() {
-            let id = document.getElementById('selectRetomarTurno').value;
-            if (!id || !turnosData[id]) { alert("⚠️ Seleccione un turno del historial."); return; }
-            let t = turnosData[id];
-            document.getElementById('editTurnoId').value = t.id;
-            document.getElementById('m3_fecha').value = t.fecha;
-            document.getElementById('m3_turno').value = t.jornada;
-            document.getElementById('m3_perforador').value = t.perforador;
-            document.getElementById('m3_geologo').value = t.geologo;
-            document.getElementById('m3_turno_obs').value = t.observaciones || '';
-            document.getElementById('tituloBoxTurno').innerText = "✏️ Editando Turno & Observaciones (" + t.pozo + ")";
-            document.getElementById('btnAccionTurno').innerText = "💾 Guardar Cambios del Turno";
-            document.getElementById('btnCancelarEdicionTurno').classList.remove('hidden');
-        }
-
-        function cancelarEdicionTurno() {
-            document.getElementById('editTurnoId').value = '';
-            document.getElementById('m3_fecha').valueAsDate = new Date();
-            document.getElementById('m3_perforador').value = '';
-            document.getElementById('m3_geologo').value = '';
-            document.getElementById('m3_turno_obs').value = '';
-            document.getElementById('tituloBoxTurno').innerText = "🚀 Control & Apertura de Turno";
-            document.getElementById('btnAccionTurno').innerText = "🚀 Iniciar / Activar Turno para Logging";
-            document.getElementById('btnCancelarEdicionTurno').classList.add('hidden');
-        }
-
-        async function eliminarTurnoSeleccionado() {
-            if (perfilActual === 'GERENCIA') { alert("⚠️ Solo lectura."); return; }
-            let id = document.getElementById('selectRetomarTurno').value;
-            if (!id || !turnosData[id]) { alert("⚠️ Seleccione un turno."); return; }
-            if (confirm("⚠️ ¿Eliminar este turno y sus datos asociados?")) {
-                delete turnosData[id];
-                if (turnoActivoObj && turnoActivoObj.id === id) {
-                    turnoActivoObj = null;
-                    localStorage.removeItem('jireth_turno_activo');
-                    document.getElementById('lblInfoTurno').innerText = "--";
-                    document.getElementById('lblInfoPerf').innerText = "--";
-                    document.getElementById('lblInfoGeo').innerText = "--";
-                }
-                await guardarYPersistirTodo();
-                poblarSelectRetomarTurno();
-                notifySuccess("Turno eliminado correctamente");
-            }
-        }
-
-        async function finalizarTurnoActivo() {
-            if (perfilActual === 'GERENCIA') return;
-            if (!turnoActivoObj) { alert("⚠️ No hay turno activo."); return; }
-            let obs = document.getElementById('m3_turno_obs').value.trim().toUpperCase();
-            turnoActivoObj.observaciones = obs || "SIN NOVEDAD";
-            turnosData[turnoActivoObj.id] = turnoActivoObj;
-            localStorage.setItem('jireth_turnos', JSON.stringify(turnosData));
-
-            await guardarYPersistirTodo();
-            notifySuccess("Turno finalizado y guardado con éxito");
-            turnoActivoObj = null;
-            localStorage.removeItem('jireth_turno_activo');
-            document.getElementById('lblInfoTurno').innerText = "--";
-            document.getElementById('lblInfoPerf').innerText = "--";
-            document.getElementById('lblInfoGeo').innerText = "--";
-            document.getElementById('m3_turno_obs').value = '';
-            document.getElementById('lblEstadoTurnoBadge').className = "text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 border border-amber-300";
-            document.getElementById('lblEstadoTurnoBadge').innerText = "Turno Pendiente";
-        }
-
-        function actualizarBannerTurnoActivo() {
-            if (!turnoActivoObj) return;
-            document.getElementById('lblInfoTurno').innerText = turnoActivoObj.pozo + " (" + turnoActivoObj.fecha + " - " + turnoActivoObj.jornada + ")";
-            document.getElementById('lblInfoPerf').innerText = turnoActivoObj.perforador;
-            document.getElementById('lblInfoGeo').innerText = turnoActivoObj.geologo;
-            document.getElementById('m3_turno_obs').value = turnoActivoObj.observaciones || '';
-            document.getElementById('lblEstadoTurnoBadge').className = "text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-900 border border-emerald-300";
-            document.getElementById('lblEstadoTurnoBadge').innerText = "Turno Activo En Vivo";
-        }
-
-        function poblarSelectRetomarTurno() {
-            const sel = document.getElementById('selectRetomarTurno');
-            if (!sel) return;
-            sel.innerHTML = '<option value="">-- Seleccionar Turno del Historial --</option>';
-            Object.keys(turnosData).forEach(k => {
-                let t = turnosData[k];
-                if (!pozoActivoId || t.pozo === pozoActivoId) {
-                    let opt = document.createElement('option');
-                    opt.value = k;
-                    opt.text = "[" + t.fecha + " - " + t.jornada + "] Sondaje: " + t.pozo + " | Perf: " + t.perforador;
-                    sel.appendChild(opt);
-                }
-            });
-        }
-
-        function mostrarDetallesTurnoSeleccionado() {
-            let id = document.getElementById('selectRetomarTurno').value;
-            if (!id || !turnosData[id]) return;
-            let t = turnosData[id];
-            notifySuccess("Turno seleccionado: " + t.fecha + " (" + t.jornada + ")");
-        }
-
-        function retomarTurnoSeleccionado() {
-            const id = document.getElementById('selectRetomarTurno').value;
-            if (!id || !turnosData[id]) { alert("⚠️ Seleccione un turno."); return; }
-            turnoActivoObj = turnosData[id];
-            localStorage.setItem('jireth_turno_activo', JSON.stringify(turnoActivoObj));
-            pozoActivoId = turnoActivoObj.pozo;
-            localStorage.setItem('jireth_pozo_activo', pozoActivoId);
-            cargarDatosPozoEnFormularios(pozoActivoId);
-            actualizarBannerTurnoActivo();
-            notifySuccess("▶️ Turno retomado con éxito");
-        }
-
-        function autoCalcularHasta() {
-            if (!pozoActivoId || !pozosData[pozoActivoId]) return;
-            let p = pozosData[pozoActivoId];
-            let ultimoHasta = 0.0;
-            if (p.avances && p.avances.length > 0) ultimoHasta = parseFloat(p.avances[p.avances.length - 1].hasta) || 0.0;
-            document.getElementById('m3_desde').value = ultimoHasta.toFixed(2);
-            let lon = parseFloat(document.getElementById('m3_longitud').value) || 1.5;
-            let hasta = ultimoHasta + lon;
-            document.getElementById('m3_hasta').value = hasta.toFixed(2);
-            document.getElementById('m3_recuperado').value = '';
-        }
-
-        async function guardarAvance() {
-            if (perfilActual === 'GERENCIA') { alert("⚠️ Solo lectura."); return; }
-            if (!pozoActivoId || !pozosData[pozoActivoId]) { alert("⚠️ Seleccione un sondaje."); switchTab('mod1'); return; }
-            if (!turnoActivoObj) { alert("⚠️ Debe iniciar o retomar un turno antes de registrar avances."); return; }
-
-            let p = pozosData[pozoActivoId];
-            let desde = parseFloat(document.getElementById('m3_desde').value) || 0;
-            let hasta = parseFloat(document.getElementById('m3_hasta').value) || 0;
-            let diametro = document.getElementById('m3_diametro').value;
-            let recuperado = parseFloat(document.getElementById('m3_recuperado').value);
-            let meteorizacion = document.getElementById('m3_meteorizacion').value;
-            let lonManiobra = hasta - desde;
-
-            if (isNaN(recuperado) || recuperado < 0 || recuperado > lonManiobra) { 
-                alert("❌ Metros recuperados inválidos o campo vacío respecto a la longitud del tramo."); 
-                return; 
-            }
-
-            let metrosPago = calcularMetrosAPagar(lonManiobra, recuperado, meteorizacion);
-            let objTramo = {
-                desde: desde.toFixed(2), hasta: hasta.toFixed(2), diametro: diametro,
-                recuperado: recuperado.toFixed(2), porcentaje: (((recuperado / lonManiobra) * 100)).toFixed(1),
-                meteorizacion: meteorizacion, pagoEstandar: metrosPago.toFixed(2),
-                turnoId: turnoActivoObj.id, perforador: turnoActivoObj.perforador, geologoTurno: turnoActivoObj.geologo
-            };
-
-            if (indexEditandoAvance !== null) {
-                p.avances[indexEditandoAvance] = objTramo;
-                indexEditandoAvance = null;
-                document.getElementById('btnGuardarAvance').innerText = "➕ Guardar Avance Tramo";
-                document.getElementById('btnCancelarEdicion').classList.add('hidden');
-                notifySuccess("Tramo de avance actualizado");
-            } else { 
-                p.avances.push(objTramo); 
-                notifySuccess("➕ Tramo de avance registrado con éxito");
-            }
-
-            localStorage.setItem('jireth_pozos', JSON.stringify(pozosData));
-            localStorage.setItem('jireth_turnos', JSON.stringify(turnosData));
-
-            actualizarTablaAvances();
-            actualizarProgresoGrafico();
-            autoCalcularHasta();
-
-            if (navigator.onLine && supabaseClient) {
-                setTimeout(async () => {
-                    try {
-                        const payloadData = { pozos: pozosData, turnos: turnosData, actualizado: new Date().toISOString() };
-                        await supabaseClient.from('jireth_geocore').upsert({ id: 'db_principal', payload: payloadData });
-                    } catch(e) { console.warn("Sync diferida offline", e); }
-                }, 50);
-            }
-        }
-
-        function actualizarTablaAvances() {
-            if (!pozoActivoId || !pozosData[pozoActivoId]) return;
-            let p = pozosData[pozoActivoId];
-            let tbody = document.getElementById('tablaAvancesBody');
-            if (!tbody) return;
-            tbody.innerHTML = '';
-            
-            let avancesAMostrar = turnoActivoObj ? p.avances.filter(t => t.turnoId === turnoActivoObj.id) : p.avances;
-
-            avancesAMostrar.forEach((t) => {
-                let idxOriginal = p.avances.indexOf(t);
-                let lonM = parseFloat(t.hasta) - parseFloat(t.desde);
-                let pagVal = t.pagoEstandar ? parseFloat(t.pagoEstandar) : calcularMetrosAPagar(lonM, parseFloat(t.recuperado), t.meteorizacion);
-
-                let tr = document.createElement('tr');
-                tr.className = "hover:bg-slate-50 transition";
-                let tdAccion = perfilActual === 'GERENCIA' ? `<td class="p-3 text-center text-slate-400">Solo Lectura</td>` : `<td class="p-3 text-center space-x-1"><button onclick="editarTramo(${idxOriginal})" class="text-xs bg-slate-100 text-slate-800 px-2 py-1 rounded border border-slate-200 shadow-sm">✏️</button><button onclick="eliminarTramo(${idxOriginal})" class="text-xs bg-rose-50 text-rose-800 px-2 py-1 rounded border border-rose-200 shadow-sm">🗑️</button></td>`;
-                tr.innerHTML = `<td class="p-3">#${idxOriginal + 1}</td><td class="p-3 text-slate-900 font-bold">${t.desde} - ${t.hasta}</td><td class="p-3 text-indigo-800 font-bold">${t.diametro}</td><td class="p-3 text-slate-900">${t.recuperado}</td><td class="p-3 font-bold ${parseFloat(t.porcentaje) < 70 ? 'text-amber-800' : 'text-emerald-800'}">${t.porcentaje}%</td><td class="p-3 text-slate-700">${t.meteorizacion}</td><td class="p-3 text-amber-900 font-bold">${pagVal.toFixed(2)}m</td>${tdAccion}`;
-                tbody.appendChild(tr);
-            });
-        }
-
-        function editarTramo(idx) {
-            if (perfilActual === 'GERENCIA') return;
-            let p = pozosData[pozoActivoId];
-            let t = p.avances[idx];
-            document.getElementById('m3_desde').value = t.desde;
-            document.getElementById('m3_hasta').value = t.hasta;
-            document.getElementById('m3_diametro').value = t.diametro;
-            document.getElementById('m3_recuperado').value = t.recuperado;
-            document.getElementById('m3_meteorizacion').value = t.meteorizacion;
-            indexEditandoAvance = idx;
-            document.getElementById('btnGuardarAvance').innerText = "💾 Actualizar Tramo #" + (idx + 1);
-            document.getElementById('btnCancelarEdicion').classList.remove('hidden');
-        }
-
-        function cancelarEdicionAvance() {
-            indexEditandoAvance = null;
-            document.getElementById('btnGuardarAvance').innerText = "➕ Guardar Avance Tramo";
-            document.getElementById('btnCancelarEdicion').classList.add('hidden');
-            autoCalcularHasta();
-        }
-
-        async function eliminarTramo(idx) {
-            if (perfilActual === 'GERENCIA') return;
-            if (confirm("¿Eliminar este tramo?")) {
-                pozosData[pozoActivoId].avances.splice(idx, 1);
-                await guardarYPersistirTodo();
-                actualizarTablaAvances();
-                actualizarProgresoGrafico();
-                autoCalcularHasta();
-                notifySuccess("Tramo eliminado");
-            }
-        }
-
-        function actualizarProgresoGrafico() {
-            if (!pozoActivoId || !pozosData[pozoActivoId]) return;
-            let p = pozosData[pozoActivoId];
-            let target = parseFloat(p.target) || 100.0;
-            let totalHQ = 0, totalNQ = 0, totalRecuperado = 0, totalMetros = 0, totalPago = 0;
-
-            p.avances.forEach(t => {
-                let met = parseFloat(t.hasta) - parseFloat(t.desde);
-                let rec = parseFloat(t.recuperado) || 0;
-                let lonM = parseFloat(t.hasta) - parseFloat(t.desde);
-                let pago = t.pagoEstandar ? parseFloat(t.pagoEstandar) : calcularMetrosAPagar(lonM, rec, t.meteorizacion);
-                totalMetros += met;
-                totalRecuperado += rec;
-                totalPago += pago;
-                if (t.diametro === 'HQ') totalHQ += met; else totalNQ += met;
-            });
-
-            let totalPerforado = totalHQ + totalNQ;
-            let pct = target > 0 ? Math.min(100, (totalPerforado / target) * 100) : 0;
-            let recGlobal = totalMetros > 0 ? ((totalRecuperado / totalMetros) * 100) : 0;
-
-            document.getElementById('cardMetrajeAcum').innerText = totalPerforado.toFixed(2) + " m";
-            document.getElementById('cardTargetSub').innerText = "Target: " + target.toFixed(2) + " m";
-            document.getElementById('cardRecGlobal').innerText = recGlobal.toFixed(1) + "%";
-            document.getElementById('cardAvanceGen').innerText = pct.toFixed(1) + "%";
-            document.getElementById('cardMetrosPago').innerText = totalPago.toFixed(2) + " m";
-
-            document.getElementById('txtMetrosHQ').innerText = totalHQ.toFixed(2);
-            document.getElementById('txtMetrosNQ').innerText = totalNQ.toFixed(2);
-            let pendiente = Math.max(0, target - totalPerforado);
-            document.getElementById('txtMetrosPend').innerText = pendiente.toFixed(2);
-            document.getElementById('lblProgresoTexto').innerText = totalPerforado.toFixed(2) + " m / " + target.toFixed(2) + " m (" + pct.toFixed(1) + "%)";
-
-            let pHQ = target > 0 ? (totalHQ / target) * 100 : 0;
-            let pNQ = target > 0 ? (totalNQ / target) * 100 : 0;
-            let pPend = target > 0 ? (pendiente / target) * 100 : 100;
-
-            document.getElementById('barHQ').style.width = pHQ + '%';
-            document.getElementById('barNQ').style.width = pNQ + '%';
-            document.getElementById('barPendiente').style.width = pPend + '%';
-        }
-
-        function cargarResumenCierrePozo() {
-            let container = document.getElementById('cierreResumenPozo');
-            if (!container) return;
-            if (!pozoActivoId || !pozosData[pozoActivoId]) {
-                container.innerHTML = '<p class="text-rose-600 font-bold">No hay sondaje seleccionado.</p>';
-                return;
-            }
-            let p = pozosData[pozoActivoId];
-            let totalMetros = 0, totalRec = 0, totalPago = 0;
-            p.avances.forEach(t => {
-                let met = (parseFloat(t.hasta) - parseFloat(t.desde));
-                let pag = t.pagoEstandar ? parseFloat(t.pagoEstandar) : calcularMetrosAPagar(met, parseFloat(t.recuperado), t.meteorizacion);
-                totalMetros += met;
-                totalRec += parseFloat(t.recuperado) || 0;
-                totalPago += pag;
-            });
-            let target = parseFloat(p.target) || 100.0;
-            let recGralPozo = totalMetros > 0 ? ((totalRec / totalMetros) * 100).toFixed(1) : '0.0';
-
-            container.innerHTML = `
-                <div class="space-y-3">
-                    <p class="text-slate-900 font-black uppercase text-xs tracking-wider border-b border-slate-200 pb-1">📋 Ficha Técnica Consolidada para Evaluación y Cierre (100% de Trazabilidad)</p>
-                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[11px]">
-                        <div><b>Código Sondaje:</b> <span class="text-indigo-900 font-bold">${p.codigo}</span></div>
-                        <div><b>Proyecto / Sector:</b> <span class="text-purple-900 font-bold">${p.proyecto}</span></div>
-                        <div><b>Empresa Cliente:</b> <span class="text-slate-800 font-bold">${p.empresa}</span></div>
-                        <div><b>Estado Actual:</b> <span class="text-emerald-800 font-bold">${p.estado}</span></div>
-                        <div><b>Máquina Perf.:</b> <span class="text-slate-700 font-bold">${p.maquina || 'GEOMAX'}</span></div>
-                        <div><b>Coordenada Este:</b> <span class="font-mono-code text-slate-800">${p.este || '0.00'} m</span></div>
-                        <div><b>Coordenada Norte:</b> <span class="font-mono-code text-slate-800">${p.norte || '0.00'} m</span></div>
-                        <div><b>Cota Z (m):</b> <span class="font-mono-code text-slate-800">${p.cota || '0.00'} m</span></div>
-                        <div><b>Inclinación (Dip):</b> <span class="font-mono-code text-slate-800">${p.dip || '-'}°</span></div>
-                        <div><b>Azimut (°):</b> <span class="font-mono-code text-slate-800">${p.azimut || '0'}°</span></div>
-                        <div><b>Prof. Target:</b> <span class="font-mono-code text-slate-800">${target} m</span></div>
-                        <div><b>Total Perforado:</b> <span class="font-mono-code text-indigo-950 font-bold">${totalMetros.toFixed(2)} m</span></div>
-                        <div><b>Recuperación Gral:</b> <span class="font-mono-code text-purple-900 font-bold">${recGralPozo}%</span></div>
-                        <div><b>Total Metros a Pagar:</b> <span class="font-mono-code text-amber-900 font-bold">${totalPago.toFixed(2)} m</span></div>
-                    </div>
-                </div>
-            `;
-
-            renderChartCierreMeteorizacion(p);
-
-            if (p.estado === 'CULMINADO') {
-                document.getElementById('btnCierrePozo').classList.add('hidden');
-                document.getElementById('divMotivoCierreBox').classList.add('hidden');
-                document.getElementById('divObsCierreBox').classList.add('hidden');
-                document.getElementById('btnReactivarPozo').classList.remove('hidden');
-            } else {
-                document.getElementById('btnCierrePozo').classList.remove('hidden');
-                document.getElementById('divMotivoCierreBox').classList.remove('hidden');
-                document.getElementById('divObsCierreBox').classList.remove('hidden');
-                document.getElementById('btnReactivarPozo').classList.add('hidden');
-            }
-        }
-
-        function renderChartCierreMeteorizacion(p) {
-            const ctx = document.getElementById('chart-cierre-meteorizacion');
-            if (!ctx) return;
-            let totals = {};
-            p.avances.forEach(t => {
-                let len = parseFloat(t.hasta) - parseFloat(t.desde);
-                totals[t.meteorizacion] = (totals[t.meteorizacion] || 0) + len;
-            });
-            let sortedKeys = Object.keys(totals).sort((a, b) => totals[b] - totals[a]);
-            let sortedData = sortedKeys.map(k => totals[k].toFixed(2));
-
-            if (chartCierreMeteorizacion) chartCierreMeteorizacion.destroy();
-            chartCierreMeteorizacion = new Chart(ctx.getContext('2d'), {
-                type: 'doughnut',
-                data: {
-                    labels: sortedKeys,
-                    datasets: [{ data: sortedData, backgroundColor: ['#312e81', '#7e22ce', '#047857', '#b45309', '#0284c7', '#db2777', '#475569'] }]
-                },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { color: '#1e293b', font: { size: 10, weight: 'bold' } } } } }
-            });
-        }
-
-        async function ejecutarCierrePozo() {
-            if (perfilActual === 'GERENCIA') { alert("⚠️ Solo lectura."); return; }
-            if (!pozoActivoId || !pozosData[pozoActivoId]) return;
-            let motivo = document.getElementById('m4_motivo').value;
-            let obs = document.getElementById('m4_obs').value;
-            pozosData[pozoActivoId].estado = 'CULMINADO';
-            pozosData[pozoActivoId].motivoCierre = motivo;
-            pozosData[pozoActivoId].obsCierre = obs;
-            await guardarYPersistirTodo();
-            refrescarSelectoresOperativos();
-            refrescarSelectorModuloUno();
-            poblarSelectTopografia();
-            poblarSelectCierre();
-            renderizarSalaSituacional();
-            cargarResumenCierrePozo();
-            notifySuccess("🔒 Sondaje " + pozoActivoId + " cerrado con éxito");
-        }
-
-        async function reactivarPozoActual() {
+            document.
