@@ -121,7 +121,6 @@
             color: #ffffff;
         }
 
-        /* COMPONENTE NOTIFICACIÓN FLOTANTE (TOAST) */
         #toastContainer {
             position: fixed;
             bottom: 20px;
@@ -153,15 +152,6 @@
             opacity: 1;
             transform: translateY(0);
         }
-
-        /* LITOLOGÍA VISUAL PATTERNS */
-        .litho-suelo { background-color: #fef08a; border-left: 4px solid #ca8a04; }
-        .litho-saprolita { background-color: #fde047; border-left: 4px solid #b45309; }
-        .litho-saprock { background-color: #fed7aa; border-left: 4px solid #c2410c; }
-        .litho-oxidada { background-color: #fca5a5; border-left: 4px solid #b91c1c; }
-        .litho-fracturada { background-color: #cbd5e1; border-left: 4px solid #334155; }
-        .litho-fresca { background-color: #94a3b8; border-left: 4px solid #0f172a; }
-        .litho-veta { background-color: #f43f5e; border-left: 4px solid #ffe4e6; }
 
         @media print {
             @page { size: portrait; margin: 15mm 10mm 15mm 10mm; }
@@ -581,7 +571,7 @@
 
         <!-- MÓDULO 3: UNIFICADO (TURNOS, OBSERVACIONES EDITABLES, LOG VISUAL & TENDENCIAS) -->
         <section id="mod3_unificado" class="hidden space-y-4 bg-white p-5 sm:p-6 rounded-3xl border border-slate-200 shadow-sm">
-            <h2 class="text-xl font-black text-slate-900 tracking-tight flex items-center gap-2">🪵 Módulo: Gestión de Turnos & Core Logging en Vivo (Con Arquitectura Visual)</h2>
+            <h2 class="text-xl font-black text-slate-900 tracking-tight flex items-center gap-2">🪵 Módulo: Gestión de Turnos & Core Logging en Vivo</h2>
             <p class="text-xs text-slate-600 font-medium">Seleccione el sondaje activo. Gestione el turno operativo (incluyendo sus observaciones y novedades) en la sección superior y registre los tramos en la sección inferior.</p>
 
             <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 shadow-sm">
@@ -648,7 +638,7 @@
                     </div>
                 </div>
 
-                <!-- SECCIÓN INFERIOR: CORE LOGGING, PERFIL LITOLÓGICO GRÁFICO & TENDENCIAS -->
+                <!-- SECCIÓN INFERIOR: CORE LOGGING Y CUADROS CONSOLIDADOS -->
                 <div id="contenedorCoreLogging" class="space-y-4 pt-2 border-t-2 border-slate-200">
                     <div id="infoTurnoActivo" class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 flex justify-between items-center flex-wrap gap-2 text-xs shadow-sm">
                         <div>
@@ -681,28 +671,6 @@
                             <p class="text-[10px] text-amber-800 font-bold uppercase">Total Metros a Pagar</p>
                             <p class="text-sm sm:text-base font-black text-amber-950 font-mono-code mt-0.5" id="cardMetrosPago">0.00 m</p>
                             <p class="text-[9px] text-amber-700 font-bold">Según Estándar de Pago</p>
-                        </div>
-                    </div>
-
-                    <!-- ARQUITECTURA COMPLEMENTARIA GLOBAL: CURVA DE TENDENCIA Y PERFIL LITOLÓGICO -->
-                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
-                        <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 shadow-sm">
-                            <h3 class="text-xs font-black text-slate-800 uppercase mb-2 flex items-center justify-between">
-                                <span>🎨 Perfil Litológico Gráfico</span>
-                                <span class="text-[9px] text-indigo-700 font-bold">Log Visual Testigo</span>
-                            </h3>
-                            <div id="perfilLitologicoGrafico" class="space-y-1.5 max-h-56 overflow-y-auto p-2 bg-white rounded-xl border border-slate-300 font-mono-code text-[10px]">
-                                <p class="text-slate-400 italic text-center py-6">Sin tramos registrados aún</p>
-                            </div>
-                        </div>
-                        <div class="lg:col-span-2 bg-slate-50 p-4 rounded-2xl border border-slate-200 shadow-sm">
-                            <h3 class="text-xs font-black text-slate-800 uppercase mb-2 flex items-center justify-between">
-                                <span>📈 Curva de Tendencia de Recuperación vs Profundidad</span>
-                                <span class="text-[9px] text-purple-700 font-bold">% Recup vs Tramo</span>
-                            </h3>
-                            <div class="h-48 relative">
-                                <canvas id="chart-tendencia-recuperacion"></canvas>
-                            </div>
                         </div>
                     </div>
 
@@ -1046,7 +1014,6 @@
         let chartSituacionalMeteorizacion = null;
         let chartSituacionalPorcentajes = null;
         let chartCierreMeteorizacion = null;
-        let chartTendenciaRecuperacion = null;
 
         if (!localStorage.getItem('jireth_clave_geo')) localStorage.setItem('jireth_clave_geo', 'Mina2628');
         localStorage.setItem('jireth_clave_ger', 'JIRETH2026');
@@ -1467,80 +1434,6 @@
             });
         }
 
-        // RENDERIZAR ARQUITECTURA COMPLEMENTARIA GLOBAL (PERFIL LITOLÓGICO Y CURVA TENDENCIA)
-        function renderizarArquitecturaComplementariaGlobal(p) {
-            const perfilDiv = document.getElementById('perfilLitologicoGrafico');
-            if (!perfilDiv) return;
-            
-            if (!p.avances || p.avances.length === 0) {
-                perfilDiv.innerHTML = '<p class="text-slate-400 italic text-center py-6">Sin tramos registrados aún</p>';
-                if (chartTendenciaRecuperacion) { chartTendenciaRecuperacion.destroy(); chartTendenciaRecuperacion = null; }
-                return;
-            }
-
-            perfilDiv.innerHTML = '';
-            let labelTramos = [];
-            let dataRecup = [];
-
-            p.avances.forEach((t, idx) => {
-                let litUpper = (t.meteorizacion || '').toUpperCase();
-                let cssClass = 'litho-saprolita';
-                if (litUpper.includes('SUELO')) cssClass = 'litho-suelo';
-                else if (litUpper.includes('SAPROCK')) cssClass = 'litho-saprock';
-                else if (litUpper.includes('OXIDADA')) cssClass = 'litho-oxidada';
-                else if (litUpper.includes('FRACTURADA')) cssClass = 'litho-fracturada';
-                else if (litUpper.includes('FRESCA')) cssClass = 'litho-fresca';
-                else if (litUpper.includes('VETA')) cssClass = 'litho-veta';
-
-                let item = document.createElement('div');
-                item.className = `p-2 rounded-lg shadow-sm border border-slate-200 ${cssClass} flex justify-between items-center`;
-                item.innerHTML = `
-                    <div>
-                        <span class="font-black text-slate-900">#${idx+1} [${t.desde}-${t.hasta}m]</span>
-                        <div class="text-[9px] text-slate-700 font-bold">${t.meteorizacion} (${t.diametro})</div>
-                    </div>
-                    <div class="text-right font-black ${parseFloat(t.porcentaje) < 70 ? 'text-rose-700' : 'text-emerald-800'}">
-                        ${t.porcentaje}% Rec
-                    </div>
-                `;
-                perfilDiv.appendChild(item);
-
-                labelTramos.push(`${t.desde}-${t.hasta}m`);
-                dataRecup.push(parseFloat(t.porcentaje));
-            });
-
-            // Renderizar Gráfico de Tendencia de Recuperación vs Profundidad
-            const ctxTendencia = document.getElementById('chart-tendencia-recuperacion');
-            if (ctxTendencia) {
-                if (chartTendenciaRecuperacion) chartTendenciaRecuperacion.destroy();
-                chartTendenciaRecuperacion = new Chart(ctxTendencia.getContext('2d'), {
-                    type: 'line',
-                    data: {
-                        labels: labelTramos,
-                        datasets: [{
-                            label: '% Recuperación por Tramo',
-                            data: dataRecup,
-                            borderColor: '#7e22ce',
-                            backgroundColor: 'rgba(126, 34, 206, 0.1)',
-                            borderWidth: 2.5,
-                            fill: true,
-                            tension: 0.2,
-                            pointRadius: 4,
-                            pointBackgroundColor: '#312e81'
-                        }]
-                    },
-                    options: {
-                        responsive: true, maintainAspectRatio: false,
-                        plugins: { legend: { display: false } },
-                        scales: {
-                            x: { ticks: { color: '#1e293b', font: { size: 9, weight: 'bold' } }, grid: { display: false } },
-                            y: { max: 100, min: 0, ticks: { color: '#1e293b' }, grid: { color: '#e2e8f0' } }
-                        }
-                    }
-                });
-            }
-        }
-
         function forzarMayusculas(el) { if (el && el.value) el.value = el.value.toUpperCase(); }
         function formatearUTM(el) { if (el && el.value) { let num = parseFloat(el.value.replace(/,/g, '')); if (!isNaN(num)) el.value = num.toFixed(2); } }
         function formatearDecimalesLibres(el) { if (el && el.value) { let num = parseFloat(el.value.replace(/,/g, '')); if (!isNaN(num)) el.value = num.toFixed(2); } }
@@ -1839,7 +1732,6 @@
 
             actualizarTablaAvances();
             actualizarProgresoGrafico();
-            renderizarArquitecturaComplementariaGlobal(p);
             autoCalcularHasta();
             poblarSelectRetomarTurno();
             
@@ -2056,7 +1948,6 @@
 
             actualizarTablaAvances();
             actualizarProgresoGrafico();
-            renderizarArquitecturaComplementariaGlobal(p);
             autoCalcularHasta();
 
             if (navigator.onLine && supabaseClient) {
@@ -2119,7 +2010,6 @@
                 await guardarYPersistirTodo();
                 actualizarTablaAvances();
                 actualizarProgresoGrafico();
-                renderizarArquitecturaComplementariaGlobal(pozosData[pozoActivoId]);
                 autoCalcularHasta();
                 notifySuccess("Tramo eliminado");
             }
