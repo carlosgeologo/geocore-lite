@@ -335,7 +335,8 @@
                 </div>
             </div>
 
-            <div class="flex gap-2 flex-wrap">
+            <div class="flex gap-2 flex-wrap items-center">
+                <span id="badgeSyncQueue" class="hidden bg-amber-100 text-amber-900 border border-amber-300 text-[10px] px-2.5 py-1 rounded-lg font-black font-mono-code">⏳ 0 Pendientes</span>
                 <button type="button" onclick="sincronizarConSupabaseReal()" class="text-xs bg-slate-100 text-slate-800 px-3 py-2 rounded-xl font-extrabold border border-slate-300 hover:bg-slate-200 transition shadow-sm">🔄 Sincronizar Cloud</button>
                 <button type="button" onclick="cerrarSesion()" class="text-xs bg-rose-50 text-rose-800 px-3 py-2 rounded-xl font-extrabold border border-rose-300 hover:bg-rose-100 transition shadow-sm">🚪 Salir</button>
             </div>
@@ -682,6 +683,27 @@
                     </div>
                 </div>
 
+                <!-- NUEVA SECCIÓN: VISUALIZADOR DE PERFIL 2D (CANVAS) Y LOG LITOLÓGICO -->
+                <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-3 shadow-sm">
+                    <div class="flex justify-between items-center flex-wrap gap-2">
+                        <h3 class="text-xs font-black text-slate-900 uppercase tracking-wider flex items-center gap-2">
+                            <span>📐 Perfil Topográfico 2D & Log Litológico en Tiempo Real</span>
+                        </h3>
+                        <div class="flex items-center gap-2 text-[10px] font-bold text-slate-600">
+                            <span class="flex items-center gap-1"><b class="inline-block w-2.5 h-2.5 bg-amber-200 border border-amber-400 rounded"></b> Suelo/Sap</span>
+                            <span class="flex items-center gap-1"><b class="inline-block w-2.5 h-2.5 bg-amber-600 rounded"></b> Saprock</span>
+                            <span class="flex items-center gap-1"><b class="inline-block w-2.5 h-2.5 bg-orange-500 rounded"></b> R.Oxidada</span>
+                            <span class="flex items-center gap-1"><b class="inline-block w-2.5 h-2.5 bg-sky-500 rounded"></b> R.Fract</span>
+                            <span class="flex items-center gap-1"><b class="inline-block w-2.5 h-2.5 bg-emerald-600 rounded"></b> R.Fresca</span>
+                            <span class="flex items-center gap-1"><b class="inline-block w-2.5 h-2.5 bg-yellow-400 rounded"></b> Veta</span>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white p-3 rounded-xl border border-slate-200 overflow-x-auto shadow-inner flex justify-center">
+                        <canvas id="canvasPerfil2D" width="850" height="420" class="max-w-full h-auto bg-slate-950 rounded-lg shadow-md"></canvas>
+                    </div>
+                </div>
+
                 <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-2.5 shadow-sm">
                     <div class="flex justify-between items-center text-xs font-extrabold">
                         <span class="text-slate-800 uppercase tracking-wider">📈 Progreso Analítico por Diámetro (Dashboard Pro)</span>
@@ -709,12 +731,12 @@
                             </select>
                         </div>
                         <div>
-                            <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Desde (m)</label>
-                            <input type="text" id="m3_desde" readonly class="input-field w-full px-3.5 bg-slate-100 text-slate-600 text-xs font-mono-code font-black">
+                            <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Desde (m) *</label>
+                            <input type="text" id="m3_desde" onblur="formatearDecimalesLibres(this)" class="input-field w-full px-3.5 bg-white text-slate-900 text-xs font-mono-code font-black">
                         </div>
                         <div>
-                            <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Hasta (m)</label>
-                            <input type="text" id="m3_hasta" readonly class="input-field w-full px-3.5 bg-slate-100 text-slate-900 text-xs font-mono-code font-black">
+                            <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Hasta (m) *</label>
+                            <input type="text" id="m3_hasta" onblur="formatearDecimalesLibres(this)" class="input-field w-full px-3.5 bg-white text-slate-900 text-xs font-mono-code font-black">
                         </div>
                         <div>
                             <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Diámetro *</label>
@@ -999,6 +1021,7 @@
         let pozoActivoId = localStorage.getItem('jireth_pozo_activo') || '';
         let turnosData = JSON.parse(localStorage.getItem('jireth_turnos') || '{}');
         let turnoActivoObj = JSON.parse(localStorage.getItem('jireth_turno_activo') || 'null');
+        let syncQueue = JSON.parse(localStorage.getItem('jireth_sync_queue') || '[]');
         let indexEditandoAvance = null;
         let lastActivityTime = Date.now();
 
@@ -1033,6 +1056,7 @@
             refrescarSelectoresOperativos();
             refrescarSelectorModuloUno();
             poblarSelectTopografia();
+            actualizarBadgeSyncQueue();
             
             if (pozoActivoId && pozosData[pozoActivoId]) {
                 cargarDatosPozoEnFormularios(pozoActivoId);
@@ -1049,6 +1073,17 @@
                 marcarModoOfflineVisual();
             }
         };
+
+        function actualizarBadgeSyncQueue() {
+            const badge = document.getElementById('badgeSyncQueue');
+            if (!badge) return;
+            if (syncQueue.length > 0) {
+                badge.innerText = `⏳ ${syncQueue.length} Pendientes`;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+        }
 
         function marcarModoOfflineVisual() {
             const indRed = document.getElementById('indicadorRed');
@@ -1199,7 +1234,7 @@
             if (tabId === 'mod1') refrescarSelectorModuloUno();
             if (tabId === 'mod2') poblarSelectTopografia();
             if (tabId === 'mod3_turno') verificarSeleccionTurnosModulo();
-            if (tabId === 'mod3_logging') verificarSeleccionCoreLoggingModulo();
+            if (tabId === 'mod3_logging') { verificarSeleccionCoreLoggingModulo(); renderizarPerfil2D(); }
             if (tabId === 'mod4') poblarSelectCierre();
             if (tabId === 'mod3_turno' || tabId === 'mod3_logging' || tabId === 'mod4') refrescarSelectoresOperativos();
             if (tabId === 'mod5') { poblarSelectRepositorioTodos(); }
@@ -1561,7 +1596,6 @@
             cargarDatosPozoEnFormularios(codigo);
         }
 
-        // FUNCIÓN HABILITAR EDICIÓN TOPOGRAFÍA CORREGIDA Y ROBUSTA
         function habilitarEdicionTopo() {
             if (perfilActual === 'GERENCIA') { 
                 alert("⚠️ Perfil de Gerencia: Solo lectura."); 
@@ -1822,6 +1856,7 @@
             actualizarProgresoGrafico();
             autoCalcularHasta();
             poblarSelectRetomarTurno();
+            renderizarPerfil2D();
             
             if (!document.getElementById('mod4').classList.contains('hidden')) cargarResumenCierrePozo();
             if (!document.getElementById('mod5').classList.contains('hidden')) { poblarSelectRepositorioTodos(); poblarSelectTurnosRepo(); generarReporteDSR(); }
@@ -2013,21 +2048,61 @@
             document.getElementById('m3_recuperado').value = '';
         }
 
+        // VALIDACIÓN GEOMÉTRICA DE TRAMOS (SIN OVERLAPS NI GAPS)
+        function validarGeometriaTramo(p, desde, hasta, idxExcluir = null) {
+            if (desde >= hasta) {
+                return { valido: false, mensaje: "❌ Error Geométrico: El metraje 'Hasta' debe ser estrictamente mayor que 'Desde'." };
+            }
+            if (desde < 0) {
+                return { valido: false, mensaje: "❌ Error Geométrico: El metraje 'Desde' no puede ser negativo." };
+            }
+
+            for (let i = 0; i < p.avances.length; i++) {
+                if (idxExcluir !== null && i === idxExcluir) continue;
+                let t = p.avances[i];
+                let tDesde = parseFloat(t.desde);
+                let tHasta = parseFloat(t.hasta);
+
+                // Solapamiento (Overlap)
+                if ((desde >= tDesde && desde < tHasta) || (hasta > tDesde && hasta <= tHasta) || (desde <= tDesde && hasta >= tHasta)) {
+                    return { 
+                        valido: false, 
+                        mensaje: `❌ Error de SOLAPAMIENTO (OVERLAP): El tramo (${desde.toFixed(2)}m - ${hasta.toFixed(2)}m) se cruza con el tramo #${i+1} existente (${tDesde.toFixed(2)}m - ${tHasta.toFixed(2)}m).` 
+                    };
+                }
+            }
+
+            return { valido: true };
+        }
+
         async function guardarAvance() {
             if (perfilActual === 'GERENCIA') { alert("⚠️ Solo lectura."); return; }
             if (!pozoActivoId || !pozosData[pozoActivoId]) { alert("⚠️ Seleccione un sondaje."); switchTab('mod1'); return; }
             if (!turnoActivoObj) { alert("⚠️ Debe iniciar o retomar un turno antes de registrar avances."); switchTab('mod3_turno'); return; }
 
             let p = pozosData[pozoActivoId];
-            let desde = parseFloat(document.getElementById('m3_desde').value) || 0;
-            let hasta = parseFloat(document.getElementById('m3_hasta').value) || 0;
+            let desde = parseFloat(document.getElementById('m3_desde').value);
+            let hasta = parseFloat(document.getElementById('m3_hasta').value);
             let diametro = document.getElementById('m3_diametro').value;
             let recuperado = parseFloat(document.getElementById('m3_recuperado').value);
             let meteorizacion = document.getElementById('m3_meteorizacion').value;
+
+            if (isNaN(desde) || isNaN(hasta)) {
+                alert("❌ Ingrese valores válidos de metraje 'Desde' y 'Hasta'.");
+                return;
+            }
+
+            // Validación Geométrica de Inviolabilidad
+            let resValidacion = validarGeometriaTramo(p, desde, hasta, indexEditandoAvance);
+            if (!resValidacion.valido) {
+                alert(resValidacion.mensaje);
+                return;
+            }
+
             let lonManiobra = hasta - desde;
 
             if (isNaN(recuperado) || recuperado < 0 || recuperado > lonManiobra) { 
-                alert("❌ Metros recuperados inválidos o campo vacío respecto a la longitud del tramo."); 
+                alert(`❌ Metros recuperados inválidos (${recuperado}m). No puede exceder la longitud del tramo (${lonManiobra.toFixed(2)}m) ni ser negativo.`); 
                 return; 
             }
 
@@ -2046,21 +2121,15 @@
                 document.getElementById('btnCancelarEdicion').classList.add('hidden');
             } else { p.avances.push(objTramo); }
 
-            localStorage.setItem('jireth_pozos', JSON.stringify(pozosData));
-            localStorage.setItem('jireth_turnos', JSON.stringify(turnosData));
+            // Ordenar avances cromatográficamente por metraje 'Desde'
+            p.avances.sort((a, b) => parseFloat(a.desde) - parseFloat(b.desde));
+
+            await guardarYPersistirTodo();
 
             actualizarTablaAvances();
             actualizarProgresoGrafico();
+            renderizarPerfil2D();
             autoCalcularHasta();
-
-            if (navigator.onLine && supabaseClient) {
-                setTimeout(async () => {
-                    try {
-                        const payloadData = { pozos: pozosData, turnos: turnosData, actualizado: new Date().toISOString() };
-                        await supabaseClient.from('jireth_geocore').upsert({ id: 'db_principal', payload: payloadData });
-                    } catch(e) { console.warn("Sync diferida offline", e); }
-                }, 50);
-            }
         }
 
         function actualizarTablaAvances() {
@@ -2113,6 +2182,7 @@
                 await guardarYPersistirTodo();
                 actualizarTablaAvances();
                 actualizarProgresoGrafico();
+                renderizarPerfil2D();
                 autoCalcularHasta();
             }
         }
@@ -2157,6 +2227,129 @@
             document.getElementById('barHQ').style.width = pHQ + '%';
             document.getElementById('barNQ').style.width = pNQ + '%';
             document.getElementById('barPendiente').style.width = pPend + '%';
+        }
+
+        // MOTOR RENDERIZADOR 2D DEL PERFIL Y LOG LITOLÓGICO (CANVAS)
+        function renderizarPerfil2D() {
+            const canvas = document.getElementById('canvasPerfil2D');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width;
+            const h = canvas.height;
+
+            // Limpieza del Canvas con fondo oscuro geológico
+            ctx.fillStyle = '#020617';
+            ctx.fillRect(0, 0, w, h);
+
+            if (!pozoActivoId || !pozosData[pozoActivoId]) {
+                ctx.fillStyle = '#64748b';
+                ctx.font = 'bold 14px "Plus Jakarta Sans"';
+                ctx.textAlign = 'center';
+                ctx.fillText('SELECCIONE UN SONDAJE PARA VISUALIZAR EL PERFIL 2D', w / 2, h / 2);
+                return;
+            }
+
+            let p = pozosData[pozoActivoId];
+            let dipVal = Math.abs(parseFloat(p.dip) || 90); // Inclinación en grados
+            let dipRad = (dipVal * Math.PI) / 180;
+            let targetNum = parseFloat(p.target) || 100.0;
+
+            // Coordenadas de origen del brocal (collar)
+            let startX = 100;
+            let startY = 60;
+            let maxDrawLength = Math.min(w - 250, h - 120);
+            let scale = maxDrawLength / Math.max(targetNum, 20); // Escala píxeles por metro
+
+            // Dibujar Terreno / Superficie Topográfica
+            ctx.strokeStyle = '#1e293b';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(20, startY);
+            ctx.lineTo(w - 20, startY);
+            ctx.stroke();
+
+            ctx.fillStyle = '#334155';
+            ctx.font = 'bold 10px "JetBrains Mono"';
+            ctx.textAlign = 'left';
+            ctx.fillText('SUPERFICIE (BROCAL z=' + (p.cota || '0m') + ')', 20, startY - 12);
+            ctx.fillText('DIP: -' + dipVal + '° | AZ: ' + (p.azimut || '0') + '°', 20, startY + 20);
+
+            // Calcular trayectoria del pozo
+            let endX = startX + Math.cos(dipRad) * targetNum * scale;
+            let endY = startY + Math.sin(dipRad) * targetNum * scale;
+
+            // Dibujar línea guía de Target Planificado
+            ctx.strokeStyle = '#334155';
+            ctx.lineWidth = 10;
+            ctx.lineCap = 'round';
+            ctx.beginPath();
+            ctx.moveTo(startX, startY);
+            ctx.lineTo(endX, endY);
+            ctx.stroke();
+
+            // Mapa de Colores por Meteorización/Litología Estándar Geológica
+            const colorMap = {
+                'SUELO / RELLENO': '#fef08a',
+                'SAPROLITA': '#fde047',
+                'SAPROCK': '#d97706',
+                'ROCA OXIDADA': '#f97316',
+                'ROCA FRACTURADA': '#38bdf8',
+                'ROCA FRESCA': '#059669',
+                'ZONA DE VETA': '#eab308'
+            };
+
+            // Dibujar Tramos Perforados con Colores Geológicos
+            if (p.avances && p.avances.length > 0) {
+                p.avances.forEach((av, idx) => {
+                    let d = parseFloat(av.desde);
+                    let h = parseFloat(av.hasta);
+                    let diam = av.diametro;
+
+                    let segStartX = startX + Math.cos(dipRad) * d * scale;
+                    let segStartY = startY + Math.sin(dipRad) * d * scale;
+                    let segEndX = startX + Math.cos(dipRad) * h * scale;
+                    let segEndY = startY + Math.sin(dipRad) * h * scale;
+
+                    ctx.strokeStyle = colorMap[av.meteorizacion] || '#94a3b8';
+                    ctx.lineWidth = diam === 'HQ' ? 14 : 9; // Grosor diferenciado HQ vs NQ
+                    ctx.lineCap = 'butt';
+                    ctx.beginPath();
+                    ctx.moveTo(segStartX, segStartY);
+                    ctx.lineTo(segEndX, segEndY);
+                    ctx.stroke();
+
+                    // Etiqueta de Metraje y Recuperación a la derecha
+                    if (idx % 2 === 0 || p.avances.length <= 8) {
+                        ctx.fillStyle = '#f8fafc';
+                        ctx.font = '9px "JetBrains Mono"';
+                        ctx.textAlign = 'left';
+                        ctx.fillText(`${h.toFixed(1)}m (${av.porcentaje}%)`, segEndX + 15, segEndY + 3);
+
+                        ctx.strokeStyle = 'rgba(148, 163, 184, 0.3)';
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.moveTo(segEndX, segEndY);
+                        ctx.lineTo(segEndX + 10, segEndY);
+                        ctx.stroke();
+                    }
+                });
+            }
+
+            // Marcador del Brocal (Collar)
+            ctx.fillStyle = '#ef4444';
+            ctx.beginPath();
+            ctx.arc(startX, startY, 6, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Leyenda de Código y Avance Total
+            let metAcum = p.avances ? p.avances.reduce((acc, curr) => acc + (parseFloat(curr.hasta) - parseFloat(curr.desde)), 0) : 0;
+            ctx.fillStyle = '#38bdf8';
+            ctx.font = 'bold 12px "Plus Jakarta Sans"';
+            ctx.textAlign = 'right';
+            ctx.fillText(p.codigo, w - 20, 30);
+            ctx.fillStyle = '#f8fafc';
+            ctx.font = '10px "JetBrains Mono"';
+            ctx.fillText(`Perforado: ${metAcum.toFixed(2)}m / ${targetNum.toFixed(2)}m`, w - 20, 48);
         }
 
         function cargarResumenCierrePozo() {
@@ -2525,15 +2718,60 @@
             reader.readAsText(file);
         }
 
+        // SISTEMA ROBUSTO DE PERSISTENCIA Y COLA DE SINCRONIZACIÓN (SYNC QUEUE)
         async function guardarYPersistirTodo() {
             localStorage.setItem('jireth_pozos', JSON.stringify(pozosData));
             localStorage.setItem('jireth_turnos', JSON.stringify(turnosData));
-            
+
+            const timestampActual = new Date().toISOString();
+            const payloadData = { pozos: pozosData, turnos: turnosData, actualizado: timestampActual };
+
             if (navigator.onLine && supabaseClient) {
                 try {
-                    const payloadData = { pozos: pozosData, turnos: turnosData, actualizado: new Date().toISOString() };
-                    await supabaseClient.from('jireth_geocore').upsert({ id: 'db_principal', payload: payloadData });
-                } catch(ex) { console.warn("Supabase Excepción controlada offline:", ex); }
+                    // Intentar vaciar cola de sincronización pendiente antes del envío
+                    await procesarColaSincronizacion();
+
+                    const { error } = await supabaseClient.from('jireth_geocore').upsert({ id: 'db_principal', payload: payloadData });
+                    if (error) throw error;
+
+                    const indRed = document.getElementById('indicadorRed');
+                    if (indRed) {
+                        indRed.innerText = "(🟢 Sincronizado En Vivo)";
+                        indRed.className = "text-emerald-700 font-bold pulse-live";
+                    }
+                } catch(ex) {
+                    console.warn("Error de subida a Supabase, añadiendo a Cola de Sincronización Local:", ex);
+                    encolarSincronizacionLocal(payloadData);
+                }
+            } else {
+                encolarSincronizacionLocal(payloadData);
+            }
+
+            actualizarBadgeSyncQueue();
+        }
+
+        function encolarSincronizacionLocal(payload) {
+            syncQueue.push({ id: 'db_principal', payload: payload, timestamp: Date.now() });
+            localStorage.setItem('jireth_sync_queue', JSON.stringify(syncQueue));
+            marcarModoOfflineVisual();
+            actualizarBadgeSyncQueue();
+        }
+
+        async function procesarColaSincronizacion() {
+            if (!navigator.onLine || !supabaseClient || syncQueue.length === 0) return;
+
+            try {
+                // Tomar el registro más reciente de la cola para sincronización en lote
+                const ultimoCambio = syncQueue[syncQueue.length - 1];
+                const { error } = await supabaseClient.from('jireth_geocore').upsert({ id: ultimoCambio.id, payload: ultimoCambio.payload });
+
+                if (!error) {
+                    syncQueue = []; // Vaciar cola tras éxito
+                    localStorage.setItem('jireth_sync_queue', JSON.stringify(syncQueue));
+                    actualizarBadgeSyncQueue();
+                }
+            } catch(e) {
+                console.warn("Fallo al procesar cola de sincronización:", e);
             }
         }
 
@@ -2543,6 +2781,9 @@
                 return;
             }
             try {
+                // Primero procesamos cualquier cola local acumulada
+                await procesarColaSincronizacion();
+
                 const { data, error } = await supabaseClient.from('jireth_geocore').select('payload').eq('id', 'db_principal').maybeSingle();
                 if (error) { if (mostrarAlerta) alert("⚠️ No se pudo conectar con la nube, operando en modo local."); return; }
 
