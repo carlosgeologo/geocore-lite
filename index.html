@@ -153,6 +153,15 @@
             transform: translateY(0);
         }
 
+        /* LITOLOGÍA VISUAL PATTERNS */
+        .litho-suelo { background-color: #fef08a; border-left: 4px solid #ca8a04; }
+        .litho-saprolita { background-color: #fde047; border-left: 4px solid #b45309; }
+        .litho-saprock { background-color: #fed7aa; border-left: 4px solid #c2410c; }
+        .litho-oxidada { background-color: #fca5a5; border-left: 4px solid #b91c1c; }
+        .litho-fracturada { background-color: #cbd5e1; border-left: 4px solid #334155; }
+        .litho-fresca { background-color: #94a3b8; border-left: 4px solid #0f172a; }
+        .litho-veta { background-color: #f43f5e; border-left: 4px solid #ffe4e6; }
+
         @media print {
             @page { size: portrait; margin: 15mm 10mm 15mm 10mm; }
             body * { visibility: hidden !important; }
@@ -379,7 +388,7 @@
                         <span>🏠 Sala Situacional & Dashboard Pro (Solo Frentes Activos)</span>
                         <span class="text-xs bg-sky-100 text-sky-800 px-2.5 py-0.5 rounded-full border border-sky-300 font-mono-code pulse-live" id="contadorFrentesActivos">0 Activos</span>
                     </h2>
-                    <p class="text-xs text-slate-600 mt-0.5">Fichas individuales de pozos activos arriba; métricas, avances y gráficos analíticos independientes abajo.</p>
+                    <p class="text-xs text-slate-600 mt-0.5">Fichas individuales de pozos activos arriba; métricas, avances, perfiles litológicos y gráficos analíticos abajo.</p>
                 </div>
                 <button type="button" onclick="renderizarSalaSituacional()" class="bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 px-3 py-2 rounded-xl text-xs font-bold transition shadow-sm">🔄 Actualizar En Vivo</button>
             </div>
@@ -392,7 +401,7 @@
             </div>
 
             <div class="border-t border-slate-200 pt-4 space-y-4">
-                <h3 class="text-xs font-black text-slate-900 uppercase tracking-wider">📊 Resúmenes Globales, Métricas & Gráficos Comparativos</h3>
+                <h3 class="text-xs font-black text-slate-900 uppercase tracking-wider">📊 Resúmenes Globales, Métricas & Gráficos Analíticos Avanzados</h3>
                 
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
                     <div class="bg-indigo-50 p-3.5 rounded-2xl border border-indigo-200 relative overflow-hidden shadow-sm">
@@ -418,6 +427,28 @@
                         <p class="text-[10px] text-purple-800 font-bold uppercase">Eficiencia Testigo</p>
                         <p class="text-base font-black text-purple-950 font-mono-code mt-0.5" id="macroRecuperacionGlobal">0.0%</p>
                         <p class="text-[9px] text-purple-700 font-bold">Recuperación (Activos)</p>
+                    </div>
+                </div>
+
+                <!-- SECCIÓN DE GRÁFICOS AVANZADOS REUBICADA AQUÍ EN LA SALA SITUACIONAL -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 pt-2">
+                    <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 shadow-sm">
+                        <h3 class="text-xs font-black text-slate-800 uppercase mb-2 flex items-center justify-between">
+                            <span>🎨 Perfil Litológico Gráfico</span>
+                            <span class="text-[9px] text-indigo-700 font-bold">Log Visual Global</span>
+                        </h3>
+                        <div id="perfilLitologicoGraficoSala" class="space-y-1.5 max-h-56 overflow-y-auto p-2 bg-white rounded-xl border border-slate-300 font-mono-code text-[10px]">
+                            <p class="text-slate-400 italic text-center py-6">Seleccione o mantenga pozos activos</p>
+                        </div>
+                    </div>
+                    <div class="lg:col-span-2 bg-slate-50 p-4 rounded-2xl border border-slate-200 shadow-sm">
+                        <h3 class="text-xs font-black text-slate-800 uppercase mb-2 flex items-center justify-between">
+                            <span>📈 Curva de Tendencia de Recuperación Global vs Profundidad</span>
+                            <span class="text-[9px] text-purple-700 font-bold">% Recup vs Tramo</span>
+                        </h3>
+                        <div class="h-48 relative">
+                            <canvas id="chart-tendencia-recuperacion"></canvas>
+                        </div>
                     </div>
                 </div>
 
@@ -569,7 +600,7 @@
             </div>
         </section>
 
-        <!-- MÓDULO 3: UNIFICADO (TURNOS, OBSERVACIONES EDITABLES, LOG VISUAL & TENDENCIAS) -->
+        <!-- MÓDULO 3: UNIFICADO (TURNOS, OBSERVACIONES EDITABLES & LOGGING LIMPIO) -->
         <section id="mod3_unificado" class="hidden space-y-4 bg-white p-5 sm:p-6 rounded-3xl border border-slate-200 shadow-sm">
             <h2 class="text-xl font-black text-slate-900 tracking-tight flex items-center gap-2">🪵 Módulo: Gestión de Turnos & Core Logging en Vivo</h2>
             <p class="text-xs text-slate-600 font-medium">Seleccione el sondaje activo. Gestione el turno operativo (incluyendo sus observaciones y novedades) en la sección superior y registre los tramos en la sección inferior.</p>
@@ -638,7 +669,7 @@
                     </div>
                 </div>
 
-                <!-- SECCIÓN INFERIOR: CORE LOGGING Y CUADROS CONSOLIDADOS -->
+                <!-- SECCIÓN INFERIOR: CORE LOGGING Y CUADROS CONSOLIDADOS (TAL COMO TU IMAGEN) -->
                 <div id="contenedorCoreLogging" class="space-y-4 pt-2 border-t-2 border-slate-200">
                     <div id="infoTurnoActivo" class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 flex justify-between items-center flex-wrap gap-2 text-xs shadow-sm">
                         <div>
@@ -1014,6 +1045,7 @@
         let chartSituacionalMeteorizacion = null;
         let chartSituacionalPorcentajes = null;
         let chartCierreMeteorizacion = null;
+        let chartTendenciaRecuperacion = null;
 
         if (!localStorage.getItem('jireth_clave_geo')) localStorage.setItem('jireth_clave_geo', 'Mina2628');
         localStorage.setItem('jireth_clave_ger', 'JIRETH2026');
@@ -1254,6 +1286,7 @@
             let totalMetrosGlobal = 0, totalRecGral = 0, cuentaTramosGral = 0;
             let chartLabels = [], chartAvances = [], chartPlan = [], chartRec = [], chartPorcentajes = [];
             let meteorizacionTotales = {};
+            let allAvancesGlobal = [];
 
             pozosActivosKeys.forEach(k => {
                 let p = pozosData[k];
@@ -1269,6 +1302,7 @@
 
                         let lit = t.meteorizacion || 'OTRO';
                         meteorizacionTotales[lit] = (meteorizacionTotales[lit] || 0) + met;
+                        allAvancesGlobal.push({ pozo: p.codigo, ...t });
                     });
                 }
                 totalMetrosGlobal += metPozo;
@@ -1292,6 +1326,7 @@
             renderChartSituacionalRecuperacion(chartLabels, chartRec);
             renderChartSituacionalMeteorizacion(meteorizacionTotales);
             renderChartSituacionalPorcentajes(chartLabels, chartPorcentajes);
+            renderizarArquitecturaVisualSala(allAvancesGlobal);
 
             if (pozosActivosKeys.length === 0) {
                 grid.innerHTML = `<div class="col-span-full bg-slate-50 p-8 rounded-2xl border border-slate-200 text-center space-y-3 shadow-sm"><div class="text-3xl">📡</div><h3 class="text-base font-black text-slate-900 uppercase tracking-wider">SALA SITUACIONAL — SIN SONDAJES ACTIVOS</h3><p class="text-xs text-slate-500 max-w-md mx-auto">No hay sondajes activos en este momento.</p></div>`;
@@ -1349,6 +1384,78 @@
                 `;
                 grid.appendChild(card);
             });
+        }
+
+        function renderizarArquitecturaVisualSala(avancesArray) {
+            const perfilDiv = document.getElementById('perfilLitologicoGraficoSala');
+            if (!perfilDiv) return;
+
+            if (!avancesArray || avancesArray.length === 0) {
+                perfilDiv.innerHTML = '<p class="text-slate-400 italic text-center py-6">Sin tramos registrados en frentes activos</p>';
+                if (chartTendenciaRecuperacion) { chartTendenciaRecuperacion.destroy(); chartTendenciaRecuperacion = null; }
+                return;
+            }
+
+            perfilDiv.innerHTML = '';
+            let labelTramos = [];
+            let dataRecup = [];
+
+            avancesArray.forEach((t, idx) => {
+                let litUpper = (t.meteorizacion || '').toUpperCase();
+                let cssClass = 'litho-saprolita';
+                if (litUpper.includes('SUELO')) cssClass = 'litho-suelo';
+                else if (litUpper.includes('SAPROCK')) cssClass = 'litho-saprock';
+                else if (litUpper.includes('OXIDADA')) cssClass = 'litho-oxidada';
+                else if (litUpper.includes('FRACTURADA')) cssClass = 'litho-fracturada';
+                else if (litUpper.includes('FRESCA')) cssClass = 'litho-fresca';
+                else if (litUpper.includes('VETA')) cssClass = 'litho-veta';
+
+                let item = document.createElement('div');
+                item.className = `p-2 rounded-lg shadow-sm border border-slate-200 ${cssClass} flex justify-between items-center`;
+                item.innerHTML = `
+                    <div>
+                        <span class="font-black text-slate-900">[${t.pozo}] #${idx+1} [${t.desde}-${t.hasta}m]</span>
+                        <div class="text-[9px] text-slate-700 font-bold">${t.meteorizacion} (${t.diametro})</div>
+                    </div>
+                    <div class="text-right font-black ${parseFloat(t.porcentaje) < 70 ? 'text-rose-700' : 'text-emerald-800'}">
+                        ${t.porcentaje}% Rec
+                    </div>
+                `;
+                perfilDiv.appendChild(item);
+
+                labelTramos.push(`${t.pozo}: ${t.desde}-${t.hasta}m`);
+                dataRecup.push(parseFloat(t.porcentaje));
+            });
+
+            const ctxTendencia = document.getElementById('chart-tendencia-recuperacion');
+            if (ctxTendencia) {
+                if (chartTendenciaRecuperacion) chartTendenciaRecuperacion.destroy();
+                chartTendenciaRecuperacion = new Chart(ctxTendencia.getContext('2d'), {
+                    type: 'line',
+                    data: {
+                        labels: labelTramos,
+                        datasets: [{
+                            label: '% Recuperación por Tramo',
+                            data: dataRecup,
+                            borderColor: '#7e22ce',
+                            backgroundColor: 'rgba(126, 34, 206, 0.1)',
+                            borderWidth: 2.5,
+                            fill: true,
+                            tension: 0.2,
+                            pointRadius: 4,
+                            pointBackgroundColor: '#312e81'
+                        }]
+                    },
+                    options: {
+                        responsive: true, maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            x: { ticks: { color: '#1e293b', font: { size: 9, weight: 'bold' } }, grid: { display: false } },
+                            y: { max: 100, min: 0, ticks: { color: '#1e293b' }, grid: { color: '#e2e8f0' } }
+                        }
+                    }
+                });
+            }
         }
 
         function irARepositorioSondaje(codigo) {
@@ -2154,271 +2261,3 @@
         }
 
         async function reactivarPozoActual() {
-            if (perfilActual === 'GERENCIA') return;
-            if (!pozoActivoId || !pozosData[pozoActivoId]) return;
-            if (confirm("🔓 ¿Desea reactivar este sondaje?")) {
-                pozosData[pozoActivoId].estado = 'ABIERTO';
-                delete pozosData[pozoActivoId].motivoCierre;
-                delete pozosData[pozoActivoId].obsCierre;
-                await guardarYPersistirTodo();
-                refrescarSelectoresOperativos();
-                refrescarSelectorModuloUno();
-                poblarSelectTopografia();
-                poblarSelectCierre();
-                renderizarSalaSituacional();
-                cargarResumenCierrePozo();
-                notifySuccess("🔓 Sondaje reactivado a estado ABIERTO");
-            }
-        }
-
-        function poblarSelectTurnosRepo() {
-            const sel = document.getElementById('repTurnoSelect');
-            if (!sel) return;
-            sel.innerHTML = '';
-            Object.keys(turnosData).forEach(k => {
-                let t = turnosData[k];
-                if (t.pozo === pozoActivoId) {
-                    let opt = document.createElement('option');
-                    opt.value = k;
-                    opt.text = "[" + t.fecha + " - " + t.jornada + "] Perf: " + t.perforador;
-                    sel.appendChild(opt);
-                }
-            });
-        }
-
-        function generarReporteDSR() {
-            if (!pozoActivoId || !pozosData[pozoActivoId]) { alert("⚠️ Seleccione un sondaje en el repositorio primero."); return; }
-            let p = pozosData[pozoActivoId];
-            let modo = document.getElementById('repModoVista').value;
-            let boxTurno = document.getElementById('boxSelectTurnoRepo');
-            
-            if (modo === 'CULMINADO' && p.estado !== 'CULMINADO') {
-                alert(`⚠️ ALERTA: El sondaje seleccionado (${p.codigo}) se encuentra en estado ACTIVO y no ha sido culminado. Debe proceder al Módulo de Cierre (Módulo 4) para culminarlo antes de emitir este reporte.`);
-                document.getElementById('repModoVista').value = 'ACUMULADO';
-                generarReporteDSR();
-                return;
-            }
-
-            if (modo === 'TURNO') {
-                boxTurno.classList.remove('hidden');
-                document.getElementById('repTituloPrincipalDSR').innerText = "REPORTE DE TURNO";
-            } else if (modo === 'ACUMULADO') {
-                boxTurno.classList.add('hidden');
-                document.getElementById('repTituloPrincipalDSR').innerText = "REPORTE ACUMULADO DEL SONDAJE";
-            } else if (modo === 'CULMINADO') {
-                boxTurno.classList.add('hidden');
-                document.getElementById('repTituloPrincipalDSR').innerText = "REPORTE SONDAJE CULMINADO";
-            }
-
-            let listaAvancesFiltrada = [];
-            let fechaReporte = new Date().toLocaleDateString();
-            let jornadaTexto = "DIURNO";
-            let observacionesTurnoTexto = "SIN NOVEDADES REGISTRADAS.";
-
-            if (modo === 'TURNO') {
-                let turnoSelId = document.getElementById('repTurnoSelect').value;
-                if (turnoSelId && turnosData[turnoSelId]) {
-                    let tObj = turnosData[turnoSelId];
-                    fechaReporte = tObj.fecha;
-                    jornadaTexto = tObj.jornada;
-                    observacionesTurnoTexto = tObj.observaciones || "SIN NOVEDADES EN EL TURNO.";
-                    listaAvancesFiltrada = p.avances.filter(item => item.turnoId === turnoSelId);
-                }
-            } else if (modo === 'ACUMULADO') {
-                listaAvancesFiltrada = p.avances;
-                observacionesTurnoTexto = p.obsCierre || "REGISTRO ACUMULADO GENERAL DEL SONDAJE.";
-            } else if (modo === 'CULMINADO') {
-                listaAvancesFiltrada = p.avances;
-                observacionesTurnoTexto = p.obsCierre || "SONDAJE CULMINADO SATISFACTORIAMENTE.";
-            }
-
-            document.getElementById('repFechaEmision').innerText = "Fecha: " + fechaReporte + " | Turno: " + jornadaTexto;
-            document.getElementById('repCodigoHeader').innerText = p.codigo;
-            document.getElementById('repEmpresa').innerText = p.empresa;
-            document.getElementById('repProyecto').innerText = p.proyecto;
-            document.getElementById('repMaquina').innerText = p.maquina;
-            document.getElementById('repEste').innerText = (p.este || '0.00') + " m";
-            document.getElementById('repNorte').innerText = (p.norte || '0.00') + " m";
-            document.getElementById('repCota').innerText = (p.cota || '0.00') + " m";
-            document.getElementById('repDipAzimut').innerText = (p.dip || '-') + "° / " + (p.azimut || '0') + "°";
-            document.getElementById('repEstadoPozo').innerText = p.estado;
-            document.getElementById('repTargetSub').innerText = "Target: " + (p.target || '100.00') + " m";
-
-            document.getElementById('repPerforadorTurno').innerText = "___________________________";
-            document.getElementById('repGeologoTurno').innerText = "___________________________";
-
-            let totalMetros = 0, totalRecuperado = 0, totalPagoFinal = 0;
-            let totalHQMet = 0, totalNQMet = 0;
-            let tbody = document.getElementById('repTablaBody');
-            tbody.innerHTML = '';
-
-            listaAvancesFiltrada.forEach((t, idx) => {
-                let met = parseFloat(t.hasta) - parseFloat(t.desde);
-                let rec = parseFloat(t.recuperado);
-                let lonM = met;
-                let pagoTramo = t.pagoEstandar ? parseFloat(t.pagoEstandar) : calcularMetrosAPagar(lonM, rec, t.meteorizacion);
-                
-                totalMetros += met; 
-                totalRecuperado += rec;
-                totalPagoFinal += pagoTramo;
-                if (t.diametro === 'HQ') totalHQMet += met; else totalNQMet += met;
-
-                let tr = document.createElement('tr');
-                tr.className = "border-b border-slate-200 hover:bg-slate-50";
-                tr.innerHTML = `<td class="p-2 border-r border-slate-200 font-bold">#${idx + 1}</td><td class="p-2 border-r border-slate-200">${t.desde}</td><td class="p-2 border-r border-slate-200">${t.hasta}</td><td class="p-2 border-r border-slate-200 font-bold">${met.toFixed(2)}</td><td class="p-2 border-r border-slate-200 font-bold text-slate-800">${t.diametro}</td><td class="p-2 border-r border-slate-200">${t.recuperado}</td><td class="p-2 border-r border-slate-200 font-bold ${parseFloat(t.porcentaje) < 70 ? 'text-amber-800' : 'text-slate-900'}">${t.porcentaje}%</td><td class="p-2 border-r border-slate-200">${t.meteorizacion}</td><td class="p-2 font-black text-slate-950 bg-slate-100">${pagoTramo.toFixed(2)} m</td>`;
-                tbody.appendChild(tr);
-            });
-
-            let targetNum = parseFloat(p.target) || 100.0;
-            let avGen = targetNum > 0 ? Math.min(100, (totalMetros / targetNum) * 100) : 0;
-            let recProm = totalMetros > 0 ? ((totalRecuperado / totalMetros) * 100).toFixed(1) : '0.0';
-
-            document.getElementById('repMetrajeTotal').innerText = totalMetros.toFixed(2) + " m";
-            document.getElementById('repRecPromedio').innerText = recProm + "%";
-            document.getElementById('repMetrosPagoTotal').innerText = totalPagoFinal.toFixed(2) + " m";
-            document.getElementById('repAvanceGen').innerText = avGen.toFixed(1) + "%";
-            document.getElementById('repMetrosHQRep').innerText = totalHQMet.toFixed(2) + " m";
-            document.getElementById('repMetrosNQRep').innerText = totalNQMet.toFixed(2) + " m";
-            document.getElementById('repObservacionesTexto').innerText = observacionesTurnoTexto;
-            
-            if (p.estado === 'CULMINADO') {
-                document.getElementById('repMotivoCierreBox').innerHTML = `<b>Motivo de Cierre:</b> ${p.motivoCierre || 'CULMINADO'}`;
-            } else {
-                document.getElementById('repMotivoCierreBox').innerHTML = `<b>Estado:</b> Sondaje Activo en Operación`;
-            }
-        }
-
-        function imprimirOExportarPDF() { window.print(); }
-
-        function poblarSelectAdminBorrar() {
-            const sel = document.getElementById('adminSelectPozoBorrar');
-            if (!sel) return;
-            sel.innerHTML = '<option value="">-- Seleccionar Sondaje a Eliminar --</option>';
-            Object.keys(pozosData).forEach(k => {
-                let opt = document.createElement('option');
-                opt.value = k;
-                opt.text = "Sondaje: " + k + " (" + pozosData[k].proyecto + ")";
-                sel.appendChild(opt);
-            });
-        }
-
-        async function eliminarPozoEspecifico() {
-            if (perfilActual === 'GERENCIA') { alert("⚠️ Solo lectura."); return; }
-            let codigo = document.getElementById('adminSelectPozoBorrar').value;
-            if (!codigo) { alert("⚠️ Seleccione un sondaje."); return; }
-            if (confirm("⚠️ ¿Eliminar el sondaje " + codigo + "?")) {
-                delete pozosData[codigo];
-                if (pozoActivoId === codigo) { pozoActivoId = ''; localStorage.removeItem('jireth_pozo_activo'); }
-                await guardarYPersistirTodo();
-                refrescarSelectoresOperativos();
-                refrescarSelectorModuloUno();
-                poblarSelectTopografia();
-                poblarSelectCierre();
-                poblarSelectAdminBorrar();
-                renderizarSalaSituacional();
-                notifySuccess("Sondaje " + codigo + " eliminado con éxito");
-                location.reload();
-            }
-        }
-
-        function copiarReportePortapapeles() {
-            if (!pozoActivoId || !pozosData[pozoActivoId]) { alert("⚠️ Seleccione un sondaje."); return; }
-            let p = pozosData[pozoActivoId];
-            let texto = "=== COMPLEJO JIRETH C.A. — REPORTE DIARIO DE GEOLOGÍA (DSR) ===\nSondaje: " + p.codigo + " | Proyecto: " + p.proyecto + "\nEmpresa: " + p.empresa + " | Máquina: " + p.maquina + "\n===========================================================\n";
-            p.avances.forEach((t, i) => {
-                let lonM = parseFloat(t.hasta) - parseFloat(t.desde);
-                let pagVal = t.pagoEstandar ? t.pagoEstandar : calcularMetrosAPagar(lonM, parseFloat(t.recuperado), t.meteorizacion);
-                texto += `Tramo #${i+1}: ${t.desde}-${t.hasta}m | ${t.diametro} | Rec: ${t.recuperado}m (${t.porcentaje}%) | Pago: ${pagVal}m | ${t.meteorizacion}\n`;
-            });
-            navigator.clipboard.writeText(texto).then(() => { notifySuccess("📋 Resumen copiado al portapapeles"); });
-        }
-
-        function exportarBackupJSON() {
-            let backup = { pozos: pozosData, turnos: turnosData, activo: pozoActivoId };
-            let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backup, null, 2));
-            let dlAnchorElem = document.createElement('a');
-            dlAnchorElem.setAttribute("href", dataStr);
-            dlAnchorElem.setAttribute("download", "jireth_geocore_backup_" + Date.now() + ".json");
-            dlAnchorElem.click();
-            notifySuccess("📥 Respaldo JSON exportado");
-        }
-
-        function importarBackupJSON(event) {
-            if (perfilActual === 'GERENCIA') { alert("⚠️ Solo lectura."); return; }
-            let file = event.target.files[0];
-            if (!file) return;
-            let reader = new FileReader();
-            reader.onload = async function(e) {
-                try {
-                    let imp = JSON.parse(e.target.result);
-                    if (imp.pozos) {
-                        pozosData = imp.pozos;
-                        turnosData = imp.turnos || {};
-                        pozoActivoId = imp.activo || '';
-                        migrarRecalcularPagosEstandar();
-                        await guardarYPersistirTodo();
-                        refrescarSelectoresOperativos();
-                        refrescarSelectorModuloUno();
-                        poblarSelectTopografia();
-                        poblarSelectCierre();
-                        renderizarSalaSituacional();
-                        if (pozoActivoId) cargarDatosPozoEnFormularios(pozoActivoId);
-                        notifySuccess("✅ Respaldo JSON importado con éxito");
-                    } else { alert("❌ JSON inválido."); }
-                } catch(err) { alert("❌ Error: " + err); }
-            };
-            reader.readAsText(file);
-        }
-
-        async function guardarYPersistirTodo() {
-            localStorage.setItem('jireth_pozos', JSON.stringify(pozosData));
-            localStorage.setItem('jireth_turnos', JSON.stringify(turnosData));
-            
-            if (navigator.onLine && supabaseClient) {
-                try {
-                    const payloadData = { pozos: pozosData, turnos: turnosData, actualizado: new Date().toISOString() };
-                    await supabaseClient.from('jireth_geocore').upsert({ id: 'db_principal', payload: payloadData });
-                } catch(ex) { console.warn("Supabase Excepción controlada offline:", ex); }
-            }
-        }
-
-        async function sincronizarDesdeSupabaseCloud(mostrarAlerta = true) {
-            if (!navigator.onLine || !supabaseClient) {
-                if (mostrarAlerta) alert("⚠️ Estás sin conexión a internet. Trabajando con datos locales de campo.");
-                return;
-            }
-            try {
-                const { data, error } = await supabaseClient.from('jireth_geocore').select('payload').eq('id', 'db_principal').maybeSingle();
-                if (error) { if (mostrarAlerta) alert("⚠️ No se pudo conectar con la nube, operando en modo local."); return; }
-
-                if (data && data.payload) {
-                    if (data.payload.pozos && Object.keys(data.payload.pozos).length > 0) {
-                        pozosData = data.payload.pozos;
-                        localStorage.setItem('jireth_pozos', JSON.stringify(pozosData));
-                    }
-                    if (data.payload.turnos) {
-                        turnosData = data.payload.turnos;
-                        localStorage.setItem('jireth_turnos', JSON.stringify(turnosData));
-                    }
-                    migrarRecalcularPagosEstandar();
-                    refrescarSelectoresOperativos();
-                    refrescarSelectorModuloUno();
-                    poblarSelectTopografia();
-                    poblarSelectCierre();
-                    renderizarSalaSituacional();
-                    if (pozoActivoId && pozosData[pozoActivoId]) cargarDatosPozoEnFormularios(pozoActivoId);
-                    if (mostrarAlerta) notifySuccess("Sincronizado con Supabase Cloud con éxito");
-                } else { await guardarYPersistirTodo(); }
-            } catch(e) { if (mostrarAlerta) alert("⚠️ Error de red al sincronizar con Supabase."); }
-        }
-
-        async function sincronizarConSupabaseReal() { 
-            if (!navigator.onLine) {
-                alert("⚠️ No hay conexión a internet en este momento. El sistema está operando en Modo Local (Offline).");
-                return;
-            }
-            await sincronizarDesdeSupabaseCloud(true); 
-        }
-    </script>
-</body>
-</html>
