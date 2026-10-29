@@ -1,48 +1,56 @@
-// Service Worker Autónomo Jireth GeoCore Lite
-const CACHE_NAME = 'geocore-lite-v1';
-const ASSETS_TO_CACHE = [
-  './',
+const CACHE_NAME = 'jireth-geocore-v2026';
+const assetsToCache = [
   './index.html',
   './manifest.json',
-  'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2',
-  'https://cdn.jsdelivr.net/npm/chart.js',
-  'https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap'
+  './1792941546023.jpg'
 ];
 
-// Instalación: Guarda todo el núcleo y librerías en memoria física del equipo
-self.addEventListener('install', (e) => {
-  e.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(ASSETS_TO_CACHE);
-    }).then(() => self.skipWaiting())
+// Fase de Instalación: Descarga y almacena los recursos estáticos en caché
+self.addEventListener('install', event => {
+  event.waitUntil(
+    caches.open(CACHE_NAME)
+      .then(cache => {
+        console.log('[Service Worker] Almacenando archivos en caché de campo');
+        return cache.addAll(assetsToCache);
+      })
+      .catch(err => console.warn('[Service Worker] Error al cachear assets:', err))
   );
+  self.skipWaiting();
 });
 
-self.addEventListener('activate', (e) => {
-  e.waitUntil(
-    caches.keys().then((keys) => {
+// Fase de Activación: Limpia cachés antiguas obsoletas
+self.addEventListener('activate', event => {
+  event.waitUntil(
+    caches.keys().then(cacheNames => {
       return Promise.all(
-        keys.map((key) => {
-          if (key !== CACHE_NAME) return caches.delete(key);
+        cacheNames.map(cacheName => {
+          if (cacheName !== CACHE_NAME) {
+            console.log('[Service Worker] Borrando caché antigua:', cacheName);
+            return caches.delete(cacheName);
+          }
         })
       );
-    }).then(() => self.clients.claim())
+    })
   );
+  self.clientsClaim();
 });
 
-// Intercepción de red: Si no hay señal, sirve DIRECTO desde la memoria sin dinosaurio
-self.addEventListener('fetch', (e) => {
-  e.respondWith(
-    caches.match(e.request).then((cachedResponse) => {
-      if (cachedResponse) {
-        fetch(e.request).then((networkResponse) => {
-          if (networkResponse && networkResponse.status === 200) {
-            caches.open(CACHE_NAME).then((cache) => cache.put(e.request, networkResponse));
+// Fase de Interceptación (Fetch): Sirve la app offline o busca en la red si hay señal
+self.addEventListener('fetch', event => {
+  event.respondWith(
+    caches.match(event.request)
+      .then(cachedResponse => {
+        // Si el recurso está en caché local, lo devuelve de inmediato
+        if (cachedResponse) {
+          return cachedResponse;
+        }
+        // Si no está en caché, intenta buscarlo en la red
+        return fetch(event.request).catch(() => {
+          // Si falla la red y es una navegación de página, devuelve el index.html principal
+          if (event.request.mode === 'navigate') {
+            return caches.match('./index.html');
           }
-        }).catch(() => {/* Modo offline silencioso y seguro */});
-        return cachedResponse;
-      }
-      return fetch(e.request);
-    })
+        });
+      })
   );
 });
