@@ -84,9 +84,9 @@
         }
         .pulse-live { animation: pulseGlow 1.8s infinite ease-in-out; }
 
-        /* LOGO RECTANGULAR NATURAL (SIN RECORTES FORZADOS) */
+        /* LOGO RECTANGULAR NATURAL (PROPORCIÓN EXACTA SIN DEFORMACIONES) */
         .logo-img-real {
-            height: 42px; width: auto; max-width: 130px; border-radius: 0.5rem; object-fit: contain;
+            height: 42px; width: auto; max-width: 140px; border-radius: 0.5rem; object-fit: contain;
             border: 1px solid rgba(59, 130, 246, 0.5); box-shadow: 0 4px 10px rgba(0,0,0,0.4); flex-shrink: 0;
             background-color: #0f172a;
         }
@@ -121,25 +121,49 @@
             box-shadow: 0 2px 6px rgba(0,0,0,0.4);
         }
 
-        /* CONFIGURACIÓN ESTRICTA DE IMPRESIÓN Y PDF DSR CON MÁRGENES ESTÁNDAR CARTA */
+        /* CONFIGURACIÓN ESTRICTA DE IMPRESIÓN Y PDF DSR: MÁRGENES CARTA Y MEMBRETE EN BORDE SUPERIOR */
         @media print {
-            @page { size: A4 portrait; margin: 15mm; }
-            body { background: #ffffff !important; color: #0f172a !important; margin: 0 !important; padding: 0 !important; }
+            @page { 
+                size: letter portrait; 
+                margin: 15mm 12mm 15mm 12mm; 
+            }
+            body { 
+                background: #ffffff !important; 
+                color: #0f172a !important; 
+                margin: 0 !important; 
+                padding: 0 !important; 
+            }
             body * { visibility: hidden !important; }
             #printable-area, #printable-area * { visibility: visible !important; }
             
             #printable-area { 
-                position: absolute !important; left: 0 !important; top: 0 !important; 
-                width: 100% !important; background: #ffffff !important; color: #0f172a !important; 
-                padding: 0 !important; font-size: 11px !important;
-                -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
+                position: absolute !important; 
+                left: 0 !important; 
+                top: 0 !important; 
+                width: 100% !important; 
+                background: #ffffff !important; 
+                color: #0f172a !important; 
+                padding: 0 !important; 
+                margin: 0 !important;
+                font-size: 11px !important;
+                -webkit-print-color-adjust: exact !important; 
+                print-color-adjust: exact !important;
             }
 
             .page-header-membrete-print {
-                display: flex !important; position: relative !important; top: 0 !important; left: 0 !important;
-                width: 100% !important; background: #ffffff !important; border-bottom: 2px solid #0f172a !important; 
-                padding-bottom: 8px !important; margin-top: 0 !important; margin-bottom: 12px !important; z-index: 1000;
-                align-items: center !important; justify-content: space-between !important;
+                display: flex !important; 
+                position: relative !important; 
+                top: 0 !important; 
+                left: 0 !important;
+                width: 100% !important; 
+                background: #ffffff !important; 
+                border-bottom: 2px solid #0f172a !important; 
+                padding-bottom: 8px !important; 
+                margin-top: 0 !important; 
+                margin-bottom: 12px !important; 
+                z-index: 1000;
+                align-items: center !important; 
+                justify-content: space-between !important;
             }
 
             .printable-content-body { margin-top: 0 !important; }
@@ -149,7 +173,7 @@
             .avoid-break { break-inside: avoid !important; page-break-inside: avoid !important; }
 
             .print-footer-pagination {
-                position: fixed !important; bottom: 10mm !important; right: 10mm !important;
+                position: fixed !important; bottom: 8mm !important; right: 10mm !important;
                 font-size: 9px !important; font-weight: 800 !important; color: #475569 !important;
             }
             .print-footer-pagination::after { content: "Página " counter(page) " de " counter(pages); }
@@ -201,7 +225,7 @@
                 <div>
                     <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Contraseña de Geólogos</label>
                     <div class="relative flex items-center">
-                        <input type="password" id="inputClaveGeo" autocomplete="current-password" placeholder="Ingrese contraseña..." class="input-field w-full px-4 pr-11 text-sm font-bold" value="">
+                        <input type="password" id="inputClaveGeo" autocomplete="current-password" placeholder="" class="input-field w-full px-4 pr-11 text-sm font-bold" value="">
                         <button type="button" onclick="togglePasswordVisibility('inputClaveGeo')" class="absolute right-3.5 text-slate-400 hover:text-white text-base">👁️</button>
                     </div>
                 </div>
@@ -217,7 +241,7 @@
                 <div>
                     <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Contraseña de Gerencia</label>
                     <div class="relative flex items-center">
-                        <input type="password" id="inputClaveGer" autocomplete="current-password" placeholder="Ingrese contraseña..." class="input-field w-full px-4 pr-11 text-sm font-bold" value="">
+                        <input type="password" id="inputClaveGer" autocomplete="current-password" placeholder="" class="input-field w-full px-4 pr-11 text-sm font-bold" value="">
                         <button type="button" onclick="togglePasswordVisibility('inputClaveGer')" class="absolute right-3.5 text-slate-400 hover:text-white text-base">👁️</button>
                     </div>
                 </div>
@@ -232,11 +256,11 @@
                 </div>
                 <div>
                     <label class="block text-xs font-extrabold text-slate-400 mb-1 uppercase tracking-wider">PIN Maestro (4 dígitos)</label>
-                    <input type="password" maxlength="4" id="inputPinRescate" placeholder="----" class="input-field w-full px-3 text-sm font-mono-code font-bold text-center tracking-widest" value="">
+                    <input type="password" maxlength="4" id="inputPinRescate" placeholder="" class="input-field w-full px-3 text-sm font-mono-code font-bold text-center tracking-widest" value="">
                 </div>
                 <div>
                     <label class="block text-xs font-extrabold text-slate-400 mb-1 uppercase tracking-wider">Nueva Contraseña Geólogos</label>
-                    <input type="password" id="inputClaveNuevaRescate" placeholder="Nueva contraseña" class="input-field w-full px-3 text-sm font-bold" value="">
+                    <input type="password" id="inputClaveNuevaRescate" placeholder="" class="input-field w-full px-3 text-sm font-bold" value="">
                 </div>
                 <button type="button" onclick="ejecutarRescateClave()" class="btn-field w-full bg-sky-600 hover:bg-sky-500 text-white text-sm font-black shadow-lg shadow-sky-900/40">
                     🔄 Restablecer Clave e Ingresar
@@ -837,7 +861,7 @@
                 <!-- ÁREA IMPRIMIBLE DSR CON MÁRGENES ESTÁNDAR Y REPETICIÓN DE TABLAS -->
                 <div id="printable-area" class="bg-white p-6 rounded-2xl border border-slate-200 space-y-4 text-xs text-slate-900 shadow-xl relative overflow-hidden">
                     
-                    <!-- MEMBRETE FIJO CON LOGO RECTANGULAR NATURAL -->
+                    <!-- MEMBRETE FIJO CON LOGO RECTANGULAR NATURAL EN BORDE SUPERIOR -->
                     <div class="page-header-membrete-print border-b-2 border-slate-900 pb-3 flex justify-between items-center flex-wrap gap-3 px-6 pt-0">
                         <div class="flex items-center gap-3">
                             <img src="1792941546023.jpg" class="logo-img-real" style="height: 48px;" alt="Logo Jireth">
