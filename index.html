@@ -15,11 +15,21 @@
         
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: #f8fafc;
+            background-color: #020617;
             color: #0f172a;
         }
         .font-mono-code { font-family: 'JetBrains Mono', monospace; }
         
+        /* FONDO ESTILO SEEQUENT + MICROMINE CON LA IMAGEN HD GENERADA */
+        .bg-seequent-micromine {
+            background-color: #020617;
+            background-image: linear-gradient(to bottom, rgba(2, 6, 23, 0.78), rgba(2, 6, 23, 0.92)), url('Gemini_Generated_Image_m89jgem89jgem89j.jfif');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+
         .btn-field { 
             min-height: 48px; 
             font-weight: 800; 
@@ -40,13 +50,24 @@
             transition: border-color 0.2s;
         }
         .input-field:focus {
-            border-color: #475569;
+            border-color: #38bdf8;
             outline: none;
-            box-shadow: 0 0 0 3px rgba(71, 85, 105, 0.12);
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
         }
 
-        .bg-bienvenida-oficial {
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        /* Estilo oscuro para campos del login Seequent */
+        .input-login-dark {
+            background-color: #090d16;
+            border: 1.5px solid #1e293b;
+            color: #ffffff;
+            border-radius: 0.85rem;
+            transition: all 0.2s ease;
+            min-height: 46px;
+        }
+        .input-login-dark:focus {
+            border-color: #38bdf8;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
         }
 
         @keyframes laserMove {
@@ -62,13 +83,13 @@
             content: '';
             position: absolute;
             top: 0; left: 0; height: 100%; width: 60%;
-            background: linear-gradient(90deg, transparent, rgba(100, 116, 139, 0.9), #475569, transparent);
+            background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.9), #0284c7, transparent);
             animation: laserMove 2.5s infinite linear;
         }
 
         @keyframes pulseGlow {
-            0%, 100% { opacity: 1; transform: scale(1); filter: drop-shadow(0 0 6px rgba(100, 116, 139, 0.5)); }
-            50% { opacity: 0.5; transform: scale(0.96); filter: drop-shadow(0 0 2px rgba(100, 116, 139, 0.2)); }
+            0%, 100% { opacity: 1; transform: scale(1); filter: drop-shadow(0 0 6px rgba(56, 189, 248, 0.5)); }
+            50% { opacity: 0.5; transform: scale(0.96); filter: drop-shadow(0 0 2px rgba(56, 189, 248, 0.2)); }
         }
         .pulse-live { animation: pulseGlow 1.8s infinite ease-in-out; }
 
@@ -157,96 +178,96 @@
     </style>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="min-h-screen p-2.5 sm:p-4 antialiased selection:bg-slate-700 selection:text-white text-slate-800">
+<body class="min-h-screen p-2.5 sm:p-4 antialiased selection:bg-sky-600 selection:text-white bg-slate-950 text-slate-800">
 
-    <!-- PANTALLA DE ACCESO Y BIENVENIDA -->
-    <div id="pantallaLogin" class="fixed inset-0 bg-bienvenida-oficial z-50 flex items-center justify-center p-4 backdrop-blur-sm overflow-y-auto">
-        <div class="bg-white p-5 sm:p-7 rounded-3xl border border-slate-200 w-full max-w-lg space-y-4 shadow-2xl relative overflow-hidden backdrop-blur-md my-auto text-slate-900">
-            <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-slate-700 via-slate-500 to-slate-700 laser-line"></div>
+    <!-- PANTALLA DE ACCESO Y BIENVENIDA ESTILO SEEQUENT / MICROMINE HD -->
+    <div id="pantallaLogin" class="fixed inset-0 bg-seequent-micromine z-50 flex items-center justify-center p-4 backdrop-blur-sm overflow-y-auto">
+        <div class="bg-slate-900/90 border border-slate-800 p-6 sm:p-8 rounded-3xl w-full max-w-md space-y-5 shadow-2xl backdrop-blur-2xl relative overflow-hidden my-auto text-white">
+            <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-sky-500 via-indigo-500 to-sky-500 laser-line"></div>
             
-            <div class="text-center pt-2 space-y-2">
-                <div class="mx-auto flex items-center justify-center gap-3 bg-slate-50 p-3 rounded-2xl border border-slate-200 shadow-sm w-max">
-                    <div class="logo-jj-badge" style="width: 48px; height: 48px;"></div>
+            <div class="text-center pt-2 space-y-3">
+                <div class="mx-auto flex items-center justify-center gap-3 bg-slate-950/80 p-3 rounded-2xl border border-slate-800 shadow-lg w-max">
+                    <div class="logo-jj-badge" style="width: 44px; height: 44px;"></div>
                     <div class="text-left leading-tight">
-                        <div class="text-base font-black tracking-wider text-slate-900">JIRETH <span class="text-slate-600 text-xs">GEOCORE LITE</span></div>
-                        <div class="text-[10px] text-slate-600 font-extrabold uppercase">Complejo Jireth C.A.</div>
-                        <div class="text-[9px] text-slate-500 font-bold">Sistema de Integración & Control de Sondajes</div>
+                        <div class="text-base font-black tracking-widest text-white">SEEQUENT <span class="text-sky-400 text-xs font-bold">JIRETH</span></div>
+                        <div class="text-[10px] text-slate-400 font-extrabold uppercase tracking-wider">Complejo Jireth C.A.</div>
+                        <div class="text-[9px] text-slate-500 font-bold">Subsurface Intelligence & Logging System</div>
                     </div>
                 </div>
 
                 <div class="py-1 space-y-1">
-                    <span class="text-[10px] uppercase tracking-widest font-extrabold text-slate-700 bg-slate-100 px-3 py-1 rounded-full border border-slate-300">Módulo Operativo & Gerencial</span>
-                    <h2 class="text-3xl sm:text-4xl font-black text-slate-900 tracking-widest mt-2 uppercase drop-shadow-sm">BIENVENIDOS</h2>
-                    <p class="text-xs text-slate-600 font-semibold">Sistema Integrado de Sondajes y Perforación Diamantina</p>
+                    <span class="text-[10px] uppercase tracking-widest font-extrabold text-sky-400 bg-sky-950/60 px-3 py-1 rounded-full border border-sky-800/60">Portal de Autenticación Minera</span>
+                    <h2 class="text-2xl sm:text-3xl font-black text-white tracking-widest mt-2 uppercase drop-shadow-md">INICIAR SESIÓN</h2>
+                    <p class="text-xs text-slate-400 font-medium">Control Integrado de Sondajes Diamantinos</p>
                 </div>
             </div>
             
-            <div class="grid grid-cols-2 gap-2.5 pt-1">
-                <button type="button" onclick="seleccionarPerfil('GEOLOGOS')" id="btnPerfilGeo" class="py-3 px-2 rounded-2xl text-xs font-black border-2 border-slate-800 bg-slate-900 text-white transition-all shadow-inner">
+            <div class="grid grid-cols-2 gap-2 pt-1">
+                <button type="button" onclick="seleccionarPerfil('GEOLOGOS')" id="btnPerfilGeo" class="py-3 px-2 rounded-2xl text-xs font-black border-2 border-sky-500 bg-sky-600/30 text-white transition-all shadow-inner">
                     👷 GEÓLOGOS
                 </button>
-                <button type="button" onclick="seleccionarPerfil('GERENCIA')" id="btnPerfilGer" class="py-3 px-2 rounded-2xl text-xs font-black border-2 border-slate-200 bg-slate-100 text-slate-600 transition-all">
+                <button type="button" onclick="seleccionarPerfil('GERENCIA')" id="btnPerfilGer" class="py-3 px-2 rounded-2xl text-xs font-black border-2 border-slate-800 bg-slate-950 text-slate-400 transition-all">
                     👔 GERENCIA (REPOSITORIO)
                 </button>
             </div>
 
-            <div id="boxLoginGeologos" class="space-y-3.5">
+            <div id="boxLoginGeologos" class="space-y-4">
                 <div>
-                    <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Contraseña de Geólogos</label>
+                    <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Contraseña de Geólogos</label>
                     <div class="relative flex items-center">
-                        <input type="password" id="inputClaveGeo" autocomplete="current-password" placeholder="Ingrese clave..." class="input-field w-full px-3.5 pr-11 text-sm font-bold">
-                        <button type="button" onclick="togglePasswordVisibility('inputClaveGeo')" class="absolute right-3.5 text-slate-500 hover:text-slate-800 text-base">👁️</button>
+                        <input type="password" id="inputClaveGeo" autocomplete="current-password" placeholder="Ingrese clave (Mina2628)..." class="input-login-dark w-full px-4 pr-11 text-sm font-bold">
+                        <button type="button" onclick="togglePasswordVisibility('inputClaveGeo')" class="absolute right-3.5 text-slate-400 hover:text-white text-base">👁️</button>
                     </div>
                 </div>
-                <button type="button" onclick="intentarLoginGeo()" class="btn-field w-full bg-slate-900 hover:bg-slate-800 text-white text-sm font-black shadow-slate-900/25">
-                    🔐 Ingresar como Geólogos
+                <button type="button" onclick="intentarLoginGeo()" class="btn-field w-full bg-gradient-to-r from-sky-600 to-indigo-600 hover:from-sky-500 hover:to-indigo-500 text-white text-sm font-black shadow-lg shadow-sky-900/40">
+                    🔐 Ingresar a GeoCore
                 </button>
                 <div class="text-center pt-1">
-                    <button type="button" onclick="mostrarBoxRescate()" class="text-xs text-slate-600 hover:text-slate-900 underline font-bold">🔑 ¿Olvidaste tu contraseña? (PIN Maestro)</button>
+                    <button type="button" onclick="mostrarBoxRescate()" class="text-xs text-slate-400 hover:text-sky-400 underline font-semibold">🔑 ¿Olvidaste tu contraseña? (PIN Maestro)</button>
                 </div>
             </div>
 
-            <div id="boxLoginGerencia" class="hidden space-y-3.5">
+            <div id="boxLoginGerencia" class="hidden space-y-4">
                 <div>
-                    <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Contraseña de Gerencia</label>
+                    <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Contraseña de Gerencia</label>
                     <div class="relative flex items-center">
-                        <input type="password" id="inputClaveGer" autocomplete="current-password" placeholder="Ingrese clave..." class="input-field w-full px-3.5 pr-11 text-sm font-bold">
-                        <button type="button" onclick="togglePasswordVisibility('inputClaveGer')" class="absolute right-3.5 text-slate-500 hover:text-slate-800 text-base">👁️</button>
+                        <input type="password" id="inputClaveGer" autocomplete="current-password" placeholder="Ingrese clave..." class="input-login-dark w-full px-4 pr-11 text-sm font-bold">
+                        <button type="button" onclick="togglePasswordVisibility('inputClaveGer')" class="absolute right-3.5 text-slate-400 hover:text-white text-base">👁️</button>
                     </div>
                 </div>
-                <button type="button" onclick="intentarLoginGer()" class="btn-field w-full bg-slate-700 hover:bg-slate-600 text-white text-sm font-black shadow-slate-700/25">
+                <button type="button" onclick="intentarLoginGer()" class="btn-field w-full bg-slate-800 hover:bg-slate-700 text-white text-sm font-black shadow-lg shadow-slate-950/50">
                     📊 Ingresar a Repositorio & Sala Situacional
                 </button>
             </div>
 
-            <div id="boxLoginRescate" class="hidden space-y-3 pt-2 border-t border-slate-200">
-                <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 text-slate-800 text-[11px]">
+            <div id="boxLoginRescate" class="hidden space-y-3 pt-2 border-t border-slate-800">
+                <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800 text-slate-300 text-[11px]">
                     🔑 <b>Restablecimiento:</b> Ingrese el PIN maestro para asignar nueva clave.
                 </div>
                 <div>
-                    <label class="block text-xs font-extrabold text-slate-700 mb-1 uppercase tracking-wider">PIN Maestro (4 dígitos)</label>
-                    <input type="password" maxlength="4" id="inputPinRescate" placeholder="----" class="input-field w-full px-3 bg-white text-slate-900 text-sm font-mono-code font-bold text-center tracking-widest">
+                    <label class="block text-xs font-extrabold text-slate-400 mb-1 uppercase tracking-wider">PIN Maestro (4 dígitos)</label>
+                    <input type="password" maxlength="4" id="inputPinRescate" placeholder="----" class="input-login-dark w-full px-3 text-sm font-mono-code font-bold text-center tracking-widest">
                 </div>
                 <div>
-                    <label class="block text-xs font-extrabold text-slate-700 mb-1 uppercase tracking-wider">Nueva Contraseña Geólogos</label>
-                    <input type="password" id="inputClaveNuevaRescate" placeholder="Nueva clave" class="input-field w-full px-3 text-sm font-bold">
+                    <label class="block text-xs font-extrabold text-slate-400 mb-1 uppercase tracking-wider">Nueva Contraseña Geólogos</label>
+                    <input type="password" id="inputClaveNuevaRescate" placeholder="Nueva clave" class="input-login-dark w-full px-3 text-sm font-bold">
                 </div>
-                <button type="button" onclick="ejecutarRescateClave()" class="btn-field w-full bg-slate-800 hover:bg-slate-700 text-white text-sm font-black shadow-slate-800/25">
+                <button type="button" onclick="ejecutarRescateClave()" class="btn-field w-full bg-sky-600 hover:bg-sky-500 text-white text-sm font-black shadow-lg shadow-sky-900/40">
                     🔄 Restablecer Clave e Ingresar
                 </button>
                 <div class="text-center pt-1">
-                    <button type="button" onclick="ocultarBoxRescate()" class="text-xs text-slate-500 hover:text-slate-800 underline font-semibold">Volver al inicio</button>
+                    <button type="button" onclick="ocultarBoxRescate()" class="text-xs text-slate-400 hover:text-white underline font-semibold">Volver al inicio</button>
                 </div>
             </div>
 
-            <div class="text-center pt-3 border-t border-slate-100">
-                <span class="text-[10px] font-mono-code text-slate-400 font-bold uppercase tracking-wider">by: carlosgeologo — 2026</span>
+            <div class="text-center pt-3 border-t border-slate-800/80">
+                <span class="text-[10px] font-mono-code text-slate-500 font-bold uppercase tracking-widest">by: carlosgeologo — 2026</span>
             </div>
         </div>
     </div>
 
     <!-- PANEL LATERAL DESPLEGABLE (SIDEBAR MENU) -->
-    <div id="sidebarOverlay" class="fixed inset-0 bg-slate-950/50 z-50 hidden backdrop-blur-sm transition-opacity" onclick="toggleSidebar()"></div>
+    <div id="sidebarOverlay" class="fixed inset-0 bg-slate-950/60 z-50 hidden backdrop-blur-sm transition-opacity" onclick="toggleSidebar()"></div>
     <aside id="sidebarMenu" class="fixed top-0 left-0 bottom-0 w-80 bg-white z-50 shadow-2xl p-5 flex flex-col justify-between -translate-x-full border-r border-slate-200 overflow-y-auto">
         <div class="space-y-6">
             <div class="flex items-center justify-between border-b border-slate-200 pb-4">
@@ -879,7 +900,7 @@
                     </div>
                 </div>
 
-                <!-- ÁREA IMPRIMIBLE DSR (FUENTES AMPLIADAS Y LOGO GRANDE VISIBLE) -->
+                <!-- ÁREA IMPRIMIBLE DSR -->
                 <div id="printable-area" class="bg-white p-6 rounded-2xl border border-slate-200 space-y-4 text-xs text-slate-900 shadow-xl relative overflow-hidden">
                     <div class="watermark-bg hidden print:flex">
                         <img src="1792941546023.jpg" alt="Watermark" class="w-96 h-96 object-contain opacity-10" onerror="this.src='https://images.unsplash.com/photo-1579783902614-a3fb3927b675?w=200&auto=format&fit=crop&q=60';">
@@ -945,7 +966,7 @@
                         </div>
                     </div>
 
-                    <!-- VISUALIZADOR DE PERFIL 2D FILTRADO (TURNO VS ACUMULADO) EN REPORTE DSR -->
+                    <!-- VISUALIZADOR DE PERFIL 2D FILTRADO EN REPORTE DSR -->
                     <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2 avoid-break shadow-sm">
                         <p class="text-xs font-black text-slate-900 uppercase tracking-wider" id="repTituloPerfil2D">📐 Perfil Topográfico 2D & Log Litológico (Tramos del Turno):</p>
                         <div class="flex justify-center bg-slate-950 p-3 rounded-lg">
@@ -1180,14 +1201,14 @@
         function seleccionarPerfil(perfil) {
             perfilActual = perfil;
             if (perfil === 'GEOLOGOS') {
-                document.getElementById('btnPerfilGeo').className = "py-3 px-2 rounded-2xl text-xs font-black border-2 border-slate-800 bg-slate-900 text-white transition-all shadow-inner";
-                document.getElementById('btnPerfilGer').className = "py-3 px-2 rounded-2xl text-xs font-black border-2 border-slate-200 bg-slate-100 text-slate-600 transition-all";
+                document.getElementById('btnPerfilGeo').className = "py-3 px-2 rounded-2xl text-xs font-black border-2 border-sky-500 bg-sky-600/30 text-white transition-all shadow-inner";
+                document.getElementById('btnPerfilGer').className = "py-3 px-2 rounded-2xl text-xs font-black border-2 border-slate-800 bg-slate-950 text-slate-400 transition-all";
                 document.getElementById('boxLoginGeologos').classList.remove('hidden');
                 document.getElementById('boxLoginGerencia').classList.add('hidden');
                 document.getElementById('boxLoginRescate').classList.add('hidden');
             } else {
-                document.getElementById('btnPerfilGer').className = "py-3 px-2 rounded-2xl text-xs font-black border-2 border-slate-700 bg-slate-800 text-white transition-all shadow-inner";
-                document.getElementById('btnPerfilGeo').className = "py-3 px-2 rounded-2xl text-xs font-black border-2 border-slate-200 bg-slate-100 text-slate-600 transition-all";
+                document.getElementById('btnPerfilGer').className = "py-3 px-2 rounded-2xl text-xs font-black border-2 border-sky-500 bg-sky-600/30 text-white transition-all shadow-inner";
+                document.getElementById('btnPerfilGeo').className = "py-3 px-2 rounded-2xl text-xs font-black border-2 border-slate-800 bg-slate-950 text-slate-400 transition-all";
                 document.getElementById('boxLoginGerencia').classList.remove('hidden');
                 document.getElementById('boxLoginGeologos').classList.add('hidden');
                 document.getElementById('boxLoginRescate').classList.add('hidden');
@@ -1300,7 +1321,6 @@
             let chartLabels = [], chartAvances = [], chartPlan = [], chartRec = [], chartPorcentajes = [];
             let meteorizacionTotales = {};
 
-            // Poblar selector del Perfil 2D grande en Sala Situacional
             const selPerfilSala = document.getElementById('selectPozoPerfilSala');
             if (selPerfilSala) {
                 let valActual = selPerfilSala.value;
@@ -2130,7 +2150,7 @@
 
         function validarGeometriaTramo(p, desde, hasta, idxExcluir = null) {
             if (desde >= hasta) {
-                return { valido: false, mensaje: "❌ Error Geométrico: El metraje 'Hasta' debe ser estrictamente mayor que 'Desde'." };
+                return { valido: false, mensaje: "❌ Error Geométrico: El metraje 'Hasta' debe ser strictly mayor que 'Desde'." };
             }
             if (desde < 0) {
                 return { valido: false, mensaje: "❌ Error Geométrico: El metraje 'Desde' no puede ser negativo." };
@@ -2305,7 +2325,7 @@
             document.getElementById('barPendiente').style.width = pPend + '%';
         }
 
-        // MOTOR RENDERIZADOR 2D DEL PERFIL Y LOG LITOLÓGICO (FLEXIBLE PARA FILTRAR TRAMOS)
+        // MOTOR RENDERIZADOR 2D DEL PERFIL Y LOG LITOLÓGICO
         function renderizarPerfil2D() {
             const canvas = document.getElementById('canvasPerfil2D');
             if (!canvas) return;
@@ -2682,7 +2702,6 @@
                 document.getElementById('repMotivoCierreBox').innerHTML = `<b>Estado:</b> Sondaje Activo en Operación`;
             }
 
-            // Renderizar Perfil 2D filtrado en el Reporte (Solo tramos del turno o acumulados según selección)
             setTimeout(() => {
                 const canvasRep = document.getElementById('canvasReporte2D');
                 if (canvasRep) {
@@ -2692,7 +2711,6 @@
                     dibujarPerfilEnCanvas(ctxR, p, canvasRep.width, canvasRep.height, false, listaAvancesFiltrada);
                 }
 
-                // Renderizar gráficos dentro del reporte
                 renderChartReporteRecuperacion(listaAvancesFiltrada);
                 renderChartReporteLitologia(listaAvancesFiltrada);
             }, 100);
