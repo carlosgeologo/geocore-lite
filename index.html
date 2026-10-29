@@ -84,10 +84,10 @@
         }
         .pulse-live { animation: pulseGlow 1.8s infinite ease-in-out; }
 
-        /* ESTILO PARA EL LOGO REAL 1792941546023.jpg */
+        /* LOGO RECTANGULAR NATURAL (SIN RECORTES FORZADOS) */
         .logo-img-real {
-            width: 44px; height: 44px; border-radius: 0.75rem; object-fit: cover;
-            border: 1px solid rgba(59, 130, 246, 0.6); box-shadow: 0 4px 10px rgba(0,0,0,0.4); flex-shrink: 0;
+            height: 42px; width: auto; max-width: 130px; border-radius: 0.5rem; object-fit: contain;
+            border: 1px solid rgba(59, 130, 246, 0.5); box-shadow: 0 4px 10px rgba(0,0,0,0.4); flex-shrink: 0;
             background-color: #0f172a;
         }
 
@@ -121,9 +121,9 @@
             box-shadow: 0 2px 6px rgba(0,0,0,0.4);
         }
 
-        /* ESTRICTA CONFIGURACIÓN DE IMPRESIÓN Y PDF DSR CON MEMBRETE ANCLADO ARRIBA */
+        /* CONFIGURACIÓN ESTRICTA DE IMPRESIÓN Y PDF DSR CON MÁRGENES ESTÁNDAR CARTA */
         @media print {
-            @page { size: A4 portrait; margin: 0mm; }
+            @page { size: A4 portrait; margin: 15mm; }
             body { background: #ffffff !important; color: #0f172a !important; margin: 0 !important; padding: 0 !important; }
             body * { visibility: hidden !important; }
             #printable-area, #printable-area * { visibility: visible !important; }
@@ -131,7 +131,7 @@
             #printable-area { 
                 position: absolute !important; left: 0 !important; top: 0 !important; 
                 width: 100% !important; background: #ffffff !important; color: #0f172a !important; 
-                padding: 12mm !important; font-size: 11px !important;
+                padding: 0 !important; font-size: 11px !important;
                 -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
             }
 
@@ -166,7 +166,7 @@
         </div>
     </div>
 
-    <!-- PANTALLA DE ACCESO -->
+    <!-- PANTALLA DE ACCESO (SIN SUGERENCIAS DE CONTRASEÑAS) -->
     <div id="pantallaLogin" class="fixed inset-0 bg-geocore-master z-50 flex items-center justify-center p-4 overflow-y-auto">
         <div class="card-pro p-6 sm:p-8 rounded-3xl w-full max-w-md space-y-6 relative overflow-hidden my-auto text-white">
             <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-sky-500 via-indigo-500 to-sky-500 laser-line"></div>
@@ -201,7 +201,7 @@
                 <div>
                     <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Contraseña de Geólogos</label>
                     <div class="relative flex items-center">
-                        <input type="password" id="inputClaveGeo" autocomplete="current-password" placeholder="Ingrese clave (Mina2628)..." class="input-field w-full px-4 pr-11 text-sm font-bold">
+                        <input type="password" id="inputClaveGeo" autocomplete="current-password" placeholder="Ingrese contraseña..." class="input-field w-full px-4 pr-11 text-sm font-bold" value="">
                         <button type="button" onclick="togglePasswordVisibility('inputClaveGeo')" class="absolute right-3.5 text-slate-400 hover:text-white text-base">👁️</button>
                     </div>
                 </div>
@@ -217,7 +217,7 @@
                 <div>
                     <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Contraseña de Gerencia</label>
                     <div class="relative flex items-center">
-                        <input type="password" id="inputClaveGer" autocomplete="current-password" placeholder="Ingrese clave..." class="input-field w-full px-4 pr-11 text-sm font-bold">
+                        <input type="password" id="inputClaveGer" autocomplete="current-password" placeholder="Ingrese contraseña..." class="input-field w-full px-4 pr-11 text-sm font-bold" value="">
                         <button type="button" onclick="togglePasswordVisibility('inputClaveGer')" class="absolute right-3.5 text-slate-400 hover:text-white text-base">👁️</button>
                     </div>
                 </div>
@@ -232,11 +232,11 @@
                 </div>
                 <div>
                     <label class="block text-xs font-extrabold text-slate-400 mb-1 uppercase tracking-wider">PIN Maestro (4 dígitos)</label>
-                    <input type="password" maxlength="4" id="inputPinRescate" placeholder="----" class="input-field w-full px-3 text-sm font-mono-code font-bold text-center tracking-widest">
+                    <input type="password" maxlength="4" id="inputPinRescate" placeholder="----" class="input-field w-full px-3 text-sm font-mono-code font-bold text-center tracking-widest" value="">
                 </div>
                 <div>
                     <label class="block text-xs font-extrabold text-slate-400 mb-1 uppercase tracking-wider">Nueva Contraseña Geólogos</label>
-                    <input type="password" id="inputClaveNuevaRescate" placeholder="Nueva clave" class="input-field w-full px-3 text-sm font-bold">
+                    <input type="password" id="inputClaveNuevaRescate" placeholder="Nueva contraseña" class="input-field w-full px-3 text-sm font-bold" value="">
                 </div>
                 <button type="button" onclick="ejecutarRescateClave()" class="btn-field w-full bg-sky-600 hover:bg-sky-500 text-white text-sm font-black shadow-lg shadow-sky-900/40">
                     🔄 Restablecer Clave e Ingresar
@@ -258,7 +258,7 @@
         <div class="space-y-6">
             <div class="flex items-center justify-between border-b border-slate-800 pb-4">
                 <div class="flex items-center gap-3">
-                    <img src="1792941546023.jpg" class="logo-img-real" style="width: 36px; height: 36px;" alt="Logo">
+                    <img src="1792941546023.jpg" class="logo-img-real" alt="Logo">
                     <div>
                         <h2 class="text-xs font-black uppercase text-white">Jireth GeoCore</h2>
                         <p class="text-[10px] text-sky-400 font-bold">Menú Operativo Global</p>
@@ -322,7 +322,7 @@
             </div>
             
             <div id="cardBienvenidaUsuario" class="hidden sm:flex items-center gap-3 bg-slate-900/80 px-3.5 py-1.5 rounded-xl border border-slate-800 text-xs shadow-sm">
-                <img src="1792941546023.jpg" class="logo-img-real" style="width: 28px; height: 28px;" alt="Logo">
+                <img src="1792941546023.jpg" class="logo-img-real" style="height: 30px;" alt="Logo">
                 <div>
                     <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Sesión Activa Pro</p>
                     <p class="text-white font-extrabold" id="lblNombreUsuarioLogueado">Operador Autorizado</p>
@@ -399,11 +399,11 @@
                     </div>
                 </div>
 
-                <!-- VISUALIZADOR 2D AMPLIADO (ALTURA 700PX PARA MÁXIMA LEGIBILIDAD) -->
+                <!-- VISUALIZADOR 2D OPTIMIZADO VERTICAL HD -->
                 <div class="bg-slate-900/80 p-4 rounded-2xl border border-slate-800 space-y-3 shadow-sm pt-4">
                     <div class="flex justify-between items-center flex-wrap gap-2">
                         <h3 class="text-xs font-black text-white uppercase tracking-wider flex items-center gap-2">
-                            <span>📐 Visualizador de Perfil 2D & Log Litológico (Sala Situacional - Ampliado HD)</span>
+                            <span>📐 Visualizador de Perfil 2D & Log Litológico (Sala Situacional - HD Vertical)</span>
                         </h3>
                         <div class="flex items-center gap-2">
                             <select id="selectPozoPerfilSala" onchange="renderizarPerfilSalaSituacionalCompleto()" class="input-field px-3 py-1.5 text-xs font-bold text-white">
@@ -413,7 +413,7 @@
                     </div>
                     
                     <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 overflow-x-auto shadow-inner flex justify-center">
-                        <canvas id="canvasSalaSituacionalGrande" width="950" height="700" class="max-w-full h-auto bg-slate-950 rounded-lg shadow-md"></canvas>
+                        <canvas id="canvasSalaSituacionalGrande" width="950" height="750" class="max-w-full h-auto bg-slate-950 rounded-lg shadow-md"></canvas>
                     </div>
 
                     <div class="flex flex-wrap justify-center gap-2 pt-2 border-t border-slate-800/80">
@@ -674,16 +674,16 @@
                     </div>
                 </div>
 
-                <!-- PERFIL 2D DE LOGGING AMPLIADO A 700PX -->
+                <!-- PERFIL 2D OPTIMIZADO VERTICAL HD -->
                 <div class="bg-slate-900/80 p-4 rounded-2xl border border-slate-800 space-y-3 shadow-sm">
                     <div class="flex justify-between items-center flex-wrap gap-2">
                         <h3 class="text-xs font-black text-white uppercase tracking-wider flex items-center gap-2">
-                            <span>📐 Perfil Topográfico 2D & Log Litológico en Tiempo Real (Ampliado HD)</span>
+                            <span>📐 Perfil Topográfico 2D & Log Litológico en Tiempo Real (HD Vertical)</span>
                         </h3>
                     </div>
                     
                     <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 overflow-x-auto shadow-inner flex justify-center">
-                        <canvas id="canvasPerfil2D" width="900" height="700" class="max-w-full h-auto bg-slate-950 rounded-lg shadow-md"></canvas>
+                        <canvas id="canvasPerfil2D" width="900" height="750" class="max-w-full h-auto bg-slate-950 rounded-lg shadow-md"></canvas>
                     </div>
                 </div>
 
@@ -834,13 +834,13 @@
                     </div>
                 </div>
 
-                <!-- ÁREA IMPRIMIBLE DSR -->
+                <!-- ÁREA IMPRIMIBLE DSR CON MÁRGENES ESTÁNDAR Y REPETICIÓN DE TABLAS -->
                 <div id="printable-area" class="bg-white p-6 rounded-2xl border border-slate-200 space-y-4 text-xs text-slate-900 shadow-xl relative overflow-hidden">
                     
-                    <!-- MEMBRETE FIJO ANCLADO AL BORDE SUPERIOR EN IMPRESIÓN CON EL LOGO REAL 1792941546023.jpg -->
+                    <!-- MEMBRETE FIJO CON LOGO RECTANGULAR NATURAL -->
                     <div class="page-header-membrete-print border-b-2 border-slate-900 pb-3 flex justify-between items-center flex-wrap gap-3 px-6 pt-0">
                         <div class="flex items-center gap-3">
-                            <img src="1792941546023.jpg" class="logo-img-real" style="width: 48px; height: 48px;" alt="Logo Jireth">
+                            <img src="1792941546023.jpg" class="logo-img-real" style="height: 48px;" alt="Logo Jireth">
                             <div>
                                 <h3 class="text-sm font-black text-slate-900 uppercase tracking-tight" id="repTituloPrincipalDSR">REPORTE DE TURNO</h3>
                                 <p class="text-[9px] text-slate-600 font-extrabold uppercase">COMPLEJO JIRETH C.A. — COORDINACIÓN DE GEOLOGÍA</p>
@@ -896,11 +896,11 @@
                             </div>
                         </div>
 
-                        <!-- PERFIL 2D AMPLIADO EN REPORTE (ALTURA 450PX) -->
+                        <!-- PERFIL 2D EN REPORTE VERTICAL HD -->
                         <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-1.5 avoid-break shadow-sm">
-                            <p class="text-[11px] font-black text-slate-900 uppercase tracking-wider" id="repTituloPerfil2D">📐 Perfil Topográfico 2D & Log Litológico (HD):</p>
+                            <p class="text-[11px] font-black text-slate-900 uppercase tracking-wider" id="repTituloPerfil2D">📐 Perfil Topográfico 2D & Log Litológico (HD Vertical):</p>
                             <div class="flex justify-center bg-white p-2.5 rounded-lg border border-slate-200">
-                                <canvas id="canvasReporte2D" width="850" height="450" class="max-w-full h-auto bg-white rounded"></canvas>
+                                <canvas id="canvasReporte2D" width="850" height="500" class="max-w-full h-auto bg-white rounded"></canvas>
                             </div>
                         </div>
 
@@ -2126,7 +2126,7 @@
             dibujarPerfilEnCanvasVertical(ctx, p, w, h, p.avances, false);
         }
 
-        /* MOTOR DE PERFIL 2D AMPLIADO HD */
+        /* MOTOR DE PERFIL 2D OPTIMIZADO VERTICAL HD */
         function dibujarPerfilEnCanvasVertical(ctx, p, w, h, listaTramos = null, esReporte = false) {
             let dipVal = Math.abs(parseFloat(p.dip) || 90);
             let dipRad = (dipVal * Math.PI) / 180;
@@ -2139,7 +2139,7 @@
 
             let startX = w / 2;
             let startY = 60;
-            let maxDrawHeight = h - 120;
+            let maxDrawHeight = h - 100;
             let scale = maxDrawHeight / Math.max(targetNum, 20);
 
             ctx.strokeStyle = esReporte ? '#cbd5e1' : '#334155';
@@ -2158,7 +2158,7 @@
             let endY = startY + Math.sin(dipRad) * targetNum * scale;
 
             ctx.strokeStyle = esReporte ? '#e2e8f0' : '#1e293b';
-            ctx.lineWidth = 14;
+            ctx.lineWidth = 18;
             ctx.lineCap = 'round';
             ctx.beginPath();
             ctx.moveTo(startX, startY);
@@ -2189,24 +2189,24 @@
                     let segEndY = startY + Math.sin(dipRad) * hTramo * scale;
 
                     ctx.strokeStyle = colorMap[av.meteorizacion] || '#94a3b8';
-                    ctx.lineWidth = diam === 'HQ' ? 18 : 12;
+                    ctx.lineWidth = diam === 'HQ' ? 22 : 16;
                     ctx.lineCap = 'butt';
                     ctx.beginPath();
                     ctx.moveTo(segStartX, segStartY);
                     ctx.lineTo(segEndX, segEndY);
                     ctx.stroke();
 
-                    // Etiquetas legibles y grandes en HD
+                    // Etiquetas legibles y destacadas
                     ctx.fillStyle = esReporte ? '#0f172a' : '#f8fafc';
-                    ctx.font = 'bold 11px "JetBrains Mono"';
+                    ctx.font = 'bold 12px "JetBrains Mono"';
                     ctx.textAlign = 'left';
-                    ctx.fillText(`${hTramo.toFixed(1)}m [${av.diametro}] (${av.porcentaje}%)`, segEndX + 18, segEndY + 4);
+                    ctx.fillText(`${hTramo.toFixed(1)}m [${av.diametro}] (${av.porcentaje}%)`, segEndX + 20, segEndY + 4);
 
                     ctx.strokeStyle = esReporte ? 'rgba(15, 23, 42, 0.5)' : 'rgba(148, 163, 184, 0.5)';
                     ctx.lineWidth = 1.5;
                     ctx.beginPath();
                     ctx.moveTo(segEndX, segEndY);
-                    ctx.lineTo(segEndX + 14, segEndY);
+                    ctx.lineTo(segEndX + 16, segEndY);
                     ctx.stroke();
                 });
             }
@@ -2347,15 +2347,15 @@
             if (modo === 'TURNO') {
                 boxTurno.classList.remove('hidden');
                 document.getElementById('repTituloPrincipalDSR').innerText = "REPORTE DE TURNO";
-                document.getElementById('repTituloPerfil2D').innerText = "📐 Perfil Topográfico 2D & Log Litológico (Tramos del Turno - HD):";
+                document.getElementById('repTituloPerfil2D').innerText = "📐 Perfil Topográfico 2D & Log Litológico (Tramos del Turno - HD Vertical):";
             } else if (modo === 'ACUMULADO') {
                 boxTurno.classList.add('hidden');
                 document.getElementById('repTituloPrincipalDSR').innerText = "REPORTE ACUMULADO DEL SONDAJE";
-                document.getElementById('repTituloPerfil2D').innerText = "📐 Perfil Topográfico 2D & Log Litológico (Acumulado General - HD):";
+                document.getElementById('repTituloPerfil2D').innerText = "📐 Perfil Topográfico 2D & Log Litológico (Acumulado General - HD Vertical):";
             } else if (modo === 'CULMINADO') {
                 boxTurno.classList.add('hidden');
                 document.getElementById('repTituloPrincipalDSR').innerText = "REPORTE SONDAJE CULMINADO";
-                document.getElementById('repTituloPerfil2D').innerText = "📐 Perfil Topográfico 2D & Log Litológico (Sondaje Culminado - HD):";
+                document.getElementById('repTituloPerfil2D').innerText = "📐 Perfil Topográfico 2D & Log Litológico (Sondaje Culminado - HD Vertical):";
             }
 
             let listaAvancesFiltrada = [];
