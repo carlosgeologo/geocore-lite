@@ -22,7 +22,6 @@
         }
         .font-mono-code { font-family: 'JetBrains Mono', monospace; }
         
-        /* FONDO HD GEOLÓGICO Y TOPOGRÁFICO DE ALTA VISIBILIDAD */
         .bg-geocore-master {
             background-color: #020617;
             background-image: linear-gradient(to bottom, rgba(2, 6, 23, 0.35), rgba(2, 6, 23, 0.65)), url('Gemini_Generated_Image_m89jgem89jgem89j.jfif');
@@ -32,7 +31,6 @@
             background-attachment: fixed;
         }
 
-        /* CABECERA MAESTRA STICKY / ANCLADA CON DESENFOQUE */
         .header-sticky-master {
             position: sticky;
             top: 0;
@@ -53,29 +51,19 @@
         }
 
         .btn-field { 
-            min-height: 46px; 
-            font-weight: 800; 
-            border-radius: 0.75rem; 
-            letter-spacing: 0.025em;
-            transition: all 0.2s ease-in-out;
-            box-shadow: 0 4px 14px rgba(0,0,0,0.35);
+            min-height: 46px; font-weight: 800; border-radius: 0.75rem; letter-spacing: 0.025em;
+            transition: all 0.2s ease-in-out; box-shadow: 0 4px 14px rgba(0,0,0,0.35);
         }
         .btn-field:active { transform: scale(0.98); }
         
         .input-field { 
-            min-height: 46px; 
-            border: 1.5px solid rgba(51, 65, 85, 0.8); 
-            font-weight: 700;
-            background-color: rgba(9, 13, 22, 0.9);
-            color: #f8fafc;
-            border-radius: 0.75rem;
+            min-height: 46px; border: 1.5px solid rgba(51, 65, 85, 0.8); font-weight: 700;
+            background-color: rgba(9, 13, 22, 0.9); color: #f8fafc; border-radius: 0.75rem;
             transition: all 0.2s ease;
         }
         .input-field:focus {
-            border-color: #38bdf8;
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.25);
-            background-color: #020617;
+            border-color: #38bdf8; outline: none;
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.25); background-color: #020617;
         }
 
         @keyframes laserMove {
@@ -110,7 +98,6 @@
             letter-spacing: -0.05em;
         }
 
-        /* NOTIFICACIÓN TOAST FLOTANTE DE FEEDBACK */
         #toastFeedback {
             position: fixed; bottom: 24px; right: 24px; z-index: 100;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -134,7 +121,6 @@
             color: #ffffff; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.35);
         }
 
-        /* LEYENDA TÁCTICA TIPO PILL BADGE */
         .pill-badge {
             display: inline-flex; align-items: center; gap: 6px;
             padding: 4px 10px; border-radius: 9999px; font-size: 10px; font-weight: 800;
@@ -142,9 +128,9 @@
             box-shadow: 0 2px 6px rgba(0,0,0,0.4);
         }
 
-        /* CONFIGURACIÓN ESTRICTA DE IMPRESIÓN Y EXPORTACIÓN DSR (PDF) */
+        /* ESTRICTA CONFIGURACIÓN DE IMPRESIÓN Y PDF DSR */
         @media print {
-            @page { size: A4 portrait; margin: 8mm 10mm; }
+            @page { size: A4 portrait; margin: 10mm; }
             body { background: #ffffff !important; color: #0f172a !important; }
             body * { visibility: hidden !important; }
             #printable-area, #printable-area * { visibility: visible !important; }
@@ -157,18 +143,18 @@
             }
 
             .page-header-membrete-print {
-                display: flex !important; position: relative !important; 
-                background: #ffffff !important; border-bottom: 2px solid #0f172a !important; 
-                padding-bottom: 8px !important; margin-bottom: 12px !important;
+                display: flex !important; position: fixed !important; top: 0 !important; left: 0 !important;
+                width: 100% !important; background: #ffffff !important; border-bottom: 2px solid #0f172a !important; 
+                padding-bottom: 8px !important; margin-bottom: 12px !important; z-index: 1000;
                 align-items: center !important; justify-content: space-between !important;
             }
 
-            /* REPETICIÓN DEL ENCABEZADO DE TABLA JUSTO DEBAJO DEL CINTILLO INSTITUCIONAL */
+            .printable-content-body { margin-top: 90px !important; }
+
             thead { display: table-header-group !important; }
             tr { break-inside: avoid !important; page-break-inside: avoid !important; }
             .avoid-break { break-inside: avoid !important; page-break-inside: avoid !important; }
 
-            /* PAGINACIÓN DINÁMICA DE PIE DE PÁGINA */
             .print-footer-pagination {
                 position: fixed !important; bottom: 0 !important; right: 0 !important;
                 font-size: 9px !important; font-weight: 800 !important; color: #475569 !important;
@@ -179,7 +165,6 @@
 </head>
 <body class="min-h-screen antialiased selection:bg-sky-600 selection:text-white bg-geocore-master text-slate-100">
 
-    <!-- NOTIFICACIÓN TOAST FLOTANTE -->
     <div id="toastFeedback" class="card-pro px-5 py-3 border-l-4 border-emerald-500 flex items-center gap-3 shadow-2xl">
         <span class="text-lg" id="toastIcon">✅</span>
         <div>
@@ -188,7 +173,7 @@
         </div>
     </div>
 
-    <!-- PANTALLA DE ACCESO Y BIENVENIDA -->
+    <!-- PANTALLA DE ACCESO -->
     <div id="pantallaLogin" class="fixed inset-0 bg-geocore-master z-50 flex items-center justify-center p-4 overflow-y-auto">
         <div class="card-pro p-6 sm:p-8 rounded-3xl w-full max-w-md space-y-6 relative overflow-hidden my-auto text-white">
             <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-sky-500 via-indigo-500 to-sky-500 laser-line"></div>
@@ -274,7 +259,7 @@
         </div>
     </div>
 
-    <!-- PANEL LATERAL DESPLEGABLE (SIDEBAR MENU) -->
+    <!-- SIDEBAR MENU -->
     <div id="sidebarOverlay" class="fixed inset-0 bg-slate-950/70 z-50 hidden backdrop-blur-md transition-opacity" onclick="toggleSidebar()"></div>
     <aside id="sidebarMenu" class="fixed top-0 left-0 bottom-0 w-80 z-50 shadow-2xl p-5 flex flex-col justify-between -translate-x-full overflow-y-auto">
         <div class="space-y-6">
@@ -328,15 +313,11 @@
     <!-- APLICACIÓN PRINCIPAL -->
     <div id="appPrincipal" class="hidden space-y-4 max-w-7xl mx-auto pb-16 sm:pb-6">
         
-        <!-- CABECERA MAESTRA STICKY (PERMANECE FIJA AL HACER SCROLL) -->
+        <!-- CABECERA STICKY -->
         <header class="header-sticky-master px-4 py-3 rounded-b-2xl flex justify-between items-center flex-wrap gap-3 shadow-xl">
             <div class="flex items-center gap-3">
-                <button type="button" onclick="toggleSidebar()" class="w-10 h-10 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 flex items-center justify-center text-white font-black shadow-md transition" title="Menú Principal">
-                    ☰
-                </button>
-                <button type="button" onclick="switchTab('mod_sala')" class="w-10 h-10 rounded-xl bg-sky-600 hover:bg-sky-500 text-white flex items-center justify-center font-black shadow-md transition" title="Ir a Sala Situacional (Inicio)">
-                    🏠
-                </button>
+                <button type="button" onclick="toggleSidebar()" class="w-10 h-10 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 flex items-center justify-center text-white font-black shadow-md transition" title="Menú Principal">☰</button>
+                <button type="button" onclick="switchTab('mod_sala')" class="w-10 h-10 rounded-xl bg-sky-600 hover:bg-sky-500 text-white flex items-center justify-center font-black shadow-md transition" title="Ir a Sala Situacional">🏠</button>
                 <div class="logo-jj-badge"></div>
                 <div>
                     <h1 class="text-base font-black text-white tracking-tight flex items-center gap-1.5">
@@ -375,10 +356,9 @@
                 <button type="button" onclick="renderizarSalaSituacional()" class="bg-amber-950 hover:bg-amber-900 text-amber-200 border border-amber-700 px-3 py-2 rounded-xl text-xs font-bold transition shadow-sm">🔄 Actualizar En Vivo</button>
             </div>
 
-            <!-- CONTENEDOR SI NO HAY POZOS ACTIVOS: SELECCIÓN POR EMPRESA PARA CULMINADOS -->
             <div id="boxFiltroEmpresaCulminados" class="hidden bg-slate-900/90 p-4 rounded-2xl border border-sky-900/60 space-y-3">
                 <div class="flex items-center gap-2 text-sky-400 font-black text-xs uppercase tracking-wider">
-                    <span>🏢 SIN FRENTES ACTIVOS EN PERFORACIÓN — CONSULTA DE POZOS CULMINADOS POR EMPRESA</span>
+                    <span>🏢 SIN FRENTES ACTIVOS — CONSULTA DE POZOS CULMINADOS POR EMPRESA</span>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
@@ -400,10 +380,8 @@
                 </div>
             </div>
 
-            <!-- FICHAS INDIVIDUALES DE POZOS ACTIVOS -->
             <div id="gridSalaSituacional" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
 
-            <!-- RESÚMENES GLOBALES Y MÉTRICAS COMPACTAS -->
             <div class="border-t border-slate-800 pt-4 space-y-4">
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
                     <div class="bg-slate-900/90 p-3.5 rounded-2xl border-t-2 border-sky-500 shadow-sm relative overflow-hidden">
@@ -428,7 +406,6 @@
                     </div>
                 </div>
 
-                <!-- VISUALIZADOR PROTAGONISTA DE PERFIL 2D VERTICAL -->
                 <div class="bg-slate-900/80 p-4 rounded-2xl border border-slate-800 space-y-3 shadow-sm pt-4">
                     <div class="flex justify-between items-center flex-wrap gap-2">
                         <h3 class="text-xs font-black text-white uppercase tracking-wider flex items-center gap-2">
@@ -445,7 +422,6 @@
                         <canvas id="canvasSalaSituacionalGrande" width="900" height="460" class="max-w-full h-auto bg-slate-950 rounded-lg shadow-md"></canvas>
                     </div>
 
-                    <!-- LEYENDA TÁCTICA LITO-METEOROLÓGICA FLOTANTE BAJO EL CANVAS -->
                     <div class="flex flex-wrap justify-center gap-2 pt-2 border-t border-slate-800/80">
                         <span class="pill-badge"><b class="w-2.5 h-2.5 rounded-full bg-yellow-200 inline-block"></b> Suelo / Saprolita</span>
                         <span class="pill-badge"><b class="w-2.5 h-2.5 rounded-full bg-amber-600 inline-block"></b> Saprock</span>
@@ -461,7 +437,7 @@
         <!-- MÓDULO 1: APERTURA & LISTA DE POZOS -->
         <section id="mod1" class="hidden space-y-4 card-pro p-5 sm:p-6">
             <h2 class="text-xl font-black text-white tracking-tight flex items-center gap-2">🛠️ Módulo: Lista de Pozos & Apertura de Nuevo Sondaje</h2>
-            <p class="text-xs text-slate-300 font-medium">Seleccione un sondaje activo de la lista para ir directamente a la gestión de turnos, o seleccione registrar nuevo sondaje.</p>
+            <p class="text-xs text-slate-300 font-medium">Seleccione un sondaje activo de la lista para ir directamente a la gestión de turnos, o registre uno nuevo.</p>
             
             <div class="space-y-4">
                 <div>
@@ -497,7 +473,7 @@
                         <input type="text" id="m1_proyecto" onblur="forzarMayusculas(this)" class="input-field w-full px-4 font-extrabold text-sm uppercase" placeholder="EJ: EL CALLAO / SECTOR NORTE">
                     </div>
                     <button type="button" id="btnCrearPozo" onclick="crearPozo()" class="btn-field w-full bg-gradient-to-r from-sky-600 to-indigo-600 hover:from-sky-500 hover:to-indigo-500 text-white text-base font-black shadow-lg">
-                        💾 Crear Pozo y Continuar a Ficha Topográfica (Paso a Paso)
+                        💾 Crear Pozo y Continuar a Ficha Topográfica
                     </button>
                 </div>
             </div>
@@ -557,8 +533,8 @@
                 </div>
                 
                 <div id="m2_btn_box" class="hidden pt-2 flex gap-2">
-                    <button type="button" onclick="guardarTopografia()" class="btn-field flex-1 bg-gradient-to-r from-sky-600 to-indigo-600 hover:from-sky-500 hover:to-indigo-500 text-white text-sm font-bold shadow-lg">💾 Guardar Topografía y Continuar a Aperturar Turno</button>
-                    <button type="button" onclick="cancelarEdicionTopo()" class="bg-rose-950 hover:bg-rose-900 text-rose-200 border border-rose-700 px-5 py-2.5 rounded-xl text-xs font-black shadow-sm">❌ Cancelar Edición</button>
+                    <button type="button" onclick="guardarTopografia()" class="btn-field flex-1 bg-gradient-to-r from-sky-600 to-indigo-600 hover:from-sky-500 hover:to-indigo-500 text-white text-sm font-bold shadow-lg">💾 Guardar Topografía y Continuar</button>
+                    <button type="button" onclick="cancelarEdicionTopo()" class="bg-rose-950 hover:bg-rose-900 text-rose-200 border border-rose-700 px-5 py-2.5 rounded-xl text-xs font-black shadow-sm">❌ Cancelar</button>
                 </div>
             </div>
         </section>
@@ -566,7 +542,7 @@
         <!-- MÓDULO 3A: TURNOS -->
         <section id="mod3_turno" class="hidden space-y-4 card-pro p-5 sm:p-6">
             <h2 class="text-xl font-black text-white tracking-tight">⏱️ Módulo: Gestión, Apertura & Edición de Turnos (Paso 3)</h2>
-            <p class="text-xs text-slate-300 font-medium">Seleccione un sondaje activo primero para desplegar los campos de apertura o historial del turno.</p>
+            <p class="text-xs text-slate-300 font-medium">Seleccione un sondaje activo primero para desplegar los campos de apertura o historial.</p>
 
             <div class="bg-slate-900/80 p-3.5 rounded-2xl border border-slate-800 shadow-sm">
                 <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">🎯 Seleccionar Sondaje Activo a Gestionar:</label>
@@ -704,7 +680,6 @@
                     </div>
                 </div>
 
-                <!-- VISUALIZADOR DE PERFIL 2D (CANVAS) -->
                 <div class="bg-slate-900/80 p-4 rounded-2xl border border-slate-800 space-y-3 shadow-sm">
                     <div class="flex justify-between items-center flex-wrap gap-2">
                         <h3 class="text-xs font-black text-white uppercase tracking-wider flex items-center gap-2">
@@ -795,10 +770,10 @@
             </div>
         </section>
 
-        <!-- MÓDULO 4: CIERRE EXHAUSTIVO -->
+        <!-- MÓDULO 4: CIERRE -->
         <section id="mod4" class="hidden space-y-4 card-pro p-5 sm:p-6">
             <h2 class="text-xl font-black text-white tracking-tight">🏁 Módulo: Cierre & Evaluación Exhaustiva del Sondaje</h2>
-            <p class="text-xs text-slate-300">Aquí se evalúa el sondaje con el 100% de los datos técnicos registrados para su cierre o reactivación.</p>
+            <p class="text-xs text-slate-300">Aquí se evalúa el sondaje con el 100% de los datos registrados para su cierre o reactivación.</p>
 
             <div class="bg-slate-900/80 p-3.5 rounded-2xl border border-slate-800 shadow-sm">
                 <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">🎯 Seleccionar Sondaje (Activos y Culminados):</label>
@@ -842,7 +817,7 @@
             </div>
 
             <div class="bg-slate-900/80 p-3.5 rounded-2xl border border-slate-800 shadow-sm">
-                <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">🎯 Seleccionar Sondaje en Repositorio (Activos y Culminados):</label>
+                <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">🎯 Seleccionar Sondaje en Repositorio:</label>
                 <select id="wellSelectRepositorio" onchange="seleccionarPozoRepositorio(this.value)" class="input-field w-full px-3.5 text-sm font-bold text-white">
                     <option value="">-- Seleccione un Sondaje --</option>
                 </select>
@@ -864,17 +839,15 @@
                     </div>
                 </div>
 
-                <!-- ÁREA IMPRIMIBLE DSR DE ALTA GAMA -->
+                <!-- ÁREA IMPRIMIBLE DSR -->
                 <div id="printable-area" class="bg-white p-6 rounded-2xl border border-slate-200 space-y-4 text-xs text-slate-900 shadow-xl relative overflow-hidden">
                     
-                    <!-- MEMBRETE ANCLADO AL BORDE SUPERIOR Y CON LOGO PROPORCIONAL REESCALADO -->
-                    <div class="page-header-membrete-print border-b-2 border-slate-900 pb-3 flex justify-between items-center flex-wrap gap-3">
+                    <!-- MEMBRETE FIJO AL BORDE SUPERIOR EN IMPRESIÓN -->
+                    <div class="page-header-membrete-print border-b-2 border-slate-900 pb-3 flex justify-between items-center flex-wrap gap-3 px-6 pt-4">
                         <div class="flex items-center gap-3">
-                            <div class="logo-jj-badge" style="width: 48px; height: 48px; border-radius: 0.5rem;"></div>
+                            <div class="logo-jj-badge" style="width: 46px; height: 46px; border-radius: 0.5rem;"></div>
                             <div>
-                                <h3 class="text-sm font-black text-slate-900 uppercase tracking-tight" id="repTituloPrincipalDSR">
-                                    REPORTE DE TURNO
-                                </h3>
+                                <h3 class="text-sm font-black text-slate-900 uppercase tracking-tight" id="repTituloPrincipalDSR">REPORTE DE TURNO</h3>
                                 <p class="text-[9px] text-slate-600 font-extrabold uppercase">COMPLEJO JIRETH C.A. — COORDINACIÓN DE GEOLOGÍA</p>
                             </div>
                         </div>
@@ -884,96 +857,95 @@
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-4 gap-2 avoid-break pt-1">
-                        <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 shadow-sm">
-                            <p class="text-[9px] text-slate-500 uppercase font-black">PROF. PERFORADA</p>
-                            <p class="text-xs font-black text-slate-900 font-mono-code mt-0.5" id="repMetrajeTotal">0.00 m</p>
-                            <p class="text-[9px] text-slate-500 font-bold" id="repTargetSub">Target: 0.00 m</p>
+                    <div class="printable-content-body space-y-4 pt-2">
+                        <div class="grid grid-cols-4 gap-2 avoid-break">
+                            <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 shadow-sm">
+                                <p class="text-[9px] text-slate-500 uppercase font-black">PROF. PERFORADA</p>
+                                <p class="text-xs font-black text-slate-900 font-mono-code mt-0.5" id="repMetrajeTotal">0.00 m</p>
+                                <p class="text-[9px] text-slate-500 font-bold" id="repTargetSub">Target: 0.00 m</p>
+                            </div>
+                            <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 shadow-sm">
+                                <p class="text-[9px] text-slate-500 uppercase font-black">RECUPERACIÓN</p>
+                                <p class="text-xs font-black text-slate-900 font-mono-code mt-0.5" id="repRecPromedio">0.0%</p>
+                                <p class="text-[9px] text-slate-500 font-bold">Muestra en Testigo</p>
+                            </div>
+                            <div class="bg-slate-100 p-2.5 rounded-xl border border-slate-200 shadow-sm">
+                                <p class="text-[9px] text-slate-700 uppercase font-black">METROS A PAGAR</p>
+                                <p class="text-xs font-black text-slate-950 font-mono-code mt-0.5" id="repMetrosPagoTotal">0.00 m</p>
+                                <p class="text-[9px] text-slate-700 font-bold">Según Estándar</p>
+                            </div>
+                            <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 shadow-sm">
+                                <p class="text-[9px] text-slate-500 uppercase font-black">AVANCE GENERAL</p>
+                                <p class="text-xs font-black text-slate-900 font-mono-code mt-0.5" id="repAvanceGen">0.0%</p>
+                                <p class="text-[9px] text-slate-500 font-bold">Progreso Pozo</p>
+                            </div>
                         </div>
-                        <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 shadow-sm">
-                            <p class="text-[9px] text-slate-500 uppercase font-black">RECUPERACIÓN</p>
-                            <p class="text-xs font-black text-slate-900 font-mono-code mt-0.5" id="repRecPromedio">0.0%</p>
-                            <p class="text-[9px] text-slate-500 font-bold">Muestra en Testigo</p>
+
+                        <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs avoid-break shadow-sm">
+                            <div class="space-y-1">
+                                <p class="text-slate-900 font-black uppercase text-[11px] tracking-wider border-b border-slate-200 pb-0.5">DATOS DE PERFORACIÓN Y UBICACIÓN</p>
+                                <div><b>Zona / Proyecto:</b> <span id="repProyecto" class="text-slate-800 font-bold">--</span></div>
+                                <div><b>Empresa Perforadora:</b> <span id="repEmpresa" class="text-slate-800 font-bold">--</span></div>
+                                <div><b>Máquina:</b> <span id="repMaquina" class="text-slate-800 font-semibold">--</span></div>
+                                <div><b>Coordenada Este:</b> <span id="repEste" class="font-mono-code text-slate-800">--</span></div>
+                                <div><b>Coordenada Norte:</b> <span id="repNorte" class="font-mono-code text-slate-800">--</span></div>
+                                <div><b>Cota Z (m):</b> <span id="repCota" class="font-mono-code text-slate-800">--</span></div>
+                            </div>
+                            <div class="space-y-1">
+                                <p class="text-slate-900 font-black uppercase text-[11px] tracking-wider border-b border-slate-200 pb-0.5">SUPERVISIÓN Y DIÁMETROS</p>
+                                <div><b>Inclinación (Dip) / Azimut:</b> <span id="repDipAzimut" class="font-mono-code text-slate-800">--</span></div>
+                                <div><b>Operador Perforadora:</b> <span id="repPerforadorTurno" class="text-slate-800 font-bold">--</span></div>
+                                <div><b>Geólogo Responsable:</b> <span id="repGeologoTurno" class="text-slate-800 font-bold">--</span></div>
+                                <div><b>Metros HQ / NQ:</b> <span id="repMetrosHQRep" class="font-mono-code text-slate-800 font-bold">0.00m</span> / <span id="repMetrosNQRep" class="font-mono-code text-slate-700 font-bold">0.00m</span></div>
+                                <div><b>Estado Sondaje:</b> <span id="repEstadoPozo" class="font-bold text-slate-900">--</span></div>
+                            </div>
                         </div>
-                        <div class="bg-slate-100 p-2.5 rounded-xl border border-slate-200 shadow-sm">
-                            <p class="text-[9px] text-slate-700 uppercase font-black">METROS A PAGAR</p>
-                            <p class="text-xs font-black text-slate-950 font-mono-code mt-0.5" id="repMetrosPagoTotal">0.00 m</p>
-                            <p class="text-[9px] text-slate-700 font-bold">Según Estándar</p>
+
+                        <!-- PERFIL 2D CLARO PARA REPORTE -->
+                        <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-1.5 avoid-break shadow-sm">
+                            <p class="text-[11px] font-black text-slate-900 uppercase tracking-wider" id="repTituloPerfil2D">📐 Perfil Topográfico 2D & Log Litológico:</p>
+                            <div class="flex justify-center bg-white p-2.5 rounded-lg border border-slate-200">
+                                <canvas id="canvasReporte2D" width="800" height="260" class="max-w-full h-auto bg-white rounded"></canvas>
+                            </div>
                         </div>
-                        <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 shadow-sm">
-                            <p class="text-[9px] text-slate-500 uppercase font-black">AVANCE GENERAL</p>
-                            <p class="text-xs font-black text-slate-900 font-mono-code mt-0.5" id="repAvanceGen">0.0%</p>
-                            <p class="text-[9px] text-slate-500 font-bold">Progreso Pozo</p>
+
+                        <div>
+                            <h4 class="text-[11px] font-black text-slate-900 uppercase tracking-wider mb-1.5">🪵 REGISTRO DETALLADO TRAMO A TRAMO (CON ESTÁNDAR DE PAGO)</h4>
+                            <div class="overflow-x-auto border border-slate-300 rounded-xl shadow-sm">
+                                <table class="w-full text-left text-xs border-collapse">
+                                    <thead class="bg-slate-900 text-white uppercase font-black border-b border-slate-400">
+                                        <tr>
+                                            <th class="p-2 border-r border-slate-700">Corrida</th>
+                                            <th class="p-2 border-r border-slate-700">Desde</th>
+                                            <th class="p-2 border-r border-slate-700">Hasta</th>
+                                            <th class="p-2 border-r border-slate-700">Avance</th>
+                                            <th class="p-2 border-r border-slate-700">Diám</th>
+                                            <th class="p-2 border-r border-slate-700">Recup</th>
+                                            <th class="p-2 border-r border-slate-700">% Rec</th>
+                                            <th class="p-2 border-r border-slate-700">Litología</th>
+                                            <th class="p-2 text-slate-200 font-black">Pago Estándar</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="repTablaBody" class="divide-y divide-slate-200 font-mono-code text-slate-900"></tbody>
+                                </table>
+                            </div>
                         </div>
+
+                        <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-1 avoid-break shadow-sm">
+                            <p class="text-[11px] font-black text-slate-900 uppercase tracking-wider">📝 Observación y Operaciones Principales:</p>
+                            <p class="text-slate-800 text-xs uppercase font-semibold leading-relaxed" id="repObservacionesTexto">SIN NOVEDADES REGISTRADAS.</p>
+                            <p class="text-slate-600 text-xs mt-0.5 font-bold" id="repMotivoCierreBox"></p>
+                        </div>
+
+                        <div class="pt-4 border-t-2 border-slate-200 text-xs text-slate-800 avoid-break" id="contenedorFirmasDSR"></div>
                     </div>
 
-                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs avoid-break shadow-sm">
-                        <div class="space-y-1">
-                            <p class="text-slate-900 font-black uppercase text-[11px] tracking-wider border-b border-slate-200 pb-0.5">DATOS DE PERFORACIÓN Y UBICACIÓN</p>
-                            <div><b>Zona / Proyecto:</b> <span id="repProyecto" class="text-slate-800 font-bold">--</span></div>
-                            <div><b>Empresa Perforadora:</b> <span id="repEmpresa" class="text-slate-800 font-bold">--</span></div>
-                            <div><b>Máquina:</b> <span id="repMaquina" class="text-slate-800 font-semibold">--</span></div>
-                            <div><b>Coordenada Este:</b> <span id="repEste" class="font-mono-code text-slate-800">--</span></div>
-                            <div><b>Coordenada Norte:</b> <span id="repNorte" class="font-mono-code text-slate-800">--</span></div>
-                            <div><b>Cota Z (m):</b> <span id="repCota" class="font-mono-code text-slate-800">--</span></div>
-                        </div>
-                        <div class="space-y-1">
-                            <p class="text-slate-900 font-black uppercase text-[11px] tracking-wider border-b border-slate-200 pb-0.5">SUPERVISIÓN Y DIÁMETROS</p>
-                            <div><b>Inclinación (Dip) / Azimut:</b> <span id="repDipAzimut" class="font-mono-code text-slate-800">--</span></div>
-                            <div><b>Operador Perforadora:</b> <span id="repPerforadorTurno" class="text-slate-800 font-bold">--</span></div>
-                            <div><b>Geólogo Responsable:</b> <span id="repGeologoTurno" class="text-slate-800 font-bold">--</span></div>
-                            <div><b>Metros HQ / NQ:</b> <span id="repMetrosHQRep" class="font-mono-code text-slate-800 font-bold">0.00m</span> / <span id="repMetrosNQRep" class="font-mono-code text-slate-700 font-bold">0.00m</span></div>
-                            <div><b>Estado Sondaje:</b> <span id="repEstadoPozo" class="font-bold text-slate-900">--</span></div>
-                        </div>
-                    </div>
-
-                    <!-- VISUALIZADOR DE PERFIL 2D FILTRADO EN REPORTE DSR -->
-                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-1.5 avoid-break shadow-sm">
-                        <p class="text-[11px] font-black text-slate-900 uppercase tracking-wider" id="repTituloPerfil2D">📐 Perfil Topográfico 2D & Log Litológico (Tramos del Turno):</p>
-                        <div class="flex justify-center bg-slate-950 p-2.5 rounded-lg">
-                            <canvas id="canvasReporte2D" width="800" height="260" class="max-w-full h-auto bg-slate-950 rounded"></canvas>
-                        </div>
-                    </div>
-
-                    <!-- TABLA DE TRAMOS CON ENCABEZADO QUE SE REPITE INMEDIATAMENTE DEBAJO DEL CINTILLO -->
-                    <div>
-                        <h4 class="text-[11px] font-black text-slate-900 uppercase tracking-wider mb-1.5">🪵 REGISTRO DETALLADO TRAMO A TRAMO (CON ESTÁNDAR DE PAGO)</h4>
-                        <div class="overflow-x-auto border border-slate-300 rounded-xl shadow-sm">
-                            <table class="w-full text-left text-xs border-collapse">
-                                <thead class="bg-slate-900 text-white uppercase font-black border-b border-slate-400">
-                                    <tr>
-                                        <th class="p-2 border-r border-slate-700">Corrida</th>
-                                        <th class="p-2 border-r border-slate-700">Desde</th>
-                                        <th class="p-2 border-r border-slate-700">Hasta</th>
-                                        <th class="p-2 border-r border-slate-700">Avance</th>
-                                        <th class="p-2 border-r border-slate-700">Diám</th>
-                                        <th class="p-2 border-r border-slate-700">Recup</th>
-                                        <th class="p-2 border-r border-slate-700">% Rec</th>
-                                        <th class="p-2 border-r border-slate-700">Litología</th>
-                                        <th class="p-2 text-slate-200 font-black">Pago Estándar</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="repTablaBody" class="divide-y divide-slate-200 font-mono-code text-slate-900"></tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-1 avoid-break shadow-sm">
-                        <p class="text-[11px] font-black text-slate-900 uppercase tracking-wider">📝 Observación y Operaciones Principales del Turno:</p>
-                        <p class="text-slate-800 text-xs uppercase font-semibold leading-relaxed" id="repObservacionesTexto">SIN NOVEDADES REGISTRADAS.</p>
-                        <p class="text-slate-600 text-xs mt-0.5 font-bold" id="repMotivoCierreBox"></p>
-                    </div>
-
-                    <!-- ESTANDARIZACIÓN DE FIRMAS Y DATOS NOMINALES -->
-                    <div class="pt-4 border-t-2 border-slate-200 text-xs text-slate-800 avoid-break" id="contenedorFirmasDSR"></div>
-
-                    <!-- PAGINACIÓN IMPRESA EN PIE DE PÁGINA -->
                     <div class="print-footer-pagination hidden print:block"></div>
                 </div>
             </div>
         </section>
 
-        <!-- MÓDULO 6: ADMIN -->
+        <!-- MÓDULO ADMIN -->
         <section id="mod6" class="hidden space-y-4 card-pro p-5 sm:p-6">
             <h2 class="text-xl font-black text-white tracking-tight">⚙️ Módulo: Administración, Respaldos & Seguridad</h2>
             
@@ -1080,9 +1052,7 @@
             if (syncQueue.length > 0) {
                 badge.innerText = `⏳ ${syncQueue.length} Pendientes`;
                 badge.classList.remove('hidden');
-            } else {
-                badge.classList.add('hidden');
-            }
+            } else { badge.classList.add('hidden'); }
         }
 
         function marcarModoOfflineVisual() {
@@ -1094,7 +1064,6 @@
         }
 
         window.addEventListener('offline', () => marcarModoOfflineVisual());
-
         window.addEventListener('online', async () => {
             const indRed = document.getElementById('indicadorRed');
             if (indRed) {
@@ -1244,7 +1213,6 @@
             return pct >= umbral ? lonManiobra : rec;
         }
 
-        /* LÓGICA REESTRUCTURADA Y CONDICIONAL DE LA SALA SITUACIONAL */
         function renderizarSalaSituacional() {
             const grid = document.getElementById('gridSalaSituacional');
             const contador = document.getElementById('contadorFrentesActivos');
@@ -1263,7 +1231,6 @@
             if (selPerfilSala) {
                 let valActual = selPerfilSala.value;
                 selPerfilSala.innerHTML = '<option value="">-- Seleccionar Sondaje a Visualizar --</option>';
-                
                 let pozosParaPerfil = pozosActivosKeys.length > 0 ? pozosActivosKeys : pozosKeys;
                 pozosParaPerfil.forEach(k => {
                     let opt = document.createElement('option');
@@ -1275,7 +1242,6 @@
             }
 
             if (pozosActivosKeys.length === 0) {
-                /* CONDICIONAL: SI NO HAY POZOS ACTIVOS, ACTIVAR FILTRO POR EMPRESA PARA CULMINADOS */
                 boxCulminados.classList.remove('hidden');
                 filtrarPozosCulminadosPorEmpresa();
                 document.getElementById('macroTotalMetros').innerText = "0.00 m";
@@ -1292,14 +1258,12 @@
                 let p = pozosData[k];
                 let metPozo = 0, recPozoAcc = 0, pagPozoAcc = 0;
                 let targetPozo = parseFloat(p.target) || 100.0;
-                
                 if (p.avances) {
                     p.avances.forEach(t => {
                         let met = parseFloat(t.hasta) - parseFloat(t.desde);
                         metPozo += met;
                         recPozoAcc += parseFloat(t.recuperado) || 0;
-                        let lonM = met;
-                        let pag = t.pagoEstandar ? parseFloat(t.pagoEstandar) : calcularMetrosAPagar(lonM, parseFloat(t.recuperado), t.meteorizacion);
+                        let pag = t.pagoEstandar ? parseFloat(t.pagoEstandar) : calcularMetrosAPagar(met, parseFloat(t.recuperado), t.meteorizacion);
                         pagPozoAcc += pag;
                     });
                 }
@@ -1359,7 +1323,6 @@
             const selPozoCul = document.getElementById('salaSelectPozoCulminado');
             if (!selPozoCul) return;
             selPozoCul.innerHTML = '<option value="">-- Seleccione un Pozo Culminado --</option>';
-
             if (!empSel) return;
 
             let culminados = Object.keys(pozosData).filter(k => pozosData[k].empresa === empSel && pozosData[k].estado === 'CULMINADO');
@@ -1380,7 +1343,6 @@
             renderizarPerfilSalaSituacionalCompleto();
         }
 
-        /* RENDERIZADO VERTICAL Y PROTAGONISTA DEL PERFIL 2D */
         function renderizarPerfilSalaSituacionalCompleto() {
             const canvas = document.getElementById('canvasSalaSituacionalGrande');
             if (!canvas) return;
@@ -1403,7 +1365,7 @@
             }
 
             let p = pozosData[pozoKey];
-            dibujarPerfilEnCanvasVertical(ctx, p, w, h, p.avances);
+            dibujarPerfilEnCanvasVertical(ctx, p, w, h, p.avances, false);
         }
 
         function irARepositorioSondaje(codigo) {
@@ -1438,7 +1400,6 @@
             const sel = document.getElementById('m1_selectSelector');
             if (!sel) return;
             sel.innerHTML = '<option value="">-- Seleccione un Pozo Activo o Registrar Nuevo --</option>';
-            
             Object.keys(pozosData).forEach(k => {
                 let p = pozosData[k];
                 if (p.estado === 'ABIERTO') {
@@ -1448,13 +1409,11 @@
                     sel.appendChild(opt);
                 }
             });
-
             let optNuevo = document.createElement('option');
             optNuevo.value = "REGISTRAR_NUEVO";
             optNuevo.text = "➕ Registrar Nuevo Sondaje";
             optNuevo.className = "font-black text-white bg-slate-900";
             sel.appendChild(optNuevo);
-
             document.getElementById('m1_formularioNuevoPozo').classList.add('hidden');
         }
 
@@ -1478,7 +1437,7 @@
         }
 
         async function crearPozo() {
-            if (perfilActual === 'GERENCIA') { alert("⚠️ Perfil de Gerencia: Solo lectura."); return; }
+            if (perfilActual === 'GERENCIA') return;
             let codigo = document.getElementById('m1_codigo').value.trim().toUpperCase();
             let empresa = document.getElementById('m1_empresa').value;
             if (empresa === 'OTRA') empresa = document.getElementById('m1_otra_empresa').value.trim().toUpperCase();
@@ -1494,7 +1453,6 @@
             refrescarSelectoresOperativos();
             refrescarSelectorModuloUno();
             poblarSelectTopografia();
-
             cargarDatosPozoEnFormularios(codigo);
             showToast("Sondaje Creado", "Sondaje " + codigo + " registrado con éxito.");
             switchTab('mod2');
@@ -1583,7 +1541,7 @@
             p.target = document.getElementById('m2_target').value || '';
 
             await guardarYPersistirTodo();
-            showToast("Topografía Guardada", "Datos topográficos actualizados correctamente.");
+            showToast("Topografía Guardada", "Datos actualizados correctamente.");
             document.getElementById('m2_btn_box').classList.add('hidden');
             ['m2_maquina', 'm2_este', 'm2_norte', 'm2_cota', 'm2_azimut', 'm2_dip', 'm2_target', 'm2_otra_maquina'].forEach(id => {
                 let el = document.getElementById(id);
@@ -1819,7 +1777,6 @@
             }
         }
 
-        /* CARGAR TURNO PARA EDITAR CON AUTO-SCROLL Y NOTIFICACIÓN VISUAL */
         function cargarTurnoParaEditar() {
             let id = document.getElementById('selectRetomarTurno').value;
             if (!id || !turnosData[id]) { alert("⚠️ Seleccione un turno del historial."); return; }
@@ -1879,7 +1836,7 @@
             localStorage.setItem('jireth_turnos', JSON.stringify(turnosData));
 
             await guardarYPersistirTodo();
-            showToast("Turno Finalizado", "Turno guardado y cerrado en el sistema.");
+            showToast("Turno Finalizado", "Turno guardado y cerrado.");
             turnoActivoObj = null;
             localStorage.removeItem('jireth_turno_activo');
             document.getElementById('lblInfoTurno').innerText = "--";
@@ -1922,7 +1879,7 @@
             contenedor.classList.remove('hidden');
 
             document.getElementById('inspTurnoTitulo').innerText = `📅 ${t.fecha} (${t.jornada}) | Sondaje: ${t.pozo} | Perf: ${t.perforador} | Geo: ${t.geologo}`;
-            document.getElementById('inspTurnoObs').innerText = `📝 Observaciones: ${t.observaciones || 'Sin observaciones registradas en este turno.'}`;
+            document.getElementById('inspTurnoObs').innerText = `📝 Observaciones: ${t.observaciones || 'Sin observaciones registradas.'}`;
 
             let tbody = document.getElementById('inspTablaAvancesBody');
             tbody.innerHTML = '';
@@ -1938,7 +1895,7 @@
                 tbody.appendChild(tr);
             });
 
-            if (tramosturno.length === 0) tbody.innerHTML = `<tr><td colspan="7" class="p-3 text-center text-slate-500 font-bold">No hay tramos de avance registrados en este turno.</td></tr>`;
+            if (tramosturno.length === 0) tbody.innerHTML = `<tr><td colspan="7" class="p-3 text-center text-slate-500 font-bold">No hay tramos registrados en este turno.</td></tr>`;
             document.getElementById('inspTurnoMetraje').innerText = `${totalMetrosTurno.toFixed(2)} m perforados (${tramosturno.length} tramos)`;
         }
 
@@ -1951,7 +1908,7 @@
             localStorage.setItem('jireth_pozo_activo', pozoActivoId);
             cargarDatosPozoEnFormularios(pozoActivoId);
             actualizarBannerTurnoActivo();
-            showToast("Turno Retomado", "Modo logging activo para el turno seleccionado.", "▶️");
+            showToast("Turno Retomado", "Modo logging activo para el turno.", "▶️");
             switchTab('mod3_logging');
         }
 
@@ -1968,12 +1925,10 @@
             verificarAjustarLockDiametro(p);
         }
 
-        /* CONTROL GEOMÉTRICO: FIJACIÓN AUTOMÁTICA DE DIÁMETRO NQ */
         function verificarAjustarLockDiametro(p) {
             const selDiam = document.getElementById('m3_diametro');
             const notaLock = document.getElementById('lblNotaLockDiametro');
             if (!selDiam || !p || !p.avances) return;
-
             let tieneNQPrevio = p.avances.some(t => t.diametro === 'NQ');
             if (tieneNQPrevio) {
                 selDiam.value = 'NQ';
@@ -1986,17 +1941,16 @@
         }
 
         function validarGeometriaTramo(p, desde, hasta, idxExcluir = null) {
-            if (desde >= hasta) return { valido: false, mensaje: "❌ Error Geométrico: 'Hasta' debe ser strictly mayor que 'Desde'." };
-            if (desde < 0) return { valido: false, mensaje: "❌ Error Geométrico: 'Desde' no puede ser negativo." };
+            if (desde >= hasta) return { valido: false, mensaje: "❌ Error: 'Hasta' debe ser mayor que 'Desde'." };
+            if (desde < 0) return { valido: false, mensaje: "❌ Error: 'Desde' no puede ser negativo." };
 
             for (let i = 0; i < p.avances.length; i++) {
                 if (idxExcluir !== null && i === idxExcluir) continue;
                 let t = p.avances[i];
                 let tDesde = parseFloat(t.desde);
                 let tHasta = parseFloat(t.hasta);
-
                 if ((desde >= tDesde && desde < tHasta) || (hasta > tDesde && hasta <= tHasta) || (desde <= tDesde && hasta >= tHasta)) {
-                    return { valido: false, mensaje: `❌ Solapamiento de Tramo: El metraje (${desde.toFixed(2)}m - ${hasta.toFixed(2)}m) cruza con el tramo #${i+1} (${tDesde.toFixed(2)}m - ${tHasta.toFixed(2)}m).` };
+                    return { valido: false, mensaje: `❌ Solapamiento: El tramo (${desde.toFixed(2)}-${hasta.toFixed(2)}m) cruza con el tramo #${i+1} (${tDesde.toFixed(2)}-${tHasta.toFixed(2)}m).` };
                 }
             }
             return { valido: true };
@@ -2005,7 +1959,7 @@
         async function guardarAvance() {
             if (perfilActual === 'GERENCIA') return;
             if (!pozoActivoId || !pozosData[pozoActivoId]) { alert("⚠️ Seleccione un sondaje."); switchTab('mod1'); return; }
-            if (!turnoActivoObj) { alert("⚠️ Debe iniciar o retomar un turno antes de registrar avances."); switchTab('mod3_turno'); return; }
+            if (!turnoActivoObj) { alert("⚠️ Debe iniciar o retomar un turno."); switchTab('mod3_turno'); return; }
 
             let p = pozosData[pozoActivoId];
             let desde = parseFloat(document.getElementById('m3_desde').value);
@@ -2038,7 +1992,7 @@
                 indexEditandoAvance = null;
                 document.getElementById('btnGuardarAvance').innerText = "➕ Guardar Avance Tramo";
                 document.getElementById('btnCancelarEdicion').classList.add('hidden');
-                showToast("Tramo Actualizado", "Los cambios del tramo fueron guardados.");
+                showToast("Tramo Actualizado", "Modificaciones guardadas.");
             } else { 
                 p.avances.push(objTramo);
                 showToast("Tramo Guardado", "Maniobra registrada exitosamente.");
@@ -2090,7 +2044,7 @@
             document.getElementById('btnGuardarAvance').innerText = "💾 Actualizar Tramo #" + (idx + 1);
             document.getElementById('btnCancelarEdicion').classList.remove('hidden');
             scrollToElement('boxFormAvance');
-            showToast("Modo Edición Tramo", "Cargado tramo #" + (idx + 1) + " para modificación.", "✏️");
+            showToast("Modo Edición Tramo", "Cargado tramo #" + (idx + 1) + ".", "✏️");
         }
 
         function cancelarEdicionAvance() {
@@ -2110,7 +2064,7 @@
                 verificarAjustarLockDiametro(pozosData[pozoActivoId]);
                 renderizarPerfil2D();
                 autoCalcularHasta();
-                showToast("Tramo Eliminado", "Tramo removido del registro.", "🗑️");
+                showToast("Tramo Eliminado", "Removido del registro.", "🗑️");
             }
         }
 
@@ -2123,8 +2077,7 @@
             p.avances.forEach(t => {
                 let met = parseFloat(t.hasta) - parseFloat(t.desde);
                 let rec = parseFloat(t.recuperado) || 0;
-                let lonM = met;
-                let pago = t.pagoEstandar ? parseFloat(t.pagoEstandar) : calcularMetrosAPagar(lonM, rec, t.meteorizacion);
+                let pago = t.pagoEstandar ? parseFloat(t.pagoEstandar) : calcularMetrosAPagar(met, rec, t.meteorizacion);
                 totalMetros += met;
                 totalRecuperado += rec;
                 totalPago += pago;
@@ -2156,7 +2109,6 @@
             document.getElementById('barPendiente').style.width = pPend + '%';
         }
 
-        /* RENDERIZADO VERTICAL PROTAGONISTA DEL PERFIL 2D EN CANVAS */
         function renderizarPerfil2D() {
             const canvas = document.getElementById('canvasPerfil2D');
             if (!canvas) return;
@@ -2176,28 +2128,33 @@
             }
 
             let p = pozosData[pozoActivoId];
-            dibujarPerfilEnCanvasVertical(ctx, p, w, h, p.avances);
+            dibujarPerfilEnCanvasVertical(ctx, p, w, h, p.avances, false);
         }
 
-        function dibujarPerfilEnCanvasVertical(ctx, p, w, h, listaTramos = null) {
+        /* MOTOR COMPATIBLE CON PANTALLA (DARK) Y REPORTE (LIGHT CLARO SIN FONDO NEGRO) */
+        function dibujarPerfilEnCanvasVertical(ctx, p, w, h, listaTramos = null, esReporte = false) {
             let dipVal = Math.abs(parseFloat(p.dip) || 90);
             let dipRad = (dipVal * Math.PI) / 180;
             let targetNum = parseFloat(p.target) || 100.0;
+
+            if (esReporte) {
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, w, h);
+            }
 
             let startX = w / 2;
             let startY = 40;
             let maxDrawHeight = h - 80;
             let scale = maxDrawHeight / Math.max(targetNum, 20);
 
-            /* LÍNEA DE SUPERFICIE */
-            ctx.strokeStyle = '#334155';
+            ctx.strokeStyle = esReporte ? '#cbd5e1' : '#334155';
             ctx.lineWidth = 2;
             ctx.beginPath();
             ctx.moveTo(30, startY);
             ctx.lineTo(w - 30, startY);
             ctx.stroke();
 
-            ctx.fillStyle = '#94a3b8';
+            ctx.fillStyle = esReporte ? '#475569' : '#94a3b8';
             ctx.font = 'bold 10px "JetBrains Mono"';
             ctx.textAlign = 'center';
             ctx.fillText('SUPERFICIE (z=' + (p.cota || '0m') + ') | DIP: -' + dipVal + '° | AZ: ' + (p.azimut || '0') + '°', w / 2, startY - 10);
@@ -2205,8 +2162,7 @@
             let endX = startX + Math.cos(dipRad) * targetNum * scale * 0.3;
             let endY = startY + Math.sin(dipRad) * targetNum * scale;
 
-            /* TRAZA GUÍA DEL POZO */
-            ctx.strokeStyle = '#1e293b';
+            ctx.strokeStyle = esReporte ? '#e2e8f0' : '#1e293b';
             ctx.lineWidth = 10;
             ctx.lineCap = 'round';
             ctx.beginPath();
@@ -2246,12 +2202,12 @@
                     ctx.stroke();
 
                     if (idx % 2 === 0 || tramosARenderizar.length <= 10) {
-                        ctx.fillStyle = '#f8fafc';
+                        ctx.fillStyle = esReporte ? '#0f172a' : '#f8fafc';
                         ctx.font = '9px "JetBrains Mono"';
                         ctx.textAlign = 'left';
                         ctx.fillText(`${hTramo.toFixed(1)}m (${av.porcentaje}%)`, segEndX + 16, segEndY + 3);
 
-                        ctx.strokeStyle = 'rgba(148, 163, 184, 0.4)';
+                        ctx.strokeStyle = esReporte ? 'rgba(15, 23, 42, 0.4)' : 'rgba(148, 163, 184, 0.4)';
                         ctx.lineWidth = 1;
                         ctx.beginPath();
                         ctx.moveTo(segEndX, segEndY);
@@ -2261,18 +2217,17 @@
                 });
             }
 
-            /* BOCA DEL POZO */
             ctx.fillStyle = '#ef4444';
             ctx.beginPath();
             ctx.arc(startX, startY, 5, 0, Math.PI * 2);
             ctx.fill();
 
             let metAcum = tramosARenderizar ? tramosARenderizar.reduce((acc, curr) => acc + (parseFloat(curr.hasta) - parseFloat(curr.desde)), 0) : 0;
-            ctx.fillStyle = '#38bdf8';
+            ctx.fillStyle = esReporte ? '#0284c7' : '#38bdf8';
             ctx.font = 'bold 12px "Plus Jakarta Sans"';
             ctx.textAlign = 'right';
             ctx.fillText(p.codigo, w - 20, 25);
-            ctx.fillStyle = '#f8fafc';
+            ctx.fillStyle = esReporte ? '#0f172a' : '#f8fafc';
             ctx.font = '10px "JetBrains Mono"';
             ctx.fillText(`Profundidad: ${metAcum.toFixed(2)}m`, w - 20, 42);
         }
@@ -2382,7 +2337,6 @@
             });
         }
 
-        /* GENERACIÓN DEL REPORTE DSR CON ESTANDARIZACIÓN EXACTA DE FIRMAS */
         function generarReporteDSR() {
             if (!pozoActivoId || !pozosData[pozoActivoId]) return;
             let p = pozosData[pozoActivoId];
@@ -2495,16 +2449,13 @@
                 const canvasRep = document.getElementById('canvasReporte2D');
                 if (canvasRep) {
                     const ctxR = canvasRep.getContext('2d');
-                    ctxR.fillStyle = '#020617';
-                    ctxR.fillRect(0, 0, canvasRep.width, canvasRep.height);
-                    dibujarPerfilEnCanvasVertical(ctxR, p, canvasRep.width, canvasRep.height, listaAvancesFiltrada);
+                    ctxR.clearRect(0, 0, canvasRep.width, canvasRep.height);
+                    dibujarPerfilEnCanvasVertical(ctxR, p, canvasRep.width, canvasRep.height, listaAvancesFiltrada, true);
                 }
             }, 100);
 
-            /* REGLA DE FIRMAS Y DATOS NOMINALES SEGÚN EL TIPO DE REPORTE */
             const contenedorFirmas = document.getElementById('contenedorFirmasDSR');
             if (modo === 'TURNO') {
-                /* REPORTE DE TURNO: SIN LÍNEAS DE FIRMA NI SELLOS, SOLO INFORMACIÓN NOMINAL DIRECTA */
                 contenedorFirmas.innerHTML = `
                     <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 flex justify-between items-center flex-wrap gap-2 text-slate-800">
                         <div><b>Perforador de Turno:</b> <span class="font-bold text-slate-900">${operadorTurnoTexto}</span></div>
@@ -2512,7 +2463,6 @@
                     </div>
                 `;
             } else {
-                /* REPORTE DE POZO CULMINADO / ACUMULADO: LÍNEAS ABIERTAS SIN SELLOS */
                 contenedorFirmas.innerHTML = `
                     <div class="grid grid-cols-2 gap-8 text-center pt-6">
                         <div>
@@ -2558,7 +2508,7 @@
                 poblarSelectCierre();
                 poblarSelectAdminBorrar();
                 renderizarSalaSituacional();
-                showToast("Sondaje Eliminado", "Sondaje borrado del sistema.", "🗑️");
+                showToast("Sondaje Eliminado", "Borrado del sistema.", "🗑️");
                 location.reload();
             }
         }
@@ -2623,19 +2573,13 @@
                     await procesarColaSincronizacion();
                     const { error } = await supabaseClient.from('jireth_geocore').upsert({ id: 'db_principal', payload: payloadData });
                     if (error) throw error;
-
                     const indRed = document.getElementById('indicadorRed');
                     if (indRed) {
                         indRed.innerText = "(🟢 Sincronizado En Vivo)";
                         indRed.className = "text-emerald-400 font-bold pulse-live";
                     }
-                } catch(ex) {
-                    encolarSincronizacionLocal(payloadData);
-                }
-            } else {
-                encolarSincronizacionLocal(payloadData);
-            }
-
+                } catch(ex) { encolarSincronizacionLocal(payloadData); }
+            } else { encolarSincronizacionLocal(payloadData); }
             actualizarBadgeSyncQueue();
         }
 
@@ -2651,7 +2595,6 @@
             try {
                 const ultimoCambio = syncQueue[syncQueue.length - 1];
                 const { error } = await supabaseClient.from('jireth_geocore').upsert({ id: ultimoCambio.id, payload: ultimoCambio.payload });
-
                 if (!error) {
                     syncQueue = [];
                     localStorage.setItem('jireth_sync_queue', JSON.stringify(syncQueue));
@@ -2667,7 +2610,6 @@
             }
             try {
                 await procesarColaSincronizacion();
-
                 const { data, error } = await supabaseClient.from('jireth_geocore').select('payload').eq('id', 'db_principal').maybeSingle();
                 if (error) { if (mostrarAlerta) alert("⚠️ Error de conexión con Supabase."); return; }
 
