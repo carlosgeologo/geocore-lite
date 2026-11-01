@@ -84,7 +84,6 @@
         }
         .pulse-live { animation: pulseGlow 1.8s infinite ease-in-out; }
 
-        /* LOGO RECTANGULAR NATURAL (PROPORCIÓN EXACTA SIN DEFORMACIONES) */
         .logo-img-real {
             height: 42px; width: auto; max-width: 140px; border-radius: 0.5rem; object-fit: contain;
             border: 1px solid rgba(59, 130, 246, 0.5); box-shadow: 0 4px 10px rgba(0,0,0,0.4); flex-shrink: 0;
@@ -121,11 +120,10 @@
             box-shadow: 0 2px 6px rgba(0,0,0,0.4);
         }
 
-        /* CONFIGURACIÓN ESTRICTA DE IMPRESIÓN Y PDF DSR: MÁRGENES CARTA Y MEMBRETE EN BORDE SUPERIOR */
         @media print {
             @page { 
                 size: letter portrait; 
-                margin: 15mm 12mm 15mm 12mm; 
+                margin: 10mm 10mm 12mm 10mm; 
             }
             body { 
                 background: #ffffff !important; 
@@ -167,7 +165,6 @@
             }
 
             .printable-content-body { margin-top: 0 !important; }
-
             thead { display: table-header-group !important; }
             tr { break-inside: avoid !important; page-break-inside: avoid !important; }
             .avoid-break { break-inside: avoid !important; page-break-inside: avoid !important; }
@@ -190,7 +187,7 @@
         </div>
     </div>
 
-    <!-- PANTALLA DE ACCESO (SIN SUGERENCIAS DE CONTRASEÑAS) -->
+    <!-- PANTALLA DE ACCESO -->
     <div id="pantallaLogin" class="fixed inset-0 bg-geocore-master z-50 flex items-center justify-center p-4 overflow-y-auto">
         <div class="card-pro p-6 sm:p-8 rounded-3xl w-full max-w-md space-y-6 relative overflow-hidden my-auto text-white">
             <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-sky-500 via-indigo-500 to-sky-500 laser-line"></div>
@@ -423,11 +420,11 @@
                     </div>
                 </div>
 
-                <!-- VISUALIZADOR 2D OPTIMIZADO VERTICAL HD -->
+                <!-- VISUALIZADOR 2D OPTIMIZADO VERTICAL HD (CON ZOOM MÁXIMO Y LEYENDA LATERAL) -->
                 <div class="bg-slate-900/80 p-4 rounded-2xl border border-slate-800 space-y-3 shadow-sm pt-4">
                     <div class="flex justify-between items-center flex-wrap gap-2">
                         <h3 class="text-xs font-black text-white uppercase tracking-wider flex items-center gap-2">
-                            <span>📐 Visualizador de Perfil 2D & Log Litológico (Sala Situacional - HD Vertical)</span>
+                            <span>📐 Visualizador de Perfil 2D & Log Litológico (Sala Situacional - Zoom HD Vertical)</span>
                         </h3>
                         <div class="flex items-center gap-2">
                             <select id="selectPozoPerfilSala" onchange="renderizarPerfilSalaSituacionalCompleto()" class="input-field px-3 py-1.5 text-xs font-bold text-white">
@@ -436,17 +433,22 @@
                         </div>
                     </div>
                     
-                    <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 overflow-x-auto shadow-inner flex justify-center">
-                        <canvas id="canvasSalaSituacionalGrande" width="950" height="750" class="max-w-full h-auto bg-slate-950 rounded-lg shadow-md"></canvas>
-                    </div>
-
-                    <div class="flex flex-wrap justify-center gap-2 pt-2 border-t border-slate-800/80">
-                        <span class="pill-badge"><b class="w-2.5 h-2.5 rounded-full bg-yellow-200 inline-block"></b> Suelo / Saprolita</span>
-                        <span class="pill-badge"><b class="w-2.5 h-2.5 rounded-full bg-amber-600 inline-block"></b> Saprock</span>
-                        <span class="pill-badge"><b class="w-2.5 h-2.5 rounded-full bg-orange-500 inline-block"></b> Roca Oxidada</span>
-                        <span class="pill-badge"><b class="w-2.5 h-2.5 rounded-full bg-sky-400 inline-block"></b> Roca Fracturada</span>
-                        <span class="pill-badge"><b class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></b> Roca Fresca</span>
-                        <span class="pill-badge"><b class="w-2.5 h-2.5 rounded-full bg-yellow-400 inline-block"></b> Zona de Veta</span>
+                    <div class="grid grid-cols-1 lg:grid-cols-4 gap-3 items-start">
+                        <div class="lg:col-span-3 bg-slate-950 p-3 rounded-xl border border-slate-800 overflow-x-auto shadow-inner flex justify-center">
+                            <canvas id="canvasSalaSituacionalGrande" width="980" height="780" class="max-w-full h-auto bg-slate-950 rounded-lg shadow-md"></canvas>
+                        </div>
+                        <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2 text-xs">
+                            <p class="text-[11px] font-black text-sky-400 uppercase tracking-wider border-b border-slate-800 pb-1">🎨 Convención Litológica / Meteorización</p>
+                            <div class="space-y-1.5 pt-1">
+                                <div class="flex items-center gap-2 p-1.5 rounded bg-slate-900 border border-slate-800"><span class="w-3.5 h-3.5 rounded-full bg-yellow-200 inline-block border border-black/30"></span><span class="font-extrabold text-slate-200">Suelo / Relleno (&ge;70%)</span></div>
+                                <div class="flex items-center gap-2 p-1.5 rounded bg-slate-900 border border-slate-800"><span class="w-3.5 h-3.5 rounded-full bg-yellow-400 inline-block border border-black/30"></span><span class="font-extrabold text-slate-200">Saprolita (&ge;70%)</span></div>
+                                <div class="flex items-center gap-2 p-1.5 rounded bg-slate-900 border border-slate-800"><span class="w-3.5 h-3.5 rounded-full bg-amber-600 inline-block border border-black/30"></span><span class="font-extrabold text-slate-200">Saprock (&ge;70%)</span></div>
+                                <div class="flex items-center gap-2 p-1.5 rounded bg-slate-900 border border-slate-800"><span class="w-3.5 h-3.5 rounded-full bg-orange-500 inline-block border border-black/30"></span><span class="font-extrabold text-slate-200">Roca Oxidada (&ge;80%)</span></div>
+                                <div class="flex items-center gap-2 p-1.5 rounded bg-slate-900 border border-slate-800"><span class="w-3.5 h-3.5 rounded-full bg-sky-400 inline-block border border-black/30"></span><span class="font-extrabold text-slate-200">Roca Fracturada (&ge;70%)</span></div>
+                                <div class="flex items-center gap-2 p-1.5 rounded bg-slate-900 border border-slate-800"><span class="w-3.5 h-3.5 rounded-full bg-emerald-500 inline-block border border-black/30"></span><span class="font-extrabold text-slate-200">Roca Fresca (&ge;90%)</span></div>
+                                <div class="flex items-center gap-2 p-1.5 rounded bg-slate-900 border border-slate-800"><span class="w-3.5 h-3.5 rounded-full bg-amber-300 inline-block border border-black/30"></span><span class="font-extrabold text-slate-200">Zona de Veta (&ge;90%)</span></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -698,16 +700,30 @@
                     </div>
                 </div>
 
-                <!-- PERFIL 2D OPTIMIZADO VERTICAL HD -->
+                <!-- PERFIL 2D CON ZOOM MÁXIMO Y LEYENDA LATERAL INTEGRADA -->
                 <div class="bg-slate-900/80 p-4 rounded-2xl border border-slate-800 space-y-3 shadow-sm">
                     <div class="flex justify-between items-center flex-wrap gap-2">
                         <h3 class="text-xs font-black text-white uppercase tracking-wider flex items-center gap-2">
-                            <span>📐 Perfil Topográfico 2D & Log Litológico en Tiempo Real (HD Vertical)</span>
+                            <span>📐 Perfil Topográfico 2D & Log Litológico en Tiempo Real (Zoom HD Vertical)</span>
                         </h3>
                     </div>
                     
-                    <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 overflow-x-auto shadow-inner flex justify-center">
-                        <canvas id="canvasPerfil2D" width="900" height="750" class="max-w-full h-auto bg-slate-950 rounded-lg shadow-md"></canvas>
+                    <div class="grid grid-cols-1 lg:grid-cols-4 gap-3 items-start">
+                        <div class="lg:col-span-3 bg-slate-950 p-3 rounded-xl border border-slate-800 overflow-x-auto shadow-inner flex justify-center">
+                            <canvas id="canvasPerfil2D" width="940" height="780" class="max-w-full h-auto bg-slate-950 rounded-lg shadow-md"></canvas>
+                        </div>
+                        <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2 text-xs">
+                            <p class="text-[11px] font-black text-sky-400 uppercase tracking-wider border-b border-slate-800 pb-1">🎨 Convención Litológica / Meteorización</p>
+                            <div class="space-y-1.5 pt-1">
+                                <div class="flex items-center gap-2 p-1.5 rounded bg-slate-900 border border-slate-800"><span class="w-3.5 h-3.5 rounded-full bg-yellow-200 inline-block border border-black/30"></span><span class="font-extrabold text-slate-200">Suelo / Relleno (&ge;70%)</span></div>
+                                <div class="flex items-center gap-2 p-1.5 rounded bg-slate-900 border border-slate-800"><span class="w-3.5 h-3.5 rounded-full bg-yellow-400 inline-block border border-black/30"></span><span class="font-extrabold text-slate-200">Saprolita (&ge;70%)</span></div>
+                                <div class="flex items-center gap-2 p-1.5 rounded bg-slate-900 border border-slate-800"><span class="w-3.5 h-3.5 rounded-full bg-amber-600 inline-block border border-black/30"></span><span class="font-extrabold text-slate-200">Saprock (&ge;70%)</span></div>
+                                <div class="flex items-center gap-2 p-1.5 rounded bg-slate-900 border border-slate-800"><span class="w-3.5 h-3.5 rounded-full bg-orange-500 inline-block border border-black/30"></span><span class="font-extrabold text-slate-200">Roca Oxidada (&ge;80%)</span></div>
+                                <div class="flex items-center gap-2 p-1.5 rounded bg-slate-900 border border-slate-800"><span class="w-3.5 h-3.5 rounded-full bg-sky-400 inline-block border border-black/30"></span><span class="font-extrabold text-slate-200">Roca Fracturada (&ge;70%)</span></div>
+                                <div class="flex items-center gap-2 p-1.5 rounded bg-slate-900 border border-slate-800"><span class="w-3.5 h-3.5 rounded-full bg-emerald-500 inline-block border border-black/30"></span><span class="font-extrabold text-slate-200">Roca Fresca (&ge;90%)</span></div>
+                                <div class="flex items-center gap-2 p-1.5 rounded bg-slate-900 border border-slate-800"><span class="w-3.5 h-3.5 rounded-full bg-amber-300 inline-block border border-black/30"></span><span class="font-extrabold text-slate-200">Zona de Veta (&ge;90%)</span></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -861,7 +877,6 @@
                 <!-- ÁREA IMPRIMIBLE DSR CON MÁRGENES ESTÁNDAR Y REPETICIÓN DE TABLAS -->
                 <div id="printable-area" class="bg-white p-6 rounded-2xl border border-slate-200 space-y-4 text-xs text-slate-900 shadow-xl relative overflow-hidden">
                     
-                    <!-- MEMBRETE FIJO CON LOGO RECTANGULAR NATURAL EN BORDE SUPERIOR -->
                     <div class="page-header-membrete-print border-b-2 border-slate-900 pb-3 flex justify-between items-center flex-wrap gap-3 px-6 pt-0">
                         <div class="flex items-center gap-3">
                             <img src="1792941546023.jpg" class="logo-img-real" style="height: 48px;" alt="Logo Jireth">
@@ -920,11 +935,25 @@
                             </div>
                         </div>
 
-                        <!-- PERFIL 2D EN REPORTE VERTICAL HD -->
+                        <!-- PERFIL 2D EN REPORTE VERTICAL HD CON LEYENDA LATERAL E IMPRESIÓN LIMPIA -->
                         <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-1.5 avoid-break shadow-sm">
                             <p class="text-[11px] font-black text-slate-900 uppercase tracking-wider" id="repTituloPerfil2D">📐 Perfil Topográfico 2D & Log Litológico (HD Vertical):</p>
-                            <div class="flex justify-center bg-white p-2.5 rounded-lg border border-slate-200">
-                                <canvas id="canvasReporte2D" width="850" height="500" class="max-w-full h-auto bg-white rounded"></canvas>
+                            <div class="grid grid-cols-1 md:grid-cols-4 gap-3 items-start bg-white p-2.5 rounded-lg border border-slate-200">
+                                <div class="md:col-span-3 flex justify-center">
+                                    <canvas id="canvasReporte2D" width="850" height="520" class="max-w-full h-auto bg-white rounded"></canvas>
+                                </div>
+                                <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 space-y-1.5 text-[10px]">
+                                    <p class="font-black text-slate-900 uppercase tracking-wider border-b border-slate-300 pb-0.5">🎨 Leyenda Litológica</p>
+                                    <div class="space-y-1 pt-1">
+                                        <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-yellow-200 inline-block border border-slate-400"></span><span class="font-bold text-slate-800">Suelo / Relleno (&ge;70%)</span></div>
+                                        <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-yellow-400 inline-block border border-slate-400"></span><span class="font-bold text-slate-800">Saprolita (&ge;70%)</span></div>
+                                        <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-amber-600 inline-block border border-slate-400"></span><span class="font-bold text-slate-800">Saprock (&ge;70%)</span></div>
+                                        <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-orange-500 inline-block border border-slate-400"></span><span class="font-bold text-slate-800">Roca Oxidada (&ge;80%)</span></div>
+                                        <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-sky-400 inline-block border border-slate-400"></span><span class="font-bold text-slate-800">Roca Fracturada (&ge;70%)</span></div>
+                                        <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-emerald-500 inline-block border border-slate-400"></span><span class="font-bold text-slate-800">Roca Fresca (&ge;90%)</span></div>
+                                        <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-amber-300 inline-block border border-slate-400"></span><span class="font-bold text-slate-800">Zona de Veta (&ge;90%)</span></div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -2150,11 +2179,71 @@
             dibujarPerfilEnCanvasVertical(ctx, p, w, h, p.avances, false);
         }
 
-        /* MOTOR DE PERFIL 2D OPTIMIZADO VERTICAL HD */
+        /* LÓGICA DE AGRUPAMIENTO ESTRICTO POR TRAMOS CONTINUOS (SECUENCIAL) */
+        function agruparTramosContinuosLitologia(tramosOriginales) {
+            if (!tramosOriginales || tramosOriginales.length === 0) return [];
+
+            let tramosOrdenados = [...tramosOriginales].sort((a, b) => parseFloat(a.desde) - parseFloat(b.desde));
+            let grupos = [];
+            let grupoActual = null;
+
+            tramosOrdenados.forEach((t) => {
+                let desde = parseFloat(t.desde);
+                let hasta = parseFloat(t.hasta);
+                let rec = parseFloat(t.recuperado) || 0;
+                let lon = hasta - desde;
+                let lito = t.meteorizacion || 'SAPROLITA';
+                let diam = t.diametro || 'HQ';
+
+                if (!grupoActual) {
+                    grupoActual = {
+                        desde: desde,
+                        hasta: hasta,
+                        meteorizacion: lito,
+                        diametro: diam,
+                        totalLongitud: lon,
+                        totalRecuperado: rec
+                    };
+                } else {
+                    if (grupoActual.meteorizacion === lito && Math.abs(grupoActual.hasta - desde) < 0.05 && grupoActual.diametro === diam) {
+                        grupoActual.hasta = hasta;
+                        grupoActual.totalLongitud += lon;
+                        grupoActual.totalRecuperado += rec;
+                    } else {
+                        grupos.push(grupoActual);
+                        grupoActual = {
+                            desde: desde,
+                            hasta: hasta,
+                            meteorizacion: lito,
+                            diametro: diam,
+                            totalLongitud: lon,
+                            totalRecuperado: rec
+                        };
+                    }
+                }
+            });
+
+            if (grupoActual) grupos.push(grupoActual);
+
+            return grupos.map(g => ({
+                desde: g.desde,
+                hasta: g.hasta,
+                meteorizacion: g.meteorizacion,
+                diametro: g.diametro,
+                porcentajeRecuperacion: g.totalLongitud > 0 ? ((g.totalRecuperado / g.totalLongitud) * 100).toFixed(1) : '0.0'
+            }));
+        }
+
+        /* MOTOR DE PERFIL 2D OPTIMIZADO VERTICAL HD CON ZOOM MÁXIMO, DISTRIBUCIÓN BILATERAL Y ANTISOLAPAMIENTO */
         function dibujarPerfilEnCanvasVertical(ctx, p, w, h, listaTramos = null, esReporte = false) {
             let dipVal = Math.abs(parseFloat(p.dip) || 90);
             let dipRad = (dipVal * Math.PI) / 180;
-            let targetNum = parseFloat(p.target) || 100.0;
+            
+            let tramosFuente = listaTramos !== null ? listaTramos : (p.avances || []);
+            let tramosAgrupados = agruparTramosContinuosLitologia(tramosFuente);
+
+            let maxProfundidadReal = tramosAgrupados.length > 0 ? tramosAgrupados[tramosAgrupados.length - 1].hasta : (parseFloat(p.target) || 100.0);
+            let targetRef = Math.max(maxProfundidadReal, parseFloat(p.target) || 10.0, 10.0);
 
             if (esReporte) {
                 ctx.fillStyle = '#ffffff';
@@ -2162,27 +2251,27 @@
             }
 
             let startX = w / 2;
-            let startY = 60;
-            let maxDrawHeight = h - 100;
-            let scale = maxDrawHeight / Math.max(targetNum, 20);
+            let startY = 65;
+            let maxDrawHeight = h - 120;
+            let scale = maxDrawHeight / targetRef;
 
             ctx.strokeStyle = esReporte ? '#cbd5e1' : '#334155';
-            ctx.lineWidth = 2.5;
+            ctx.lineWidth = 3;
             ctx.beginPath();
-            ctx.moveTo(40, startY);
-            ctx.lineTo(w - 40, startY);
+            ctx.moveTo(30, startY);
+            ctx.lineTo(w - 30, startY);
             ctx.stroke();
 
             ctx.fillStyle = esReporte ? '#0f172a' : '#38bdf8';
             ctx.font = 'bold 12px "JetBrains Mono"';
             ctx.textAlign = 'center';
-            ctx.fillText('SUPERFICIE (z=' + (p.cota || '0m') + ') | DIP: -' + dipVal + '° | AZ: ' + (p.azimut || '0') + '°', w / 2, startY - 15);
+            ctx.fillText('SUPERFICIE (Z=' + (p.cota || '0.00m') + ') | DIP: -' + dipVal + '° | AZ: ' + (p.azimut || '0') + '°', w / 2, startY - 18);
 
-            let endX = startX + Math.cos(dipRad) * targetNum * scale * 0.35;
-            let endY = startY + Math.sin(dipRad) * targetNum * scale;
+            let endX = startX + Math.cos(dipRad) * targetRef * scale * 0.25;
+            let endY = startY + Math.sin(dipRad) * targetRef * scale;
 
             ctx.strokeStyle = esReporte ? '#e2e8f0' : '#1e293b';
-            ctx.lineWidth = 18;
+            ctx.lineWidth = esReporte ? 28 : 38;
             ctx.lineCap = 'round';
             ctx.beginPath();
             ctx.moveTo(startX, startY);
@@ -2191,63 +2280,86 @@
 
             const colorMap = {
                 'SUELO / RELLENO': '#fef08a',
-                'SAPROLITA': '#fde047',
+                'SAPROLITA': '#facc15',
                 'SAPROCK': '#d97706',
                 'ROCA OXIDADA': '#f97316',
                 'ROCA FRACTURADA': '#38bdf8',
-                'ROCA FRESCA': '#059669',
-                'ZONA DE VETA': '#eab308'
+                'ROCA FRESCA': '#10b981',
+                'ZONA DE VETA': '#fde047'
             };
 
-            let tramosARenderizar = listaTramos !== null ? listaTramos : (p.avances || []);
+            let ultYIzquierda = -999;
+            let ultYDerecha = -999;
+            const minSpaceY = 18;
 
-            if (tramosARenderizar && tramosARenderizar.length > 0) {
-                tramosARenderizar.forEach((av, idx) => {
-                    let d = parseFloat(av.desde);
-                    let hTramo = parseFloat(av.hasta);
+            if (tramosAgrupados && tramosAgrupados.length > 0) {
+                tramosAgrupados.forEach((av) => {
+                    let d = av.desde;
+                    let hTramo = av.hasta;
                     let diam = av.diametro;
 
-                    let segStartX = startX + Math.cos(dipRad) * d * scale * 0.35;
+                    let segStartX = startX + Math.cos(dipRad) * d * scale * 0.25;
                     let segStartY = startY + Math.sin(dipRad) * d * scale;
-                    let segEndX = startX + Math.cos(dipRad) * hTramo * scale * 0.35;
+                    let segEndX = startX + Math.cos(dipRad) * hTramo * scale * 0.25;
                     let segEndY = startY + Math.sin(dipRad) * hTramo * scale;
 
+                    let anchoTestigo = diam === 'HQ' ? (esReporte ? 24 : 36) : (esReporte ? 18 : 28);
                     ctx.strokeStyle = colorMap[av.meteorizacion] || '#94a3b8';
-                    ctx.lineWidth = diam === 'HQ' ? 22 : 16;
+                    ctx.lineWidth = anchoTestigo;
                     ctx.lineCap = 'butt';
                     ctx.beginPath();
                     ctx.moveTo(segStartX, segStartY);
                     ctx.lineTo(segEndX, segEndY);
                     ctx.stroke();
 
-                    // Etiquetas legibles y destacadas
-                    ctx.fillStyle = esReporte ? '#0f172a' : '#f8fafc';
-                    ctx.font = 'bold 12px "JetBrains Mono"';
-                    ctx.textAlign = 'left';
-                    ctx.fillText(`${hTramo.toFixed(1)}m [${av.diametro}] (${av.porcentaje}%)`, segEndX + 20, segEndY + 4);
+                    // --- LADO IZQUIERDO: METRAJE & RECUPERACIÓN PROMEDIO ---
+                    let targetYIzq = segEndY;
+                    if (targetYIzq - ultYIzquierda < minSpaceY) targetYIzq = ultYIzquierda + minSpaceY;
+                    ultYIzquierda = targetYIzq;
 
-                    ctx.strokeStyle = esReporte ? 'rgba(15, 23, 42, 0.5)' : 'rgba(148, 163, 184, 0.5)';
-                    ctx.lineWidth = 1.5;
+                    ctx.fillStyle = esReporte ? '#0284c7' : '#38bdf8';
+                    ctx.font = 'bold 11px "JetBrains Mono"';
+                    ctx.textAlign = 'right';
+                    ctx.fillText(`${d.toFixed(1)}m - ${hTramo.toFixed(1)}m [Rec: ${av.porcentajeRecuperacion}%]`, segEndX - (anchoTestigo / 2 + 12), targetYIzq + 4);
+
+                    ctx.strokeStyle = esReporte ? 'rgba(2, 132, 199, 0.4)' : 'rgba(56, 189, 248, 0.4)';
+                    ctx.lineWidth = 1;
                     ctx.beginPath();
-                    ctx.moveTo(segEndX, segEndY);
-                    ctx.lineTo(segEndX + 16, segEndY);
+                    ctx.moveTo(segEndX - (anchoTestigo / 2 + 2), segEndY);
+                    ctx.lineTo(segEndX - (anchoTestigo / 2 + 10), targetYIzq);
+                    ctx.stroke();
+
+                    // --- LADO DERECHO: CATEGORÍA LITOLÓGICA AGRUPADA ---
+                    let targetYDerecha = segEndY;
+                    if (targetYDerecha - ultYDerecha < minSpaceY) targetYDerecha = ultYDerecha + minSpaceY;
+                    ultYDerecha = targetYDerecha;
+
+                    ctx.fillStyle = esReporte ? '#0f172a' : '#f8fafc';
+                    ctx.font = 'bold 11px "Plus Jakarta Sans"';
+                    ctx.textAlign = 'left';
+                    ctx.fillText(`${av.meteorizacion} (${av.diametro})`, segEndX + (anchoTestigo / 2 + 12), targetYDerecha + 4);
+
+                    ctx.strokeStyle = esReporte ? 'rgba(15, 23, 42, 0.4)' : 'rgba(248, 250, 252, 0.4)';
+                    ctx.lineWidth = 1;
+                    ctx.beginPath();
+                    ctx.moveTo(segEndX + (anchoTestigo / 2 + 2), segEndY);
+                    ctx.lineTo(segEndX + (anchoTestigo / 2 + 10), targetYDerecha);
                     ctx.stroke();
                 });
             }
 
             ctx.fillStyle = '#ef4444';
             ctx.beginPath();
-            ctx.arc(startX, startY, 6, 0, Math.PI * 2);
+            ctx.arc(startX, startY, 7, 0, Math.PI * 2);
             ctx.fill();
 
-            let metAcum = tramosARenderizar ? tramosARenderizar.reduce((acc, curr) => acc + (parseFloat(curr.hasta) - parseFloat(curr.desde)), 0) : 0;
             ctx.fillStyle = esReporte ? '#0284c7' : '#38bdf8';
-            ctx.font = 'bold 14px "Plus Jakarta Sans"';
+            ctx.font = 'bold 15px "Plus Jakarta Sans"';
             ctx.textAlign = 'right';
-            ctx.fillText(p.codigo, w - 30, 30);
+            ctx.fillText(p.codigo, w - 25, 30);
             ctx.fillStyle = esReporte ? '#0f172a' : '#f8fafc';
             ctx.font = 'bold 11px "JetBrains Mono"';
-            ctx.fillText(`Profundidad Total: ${metAcum.toFixed(2)}m`, w - 30, 48);
+            ctx.fillText(`Profundidad Total: ${maxProfundidadReal.toFixed(2)}m`, w - 25, 48);
         }
 
         function cargarResumenCierrePozo() {
@@ -2371,15 +2483,15 @@
             if (modo === 'TURNO') {
                 boxTurno.classList.remove('hidden');
                 document.getElementById('repTituloPrincipalDSR').innerText = "REPORTE DE TURNO";
-                document.getElementById('repTituloPerfil2D').innerText = "📐 Perfil Topográfico 2D & Log Litológico (Tramos del Turno - HD Vertical):";
+                document.getElementById('repTituloPerfil2D').innerText = "📐 Perfil Topográfico 2D & Log Litológico (Tramos del Turno - Zoom HD Vertical):";
             } else if (modo === 'ACUMULADO') {
                 boxTurno.classList.add('hidden');
                 document.getElementById('repTituloPrincipalDSR').innerText = "REPORTE ACUMULADO DEL SONDAJE";
-                document.getElementById('repTituloPerfil2D').innerText = "📐 Perfil Topográfico 2D & Log Litológico (Acumulado General - HD Vertical):";
+                document.getElementById('repTituloPerfil2D').innerText = "📐 Perfil Topográfico 2D & Log Litológico (Acumulado General - Zoom HD Vertical):";
             } else if (modo === 'CULMINADO') {
                 boxTurno.classList.add('hidden');
                 document.getElementById('repTituloPrincipalDSR').innerText = "REPORTE SONDAJE CULMINADO";
-                document.getElementById('repTituloPerfil2D').innerText = "📐 Perfil Topográfico 2D & Log Litológico (Sondaje Culminado - HD Vertical):";
+                document.getElementById('repTituloPerfil2D').innerText = "📐 Perfil Topográfico 2D & Log Litológico (Sondaje Culminado - Zoom HD Vertical):";
             }
 
             let listaAvancesFiltrada = [];
@@ -2657,7 +2769,6 @@
             await sincronizarDesdeSupabaseCloud(true); 
         }
 
-        /* REGISTRO AUTOMÁTICO DEL SERVICE WORKER PARA PERSISTENCIA PWA OFFLINE */
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('./sw.js')
