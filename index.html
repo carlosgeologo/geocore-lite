@@ -26,7 +26,7 @@
         
         .bg-geocore-master {
             background-color: #020617;
-            background-image: linear-gradient(to bottom, rgba(2, 6, 23, 0.35), rgba(2, 6, 23, 0.65)), url('Gemini_Generated_Image_m89jgem89jgem89j.jfif');
+            background-image: linear-gradient(to bottom, rgba(2, 6, 23, 0.45), rgba(2, 6, 23, 0.75)), url('Gemini_Generated_Image_m89jgem89jgem89j.jfif');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -86,7 +86,6 @@
         }
         .pulse-live { animation: pulseGlow 1.8s infinite ease-in-out; }
 
-        /* LOGO AMPLIADO SIN BORDES Y SIN RECUADRO OSCURO */
         .logo-img-real {
             height: 60px; width: auto; max-width: 180px; object-fit: contain;
             flex-shrink: 0; background: transparent !important; border: none !important; box-shadow: none !important;
@@ -115,28 +114,14 @@
             color: #ffffff; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.35);
         }
 
-        .pill-badge {
-            display: inline-flex; align-items: center; gap: 6px;
-            padding: 4px 10px; border-radius: 9999px; font-size: 10px; font-weight: 800;
-            background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(51, 65, 85, 0.8);
-            box-shadow: 0 2px 6px rgba(0,0,0,0.4);
-        }
-
-        /* ESTILOS ESPECÍFICOS PARA CONTROL DE MÁRGENES Y SALTOS EN PDF */
         @media print {
             body { background: #ffffff !important; color: #000000 !important; }
-            #printable-area {
-                width: 100% !important;
-                margin: 0 !important;
-                padding: 0 !important;
-                box-shadow: none !important;
-                border: none !important;
+            #printable-area, #printable-area-mes, #printable-area-empresa {
+                width: 100% !important; margin: 0 !important; padding: 0 !important;
+                box-shadow: none !important; border: none !important;
             }
         }
-        .avoid-break {
-            break-inside: avoid;
-            page-break-inside: avoid;
-        }
+        .avoid-break { break-inside: avoid; page-break-inside: avoid; }
     </style>
 </head>
 <body class="min-h-screen antialiased selection:bg-sky-600 selection:text-white bg-geocore-master text-slate-100">
@@ -176,7 +161,7 @@
                     👷 GEÓLOGOS
                 </button>
                 <button type="button" onclick="seleccionarPerfil('GERENCIA')" id="btnPerfilGer" class="py-3 px-2 rounded-2xl text-xs font-black border-2 border-slate-800 bg-slate-950 text-slate-400 transition-all">
-                    👔 GERENCIA (REPOSITORIO)
+                    👔 GERENCIA (ESTADÍSTICAS)
                 </button>
             </div>
 
@@ -205,7 +190,7 @@
                     </div>
                 </div>
                 <button type="button" onclick="intentarLoginGer()" class="btn-field w-full bg-slate-800 hover:bg-slate-700 text-white text-sm font-black shadow-lg shadow-slate-950/50">
-                    📊 Ingresar a Repositorio & Sala Situacional
+                    📊 Ingresar a Estadísticas & Repositorio
                 </button>
             </div>
 
@@ -253,6 +238,9 @@
             <nav class="space-y-1.5 text-xs">
                 <button type="button" onclick="switchTab('mod_sala'); toggleSidebar();" id="sidebar-mod_sala" class="sidebar-item active">
                     <span class="text-base">🏠</span> Sala Situacional (Inicio)
+                </button>
+                <button type="button" onclick="switchTab('mod_estadisticas'); toggleSidebar();" id="sidebar-mod_estadisticas" class="sidebar-item">
+                    <span class="text-base">📊</span> Estadísticas & Gestión Gerencial
                 </button>
                 <button type="button" onclick="switchTab('mod1'); toggleSidebar();" id="sidebar-mod1" class="sidebar-item">
                     <span class="text-base">🛠️</span> Lista de Pozos / Registrar Pozo
@@ -412,6 +400,125 @@
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- NUEVO MÓDULO: ESTADÍSTICAS & GESTIÓN GERENCIAL -->
+        <section id="mod_estadisticas" class="hidden space-y-6 card-pro p-5 sm:p-6">
+            <div class="flex justify-between items-center flex-wrap gap-2 pb-3 border-b border-slate-800">
+                <div>
+                    <h2 class="text-xl font-black text-white tracking-tight flex items-center gap-2">
+                        📊 Módulo de Estadísticas, Gráficas & Gestión Gerencial
+                    </h2>
+                    <p class="text-xs text-slate-400 mt-0.5">Indicadores clave de producción, balance por cliente y reportes ejecutivos de cierre de mes.</p>
+                </div>
+                <div class="flex gap-2">
+                    <button type="button" onclick="exportarReporteCierreMesPDF()" class="bg-gradient-to-r from-sky-600 to-indigo-600 hover:from-sky-500 hover:to-indigo-500 text-white font-extrabold px-3 py-2 rounded-xl text-xs shadow-md transition flex items-center gap-1.5">
+                        📥 Exportar Cierre de Mes (PDF)
+                    </button>
+                    <button type="button" onclick="renderizarEstadisticasGerenciales()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 px-3 py-2 rounded-xl text-xs font-bold transition shadow-sm">
+                        🔄 Actualizar Datos
+                    </button>
+                </div>
+            </div>
+
+            <!-- FILTROS GERENCIALES -->
+            <div class="bg-slate-900/80 p-4 rounded-2xl border border-slate-800 grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Filtrar por Empresa Cliente:</label>
+                    <select id="statFiltroEmpresa" onchange="renderizarEstadisticasGerenciales()" class="input-field w-full px-3 text-xs font-bold text-white">
+                        <option value="TODAS">-- Todas las Empresas --</option>
+                        <option value="IVM C.A.">IVM C.A.</option>
+                        <option value="MINERÍA CARABOBO C.A.">MINERÍA CARABOBO C.A.</option>
+                        <option value="INDUSTRIAS AUDIT">INDUSTRIAS AUDIT</option>
+                        <option value="HAVILA 318">HAVILA 318</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Mes de Auditoría:</label>
+                    <select id="statFiltroMes" onchange="renderizarEstadisticasGerenciales()" class="input-field w-full px-3 text-xs font-bold text-white">
+                        <option value="TODOS">-- Todos los Meses --</option>
+                        <option value="10">Octubre 2026</option>
+                        <option value="11" selected>Noviembre 2026</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Año Fiscal / Operativo:</label>
+                    <select id="statFiltroAno" onchange="renderizarEstadisticasGerenciales()" class="input-field w-full px-3 text-xs font-bold text-white">
+                        <option value="2026" selected>Año 2026</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- TARJETAS KPIS GERENCIALES -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <div class="bg-slate-900/90 p-3.5 rounded-2xl border-t-2 border-sky-500 shadow-sm">
+                    <p class="text-[10px] text-sky-400 font-bold uppercase">Total Metros Perforados</p>
+                    <p class="text-base sm:text-lg font-black text-white font-mono-code mt-0.5" id="statKpiTotalMetros">0.00 m</p>
+                    <p class="text-[9px] text-slate-400 font-bold">Volumen Total Auditado</p>
+                </div>
+                <div class="bg-slate-900/90 p-3.5 rounded-2xl border-t-2 border-amber-500 shadow-sm">
+                    <p class="text-[10px] text-amber-400 font-bold uppercase">Metros Pagables Aprobados</p>
+                    <p class="text-base sm:text-lg font-black text-white font-mono-code mt-0.5" id="statKpiMetrosPagables">0.00 m</p>
+                    <p class="text-[9px] text-slate-400 font-bold">Estándar de Pago Aprobado</p>
+                </div>
+                <div class="bg-slate-900/90 p-3.5 rounded-2xl border-t-2 border-emerald-500 shadow-sm">
+                    <p class="text-[10px] text-emerald-400 font-bold uppercase">Eficiencia de Pago</p>
+                    <p class="text-base sm:text-lg font-black text-white font-mono-code mt-0.5" id="statKpiEficienciaPago">0.0%</p>
+                    <p class="text-[9px] text-slate-400 font-bold">Pagables / Total Perforado</p>
+                </div>
+                <div class="bg-slate-900/90 p-3.5 rounded-2xl border-t-2 border-purple-500 shadow-sm">
+                    <p class="text-[10px] text-purple-400 font-bold uppercase">Sondajes Auditados</p>
+                    <p class="text-base sm:text-lg font-black text-white font-mono-code mt-0.5" id="statKpiTotalPozos">0 Pozos</p>
+                    <p class="text-[9px] text-slate-400 font-bold" id="statKpiPozosDetalle">0 Activos | 0 Culminados</p>
+                </div>
+            </div>
+
+            <!-- GRÁFICAS EJECUTIVAS (CHART.JS) -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                <!-- Gráfica 1: Distribución por Empresa -->
+                <div class="bg-slate-900/90 p-4 rounded-2xl border border-slate-800 space-y-2">
+                    <h3 class="text-xs font-black text-white uppercase tracking-wider">🍩 Distribución por Empresa (Metros)</h3>
+                    <div class="h-60 relative flex justify-center items-center">
+                        <canvas id="chartDoughnutEmpresas"></canvas>
+                    </div>
+                </div>
+
+                <!-- Gráfica 2: Rendimiento Mensual -->
+                <div class="bg-slate-900/90 p-4 rounded-2xl border border-slate-800 space-y-2 lg:col-span-2">
+                    <h3 class="text-xs font-black text-white uppercase tracking-wider">📊 Rendimiento Operativo Mensual (Metros Perforados)</h3>
+                    <div class="h-60 relative">
+                        <canvas id="chartBarrasMensual"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TABLA AUDITORÍA POR CLIENTE -->
+            <div class="bg-slate-900/90 p-4 rounded-2xl border border-slate-800 space-y-3">
+                <div class="flex justify-between items-center flex-wrap gap-2">
+                    <h3 class="text-xs font-black text-white uppercase tracking-wider">🏢 Resumen Consolidado de Proyectos por Empresa</h3>
+                    <button type="button" onclick="exportarReporteEmpresaSeleccionadaPDF()" class="bg-slate-800 hover:bg-slate-700 text-sky-400 border border-slate-700 px-3 py-1.5 rounded-xl text-xs font-bold transition">
+                        📄 Exportar Balance de Empresa (PDF)
+                    </button>
+                </div>
+                <div class="overflow-x-auto border border-slate-800 rounded-xl bg-slate-950">
+                    <table class="w-full text-left text-xs border-collapse">
+                        <thead class="bg-slate-900 text-slate-300 uppercase font-extrabold border-b border-slate-800">
+                            <tr>
+                                <th class="p-3">Empresa Cliente</th>
+                                <th class="p-3">Proyecto / Sector</th>
+                                <th class="p-3 text-center">Pozos Activos</th>
+                                <th class="p-3 text-center">Pozos Culminados</th>
+                                <th class="p-3 text-right">Metros Totales</th>
+                                <th class="p-3 text-right font-black text-amber-400">Metros Pagables</th>
+                                <th class="p-3 text-center">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbodyEstadisticasEmpresas" class="divide-y divide-slate-900 font-mono-code text-slate-200">
+                            <!-- Filas generadas dinámicamente -->
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </section>
@@ -980,6 +1087,119 @@
         </section>
     </div>
 
+    <!-- PLANTILLAS IMPRIMIBLES DE REPORTES GERENCIALES (CIERRE DE MES & EMPRESAS) -->
+    <div class="hidden">
+        <div id="printable-area-mes" class="bg-white p-6 rounded-2xl border border-slate-200 space-y-4 text-xs text-slate-900">
+            <div class="border-b-2 border-slate-900 pb-3 flex justify-between items-center px-4">
+                <div class="flex items-center gap-4">
+                    <img src="1792941546023.jpg" class="logo-img-real" alt="Logo Jireth">
+                    <div>
+                        <h3 class="text-sm font-black text-slate-900 uppercase">COMPLEJO JIRETH C.A. — INFORME GERENCIAL</h3>
+                        <p class="text-[9px] text-slate-600 font-extrabold uppercase">REPORTE OFICIAL DE CIERRE DE MES & AUDITORÍA OPERATIVA</p>
+                    </div>
+                </div>
+                <div class="text-right">
+                    <p class="text-xs font-mono-code text-slate-900 font-black" id="pdfMesTituloPeriodo">OCTUBRE 2026</p>
+                    <p class="text-[10px] text-slate-600 font-bold">División de Perforación & Geología</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-4 gap-2 avoid-break">
+                <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200">
+                    <p class="text-[9px] text-slate-500 uppercase font-black">TOTAL METROS</p>
+                    <p class="text-xs font-black text-slate-900 font-mono-code mt-0.5" id="pdfMesTotalMetros">0.00 m</p>
+                </div>
+                <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200">
+                    <p class="text-[9px] text-slate-500 uppercase font-black">METROS PAGABLES</p>
+                    <p class="text-xs font-black text-slate-900 font-mono-code mt-0.5" id="pdfMesMetrosPagables">0.00 m</p>
+                </div>
+                <div class="bg-slate-100 p-2.5 rounded-xl border border-slate-200">
+                    <p class="text-[9px] text-slate-700 uppercase font-black">EFICIENCIA PAGO</p>
+                    <p class="text-xs font-black text-slate-950 font-mono-code mt-0.5" id="pdfMesEficiencia">0.0%</p>
+                </div>
+                <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200">
+                    <p class="text-[9px] text-slate-500 uppercase font-black">SONDAJES</p>
+                    <p class="text-xs font-black text-slate-900 font-mono-code mt-0.5" id="pdfMesSondajes">0 Pozos</p>
+                </div>
+            </div>
+
+            <div class="avoid-break pt-2">
+                <h4 class="text-[11px] font-black text-slate-900 uppercase tracking-wider mb-1.5">🏢 DESGLOSE DE PRODUCCIÓN POR EMPRESA CLIENTE</h4>
+                <table class="w-full text-left text-xs border-collapse">
+                    <thead class="bg-slate-900 text-white uppercase font-black border-b border-slate-400">
+                        <tr>
+                            <th class="p-2 border-r border-slate-700">Empresa Cliente</th>
+                            <th class="p-2 border-r border-slate-700">Proyecto</th>
+                            <th class="p-2 border-r border-slate-700 text-center">Activos</th>
+                            <th class="p-2 border-r border-slate-700 text-center">Culminados</th>
+                            <th class="p-2 border-r border-slate-700 text-right">Metros Totales</th>
+                            <th class="p-2 text-slate-200 font-black text-right">Metros Pagables</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pdfMesTablaBody" class="divide-y divide-slate-200 font-mono-code text-slate-900"></tbody>
+                </table>
+            </div>
+
+            <div class="grid grid-cols-2 gap-8 text-center pt-8 avoid-break">
+                <div>
+                    <p class="font-bold uppercase text-slate-900 mb-8">Coordinación de Geología</p>
+                    <p>_____________________________________</p>
+                    <p class="mt-1 font-semibold text-slate-700">Firma Autorizada</p>
+                </div>
+                <div>
+                    <p class="font-bold uppercase text-slate-900 mb-8">Gerencia General / Auditoría</p>
+                    <p>_____________________________________</p>
+                    <p class="mt-1 font-semibold text-slate-700">Aprobación Final</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="printable-area-empresa" class="bg-white p-6 rounded-2xl border border-slate-200 space-y-4 text-xs text-slate-900">
+            <div class="border-b-2 border-slate-900 pb-3 flex justify-between items-center px-4">
+                <div class="flex items-center gap-4">
+                    <img src="1792941546023.jpg" class="logo-img-real" alt="Logo Jireth">
+                    <div>
+                        <h3 class="text-sm font-black text-slate-900 uppercase">COMPLEJO JIRETH C.A. — AUDITORÍA POR CLIENTE</h3>
+                        <p class="text-[9px] text-slate-600 font-extrabold uppercase" id="pdfEmpresaNombre">EMPRESA: IVM C.A.</p>
+                    </div>
+                </div>
+                <div class="text-right">
+                    <p class="text-xs font-mono-code text-slate-900 font-black">BALANCE OPERATIVO</p>
+                    <p class="text-[10px] text-slate-600 font-bold">Subsurface Intelligence</p>
+                </div>
+            </div>
+
+            <div class="avoid-break pt-2">
+                <h4 class="text-[11px] font-black text-slate-900 uppercase tracking-wider mb-1.5">📌 HISTÓRICO DE SONDAJES ASOCIADOS AL CLIENTE</h4>
+                <table class="w-full text-left text-xs border-collapse">
+                    <thead class="bg-slate-900 text-white uppercase font-black border-b border-slate-400">
+                        <tr>
+                            <th class="p-2 border-r border-slate-700">Código Pozo</th>
+                            <th class="p-2 border-r border-slate-700">Proyecto</th>
+                            <th class="p-2 border-r border-slate-700">Estado</th>
+                            <th class="p-2 border-r border-slate-700 text-right">Metros Totales</th>
+                            <th class="p-2 text-slate-200 font-black text-right">Metros Pagables</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pdfEmpresaTablaBody" class="divide-y divide-slate-200 font-mono-code text-slate-900"></tbody>
+                </table>
+            </div>
+
+            <div class="grid grid-cols-2 gap-8 text-center pt-8 avoid-break">
+                <div>
+                    <p class="font-bold uppercase text-slate-900 mb-8">Representante Empresa Cliente</p>
+                    <p>_____________________________________</p>
+                    <p class="mt-1 font-semibold text-slate-700">Recibido Conforme</p>
+                </div>
+                <div>
+                    <p class="font-bold uppercase text-slate-900 mb-8">Gerencia Complejo Jireth C.A.</p>
+                    <p>_____________________________________</p>
+                    <p class="mt-1 font-semibold text-slate-700">Firma y Sello</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         const SUPABASE_URL = "https://cjtseuctrbdvgagudyyr.supabase.co";
         const SUPABASE_KEY = "sb_publishable_4ElaI13qIakKqei9_-OiNA__PpbBBjX";
@@ -999,6 +1219,9 @@
         let syncQueue = JSON.parse(localStorage.getItem('jireth_sync_queue') || '[]');
         let indexEditandoAvance = null;
         let lastActivityTime = Date.now();
+
+        let chartDoughnutInst = null;
+        let chartBarrasInst = null;
 
         if (!localStorage.getItem('jireth_clave_geo')) localStorage.setItem('jireth_clave_geo', 'Mina2628');
         localStorage.setItem('jireth_clave_ger', 'JIRETH2026');
@@ -1183,14 +1406,14 @@
                 const el = document.getElementById(id);
                 if (el) el.style.display = 'none';
             });
-            switchTab('mod_sala');
+            switchTab('mod_estadisticas');
         }
 
         function cerrarSesion() { location.reload(); }
 
         function switchTab(tabId) {
-            if (perfilActual === 'GERENCIA' && tabId !== 'mod_sala' && tabId !== 'mod5') tabId = 'mod_sala';
-            ['mod_sala', 'mod1', 'mod2', 'mod3_turno', 'mod3_logging', 'mod4', 'mod5', 'mod6'].forEach(t => {
+            if (perfilActual === 'GERENCIA' && tabId !== 'mod_sala' && tabId !== 'mod_estadisticas' && tabId !== 'mod5') tabId = 'mod_estadisticas';
+            ['mod_sala', 'mod_estadisticas', 'mod1', 'mod2', 'mod3_turno', 'mod3_logging', 'mod4', 'mod5', 'mod6'].forEach(t => {
                 const sec = document.getElementById(t);
                 if (sec) sec.classList.add('hidden');
                 const btn = document.getElementById('sidebar-' + t);
@@ -1202,6 +1425,7 @@
             if (selBtn) selBtn.className = "sidebar-item active";
 
             if (tabId === 'mod_sala') renderizarSalaSituacional();
+            if (tabId === 'mod_estadisticas') renderizarEstadisticasGerenciales();
             if (tabId === 'mod1') refrescarSelectorModuloUno();
             if (tabId === 'mod2') poblarSelectTopografia();
             if (tabId === 'mod3_turno') verificarSeleccionTurnosModulo();
@@ -1219,6 +1443,229 @@
             if (litUpper.includes('OXIDADA')) umbral = 80;
             if (litUpper.includes('FRESCA') || litUpper.includes('VETA')) umbral = 90;
             return pct >= umbral ? lonManiobra : rec;
+        }
+
+        function renderizarEstadisticasGerenciales() {
+            let totalMetrosGlobal = 0;
+            let totalPagableGlobal = 0;
+            let totalPozos = 0;
+            let pozosActivos = 0;
+            let pozosCulminados = 0;
+
+            let empresasMap = {};
+            let rendimientoMeses = { 'Jun': 0, 'Jul': 0, 'Ago': 0, 'Sep': 0, 'Oct': 0, 'Nov': 0 };
+
+            Object.keys(pozosData).forEach(k => {
+                let p = pozosData[k];
+                totalPozos++;
+                if (p.estado === 'ABIERTO') pozosActivos++;
+                else pozosCulminados++;
+
+                if (!empresasMap[p.empresa]) {
+                    empresasMap[p.empresa] = { activos: 0, culminados: 0, totalMetros: 0, totalPagables: 0, proyectos: new Set() };
+                }
+                empresasMap[p.empresa].proyectos.add(p.proyecto);
+                if (p.estado === 'ABIERTO') empresasMap[p.empresa].activos++;
+                else empresasMap[p.empresa].culminados++;
+
+                if (p.avances) {
+                    p.avances.forEach(t => {
+                        let met = parseFloat(t.hasta) - parseFloat(t.desde);
+                        let pag = t.pagoEstandar ? parseFloat(t.pagoEstandar) : calcularMetrosAPagar(met, parseFloat(t.recuperado), t.meteorizacion);
+                        totalMetrosGlobal += met;
+                        totalPagableGlobal += pag;
+                        empresasMap[p.empresa].totalMetros += met;
+                        empresasMap[p.empresa].totalPagables += pag;
+
+                        let mesNum = (new Date()).getMonth();
+                        if (mesNum === 10) rendimientoMeses['Nov'] += met;
+                        else if (mesNum === 9) rendimientoMeses['Oct'] += met;
+                        else rendimientoMeses['Sep'] += met;
+                    });
+                }
+            });
+
+            document.getElementById('statKpiTotalMetros').innerText = totalMetrosGlobal.toFixed(2) + " m";
+            document.getElementById('statKpiMetrosPagables').innerText = totalPagableGlobal.toFixed(2) + " m";
+            let efic = totalMetrosGlobal > 0 ? ((totalPagableGlobal / totalMetrosGlobal) * 100).toFixed(1) : '0.0';
+            document.getElementById('statKpiEficienciaPago').innerText = efic + "%";
+            document.getElementById('statKpiTotalPozos').innerText = totalPozos + " Pozos";
+            document.getElementById('statKpiPozosDetalle').innerText = `${pozosActivos} Activos | ${pozosCulminados} Culminados`;
+
+            renderizarGraficasChartJS(empresasMap, rendimientoMeses);
+
+            let tbody = document.getElementById('tbodyEstadisticasEmpresas');
+            if (tbody) {
+                tbody.innerHTML = '';
+                Object.keys(empresasMap).forEach(emp => {
+                    let d = empresasMap[emp];
+                    let proys = Array.from(d.proyectos).join(', ');
+                    let tr = document.createElement('tr');
+                    tr.className = "hover:bg-slate-900 transition";
+                    tr.innerHTML = `
+                        <td class="p-3 font-bold text-white">${emp}</td>
+                        <td class="p-3 text-slate-300 font-sans">${proys}</td>
+                        <td class="p-3 text-center text-emerald-400 font-bold">${d.activos}</td>
+                        <td class="p-3 text-center text-slate-400 font-bold">${d.culminados}</td>
+                        <td class="p-3 text-right font-bold text-white">${d.totalMetros.toFixed(2)} m</td>
+                        <td class="p-3 text-right font-black text-amber-400">${d.totalPagables.toFixed(2)} m</td>
+                        <td class="p-3 text-center">
+                            <button onclick="exportarReporteEmpresaEspecificaPDF('${emp}')" class="bg-slate-800 hover:bg-slate-700 text-sky-400 px-2.5 py-1 rounded text-[11px] font-bold border border-slate-700 shadow-sm">📑 PDF Empresa</button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+                if (Object.keys(empresasMap).length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="7" class="p-3 text-center text-slate-500 font-bold">Sin datos registrados para el filtro.</td></tr>`;
+                }
+            }
+        }
+
+        function renderizarGraficasChartJS(empresasData, rendimientoMeses) {
+            let labelsEmp = Object.keys(empresasData);
+            let datosMetrosEmp = labelsEmp.map(k => empresasData[k].totalMetros);
+
+            if (chartDoughnutInst) chartDoughnutInst.destroy();
+            const ctxD = document.getElementById('chartDoughnutEmpresas');
+            if (ctxD) {
+                chartDoughnutInst = new Chart(ctxD, {
+                    type: 'doughnut',
+                    data: {
+                        labels: labelsEmp.length > 0 ? labelsEmp : ['Sin Datos'],
+                        datasets: [{
+                            data: datosMetrosEmp.length > 0 ? datosMetrosEmp : [1],
+                            backgroundColor: ['#0284c7', '#10b981', '#6366f1', '#f59e0b', '#ec4899'],
+                            borderColor: '#0f172a',
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { position: 'bottom', labels: { color: '#f8fafc', font: { family: 'Plus Jakarta Sans', size: 10, weight: 'bold' } } }
+                        }
+                    }
+                });
+            }
+
+            if (chartBarrasInst) chartBarrasInst.destroy();
+            const ctxB = document.getElementById('chartBarrasMensual');
+            if (ctxB) {
+                chartBarrasInst = new Chart(ctxB, {
+                    type: 'bar',
+                    data: {
+                        labels: Object.keys(rendimientoMeses),
+                        datasets: [{
+                            label: 'Metros Perforados',
+                            data: Object.values(rendimientoMeses),
+                            backgroundColor: 'rgba(2, 132, 199, 0.85)',
+                            borderColor: '#38bdf8',
+                            borderWidth: 1.5,
+                            borderRadius: 6
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(51, 65, 85, 0.3)' } },
+                            x: { ticks: { color: '#94a3b8' }, grid: { display: false } }
+                        },
+                        plugins: {
+                            legend: { display: false }
+                        }
+                    }
+                });
+            }
+        }
+
+        async function exportarReporteCierreMesPDF() {
+            let totMet = document.getElementById('statKpiTotalMetros').innerText;
+            let totPag = document.getElementById('statKpiMetrosPagables').innerText;
+            let efic = document.getElementById('statKpiEficienciaPago').innerText;
+            let pozos = document.getElementById('statKpiTotalPozos').innerText;
+
+            document.getElementById('pdfMesTotalMetros').innerText = totMet;
+            document.getElementById('pdfMesMetrosPagables').innerText = totPag;
+            document.getElementById('pdfMesEficiencia').innerText = efic;
+            document.getElementById('pdfMesSondajes').innerText = pozos;
+
+            let tbody = document.getElementById('pdfMesTablaBody');
+            tbody.innerHTML = '';
+            Object.keys(pozosData).forEach(k => {
+                let p = pozosData[k];
+                let met = 0, pag = 0;
+                if (p.avances) {
+                    p.avances.forEach(t => {
+                        let m = parseFloat(t.hasta) - parseFloat(t.desde);
+                        met += m;
+                        pag += t.pagoEstandar ? parseFloat(t.pagoEstandar) : calcularMetrosAPagar(m, parseFloat(t.recuperado), t.meteorizacion);
+                    });
+                }
+                let tr = document.createElement('tr');
+                tr.className = "border-b border-slate-200";
+                tr.innerHTML = `<td class="p-2 border-r border-slate-200 font-bold">${p.empresa}</td><td class="p-2 border-r border-slate-200">${p.proyecto}</td><td class="p-2 border-r border-slate-200 text-center">${p.estado === 'ABIERTO' ? '1' : '0'}</td><td class="p-2 border-r border-slate-200 text-center">${p.estado === 'CULMINADO' ? '1' : '0'}</td><td class="p-2 border-r border-slate-200 text-right">${met.toFixed(2)}m</td><td class="p-2 font-black text-slate-950 text-right">${pag.toFixed(2)}m</td>`;
+                tbody.appendChild(tr);
+            });
+
+            const elemento = document.getElementById('printable-area-mes');
+            showToast("Generando PDF", "Exportando reporte de cierre de mes...", "⏳");
+            const opciones = {
+                margin: [10, 10, 10, 10],
+                filename: `Cierre_Mes_${Date.now()}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2, useCORS: true, windowWidth: 900 },
+                jsPDF: { unit: 'mm', format: 'letter', orientation: 'portrait' }
+            };
+            try {
+                await html2pdf().set(opciones).from(elemento).save();
+                showToast("PDF Exportado", "Cierre de Mes generado en PDF.", "✅");
+            } catch(e) { window.print(); }
+        }
+
+        async function exportarReporteEmpresaSeleccionadaPDF() {
+            let emp = document.getElementById('statFiltroEmpresa').value;
+            if (emp === 'TODAS') emp = 'IVM C.A.';
+            exportarReporteEmpresaEspecificaPDF(emp);
+        }
+
+        async function exportarReporteEmpresaEspecificaPDF(nombreEmpresa) {
+            document.getElementById('pdfEmpresaNombre').innerText = "EMPRESA: " + nombreEmpresa;
+            let tbody = document.getElementById('pdfEmpresaTablaBody');
+            tbody.innerHTML = '';
+
+            Object.keys(pozosData).forEach(k => {
+                let p = pozosData[k];
+                if (p.empresa === nombreEmpresa) {
+                    let met = 0, pag = 0;
+                    if (p.avances) {
+                        p.avances.forEach(t => {
+                            let m = parseFloat(t.hasta) - parseFloat(t.desde);
+                            met += m;
+                            pag += t.pagoEstandar ? parseFloat(t.pagoEstandar) : calcularMetrosAPagar(m, parseFloat(t.recuperado), t.meteorizacion);
+                        });
+                    }
+                    let tr = document.createElement('tr');
+                    tr.className = "border-b border-slate-200";
+                    tr.innerHTML = `<td class="p-2 border-r border-slate-200 font-bold">${p.codigo}</td><td class="p-2 border-r border-slate-200">${p.proyecto}</td><td class="p-2 border-r border-slate-200">${p.estado}</td><td class="p-2 border-r border-slate-200 text-right">${met.toFixed(2)}m</td><td class="p-2 font-black text-slate-950 text-right">${pag.toFixed(2)}m</td>`;
+                    tbody.appendChild(tr);
+                }
+            });
+
+            const elemento = document.getElementById('printable-area-empresa');
+            showToast("Generando PDF", "Exportando reporte de la empresa...", "⏳");
+            const opciones = {
+                margin: [10, 10, 10, 10],
+                filename: `Reporte_Empresa_${nombreEmpresa.replace(/\s+/g, '_')}_${Date.now()}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2, useCORS: true, windowWidth: 900 },
+                jsPDF: { unit: 'mm', format: 'letter', orientation: 'portrait' }
+            };
+            try {
+                await html2pdf().set(opciones).from(elemento).save();
+                showToast("PDF Exportado", "Balance por empresa generado en PDF.", "✅");
+            } catch(e) { window.print(); }
         }
 
         function renderizarSalaSituacional() {
@@ -2156,12 +2603,8 @@
 
                 if (!grupoActual) {
                     grupoActual = {
-                        desde: desde,
-                        hasta: hasta,
-                        meteorizacion: lito,
-                        diametro: diam,
-                        totalLongitud: lon,
-                        totalRecuperado: rec
+                        desde: desde, hasta: hasta, meteorizacion: lito, diametro: diam,
+                        totalLongitud: lon, totalRecuperado: rec
                     };
                 } else {
                     if (grupoActual.meteorizacion === lito && Math.abs(grupoActual.hasta - desde) < 0.05 && grupoActual.diametro === diam) {
@@ -2171,12 +2614,8 @@
                     } else {
                         grupos.push(grupoActual);
                         grupoActual = {
-                            desde: desde,
-                            hasta: hasta,
-                            meteorizacion: lito,
-                            diametro: diam,
-                            totalLongitud: lon,
-                            totalRecuperado: rec
+                            desde: desde, hasta: hasta, meteorizacion: lito, diametro: diam,
+                            totalLongitud: lon, totalRecuperado: rec
                         };
                     }
                 }
@@ -2185,10 +2624,7 @@
             if (grupoActual) grupos.push(grupoActual);
 
             return grupos.map(g => ({
-                desde: g.desde,
-                hasta: g.hasta,
-                meteorizacion: g.meteorizacion,
-                diametro: g.diametro,
+                desde: g.desde, hasta: g.hasta, meteorizacion: g.meteorizacion, diametro: g.diametro,
                 porcentajeRecuperacion: g.totalLongitud > 0 ? ((g.totalRecuperado / g.totalLongitud) * 100).toFixed(1) : '0.0'
             }));
         }
@@ -2566,37 +3002,23 @@
             }
         }
 
-        /* FUNCIÓN DE EXPORTACIÓN DIRECTA A PDF OPTIMIZADA CON MÁRGENES Y SALTOS SEGUROS */
         async function imprimirOExportarPDF() {
             const elemento = document.getElementById('printable-area');
-            if (!elemento) {
-                alert("⚠️ No hay reporte visible para exportar.");
-                return;
-            }
+            if (!elemento) { alert("⚠️ No hay reporte visible para exportar."); return; }
 
-            showToast("Generando PDF", "Procesando documento a tamaño Carta con márgenes optimizados...", "⏳");
-
+            showToast("Generando PDF", "Procesando documento DSR...", "⏳");
             const opciones = {
-                margin:       [10, 10, 10, 10], // Márgenes precisos de 10mm en todos los lados
-                filename:     `DSR_${pozoActivoId || 'Sondaje'}_${Date.now()}.pdf`,
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { 
-                    scale: 2, 
-                    useCORS: true, 
-                    logging: false, 
-                    letterRendering: true,
-                    windowWidth: 900 // Ancho fijo estandarizado para evitar desbordes laterales en la captura
-                },
-                jsPDF:        { unit: 'mm', format: 'letter', orientation: 'portrait' }
+                margin: [10, 10, 10, 10],
+                filename: `DSR_${pozoActivoId || 'Sondaje'}_${Date.now()}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2, useCORS: true, logging: false, letterRendering: true, windowWidth: 900 },
+                jsPDF: { unit: 'mm', format: 'letter', orientation: 'portrait' }
             };
 
             try {
                 await html2pdf().set(opciones).from(elemento).save();
-                showToast("PDF Exportado", "El archivo se ha descargado correctamente con los márgenes ajustados.", "✅");
-            } catch (error) {
-                console.error("Error al generar el PDF:", error);
-                window.print();
-            }
+                showToast("PDF Exportado", "El archivo se ha descargado correctamente.", "✅");
+            } catch (error) { window.print(); }
         }
 
         function poblarSelectAdminBorrar() {
