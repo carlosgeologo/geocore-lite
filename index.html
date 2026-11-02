@@ -79,6 +79,7 @@
     }
     .pulse-live { animation: pulseGlow 1.8s infinite ease-in-out; }
 
+    /* LOGO AMPLIADO SIN BORDES Y SIN RECUADRO OSCURO */
     .logo-img-real {
         height: 60px; width: auto; max-width: 180px; object-fit: contain;
         flex-shrink: 0; background: transparent !important; border: none !important; box-shadow: none !important;
@@ -106,6 +107,28 @@
         background: linear-gradient(135deg, #0284c7 0%, #1e40af 100%);
         color: #ffffff; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.35);
     }
+
+    .pill-badge {
+        display: inline-flex; align-items: center; gap: 6px;
+        padding: 4px 10px; border-radius: 9999px; font-size: 10px; font-weight: 800;
+        background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(51, 65, 85, 0.8);
+        box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+    }
+
+    /* ESTILOS DE PÁGINA IMPRESA TAMAÑO CARTA EXACTO */
+    .pdf-page-container {
+        width: 816px !important;
+        min-width: 816px !important;
+        max-width: 816px !important;
+        margin: 0 auto !important;
+        box-sizing: border-box !important;
+        background-color: #ffffff !important;
+        color: #0f172a !important;
+    }
+    .avoid-break {
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+    }
 </style>
 
 
@@ -117,26 +140,35 @@
     </div>
 </div>
 
-<!-- MODAL DE VISTA PREVIA PDF CON SCROLL MULTIPÁGINA Y BOTÓN DE CIERRE -->
-<div id="modalVistaPreviaPDF" class="fixed inset-0 bg-slate-950/80 z-50 hidden backdrop-blur-sm flex items-center justify-center p-2 sm:p-4 overflow-y-auto">
-    <div class="card-pro bg-slate-900 border border-slate-700 rounded-3xl w-full max-w-5xl p-4 sm:p-6 space-y-4 shadow-2xl relative my-auto max-h-[95vh] flex flex-col">
-        <div class="flex justify-between items-center border-b border-slate-800 pb-3 flex-shrink-0">
-            <h3 class="text-xs sm:text-sm font-black text-white uppercase tracking-wider flex items-center gap-2">
-                <span>👁️ Vista Previa del Documento DSR (Tamaño Carta Exacto)</span>
-            </h3>
-            <div class="flex gap-2">
-                <button type="button" onclick="descargarDesdeModalPDF()" class="bg-sky-600 hover:bg-sky-500 text-white font-extrabold px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs shadow-md transition">
-                    📥 Descargar PDF
-                </button>
-                <button type="button" onclick="cerrarModalVistaPrevia()" class="bg-rose-950 hover:bg-rose-900 text-rose-300 border border-rose-800 font-extrabold px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs shadow-md transition">
-                    ❌ Cerrar / Cancelar
-                </button>
+<!-- MODAL DE VISTA PREVIA PDF INTEGRAL -->
+<div id="modalVistaPreviaPDF" class="fixed inset-0 bg-slate-950/85 z-50 hidden backdrop-blur-md flex flex-col items-center justify-between p-3 sm:p-6 overflow-hidden">
+    <div class="w-full max-w-5xl bg-slate-900 border border-slate-700 rounded-2xl p-4 flex justify-between items-center shadow-2xl flex-shrink-0">
+        <div class="flex items-center gap-3">
+            <span class="text-xl">👁️</span>
+            <div>
+                <h3 class="text-xs sm:text-sm font-black text-white uppercase tracking-wider">Vista Previa de Documento PDF (Tamaño Carta Exacto)</h3>
+                <p class="text-[10px] text-slate-400 font-semibold">Inspeccione el diseño, centrado y márgenes antes de la generación final</p>
             </div>
         </div>
-        <!-- Contenedor con scroll vertical completo para inspección multipágina -->
-        <div id="contenedorPreviewInyectado" class="bg-slate-950 p-4 rounded-2xl overflow-y-auto flex-1 shadow-inner flex justify-center text-slate-900">
-            <!-- El reporte clonado se inyecta aquí -->
+        <div class="flex items-center gap-2">
+            <button type="button" onclick="descargarDesdeModalPDF()" class="bg-sky-600 hover:bg-sky-500 text-white font-extrabold px-4 py-2 rounded-xl text-xs shadow-lg transition">
+                📥 Descargar PDF Final
+            </button>
+            <button type="button" onclick="cerrarModalVistaPrevia()" class="bg-rose-950 hover:bg-rose-900 text-rose-200 border border-rose-800 font-extrabold px-4 py-2 rounded-xl text-xs shadow-md transition">
+                ❌ Cerrar / Cancelar
+            </button>
         </div>
+    </div>
+
+    <!-- ÁREA CON SCROLL VERTICAL MULTIPÁGINA PARA HOJAS CARTA -->
+    <div class="w-full max-w-5xl flex-1 overflow-y-auto my-3 p-4 bg-slate-950/90 rounded-2xl border border-slate-800 shadow-inner flex justify-center items-start">
+        <div id="contenedorPreviewInyectado" class="w-full flex justify-center items-center py-2">
+            <!-- Se inyecta aquí el documento exactamente maquetado -->
+        </div>
+    </div>
+
+    <div class="w-full max-w-5xl text-center text-[10px] text-slate-400 font-mono-code flex-shrink-0">
+        <span>Formato Hoja Carta (8.5" x 11") — Centrado Perimetral de 10mm</span>
     </div>
 </div>
 
@@ -175,7 +207,7 @@
             <div>
                 <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Contraseña de Geólogos</label>
                 <div class="relative flex items-center">
-                    <input type="password" id="inputClaveGeo" autocomplete="current-password" class="input-field w-full px-4 pr-11 text-sm font-bold" value="">
+                    <input type="password" id="inputClaveGeo" autocomplete="current-password" placeholder="" class="input-field w-full px-4 pr-11 text-sm font-bold" value="">
                     <button type="button" onclick="togglePasswordVisibility('inputClaveGeo')" class="absolute right-3.5 text-slate-400 hover:text-white text-base">👁️</button>
                 </div>
             </div>
@@ -191,7 +223,7 @@
             <div>
                 <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Contraseña de Gerencia</label>
                 <div class="relative flex items-center">
-                    <input type="password" id="inputClaveGer" autocomplete="current-password" class="input-field w-full px-4 pr-11 text-sm font-bold" value="">
+                    <input type="password" id="inputClaveGer" autocomplete="current-password" placeholder="" class="input-field w-full px-4 pr-11 text-sm font-bold" value="">
                     <button type="button" onclick="togglePasswordVisibility('inputClaveGer')" class="absolute right-3.5 text-slate-400 hover:text-white text-base">👁️</button>
                 </div>
             </div>
@@ -206,11 +238,11 @@
             </div>
             <div>
                 <label class="block text-xs font-extrabold text-slate-400 mb-1 uppercase tracking-wider">PIN Maestro (4 dígitos)</label>
-                <input type="password" maxlength="4" id="inputPinRescate" class="input-field w-full px-3 text-sm font-mono-code font-bold text-center tracking-widest" value="">
+                <input type="password" maxlength="4" id="inputPinRescate" placeholder="" class="input-field w-full px-3 text-sm font-mono-code font-bold text-center tracking-widest" value="">
             </div>
             <div>
                 <label class="block text-xs font-extrabold text-slate-400 mb-1 uppercase tracking-wider">Nueva Contraseña Geólogos</label>
-                <input type="password" id="inputClaveNuevaRescate" class="input-field w-full px-3 text-sm font-bold" value="">
+                <input type="password" id="inputClaveNuevaRescate" placeholder="" class="input-field w-full px-3 text-sm font-bold" value="">
             </div>
             <button type="button" onclick="ejecutarRescateClave()" class="btn-field w-full bg-sky-600 hover:bg-sky-500 text-white text-sm font-black shadow-lg shadow-sky-900/40">
                 🔄 Restablecer Clave e Ingresar
@@ -799,7 +831,7 @@
         <div class="flex justify-between items-center flex-wrap gap-2">
             <h2 class="text-xl font-black text-white tracking-tight">📑 Módulo: Repositorio & Informes DSR Oficiales</h2>
             <div class="space-x-2">
-                <button type="button" onclick="abrirVistaPreviaPDF('printable-area')" class="bg-sky-600 hover:bg-sky-500 text-white font-black px-4 py-2 rounded-xl text-xs shadow-sm transition">👁️ Previsualizar / Descargar PDF</button>
+                <button type="button" onclick="abrirVistaPreviaPDF('printable-area')" class="bg-sky-600 hover:bg-sky-500 text-white font-black px-4 py-2 rounded-xl text-xs shadow-sm transition">👁️ Previsualizar / 📥 Descargar PDF</button>
                 <button type="button" onclick="copiarReportePortapapeles()" class="bg-slate-700 hover:bg-slate-600 text-white font-black px-4 py-2 rounded-xl text-xs shadow-sm transition">📋 Copiar Resumen</button>
             </div>
         </div>
@@ -827,118 +859,120 @@
                 </div>
             </div>
 
-            <!-- ÁREA IMPRIMIBLE DSR FIJA A 794px PARA TAMAÑO CARTA EXACTO SIN CORTES -->
-            <div id="printable-area" style="width: 794px; margin: 0 auto; background-color: #ffffff; color: #0f172a;" class="p-8 rounded-2xl border border-slate-200 space-y-5 text-xs shadow-xl relative overflow-hidden">
-                
-                <div class="border-b-2 border-slate-900 pb-3 flex justify-between items-center flex-wrap gap-3 px-2 pt-0">
-                    <div class="flex items-center gap-4">
-                        <img src="1792941546023.jpg" class="logo-img-real" alt="Logo Jireth">
-                        <div>
-                            <h3 class="text-sm font-black text-slate-900 uppercase tracking-tight" id="repTituloPrincipalDSR">REPORTE DE TURNO</h3>
-                            <p class="text-[9px] text-slate-600 font-extrabold uppercase">COMPLEJO JIRETH C.A. — COORDINACIÓN DE GEOLOGÍA</p>
-                        </div>
-                    </div>
-                    <div class="text-right">
-                        <p class="text-xs font-mono-code text-slate-900 font-black" id="repCodigoHeader">S0000-ET</p>
-                        <p class="text-[10px] text-slate-600 font-bold" id="repFechaEmision">Fecha: --/--/---- | Turno: --</p>
-                    </div>
-                </div>
-
-                <div class="printable-content-body space-y-4 pt-2">
-                    <div class="grid grid-cols-4 gap-2">
-                        <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 shadow-sm">
-                            <p class="text-[9px] text-slate-500 uppercase font-black">PROF. PERFORADA</p>
-                            <p class="text-xs font-black text-slate-900 font-mono-code mt-0.5" id="repMetrajeTotal">0.00 m</p>
-                            <p class="text-[9px] text-slate-500 font-bold" id="repTargetSub">Target: 0.00 m</p>
-                        </div>
-                        <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 shadow-sm">
-                            <p class="text-[9px] text-slate-500 uppercase font-black">RECUPERACIÓN</p>
-                            <p class="text-xs font-black text-slate-900 font-mono-code mt-0.5" id="repRecPromedio">0.0%</p>
-                            <p class="text-[9px] text-slate-500 font-bold">Muestra en Testigo</p>
-                        </div>
-                        <div class="bg-slate-100 p-2.5 rounded-xl border border-slate-200 shadow-sm">
-                            <p class="text-[9px] text-slate-700 uppercase font-black">METROS A PAGAR</p>
-                            <p class="text-xs font-black text-slate-950 font-mono-code mt-0.5" id="repMetrosPagoTotal">0.00 m</p>
-                            <p class="text-[9px] text-slate-700 font-bold">Según Estándar</p>
-                        </div>
-                        <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 shadow-sm">
-                            <p class="text-[9px] text-slate-500 uppercase font-black">AVANCE GENERAL</p>
-                            <p class="text-xs font-black text-slate-900 font-mono-code mt-0.5" id="repAvanceGen">0.0%</p>
-                            <p class="text-[9px] text-slate-500 font-bold">Progreso Pozo</p>
-                        </div>
-                    </div>
-
-                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 grid grid-cols-2 gap-3 text-xs shadow-sm">
-                        <div class="space-y-1">
-                            <p class="text-slate-900 font-black uppercase text-[11px] tracking-wider border-b border-slate-200 pb-0.5">DATOS DE PERFORACIÓN Y UBICACIÓN</p>
-                            <div><b>Zona / Proyecto:</b> <span id="repProyecto" class="text-slate-800 font-bold">--</span></div>
-                            <div><b>Empresa Perforadora:</b> <span id="repEmpresa" class="text-slate-800 font-bold">--</span></div>
-                            <div><b>Máquina:</b> <span id="repMaquina" class="text-slate-800 font-semibold">--</span></div>
-                            <div><b>Coordenada Este:</b> <span id="repEste" class="font-mono-code text-slate-800">--</span></div>
-                            <div><b>Coordenada Norte:</b> <span id="repNorte" class="font-mono-code text-slate-800">--</span></div>
-                            <div><b>Cota Z (m):</b> <span id="repCota" class="font-mono-code text-slate-800">--</span></div>
-                        </div>
-                        <div class="space-y-1">
-                            <p class="text-slate-900 font-black uppercase text-[11px] tracking-wider border-b border-slate-200 pb-0.5">SUPERVISIÓN Y DIÁMETROS</p>
-                            <div><b>Inclinación (Dip) / Azimut:</b> <span id="repDipAzimut" class="font-mono-code text-slate-800">--</span></div>
-                            <div><b>Operador Perforadora:</b> <span id="repPerforadorTurno" class="text-slate-800 font-bold">--</span></div>
-                            <div><b>Geólogo Responsable:</b> <span id="repGeologoTurno" class="text-slate-800 font-bold">--</span></div>
-                            <div><b>Metros HQ / NQ:</b> <span id="repMetrosHQRep" class="font-mono-code text-slate-800 font-bold">0.00m</span> / <span id="repMetrosNQRep" class="font-mono-code text-slate-700 font-bold">0.00m</span></div>
-                            <div><b>Estado Sondaje:</b> <span id="repEstadoPozo" class="font-bold text-slate-900">--</span></div>
-                        </div>
-                    </div>
-
-                    <!-- PERFIL 2D EN REPORTE VERTICAL HD -->
-                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-1.5 shadow-sm">
-                        <p class="text-[11px] font-black text-slate-900 uppercase tracking-wider" id="repTituloPerfil2D">📐 Perfil Topográfico 2D & Log Litológico (HD Vertical):</p>
-                        <div class="grid grid-cols-4 gap-3 items-start bg-white p-2.5 rounded-lg border border-slate-200">
-                            <div class="col-span-3 flex justify-center">
-                                <canvas id="canvasReporte2D" width="550" height="420" class="max-w-full h-auto bg-white rounded"></canvas>
+            <!-- ÁREA IMPRIMIBLE DSR DE 816PX CON MARGEN REAL CENTRADO TAMAÑO CARTA -->
+            <div id="printable-area-wrapper" class="overflow-x-auto flex justify-center p-2">
+                <div id="printable-area" class="pdf-page-container p-6 rounded-2xl border border-slate-200 space-y-4 text-xs text-slate-900 shadow-2xl relative overflow-hidden">
+                    
+                    <div class="border-b-2 border-slate-900 pb-3 flex justify-between items-center flex-wrap gap-3 px-2 pt-0">
+                        <div class="flex items-center gap-4">
+                            <img src="1792941546023.jpg" class="logo-img-real" alt="Logo Jireth">
+                            <div>
+                                <h3 class="text-sm font-black text-slate-900 uppercase tracking-tight" id="repTituloPrincipalDSR">REPORTE DE TURNO</h3>
+                                <p class="text-[9px] text-slate-600 font-extrabold uppercase">COMPLEJO JIRETH C.A. — COORDINACIÓN DE GEOLOGÍA</p>
                             </div>
-                            <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200 space-y-1 text-[9px]">
-                                <p class="font-black text-slate-900 uppercase tracking-wider border-b border-slate-300 pb-0.5">🎨 Leyenda</p>
-                                <div class="space-y-1 pt-1">
-                                    <div class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-yellow-200 inline-block border border-slate-400"></span><span class="font-bold text-slate-800">Suelo (&ge;70%)</span></div>
-                                    <div class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-yellow-400 inline-block border border-slate-400"></span><span class="font-bold text-slate-800">Saprolita (&ge;70%)</span></div>
-                                    <div class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-amber-600 inline-block border border-slate-400"></span><span class="font-bold text-slate-800">Saprock (&ge;70%)</span></div>
-                                    <div class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-orange-500 inline-block border border-slate-400"></span><span class="font-bold text-slate-800">Oxidada (&ge;80%)</span></div>
-                                    <div class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-sky-400 inline-block border border-slate-400"></span><span class="font-bold text-slate-800">Fracturada (&ge;70%)</span></div>
-                                    <div class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block border border-slate-400"></span><span class="font-bold text-slate-800">Fresca (&ge;90%)</span></div>
-                                    <div class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-amber-300 inline-block border border-slate-400"></span><span class="font-bold text-slate-800">Veta (&ge;90%)</span></div>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-xs font-mono-code text-slate-900 font-black" id="repCodigoHeader">S0000-ET</p>
+                            <p class="text-[10px] text-slate-600 font-bold" id="repFechaEmision">Fecha: --/--/---- | Turno: --</p>
+                        </div>
+                    </div>
+
+                    <div class="printable-content-body space-y-4 pt-2">
+                        <div class="grid grid-cols-4 gap-2 avoid-break">
+                            <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 shadow-sm">
+                                <p class="text-[9px] text-slate-500 uppercase font-black">PROF. PERFORADA</p>
+                                <p class="text-xs font-black text-slate-900 font-mono-code mt-0.5" id="repMetrajeTotal">0.00 m</p>
+                                <p class="text-[9px] text-slate-500 font-bold" id="repTargetSub">Target: 0.00 m</p>
+                            </div>
+                            <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 shadow-sm">
+                                <p class="text-[9px] text-slate-500 uppercase font-black">RECUPERACIÓN</p>
+                                <p class="text-xs font-black text-slate-900 font-mono-code mt-0.5" id="repRecPromedio">0.0%</p>
+                                <p class="text-[9px] text-slate-500 font-bold">Muestra en Testigo</p>
+                            </div>
+                            <div class="bg-slate-100 p-2.5 rounded-xl border border-slate-200 shadow-sm">
+                                <p class="text-[9px] text-slate-700 uppercase font-black">METROS A PAGAR</p>
+                                <p class="text-xs font-black text-slate-950 font-mono-code mt-0.5" id="repMetrosPagoTotal">0.00 m</p>
+                                <p class="text-[9px] text-slate-700 font-bold">Según Estándar</p>
+                            </div>
+                            <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 shadow-sm">
+                                <p class="text-[9px] text-slate-500 uppercase font-black">AVANCE GENERAL</p>
+                                <p class="text-xs font-black text-slate-900 font-mono-code mt-0.5" id="repAvanceGen">0.0%</p>
+                                <p class="text-[9px] text-slate-500 font-bold">Progreso Pozo</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs avoid-break shadow-sm">
+                            <div class="space-y-1">
+                                <p class="text-slate-900 font-black uppercase text-[11px] tracking-wider border-b border-slate-200 pb-0.5">DATOS DE PERFORACIÓN Y UBICACIÓN</p>
+                                <div><b>Zona / Proyecto:</b> <span id="repProyecto" class="text-slate-800 font-bold">--</span></div>
+                                <div><b>Empresa Perforadora:</b> <span id="repEmpresa" class="text-slate-800 font-bold">--</span></div>
+                                <div><b>Máquina:</b> <span id="repMaquina" class="text-slate-800 font-semibold">--</span></div>
+                                <div><b>Coordenada Este:</b> <span id="repEste" class="font-mono-code text-slate-800">--</span></div>
+                                <div><b>Coordenada Norte:</b> <span id="repNorte" class="font-mono-code text-slate-800">--</span></div>
+                                <div><b>Cota Z (m):</b> <span id="repCota" class="font-mono-code text-slate-800">--</span></div>
+                            </div>
+                            <div class="space-y-1">
+                                <p class="text-slate-900 font-black uppercase text-[11px] tracking-wider border-b border-slate-200 pb-0.5">SUPERVISIÓN Y DIÁMETROS</p>
+                                <div><b>Inclinación (Dip) / Azimut:</b> <span id="repDipAzimut" class="font-mono-code text-slate-800">--</span></div>
+                                <div><b>Operador Perforadora:</b> <span id="repPerforadorTurno" class="text-slate-800 font-bold">--</span></div>
+                                <div><b>Geólogo Responsable:</b> <span id="repGeologoTurno" class="text-slate-800 font-bold">--</span></div>
+                                <div><b>Metros HQ / NQ:</b> <span id="repMetrosHQRep" class="font-mono-code text-slate-800 font-bold">0.00m</span> / <span id="repMetrosNQRep" class="font-mono-code text-slate-700 font-bold">0.00m</span></div>
+                                <div><b>Estado Sondaje:</b> <span id="repEstadoPozo" class="font-bold text-slate-900">--</span></div>
+                            </div>
+                        </div>
+
+                        <!-- PERFIL 2D EN REPORTE VERTICAL HD -->
+                        <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-1.5 avoid-break shadow-sm">
+                            <p class="text-[11px] font-black text-slate-900 uppercase tracking-wider" id="repTituloPerfil2D">📐 Perfil Topográfico 2D & Log Litológico (HD Vertical):</p>
+                            <div class="grid grid-cols-1 md:grid-cols-4 gap-3 items-start bg-white p-2.5 rounded-lg border border-slate-200">
+                                <div class="md:col-span-3 flex justify-center">
+                                    <canvas id="canvasReporte2D" width="850" height="520" class="max-w-full h-auto bg-white rounded"></canvas>
+                                </div>
+                                <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 space-y-1.5 text-[10px]">
+                                    <p class="font-black text-slate-900 uppercase tracking-wider border-b border-slate-300 pb-0.5">🎨 Leyenda Litológica</p>
+                                    <div class="space-y-1 pt-1">
+                                        <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-yellow-200 inline-block border border-slate-400"></span><span class="font-bold text-slate-800">Suelo / Relleno (&ge;70%)</span></div>
+                                        <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-yellow-400 inline-block border border-slate-400"></span><span class="font-bold text-slate-800">Saprolita (&ge;70%)</span></div>
+                                        <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-amber-600 inline-block border border-slate-400"></span><span class="font-bold text-slate-800">Saprock (&ge;70%)</span></div>
+                                        <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-orange-500 inline-block border border-slate-400"></span><span class="font-bold text-slate-800">Roca Oxidada (&ge;80%)</span></div>
+                                        <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-sky-400 inline-block border border-slate-400"></span><span class="font-bold text-slate-800">Roca Fracturada (&ge;70%)</span></div>
+                                        <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-emerald-500 inline-block border border-slate-400"></span><span class="font-bold text-slate-800">Roca Fresca (&ge;90%)</span></div>
+                                        <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-amber-300 inline-block border border-slate-400"></span><span class="font-bold text-slate-800">Zona de Veta (&ge;90%)</span></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div>
-                        <h4 class="text-[11px] font-black text-slate-900 uppercase tracking-wider mb-1.5">🪵 REGISTRO DETALLADO TRAMO A TRAMO (CON ESTÁNDAR DE PAGO)</h4>
-                        <div class="overflow-x-auto border border-slate-300 rounded-xl shadow-sm">
-                            <table class="w-full text-left text-xs border-collapse">
-                                <thead class="bg-slate-900 text-white uppercase font-black border-b border-slate-400">
-                                    <tr>
-                                        <th class="p-2 border-r border-slate-700">Corrida</th>
-                                        <th class="p-2 border-r border-slate-700">Desde</th>
-                                        <th class="p-2 border-r border-slate-700">Hasta</th>
-                                        <th class="p-2 border-r border-slate-700">Avance</th>
-                                        <th class="p-2 border-r border-slate-700">Diám</th>
-                                        <th class="p-2 border-r border-slate-700">Recup</th>
-                                        <th class="p-2 border-r border-slate-700">% Rec</th>
-                                        <th class="p-2 border-r border-slate-700">Litología</th>
-                                        <th class="p-2 text-slate-200 font-black">Pago Estándar</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="repTablaBody" class="divide-y divide-slate-200 font-mono-code text-slate-900"></tbody>
-                            </table>
+                        <div>
+                            <h4 class="text-[11px] font-black text-slate-900 uppercase tracking-wider mb-1.5">🪵 REGISTRO DETALLADO TRAMO A TRAMO (CON ESTÁNDAR DE PAGO)</h4>
+                            <div class="overflow-x-auto border border-slate-300 rounded-xl shadow-sm">
+                                <table class="w-full text-left text-xs border-collapse">
+                                    <thead class="bg-slate-900 text-white uppercase font-black border-b border-slate-400">
+                                        <tr>
+                                            <th class="p-2 border-r border-slate-700">Corrida</th>
+                                            <th class="p-2 border-r border-slate-700">Desde</th>
+                                            <th class="p-2 border-r border-slate-700">Hasta</th>
+                                            <th class="p-2 border-r border-slate-700">Avance</th>
+                                            <th class="p-2 border-r border-slate-700">Diám</th>
+                                            <th class="p-2 border-r border-slate-700">Recup</th>
+                                            <th class="p-2 border-r border-slate-700">% Rec</th>
+                                            <th class="p-2 border-r border-slate-700">Litología</th>
+                                            <th class="p-2 text-slate-200 font-black">Pago Estándar</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="repTablaBody" class="divide-y divide-slate-200 font-mono-code text-slate-900"></tbody>
+                                </table>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-1 shadow-sm">
-                        <p class="text-[11px] font-black text-slate-900 uppercase tracking-wider">📝 Observación y Operaciones Principales:</p>
-                        <p class="text-slate-800 text-xs uppercase font-semibold leading-relaxed" id="repObservacionesTexto">SIN NOVEDADES REGISTRADAS.</p>
-                        <p class="text-slate-600 text-xs mt-0.5 font-bold" id="repMotivoCierreBox"></p>
-                    </div>
+                        <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-1 avoid-break shadow-sm">
+                            <p class="text-[11px] font-black text-slate-900 uppercase tracking-wider">📝 Observación y Operaciones Principales:</p>
+                            <p class="text-slate-800 text-xs uppercase font-semibold leading-relaxed" id="repObservacionesTexto">SIN NOVEDADES REGISTRADAS.</p>
+                            <p class="text-slate-600 text-xs mt-0.5 font-bold" id="repMotivoCierreBox"></p>
+                        </div>
 
-                    <div class="pt-4 border-t-2 border-slate-200 text-xs text-slate-800" id="contenedorFirmasDSR"></div>
+                        <div class="pt-4 border-t-2 border-slate-200 text-xs text-slate-800 avoid-break" id="contenedorFirmasDSR"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -990,6 +1024,7 @@
     let syncQueue = JSON.parse(localStorage.getItem('jireth_sync_queue') || '[]');
     let indexEditandoAvance = null;
     let lastActivityTime = Date.now();
+    let elementoObjetivoPDF = null;
 
     if (!localStorage.getItem('jireth_clave_geo')) localStorage.setItem('jireth_clave_geo', 'Mina2628');
     localStorage.setItem('jireth_clave_ger', 'JIRETH2026');
@@ -2200,27 +2235,27 @@
         }
 
         let startX = w / 2;
-        let startY = 45;
-        let maxDrawHeight = h - 70;
+        let startY = 65;
+        let maxDrawHeight = h - 120;
         let scale = maxDrawHeight / targetRef;
 
         ctx.strokeStyle = esReporte ? '#cbd5e1' : '#334155';
-        ctx.lineWidth = 2;
+        ctx.lineWidth = 3;
         ctx.beginPath();
-        ctx.moveTo(20, startY);
-        ctx.lineTo(w - 20, startY);
+        ctx.moveTo(30, startY);
+        ctx.lineTo(w - 30, startY);
         ctx.stroke();
 
         ctx.fillStyle = esReporte ? '#0f172a' : '#38bdf8';
-        ctx.font = 'bold 10px "JetBrains Mono"';
+        ctx.font = 'bold 12px "JetBrains Mono"';
         ctx.textAlign = 'center';
-        ctx.fillText('SUPERFICIE (Z=' + (p.cota || '0.00m') + ') | DIP: -' + dipVal + '° | AZ: ' + (p.azimut || '0') + '°', w / 2, startY - 12);
+        ctx.fillText('SUPERFICIE (Z=' + (p.cota || '0.00m') + ') | DIP: -' + dipVal + '° | AZ: ' + (p.azimut || '0') + '°', w / 2, startY - 18);
 
-        let endX = startX + Math.cos(dipRad) * targetRef * scale * 0.2;
+        let endX = startX + Math.cos(dipRad) * targetRef * scale * 0.25;
         let endY = startY + Math.sin(dipRad) * targetRef * scale;
 
         ctx.strokeStyle = esReporte ? '#e2e8f0' : '#1e293b';
-        ctx.lineWidth = esReporte ? 20 : 32;
+        ctx.lineWidth = esReporte ? 28 : 38;
         ctx.lineCap = 'round';
         ctx.beginPath();
         ctx.moveTo(startX, startY);
@@ -2239,7 +2274,7 @@
 
         let ultYIzquierda = -999;
         let ultYDerecha = -999;
-        const minSpaceY = 14;
+        const minSpaceY = 18;
 
         if (tramosAgrupados && tramosAgrupados.length > 0) {
             tramosAgrupados.forEach((av) => {
@@ -2247,12 +2282,12 @@
                 let hTramo = av.hasta;
                 let diam = av.diametro;
 
-                let segStartX = startX + Math.cos(dipRad) * d * scale * 0.2;
+                let segStartX = startX + Math.cos(dipRad) * d * scale * 0.25;
                 let segStartY = startY + Math.sin(dipRad) * d * scale;
-                let segEndX = startX + Math.cos(dipRad) * hTramo * scale * 0.2;
+                let segEndX = startX + Math.cos(dipRad) * hTramo * scale * 0.25;
                 let segEndY = startY + Math.sin(dipRad) * hTramo * scale;
 
-                let anchoTestigo = diam === 'HQ' ? (esReporte ? 16 : 30) : (esReporte ? 12 : 22);
+                let anchoTestigo = diam === 'HQ' ? (esReporte ? 24 : 36) : (esReporte ? 18 : 28);
                 ctx.strokeStyle = colorMap[av.meteorizacion] || '#94a3b8';
                 ctx.lineWidth = anchoTestigo;
                 ctx.lineCap = 'butt';
@@ -2266,25 +2301,47 @@
                 ultYIzquierda = targetYIzq;
 
                 ctx.fillStyle = esReporte ? '#0284c7' : '#38bdf8';
-                ctx.font = 'bold 9px "JetBrains Mono"';
+                ctx.font = 'bold 11px "JetBrains Mono"';
                 ctx.textAlign = 'right';
-                ctx.fillText(`${d.toFixed(1)}-${hTramo.toFixed(1)}m [${av.porcentajeRecuperacion}%]`, segEndX - (anchoTestigo / 2 + 8), targetYIzq + 3);
+                ctx.fillText(`${d.toFixed(1)}m - ${hTramo.toFixed(1)}m [Rec: ${av.porcentajeRecuperacion}%]`, segEndX - (anchoTestigo / 2 + 12), targetYIzq + 4);
+
+                ctx.strokeStyle = esReporte ? 'rgba(2, 132, 199, 0.4)' : 'rgba(56, 189, 248, 0.4)';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(segEndX - (anchoTestigo / 2 + 2), segEndY);
+                ctx.lineTo(segEndX - (anchoTestigo / 2 + 10), targetYIzq);
+                ctx.stroke();
 
                 let targetYDerecha = segEndY;
                 if (targetYDerecha - ultYDerecha < minSpaceY) targetYDerecha = ultYDerecha + minSpaceY;
                 ultYDerecha = targetYDerecha;
 
                 ctx.fillStyle = esReporte ? '#0f172a' : '#f8fafc';
-                ctx.font = 'bold 9px "Plus Jakarta Sans"';
+                ctx.font = 'bold 11px "Plus Jakarta Sans"';
                 ctx.textAlign = 'left';
-                ctx.fillText(`${av.meteorizacion} (${av.diametro})`, segEndX + (anchoTestigo / 2 + 8), targetYDerecha + 3);
+                ctx.fillText(`${av.meteorizacion} (${av.diametro})`, segEndX + (anchoTestigo / 2 + 12), targetYDerecha + 4);
+
+                ctx.strokeStyle = esReporte ? 'rgba(15, 23, 42, 0.4)' : 'rgba(248, 250, 252, 0.4)';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(segEndX + (anchoTestigo / 2 + 2), segEndY);
+                ctx.lineTo(segEndX + (anchoTestigo / 2 + 10), targetYDerecha);
+                ctx.stroke();
             });
         }
 
         ctx.fillStyle = '#ef4444';
         ctx.beginPath();
-        ctx.arc(startX, startY, 5, 0, Math.PI * 2);
+        ctx.arc(startX, startY, 7, 0, Math.PI * 2);
         ctx.fill();
+
+        ctx.fillStyle = esReporte ? '#0284c7' : '#38bdf8';
+        ctx.font = 'bold 15px "Plus Jakarta Sans"';
+        ctx.textAlign = 'right';
+        ctx.fillText(p.codigo, w - 25, 30);
+        ctx.fillStyle = esReporte ? '#0f172a' : '#f8fafc';
+        ctx.font = 'bold 11px "JetBrains Mono"';
+        ctx.fillText(`Profundidad Total: ${maxProfundidadReal.toFixed(2)}m`, w - 25, 48);
     }
 
     function cargarResumenCierrePozo() {
@@ -2535,80 +2592,60 @@
         }
     }
 
-    /* VISTA PREVIA Y EXPORTACIÓN PDF IMPECABLE CON SCROLL MULTIPÁGINA */
-    let elementoObjetivoActual = null;
+    /* VISTA PREVIA Y EXPORTACIÓN PDF EXACTA A TAMAÑO CARTA SIN DESPLAZAMIENTO */
+    function abrirVistaPreviaPDF(idElemento) {
+        const elOriginal = document.getElementById(idElemento || 'printable-area');
+        if (!elOriginal) { alert("⚠️ No hay reporte activo para previsualizar."); return; }
 
-    function abrirVistaPreviaPDF(idElementoReporte) {
-        const idTarget = idElementoReporte || 'printable-area';
-        const elementoOriginal = document.getElementById(idTarget);
-        if (!elementoOriginal) { 
-            alert("⚠️ No se encontró el documento de reporte para visualizar."); 
-            return; 
-        }
-        
-        elementoObjetivoActual = elementoOriginal;
+        elementoObjetivoPDF = elOriginal;
         const contenedorPreview = document.getElementById('contenedorPreviewInyectado');
-        if (!contenedorPreview) return;
-        
         contenedorPreview.innerHTML = '';
-        
-        const clon = elementoOriginal.cloneNode(true);
+
+        // Clonamos el elemento maquetado respetando el formato Carta exacto
+        const clon = elOriginal.cloneNode(true);
         clon.style.display = 'block';
-        clon.style.width = '794px';
+        clon.style.width = '816px';
         clon.style.margin = '0 auto';
-        clon.style.boxShadow = '0 10px 25px rgba(0,0,0,0.15)';
+        clon.style.boxShadow = '0 15px 30px rgba(0,0,0,0.4)';
         clon.style.backgroundColor = '#ffffff';
-        
+
         contenedorPreview.appendChild(clon);
-        
-        const modal = document.getElementById('modalVistaPreviaPDF');
-        if (modal) modal.classList.remove('hidden');
+        document.getElementById('modalVistaPreviaPDF').classList.remove('hidden');
     }
 
     function cerrarModalVistaPrevia() {
-        const modal = document.getElementById('modalVistaPreviaPDF');
-        if (modal) modal.classList.add('hidden');
-        elementoObjetivoActual = null;
+        document.getElementById('modalVistaPreviaPDF').classList.add('hidden');
+        elementoObjetivoPDF = null;
     }
 
     async function descargarDesdeModalPDF() {
-        const elemento = elementoObjetivoActual || document.getElementById('printable-area');
+        const elemento = elementoObjetivoPDF || document.getElementById('printable-area');
         if (!elemento) return;
-        
-        showToast("Generando PDF", "Exportando documento centrado a tamaño Carta...", "⏳");
-        
-        const anchoOriginal = elemento.style.width;
-        const margenOriginal = elemento.style.margin;
-        
-        elemento.style.width = '794px';
-        elemento.style.margin = '0 auto';
+
+        showToast("Generando PDF", "Exportando documento exacto centrado...", "⏳");
 
         const opciones = {
-            margin:       [10, 8, 10, 8],
+            margin:       [10, 10, 10, 10], // Margen uniforme perimetral en mm
             filename:     `DSR_${pozoActivoId || 'Sondaje'}_${Date.now()}.pdf`,
             image:        { type: 'jpeg', quality: 0.98 },
             html2canvas:  { 
                 scale: 2, 
                 useCORS: true, 
-                logging: false,
+                logging: false, 
                 letterRendering: true,
-                windowWidth: 794
+                windowWidth: 816, // Forzado estricto de captura horizontal a 816px sin recortes
+                scrollX: 0,
+                scrollY: 0
             },
             jsPDF:        { unit: 'mm', format: 'letter', orientation: 'portrait' }
         };
 
         try {
             await html2pdf().set(opciones).from(elemento).save();
-            showToast("PDF Exportado", "El archivo se ha descargado correctamente.", "✅");
-            
-            elemento.style.width = anchoOriginal;
-            elemento.style.margin = margenOriginal;
-            
+            showToast("PDF Exportado", "El reporte se ha descargado correctamente.", "✅");
             cerrarModalVistaPrevia();
         } catch (error) {
             console.error("Error al exportar PDF:", error);
-            elemento.style.width = anchoOriginal;
-            elemento.style.margin = margenOriginal;
             window.print();
         }
     }
