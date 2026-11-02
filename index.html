@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Jireth GeoCore Lite | Complejo Jireth C.A.</title>
     
     <link rel="manifest" href="manifest.json">
@@ -86,6 +86,7 @@
         }
         .pulse-live { animation: pulseGlow 1.8s infinite ease-in-out; }
 
+        /* LOGO AMPLIADO SIN BORDES Y SIN RECUADRO OSCURO */
         .logo-img-real {
             height: 60px; width: auto; max-width: 180px; object-fit: contain;
             flex-shrink: 0; background: transparent !important; border: none !important; box-shadow: none !important;
@@ -125,29 +126,6 @@
         </div>
     </div>
 
-    <!-- MODAL DE VISTA PREVIA PDF CON OPCIÓN DE CERRAR / CANCELAR -->
-    <div id="modalVistaPreviaPDF" class="fixed inset-0 bg-slate-950/80 z-50 hidden backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
-        <div class="card-pro bg-slate-900 border border-slate-700 rounded-3xl w-full max-w-4xl p-6 space-y-4 shadow-2xl relative">
-            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
-                <h3 class="text-sm font-black text-white uppercase tracking-wider flex items-center gap-2">
-                    <span>👁️ Vista Previa del Documento PDF (Tamaño Carta Centrado)</span>
-                </h3>
-                <div class="flex gap-2">
-                    <button type="button" onclick="descargarDesdeModalPDF()" class="bg-sky-600 hover:bg-sky-500 text-white font-extrabold px-4 py-2 rounded-xl text-xs shadow-md transition">
-                        📥 Confirmar y Descargar PDF
-                    </button>
-                    <button type="button" onclick="cerrarModalVistaPrevia()" class="bg-rose-950 hover:bg-rose-900 text-rose-300 border border-rose-800 font-extrabold px-4 py-2 rounded-xl text-xs shadow-md transition">
-                        ❌ Cerrar / Cancelar
-                    </button>
-                </div>
-            </div>
-            <!-- Contenedor donde se clonará temporalmente el reporte para inspección -->
-            <div id="contenedorPreviewInyectado" class="bg-white p-4 rounded-2xl max-h-[70vh] overflow-y-auto shadow-inner flex justify-center text-slate-900">
-                <!-- El contenido se inyecta aquí -->
-            </div>
-        </div>
-    </div>
-
     <!-- PANTALLA DE ACCESO -->
     <div id="pantallaLogin" class="fixed inset-0 bg-geocore-master z-50 flex items-center justify-center p-4 overflow-y-auto">
         <div class="card-pro p-6 sm:p-8 rounded-3xl w-full max-w-md space-y-6 relative overflow-hidden my-auto text-white">
@@ -183,7 +161,7 @@
                 <div>
                     <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Contraseña de Geólogos</label>
                     <div class="relative flex items-center">
-                        <input type="password" id="inputClaveGeo" autocomplete="current-password" class="input-field w-full px-4 pr-11 text-sm font-bold" value="">
+                        <input type="password" id="inputClaveGeo" autocomplete="current-password" placeholder="" class="input-field w-full px-4 pr-11 text-sm font-bold" value="">
                         <button type="button" onclick="togglePasswordVisibility('inputClaveGeo')" class="absolute right-3.5 text-slate-400 hover:text-white text-base">👁️</button>
                     </div>
                 </div>
@@ -199,7 +177,7 @@
                 <div>
                     <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Contraseña de Gerencia</label>
                     <div class="relative flex items-center">
-                        <input type="password" id="inputClaveGer" autocomplete="current-password" class="input-field w-full px-4 pr-11 text-sm font-bold" value="">
+                        <input type="password" id="inputClaveGer" autocomplete="current-password" placeholder="" class="input-field w-full px-4 pr-11 text-sm font-bold" value="">
                         <button type="button" onclick="togglePasswordVisibility('inputClaveGer')" class="absolute right-3.5 text-slate-400 hover:text-white text-base">👁️</button>
                     </div>
                 </div>
@@ -214,11 +192,11 @@
                 </div>
                 <div>
                     <label class="block text-xs font-extrabold text-slate-400 mb-1 uppercase tracking-wider">PIN Maestro (4 dígitos)</label>
-                    <input type="password" maxlength="4" id="inputPinRescate" class="input-field w-full px-3 text-sm font-mono-code font-bold text-center tracking-widest" value="">
+                    <input type="password" maxlength="4" id="inputPinRescate" placeholder="" class="input-field w-full px-3 text-sm font-mono-code font-bold text-center tracking-widest" value="">
                 </div>
                 <div>
                     <label class="block text-xs font-extrabold text-slate-400 mb-1 uppercase tracking-wider">Nueva Contraseña Geólogos</label>
-                    <input type="password" id="inputClaveNuevaRescate" class="input-field w-full px-3 text-sm font-bold" value="">
+                    <input type="password" id="inputClaveNuevaRescate" placeholder="" class="input-field w-full px-3 text-sm font-bold" value="">
                 </div>
                 <button type="button" onclick="ejecutarRescateClave()" class="btn-field w-full bg-sky-600 hover:bg-sky-500 text-white text-sm font-black shadow-lg shadow-sky-900/40">
                     🔄 Restablecer Clave e Ingresar
@@ -807,7 +785,7 @@
             <div class="flex justify-between items-center flex-wrap gap-2">
                 <h2 class="text-xl font-black text-white tracking-tight">📑 Módulo: Repositorio & Informes DSR Oficiales</h2>
                 <div class="space-x-2">
-                    <button type="button" onclick="abrirVistaPreviaPDF('printable-area')" class="bg-sky-600 hover:bg-sky-500 text-white font-black px-4 py-2 rounded-xl text-xs shadow-sm transition">👁️ Vista Previa & Descargar PDF</button>
+                    <button type="button" onclick="abrirVistaPreviaPDF('printable-area')" class="bg-sky-600 hover:bg-sky-500 text-white font-black px-4 py-2 rounded-xl text-xs shadow-sm transition">👁️ Previsualizar / 📥 Descargar PDF</button>
                     <button type="button" onclick="copiarReportePortapapeles()" class="bg-slate-700 hover:bg-slate-600 text-white font-black px-4 py-2 rounded-xl text-xs shadow-sm transition">📋 Copiar Resumen</button>
                 </div>
             </div>
@@ -835,7 +813,7 @@
                     </div>
                 </div>
 
-                <!-- ÁREA IMPRIMIBLE DSR CON LOGO AMPLIO SIN BORDES Y TAMAÑO CARTA EXACTO CENTRADO -->
+                <!-- ÁREA IMPRIMIBLE DSR CON LOGO AMPLIO SIN BORDES Y TAMAÑO CARTA EXACTO -->
                 <div id="printable-area" class="bg-white p-6 rounded-2xl border border-slate-200 space-y-4 text-xs text-slate-900 shadow-xl relative overflow-hidden" style="width: 794px; margin: 0 auto;">
                     
                     <div class="border-b-2 border-slate-900 pb-3 flex justify-between items-center flex-wrap gap-3 px-6 pt-0">
@@ -979,6 +957,28 @@
         </section>
     </div>
 
+    <!-- MODAL DE VISTA PREVIA PDF CON OPCIÓN DE CERRAR / CANCELAR Y CENTRADO PERFECTO -->
+    <div id="modalVistaPreviaPDF" class="fixed inset-0 bg-slate-950/80 z-50 hidden backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+        <div class="card-pro bg-slate-900 border border-slate-700 rounded-3xl w-full max-w-4xl p-6 space-y-4 shadow-2xl relative">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+                <h3 class="text-sm font-black text-white uppercase tracking-wider flex items-center gap-2">
+                    <span>👁️ Vista Previa del Documento PDF (Tamaño Carta - Centrado)</span>
+                </h3>
+                <div class="flex gap-2">
+                    <button type="button" onclick="descargarDesdeModalPDF()" class="bg-sky-600 hover:bg-sky-500 text-white font-extrabold px-4 py-2 rounded-xl text-xs shadow-md transition">
+                        📥 Descargar PDF
+                    </button>
+                    <button type="button" onclick="cerrarModalVistaPrevia()" class="bg-rose-950 hover:bg-rose-900 text-rose-300 border border-rose-800 font-extrabold px-4 py-2 rounded-xl text-xs shadow-md transition">
+                        ❌ Cerrar / Cancelar
+                    </button>
+                </div>
+            </div>
+            <!-- Contenedor donde se inyecta el clon centrado para inspección -->
+            <div id="contenedorPreviewInyectado" class="bg-slate-950 p-4 rounded-2xl max-h-[75vh] overflow-y-auto shadow-inner flex justify-center text-slate-900">
+            </div>
+        </div>
+    </div>
+
     <script>
         const SUPABASE_URL = "https://cjtseuctrbdvgagudyyr.supabase.co";
         const SUPABASE_KEY = "sb_publishable_4ElaI13qIakKqei9_-OiNA__PpbBBjX";
@@ -1058,7 +1058,7 @@
             const badge = document.getElementById('badgeSyncQueue');
             if (!badge) return;
             if (syncQueue.length > 0) {
-                badge.innerText = `⏳ \${syncQueue.length} Pendientes`;
+                badge.innerText = `⏳ ${syncQueue.length} Pendientes`;
                 badge.classList.remove('hidden');
             } else { badge.classList.add('hidden'); }
         }
@@ -1294,23 +1294,23 @@
                                 <span class="w-2 h-2 rounded-full bg-emerald-400 pulse-live inline-block"></span>
                                 ACTIVO
                             </span>
-                            <span class="text-xs font-mono-code font-black text-sky-400">\${p.codigo}</span>
+                            <span class="text-xs font-mono-code font-black text-sky-400">${p.codigo}</span>
                         </div>
                         <div class="grid grid-cols-2 gap-2 pt-1 text-[11px]">
-                            <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800"><span class="text-slate-400 text-[9px] block uppercase font-bold">Cliente</span><span class="text-white font-extrabold truncate block">\${p.empresa}</span></div>
-                            <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800"><span class="text-slate-400 text-[9px] block uppercase font-bold">Proyecto</span><span class="text-white font-extrabold truncate block">\${p.proyecto}</span></div>
+                            <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800"><span class="text-slate-400 text-[9px] block uppercase font-bold">Cliente</span><span class="text-white font-extrabold truncate block">${p.empresa}</span></div>
+                            <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800"><span class="text-slate-400 text-[9px] block uppercase font-bold">Proyecto</span><span class="text-white font-extrabold truncate block">${p.proyecto}</span></div>
                         </div>
                     </div>
                     <div class="space-y-3 pt-2 border-t border-slate-800">
-                        <div class="flex justify-between items-center text-xs font-extrabold"><span class="text-slate-300">Progreso:</span><span class="text-white font-mono-code font-black">\${metPozo.toFixed(2)}m / ${targetPozo.toFixed(2)}m (${pct.toFixed(1)}%)</span></div>
+                        <div class="flex justify-between items-center text-xs font-extrabold"><span class="text-slate-300">Progreso:</span><span class="text-white font-mono-code font-black">${metPozo.toFixed(2)}m / ${targetPozo.toFixed(2)}m (${pct.toFixed(1)}%)</span></div>
                         <div class="w-full bg-slate-950 h-3 rounded-full overflow-hidden flex border border-slate-800 p-0.5 shadow-inner">
-                            <div class="bg-sky-600 h-full rounded" style="width: \${pct}%"></div>
+                            <div class="bg-sky-600 h-full rounded" style="width: ${pct}%"></div>
                         </div>
                         <div class="flex justify-between text-[10px] text-slate-300 font-bold px-1 bg-slate-950 p-2 rounded-xl border border-slate-800">
-                            <span class="text-purple-300">Recup: <b class="font-mono-code">\${recPozoP}%</b></span>
-                            <span class="text-amber-300">A Pagar: <b class="font-mono-code">\${pagPozoAcc.toFixed(2)}m</b></span>
+                            <span class="text-purple-300">Recup: <b class="font-mono-code">${recPozoP}%</b></span>
+                            <span class="text-amber-300">A Pagar: <b class="font-mono-code">${pagPozoAcc.toFixed(2)}m</b></span>
                         </div>
-                        <button type="button" onclick="irARepositorioSondaje('\${p.codigo}')" class="w-full mt-1 bg-gradient-to-r from-sky-600 to-indigo-600 hover:from-sky-500 hover:to-indigo-500 text-white py-2.5 rounded-xl text-xs font-extrabold transition shadow-sm">📑 Ver en Repositorio</button>
+                        <button type="button" onclick="irARepositorioSondaje('${p.codigo}')" class="w-full mt-1 bg-gradient-to-r from-sky-600 to-indigo-600 hover:from-sky-500 hover:to-indigo-500 text-white py-2.5 rounded-xl text-xs font-extrabold transition shadow-sm">📑 Ver en Repositorio</button>
                     </div>
                 `;
                 grid.appendChild(card);
@@ -1753,7 +1753,7 @@
             if (!fecha || !perforador || !geologo) { alert("❌ Complete Fecha, Perforador y Geólogo."); return; }
 
             let duplicado = Object.values(turnosData).some(t => t.pozo === pozoActivoId && t.fecha === fecha && t.jornada === jornada && t.id !== turnoEditId);
-            if (duplicado) { alert(`⚠️ Ya existe un turno \${jornada} para la fecha ${fecha} en el sondaje${pozoActivoId}.`); return; }
+            if (duplicado) { alert(`⚠️ Ya existe un turno ${jornada} para la fecha ${fecha} en el sondaje ${pozoActivoId}.`); return; }
 
             if (turnoEditId && turnosData[turnoEditId]) {
                 turnosData[turnoEditId].fecha = fecha;
@@ -1886,7 +1886,8 @@
             let p = pozosData[t.pozo];
             contenedor.classList.remove('hidden');
 
-            document.getElementById('inspTurnoTitulo').innerText = `📅 ${t.fecha} (${t.jornada}) | Sondaje: ${t.pozo} \vert{} Perf:${t.perforador} | Geo: ${t.geologo}`; document.getElementById('inspTurnoObs').innerText = `📝 Observaciones: ${t.observaciones || 'Sin observaciones registradas.'}`;
+            document.getElementById('inspTurnoTitulo').innerText = `📅 ${t.fecha} (${t.jornada}) | Sondaje: ${t.pozo} | Perf: ${t.perforador} | Geo: ${t.geologo}`;
+            document.getElementById('inspTurnoObs').innerText = `📝 Observaciones: ${t.observaciones || 'Sin observaciones registradas.'}`;
 
             let tbody = document.getElementById('inspTablaAvancesBody');
             tbody.innerHTML = '';
@@ -1898,7 +1899,7 @@
                 totalMetrosTurno += met;
                 let tr = document.createElement('tr');
                 tr.className = "hover:bg-slate-900 transition";
-                tr.innerHTML = `<td class="p-2">#\${idx + 1}</td><td class="p-2 text-white font-bold">\${av.diametro}</td><td class="p-2 text-white font-bold">${av.desde} -${av.hasta}</td><td class="p-2 text-slate-300">\${av.recuperado}m</td><td class="p-2 font-bold ${parseFloat(av.porcentaje) < 70 ? 'text-amber-400' : 'text-slate-200'}">${av.porcentaje}%</td><td class="p-2 text-slate-300">\${av.meteorizacion}</td><td class="p-2 text-amber-400 font-bold">\${av.pagoEstandar || '0.00'}m</td>`;
+                tr.innerHTML = `<td class="p-2">#${idx + 1}</td><td class="p-2 text-white font-bold">${av.diametro}</td><td class="p-2 text-white font-bold">${av.desde} - ${av.hasta}</td><td class="p-2 text-slate-300">${av.recuperado}m</td><td class="p-2 font-bold ${parseFloat(av.porcentaje) < 70 ? 'text-amber-400' : 'text-slate-200'}">${av.porcentaje}%</td><td class="p-2 text-slate-300">${av.meteorizacion}</td><td class="p-2 text-amber-400 font-bold">${av.pagoEstandar || '0.00'}m</td>`;
                 tbody.appendChild(tr);
             });
 
@@ -1957,7 +1958,7 @@
                 let tDesde = parseFloat(t.desde);
                 let tHasta = parseFloat(t.hasta);
                 if ((desde >= tDesde && desde < tHasta) || (hasta > tDesde && hasta <= tHasta) || (desde <= tDesde && hasta >= tHasta)) {
-                    return { valido: false, mensaje: `❌ Solapamiento: El tramo (${desde.toFixed(2)}-${hasta.toFixed(2)}m) cruza con el tramo #\${i+1} (${tDesde.toFixed(2)}-${tHasta.toFixed(2)}m).` };
+                    return { valido: false, mensaje: `❌ Solapamiento: El tramo (${desde.toFixed(2)}-${hasta.toFixed(2)}m) cruza con el tramo #${i+1} (${tDesde.toFixed(2)}-${tHasta.toFixed(2)}m).` };
                 }
             }
             return { valido: true };
@@ -1982,7 +1983,7 @@
 
             let lonManiobra = hasta - desde;
             if (isNaN(recuperado) || recuperado < 0 || recuperado > lonManiobra) { 
-                alert(`❌ Metros recuperados inválidos (\${recuperado}m). No puede exceder la maniobra (\${lonManiobra.toFixed(2)}m).`); 
+                alert(`❌ Metros recuperados inválidos (${recuperado}m). No puede exceder la maniobra (${lonManiobra.toFixed(2)}m).`); 
                 return; 
             }
 
@@ -2032,8 +2033,251 @@
 
                 let tr = document.createElement('tr');
                 tr.className = "hover:bg-slate-900 transition";
-                let tdAccion = perfilActual === 'GERENCIA' ? `<td class="p-3 text-center text-slate-500">Solo Lectura</td>` : `<td class="p-3 text-center space-x-1"><button onclick="editarTramo(\${idxOriginal})" class="text-xs bg-slate-800 text-white px-2 py-1 rounded border border-slate-700 shadow-sm">✏️</button><button onclick="eliminarTramo(\${idxOriginal})" class="text-xs bg-rose-950 text-rose-300 px-2 py-1 rounded border border-rose-800 shadow-sm">🗑️</button></td>`;
-                tr.innerHTML = `<td class="p-3">#\${idxOriginal + 1}</td><td class="p-3 text-white font-bold">${t.desde} -${t.hasta}</td><td class="p-3 text-sky-400 font-bold">\${t.diametro}</td><td class="p-3 text-white">\${t.recuperado}</td><td class="p-3 font-bold ${parseFloat(t.porcentaje) < 70 ? 'text-amber-400' : 'text-emerald-400'}">${t.porcentaje}%</td><td class="p-3 text-slate-300">\${t.meteorizacion}</td><td class="p-3 text-amber-400 font-bold">\${pagVal.toFixed(2)}m</td>${tdAccion}`; tbody.appendChild(tr); }); }  function editarTramo(idx) { if (perfilActual === 'GERENCIA') return; let p = pozosData[pozoActivoId]; let t = p.avances[idx]; document.getElementById('m3_desde').value = t.desde; document.getElementById('m3_hasta').value = t.hasta; document.getElementById('m3_diametro').value = t.diametro; document.getElementById('m3_recuperado').value = t.recuperado; document.getElementById('m3_meteorizacion').value = t.meteorizacion; indexEditandoAvance = idx; document.getElementById('btnGuardarAvance').innerText = "💾 Actualizar Tramo #" + (idx + 1); document.getElementById('btnCancelarEdicion').classList.remove('hidden'); scrollToElement('boxFormAvance'); showToast("Modo Edición Tramo", "Cargado tramo #" + (idx + 1) + ".", "✏️"); }  function cancelarEdicionAvance() { indexEditandoAvance = null; document.getElementById('btnGuardarAvance').innerText = "➕ Guardar Avance Tramo"; document.getElementById('btnCancelarEdicion').classList.add('hidden'); autoCalcularHasta(); }  async function eliminarTramo(idx) { if (perfilActual === 'GERENCIA') return; if (confirm("¿Eliminar este tramo?")) { pozosData[pozoActivoId].avances.splice(idx, 1); await guardarYPersistirTodo(); actualizarTablaAvances(); actualizarProgresoGrafico(); verificarAjustarLockDiametro(pozosData[pozoActivoId]); renderizarPerfil2D(); autoCalcularHasta(); showToast("Tramo Eliminado", "Removido del registro.", "🗑️"); } }  function actualizarProgresoGrafico() { if (!pozoActivoId \vert{}\vert{} !pozosData[pozoActivoId]) return; let p = pozosData[pozoActivoId]; let target = parseFloat(p.target) \vert{}\vert{} 100.0; let totalHQ = 0, totalNQ = 0, totalRecuperado = 0, totalMetros = 0, totalPago = 0;  p.avances.forEach(t => { let met = parseFloat(t.hasta) - parseFloat(t.desde); let rec = parseFloat(t.recuperado) \vert{}\vert{} 0; let pago = t.pagoEstandar ? parseFloat(t.pagoEstandar) : calcularMetrosAPagar(met, rec, t.meteorizacion); totalMetros += met; totalRecuperado += rec; totalPago += pago; if (t.diametro === 'HQ') totalHQ += met; else totalNQ += met; });  let totalPerforado = totalHQ + totalNQ; let pct = target > 0 ? Math.min(100, (totalPerforado / target) * 100) : 0; let recGlobal = totalMetros > 0 ? ((totalRecuperado / totalMetros) * 100) : 0;  document.getElementById('cardMetrajeAcum').innerText = totalPerforado.toFixed(2) + " m"; document.getElementById('cardTargetSub').innerText = "Target: " + target.toFixed(2) + " m"; document.getElementById('cardRecGlobal').innerText = recGlobal.toFixed(1) + "\%"; document.getElementById('cardAvanceGen').innerText = pct.toFixed(1) + "\%"; document.getElementById('cardMetrosPago').innerText = totalPago.toFixed(2) + " m";  document.getElementById('txtMetrosHQ').innerText = totalHQ.toFixed(2); document.getElementById('txtMetrosNQ').innerText = totalNQ.toFixed(2); let pendiente = Math.max(0, target - totalPerforado); document.getElementById('txtMetrosPend').innerText = pendiente.toFixed(2); document.getElementById('lblProgresoTexto').innerText = totalPerforado.toFixed(2) + " m / " + target.toFixed(2) + " m (" + pct.toFixed(1) + "\%)";  let pHQ = target > 0 ? (totalHQ / target) * 100 : 0; let pNQ = target > 0 ? (totalNQ / target) * 100 : 0; let pPend = target > 0 ? (pendiente / target) * 100 : 100;  document.getElementById('barHQ').style.width = pHQ + '\%'; document.getElementById('barNQ').style.width = pNQ + '\%'; document.getElementById('barPendiente').style.width = pPend + '\%'; }  function renderizarPerfil2D() { const canvas = document.getElementById('canvasPerfil2D'); if (!canvas) return; const ctx = canvas.getContext('2d'); const w = canvas.width; const h = canvas.height;  ctx.fillStyle = '#020617'; ctx.fillRect(0, 0, w, h);  if (!pozoActivoId \vert{}\vert{} !pozosData[pozoActivoId]) { ctx.fillStyle = '#64748b'; ctx.font = 'bold 13px "Plus Jakarta Sans"'; ctx.textAlign = 'center'; ctx.fillText('SELECCIONE UN SONDAJE PARA VISUALIZAR EL PERFIL 2D', w / 2, h / 2); return; }  let p = pozosData[pozoActivoId]; dibujarPerfilEnCanvasVertical(ctx, p, w, h, p.avances, false); }  function agruparTramosContinuosLitologia(tramosOriginales) { if (!tramosOriginales \vert{}\vert{} tramosOriginales.length === 0) return [];  let tramosOrdenados = [...tramosOriginales].sort((a, b) => parseFloat(a.desde) - parseFloat(b.desde)); let grupos = []; let grupoActual = null;  tramosOrdenados.forEach((t) => { let desde = parseFloat(t.desde); let hasta = parseFloat(t.hasta); let rec = parseFloat(t.recuperado) \vert{}\vert{} 0; let lon = hasta - desde; let lito = t.meteorizacion \vert{}\vert{} 'SAPROLITA'; let diam = t.diametro \vert{}\vert{} 'HQ';  if (!grupoActual) { grupoActual = { desde: desde, hasta: hasta, meteorizacion: lito, diametro: diam, totalLongitud: lon, totalRecuperado: rec }; } else { if (grupoActual.meteorizacion === lito && Math.abs(grupoActual.hasta - desde) < 0.05 && grupoActual.diametro === diam) { grupoActual.hasta = hasta; grupoActual.totalLongitud += lon; grupoActual.totalRecuperado += rec; } else { grupos.push(grupoActual); grupoActual = { desde: desde, hasta: hasta, meteorizacion: lito, diametro: diam, totalLongitud: lon, totalRecuperado: rec }; } } });  if (grupoActual) grupos.push(grupoActual);  return grupos.map(g => ({ desde: g.desde, hasta: g.hasta, meteorizacion: g.meteorizacion, diametro: g.diametro, porcentajeRecuperacion: g.totalLongitud > 0 ? ((g.totalRecuperado / g.totalLongitud) * 100).toFixed(1) : '0.0' })); }  function dibujarPerfilEnCanvasVertical(ctx, p, w, h, listaTramos = null, esReporte = false) { let dipVal = Math.abs(parseFloat(p.dip) \vert{}\vert{} 90); let dipRad = (dipVal * Math.PI) / 180;  let tramosFuente = listaTramos !== null ? listaTramos : (p.avances \vert{}\vert{} []); let tramosAgrupados = agruparTramosContinuosLitologia(tramosFuente);  let maxProfundidadReal = tramosAgrupados.length > 0 ? tramosAgrupados[tramosAgrupados.length - 1].hasta : (parseFloat(p.target) \vert{}\vert{} 100.0); let targetRef = Math.max(maxProfundidadReal, parseFloat(p.target) \vert{}\vert{} 10.0, 10.0);  if (esReporte) { ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, w, h); }  let startX = w / 2; let startY = 65; let maxDrawHeight = h - 120; let scale = maxDrawHeight / targetRef;  ctx.strokeStyle = esReporte ? '#cbd5e1' : '#334155'; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(30, startY); ctx.lineTo(w - 30, startY); ctx.stroke();  ctx.fillStyle = esReporte ? '#0f172a' : '#38bdf8'; ctx.font = 'bold 12px "JetBrains Mono"'; ctx.textAlign = 'center'; ctx.fillText('SUPERFICIE (Z=' + (p.cota \vert{}\vert{} '0.00m') + ') \vert{} DIP: -' + dipVal + '° \vert{} AZ: ' + (p.azimut \vert{}\vert{} '0') + '°', w / 2, startY - 18);  let endX = startX + Math.cos(dipRad) * targetRef * scale * 0.25; let endY = startY + Math.sin(dipRad) * targetRef * scale;  ctx.strokeStyle = esReporte ? '#e2e8f0' : '#1e293b'; ctx.lineWidth = esReporte ? 28 : 38; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(startX, startY); ctx.lineTo(endX, endY); ctx.stroke();  const colorMap = { 'SUELO / RELLENO': '#fef08a', 'SAPROLITA': '#facc15', 'SAPROCK': '#d97706', 'ROCA OXIDADA': '#f97316', 'ROCA FRACTURADA': '#38bdf8', 'ROCA FRESCA': '#10b981', 'ZONA DE VETA': '#fde047' };  let ultYIzquierda = -999; let ultYDerecha = -999; const minSpaceY = 18;  if (tramosAgrupados && tramosAgrupados.length > 0) { tramosAgrupados.forEach((av) => { let d = av.desde; let hTramo = av.hasta; let diam = av.diametro;  let segStartX = startX + Math.cos(dipRad) * d * scale * 0.25; let segStartY = startY + Math.sin(dipRad) * d * scale; let segEndX = startX + Math.cos(dipRad) * hTramo * scale * 0.25; let segEndY = startY + Math.sin(dipRad) * hTramo * scale;  let anchoTestigo = diam === 'HQ' ? (esReporte ? 24 : 36) : (esReporte ? 18 : 28); ctx.strokeStyle = colorMap[av.meteorizacion] \vert{}\vert{} '#94a3b8'; ctx.lineWidth = anchoTestigo; ctx.lineCap = 'butt'; ctx.beginPath(); ctx.moveTo(segStartX, segStartY); ctx.lineTo(segEndX, segEndY); ctx.stroke();  let targetYIzq = segEndY; if (targetYIzq - ultYIzquierda < minSpaceY) targetYIzq = ultYIzquierda + minSpaceY; ultYIzquierda = targetYIzq;  ctx.fillStyle = esReporte ? '#0284c7' : '#38bdf8'; ctx.font = 'bold 11px "JetBrains Mono"'; ctx.textAlign = 'right'; ctx.fillText(`${d.toFixed(1)}m - ${hTramo.toFixed(1)}m [Rec:${av.porcentajeRecuperacion}%]`, segEndX - (anchoTestigo / 2 + 12), targetYIzq + 4);
+                let tdAccion = perfilActual === 'GERENCIA' ? `<td class="p-3 text-center text-slate-500">Solo Lectura</td>` : `<td class="p-3 text-center space-x-1"><button onclick="editarTramo(${idxOriginal})" class="text-xs bg-slate-800 text-white px-2 py-1 rounded border border-slate-700 shadow-sm">✏️</button><button onclick="eliminarTramo(${idxOriginal})" class="text-xs bg-rose-950 text-rose-300 px-2 py-1 rounded border border-rose-800 shadow-sm">🗑️</button></td>`;
+                tr.innerHTML = `<td class="p-3">#${idxOriginal + 1}</td><td class="p-3 text-white font-bold">${t.desde} - ${t.hasta}</td><td class="p-3 text-sky-400 font-bold">${t.diametro}</td><td class="p-3 text-white">${t.recuperado}</td><td class="p-3 font-bold ${parseFloat(t.porcentaje) < 70 ? 'text-amber-400' : 'text-emerald-400'}">${t.porcentaje}%</td><td class="p-3 text-slate-300">${t.meteorizacion}</td><td class="p-3 text-amber-400 font-bold">${pagVal.toFixed(2)}m</td>${tdAccion}`;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function editarTramo(idx) {
+            if (perfilActual === 'GERENCIA') return;
+            let p = pozosData[pozoActivoId];
+            let t = p.avances[idx];
+            document.getElementById('m3_desde').value = t.desde;
+            document.getElementById('m3_hasta').value = t.hasta;
+            document.getElementById('m3_diametro').value = t.diametro;
+            document.getElementById('m3_recuperado').value = t.recuperado;
+            document.getElementById('m3_meteorizacion').value = t.meteorizacion;
+            indexEditandoAvance = idx;
+            document.getElementById('btnGuardarAvance').innerText = "💾 Actualizar Tramo #" + (idx + 1);
+            document.getElementById('btnCancelarEdicion').classList.remove('hidden');
+            scrollToElement('boxFormAvance');
+            showToast("Modo Edición Tramo", "Cargado tramo #" + (idx + 1) + ".", "✏️");
+        }
+
+        function cancelarEdicionAvance() {
+            indexEditandoAvance = null;
+            document.getElementById('btnGuardarAvance').innerText = "➕ Guardar Avance Tramo";
+            document.getElementById('btnCancelarEdicion').classList.add('hidden');
+            autoCalcularHasta();
+        }
+
+        async function eliminarTramo(idx) {
+            if (perfilActual === 'GERENCIA') return;
+            if (confirm("¿Eliminar este tramo?")) {
+                pozosData[pozoActivoId].avances.splice(idx, 1);
+                await guardarYPersistirTodo();
+                actualizarTablaAvances();
+                actualizarProgresoGrafico();
+                verificarAjustarLockDiametro(pozosData[pozoActivoId]);
+                renderizarPerfil2D();
+                autoCalcularHasta();
+                showToast("Tramo Eliminado", "Removido del registro.", "🗑️");
+            }
+        }
+
+        function actualizarProgresoGrafico() {
+            if (!pozoActivoId || !pozosData[pozoActivoId]) return;
+            let p = pozosData[pozoActivoId];
+            let target = parseFloat(p.target) || 100.0;
+            let totalHQ = 0, totalNQ = 0, totalRecuperado = 0, totalMetros = 0, totalPago = 0;
+
+            p.avances.forEach(t => {
+                let met = parseFloat(t.hasta) - parseFloat(t.desde);
+                let rec = parseFloat(t.recuperado) || 0;
+                let pago = t.pagoEstandar ? parseFloat(t.pagoEstandar) : calcularMetrosAPagar(met, rec, t.meteorizacion);
+                totalMetros += met;
+                totalRecuperado += rec;
+                totalPago += pago;
+                if (t.diametro === 'HQ') totalHQ += met; else totalNQ += met;
+            });
+
+            let totalPerforado = totalHQ + totalNQ;
+            let pct = target > 0 ? Math.min(100, (totalPerforado / target) * 100) : 0;
+            let recGlobal = totalMetros > 0 ? ((totalRecuperado / totalMetros) * 100) : 0;
+
+            document.getElementById('cardMetrajeAcum').innerText = totalPerforado.toFixed(2) + " m";
+            document.getElementById('cardTargetSub').innerText = "Target: " + target.toFixed(2) + " m";
+            document.getElementById('cardRecGlobal').innerText = recGlobal.toFixed(1) + "%";
+            document.getElementById('cardAvanceGen').innerText = pct.toFixed(1) + "%";
+            document.getElementById('cardMetrosPago').innerText = totalPago.toFixed(2) + " m";
+
+            document.getElementById('txtMetrosHQ').innerText = totalHQ.toFixed(2);
+            document.getElementById('txtMetrosNQ').innerText = totalNQ.toFixed(2);
+            let pendiente = Math.max(0, target - totalPerforado);
+            document.getElementById('txtMetrosPend').innerText = pendiente.toFixed(2);
+            document.getElementById('lblProgresoTexto').innerText = totalPerforado.toFixed(2) + " m / " + target.toFixed(2) + " m (" + pct.toFixed(1) + "%)";
+
+            let pHQ = target > 0 ? (totalHQ / target) * 100 : 0;
+            let pNQ = target > 0 ? (totalNQ / target) * 100 : 0;
+            let pPend = target > 0 ? (pendiente / target) * 100 : 100;
+
+            document.getElementById('barHQ').style.width = pHQ + '%';
+            document.getElementById('barNQ').style.width = pNQ + '%';
+            document.getElementById('barPendiente').style.width = pPend + '%';
+        }
+
+        function renderizarPerfil2D() {
+            const canvas = document.getElementById('canvasPerfil2D');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width;
+            const h = canvas.height;
+
+            ctx.fillStyle = '#020617';
+            ctx.fillRect(0, 0, w, h);
+
+            if (!pozoActivoId || !pozosData[pozoActivoId]) {
+                ctx.fillStyle = '#64748b';
+                ctx.font = 'bold 13px "Plus Jakarta Sans"';
+                ctx.textAlign = 'center';
+                ctx.fillText('SELECCIONE UN SONDAJE PARA VISUALIZAR EL PERFIL 2D', w / 2, h / 2);
+                return;
+            }
+
+            let p = pozosData[pozoActivoId];
+            dibujarPerfilEnCanvasVertical(ctx, p, w, h, p.avances, false);
+        }
+
+        function agruparTramosContinuosLitologia(tramosOriginales) {
+            if (!tramosOriginales || tramosOriginales.length === 0) return [];
+
+            let tramosOrdenados = [...tramosOriginales].sort((a, b) => parseFloat(a.desde) - parseFloat(b.desde));
+            let grupos = [];
+            let grupoActual = null;
+
+            tramosOrdenados.forEach((t) => {
+                let desde = parseFloat(t.desde);
+                let hasta = parseFloat(t.hasta);
+                let rec = parseFloat(t.recuperado) || 0;
+                let lon = hasta - desde;
+                let lito = t.meteorizacion || 'SAPROLITA';
+                let diam = t.diametro || 'HQ';
+
+                if (!grupoActual) {
+                    grupoActual = {
+                        desde: desde,
+                        hasta: hasta,
+                        meteorizacion: lito,
+                        diametro: diam,
+                        totalLongitud: lon,
+                        totalRecuperado: rec
+                    };
+                } else {
+                    if (grupoActual.meteorizacion === lito && Math.abs(grupoActual.hasta - desde) < 0.05 && grupoActual.diametro === diam) {
+                        grupoActual.hasta = hasta;
+                        grupoActual.totalLongitud += lon;
+                        grupoActual.totalRecuperado += rec;
+                    } else {
+                        grupos.push(grupoActual);
+                        grupoActual = {
+                            desde: desde,
+                            hasta: hasta,
+                            meteorizacion: lito,
+                            diametro: diam,
+                            totalLongitud: lon,
+                            totalRecuperado: rec
+                        };
+                    }
+                }
+            });
+
+            if (grupoActual) grupos.push(grupoActual);
+
+            return grupos.map(g => ({
+                desde: g.desde,
+                hasta: g.hasta,
+                meteorizacion: g.meteorizacion,
+                diametro: g.diametro,
+                porcentajeRecuperacion: g.totalLongitud > 0 ? ((g.totalRecuperado / g.totalLongitud) * 100).toFixed(1) : '0.0'
+            }));
+        }
+
+        function dibujarPerfilEnCanvasVertical(ctx, p, w, h, listaTramos = null, esReporte = false) {
+            let dipVal = Math.abs(parseFloat(p.dip) || 90);
+            let dipRad = (dipVal * Math.PI) / 180;
+            
+            let tramosFuente = listaTramos !== null ? listaTramos : (p.avances || []);
+            let tramosAgrupados = agruparTramosContinuosLitologia(tramosFuente);
+
+            let maxProfundidadReal = tramosAgrupados.length > 0 ? tramosAgrupados[tramosAgrupados.length - 1].hasta : (parseFloat(p.target) || 100.0);
+            let targetRef = Math.max(maxProfundidadReal, parseFloat(p.target) || 10.0, 10.0);
+
+            if (esReporte) {
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, w, h);
+            }
+
+            let startX = w / 2;
+            let startY = 65;
+            let maxDrawHeight = h - 120;
+            let scale = maxDrawHeight / targetRef;
+
+            ctx.strokeStyle = esReporte ? '#cbd5e1' : '#334155';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(30, startY);
+            ctx.lineTo(w - 30, startY);
+            ctx.stroke();
+
+            ctx.fillStyle = esReporte ? '#0f172a' : '#38bdf8';
+            ctx.font = 'bold 12px "JetBrains Mono"';
+            ctx.textAlign = 'center';
+            ctx.fillText('SUPERFICIE (Z=' + (p.cota || '0.00m') + ') | DIP: -' + dipVal + '° | AZ: ' + (p.azimut || '0') + '°', w / 2, startY - 18);
+
+            let endX = startX + Math.cos(dipRad) * targetRef * scale * 0.25;
+            let endY = startY + Math.sin(dipRad) * targetRef * scale;
+
+            ctx.strokeStyle = esReporte ? '#e2e8f0' : '#1e293b';
+            ctx.lineWidth = esReporte ? 28 : 38;
+            ctx.lineCap = 'round';
+            ctx.beginPath();
+            ctx.moveTo(startX, startY);
+            ctx.lineTo(endX, endY);
+            ctx.stroke();
+
+            const colorMap = {
+                'SUELO / RELLENO': '#fef08a',
+                'SAPROLITA': '#facc15',
+                'SAPROCK': '#d97706',
+                'ROCA OXIDADA': '#f97316',
+                'ROCA FRACTURADA': '#38bdf8',
+                'ROCA FRESCA': '#10b981',
+                'ZONA DE VETA': '#fde047'
+            };
+
+            let ultYIzquierda = -999;
+            let ultYDerecha = -999;
+            const minSpaceY = 18;
+
+            if (tramosAgrupados && tramosAgrupados.length > 0) {
+                tramosAgrupados.forEach((av) => {
+                    let d = av.desde;
+                    let hTramo = av.hasta;
+                    let diam = av.diametro;
+
+                    let segStartX = startX + Math.cos(dipRad) * d * scale * 0.25;
+                    let segStartY = startY + Math.sin(dipRad) * d * scale;
+                    let segEndX = startX + Math.cos(dipRad) * hTramo * scale * 0.25;
+                    let segEndY = startY + Math.sin(dipRad) * hTramo * scale;
+
+                    let anchoTestigo = diam === 'HQ' ? (esReporte ? 24 : 36) : (esReporte ? 18 : 28);
+                    ctx.strokeStyle = colorMap[av.meteorizacion] || '#94a3b8';
+                    ctx.lineWidth = anchoTestigo;
+                    ctx.lineCap = 'butt';
+                    ctx.beginPath();
+                    ctx.moveTo(segStartX, segStartY);
+                    ctx.lineTo(segEndX, segEndY);
+                    ctx.stroke();
+
+                    let targetYIzq = segEndY;
+                    if (targetYIzq - ultYIzquierda < minSpaceY) targetYIzq = ultYIzquierda + minSpaceY;
+                    ultYIzquierda = targetYIzq;
+
+                    ctx.fillStyle = esReporte ? '#0284c7' : '#38bdf8';
+                    ctx.font = 'bold 11px "JetBrains Mono"';
+                    ctx.textAlign = 'right';
+                    ctx.fillText(`${d.toFixed(1)}m - ${hTramo.toFixed(1)}m [Rec: ${av.porcentajeRecuperacion}%]`, segEndX - (anchoTestigo / 2 + 12), targetYIzq + 4);
 
                     ctx.strokeStyle = esReporte ? 'rgba(2, 132, 199, 0.4)' : 'rgba(56, 189, 248, 0.4)';
                     ctx.lineWidth = 1;
@@ -2071,7 +2315,7 @@
             ctx.fillText(p.codigo, w - 25, 30);
             ctx.fillStyle = esReporte ? '#0f172a' : '#f8fafc';
             ctx.font = 'bold 11px "JetBrains Mono"';
-            ctx.fillText(`Profundidad Total: \${maxProfundidadReal.toFixed(2)}m`, w - 25, 48);
+            ctx.fillText(`Profundidad Total: ${maxProfundidadReal.toFixed(2)}m`, w - 25, 48);
         }
 
         function cargarResumenCierrePozo() {
@@ -2095,4 +2339,449 @@
 
             container.innerHTML = `
                 <div class="space-y-3">
-                    <p class="text-white font-black uppercase text-
+                    <p class="text-white font-black uppercase text-xs tracking-wider border-b border-slate-800 pb-1">📋 Ficha Técnica Consolidada para Evaluación y Cierre</p>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[11px] text-slate-300">
+                        <div><b>Código Sondaje:</b> <span class="text-sky-400 font-bold">${p.codigo}</span></div>
+                        <div><b>Proyecto / Sector:</b> <span class="text-purple-300 font-bold">${p.proyecto}</span></div>
+                        <div><b>Empresa Cliente:</b> <span class="text-white font-bold">${p.empresa}</span></div>
+                        <div><b>Estado Actual:</b> <span class="text-emerald-400 font-bold">${p.estado}</span></div>
+                        <div><b>Máquina Perf.:</b> <span class="text-slate-300 font-bold">${p.maquina || 'GEOMAX'}</span></div>
+                        <div><b>Coordenada Este:</b> <span class="font-mono-code text-slate-200">${p.este || '0.00'} m</span></div>
+                        <div><b>Coordenada Norte:</b> <span class="font-mono-code text-slate-200">${p.norte || '0.00'} m</span></div>
+                        <div><b>Cota Z (m):</b> <span class="font-mono-code text-slate-200">${p.cota || '0.00'} m</span></div>
+                        <div><b>Inclinación (Dip):</b> <span class="font-mono-code text-slate-200">${p.dip || '-'}°</span></div>
+                        <div><b>Azimut (°):</b> <span class="font-mono-code text-slate-200">${p.azimut || '0'}°</span></div>
+                        <div><b>Prof. Target:</b> <span class="font-mono-code text-slate-200">${target} m</span></div>
+                        <div><b>Total Perforado:</b> <span class="font-mono-code text-sky-300 font-bold">${totalMetros.toFixed(2)} m</span></div>
+                        <div><b>Recuperación Gral:</b> <span class="font-mono-code text-purple-300 font-bold">${recGralPozo}%</span></div>
+                        <div><b>Total Metros a Pagar:</b> <span class="font-mono-code text-amber-300 font-bold">${totalPago.toFixed(2)} m</span></div>
+                    </div>
+                </div>
+            `;
+
+            if (p.estado === 'CULMINADO') {
+                document.getElementById('btnCierrePozo').classList.add('hidden');
+                document.getElementById('divMotivoCierreBox').classList.add('hidden');
+                document.getElementById('divObsCierreBox').classList.add('hidden');
+                document.getElementById('btnReactivarPozo').classList.remove('hidden');
+            } else {
+                document.getElementById('btnCierrePozo').classList.remove('hidden');
+                document.getElementById('divMotivoCierreBox').classList.remove('hidden');
+                document.getElementById('divObsCierreBox').classList.remove('hidden');
+                document.getElementById('btnReactivarPozo').classList.add('hidden');
+            }
+        }
+
+        async function ejecutarCierrePozo() {
+            if (perfilActual === 'GERENCIA') return;
+            if (!pozoActivoId || !pozosData[pozoActivoId]) return;
+            let motivo = document.getElementById('m4_motivo').value;
+            let obs = document.getElementById('m4_obs').value;
+            pozosData[pozoActivoId].estado = 'CULMINADO';
+            pozosData[pozoActivoId].motivoCierre = motivo;
+            pozosData[pozoActivoId].obsCierre = obs;
+            await guardarYPersistirTodo();
+            refrescarSelectoresOperativos();
+            refrescarSelectorModuloUno();
+            poblarSelectTopografia();
+            poblarSelectCierre();
+            renderizarSalaSituacional();
+            cargarResumenCierrePozo();
+            showToast("Sondaje Culminado", "Sondaje " + pozoActivoId + " cerrado con éxito.", "🔒");
+        }
+
+        async function reactivarPozoActual() {
+            if (perfilActual === 'GERENCIA') return;
+            if (!pozoActivoId || !pozosData[pozoActivoId]) return;
+            if (confirm("🔓 ¿Desea reactivar este sondaje?")) {
+                pozosData[pozoActivoId].estado = 'ABIERTO';
+                delete pozosData[pozoActivoId].motivoCierre;
+                delete pozosData[pozoActivoId].obsCierre;
+                await guardarYPersistirTodo();
+                refrescarSelectoresOperativos();
+                refrescarSelectorModuloUno();
+                poblarSelectTopografia();
+                poblarSelectCierre();
+                renderizarSalaSituacional();
+                cargarResumenCierrePozo();
+                showToast("Sondaje Reactivado", "Sondaje retornado a estado ABIERTO.", "🔓");
+            }
+        }
+
+        function poblarSelectTurnosRepo() {
+            const sel = document.getElementById('repTurnoSelect');
+            if (!sel) return;
+            sel.innerHTML = '';
+            Object.keys(turnosData).forEach(k => {
+                let t = turnosData[k];
+                if (t.pozo === pozoActivoId) {
+                    let opt = document.createElement('option');
+                    opt.value = k;
+                    opt.text = "[" + t.fecha + " - " + t.jornada + "] Perf: " + t.perforador;
+                    sel.appendChild(opt);
+                }
+            });
+        }
+
+        function generarReporteDSR() {
+            if (!pozoActivoId || !pozosData[pozoActivoId]) return;
+            let p = pozosData[pozoActivoId];
+            let modo = document.getElementById('repModoVista').value;
+            let boxTurno = document.getElementById('boxSelectTurnoRepo');
+            
+            if (modo === 'CULMINADO' && p.estado !== 'CULMINADO') {
+                alert(`⚠️ ALERTA: El sondaje (${p.codigo}) está ACTIVO. Debe culminarlo en el Módulo 4.`);
+                document.getElementById('repModoVista').value = 'ACUMULADO';
+                generarReporteDSR();
+                return;
+            }
+
+            if (modo === 'TURNO') {
+                boxTurno.classList.remove('hidden');
+                document.getElementById('repTituloPrincipalDSR').innerText = "REPORTE DE TURNO";
+                document.getElementById('repTituloPerfil2D').innerText = "📐 Perfil Topográfico 2D & Log Litológico (Tramos del Turno - Zoom HD Vertical):";
+            } else if (modo === 'ACUMULADO') {
+                boxTurno.classList.add('hidden');
+                document.getElementById('repTituloPrincipalDSR').innerText = "REPORTE ACUMULADO DEL SONDAJE";
+                document.getElementById('repTituloPerfil2D').innerText = "📐 Perfil Topográfico 2D & Log Litológico (Acumulado General - Zoom HD Vertical):";
+            } else if (modo === 'CULMINADO') {
+                boxTurno.classList.add('hidden');
+                document.getElementById('repTituloPrincipalDSR').innerText = "REPORTE SONDAJE CULMINADO";
+                document.getElementById('repTituloPerfil2D').innerText = "📐 Perfil Topográfico 2D & Log Litológico (Sondaje Culminado - Zoom HD Vertical):";
+            }
+
+            let listaAvancesFiltrada = [];
+            let operadorTurnoTexto = "---";
+            let geologoTurnoTexto = "---";
+            let fechaReporte = new Date().toLocaleDateString();
+            let jornadaTexto = "DIURNO";
+            let observacionesTurnoTexto = "SIN NOVEDADES REGISTRADAS.";
+
+            if (modo === 'TURNO') {
+                let turnoSelId = document.getElementById('repTurnoSelect').value;
+                if (turnoSelId && turnosData[turnoSelId]) {
+                    let tObj = turnosData[turnoSelId];
+                    operadorTurnoTexto = tObj.perforador;
+                    geologoTurnoTexto = tObj.geologo;
+                    fechaReporte = tObj.fecha;
+                    jornadaTexto = tObj.jornada;
+                    observacionesTurnoTexto = tObj.observaciones || "SIN NOVEDADES EN EL TURNO.";
+                    listaAvancesFiltrada = p.avances.filter(item => item.turnoId === turnoSelId);
+                }
+            } else {
+                operadorTurnoTexto = "ACUMULADO GENERAL";
+                geologoTurnoTexto = "SUPERVISIÓN GENERAL DE GEOLOGÍA";
+                listaAvancesFiltrada = p.avances;
+                observacionesTurnoTexto = p.obsCierre || "REGISTRO GENERAL DEL SONDAJE.";
+            }
+
+            document.getElementById('repFechaEmision').innerText = "Fecha: " + fechaReporte + " | Turno: " + jornadaTexto;
+            document.getElementById('repCodigoHeader').innerText = p.codigo;
+            document.getElementById('repEmpresa').innerText = p.empresa;
+            document.getElementById('repProyecto').innerText = p.proyecto;
+            document.getElementById('repMaquina').innerText = p.maquina;
+            document.getElementById('repEste').innerText = (p.este || '0.00') + " m";
+            document.getElementById('repNorte').innerText = (p.norte || '0.00') + " m";
+            document.getElementById('repCota').innerText = (p.cota || '0.00') + " m";
+            document.getElementById('repDipAzimut').innerText = (p.dip || '-') + "° / " + (p.azimut || '0') + "°";
+            document.getElementById('repEstadoPozo').innerText = p.estado;
+            document.getElementById('repTargetSub').innerText = "Target: " + (p.target || '100.00') + " m";
+
+            document.getElementById('repPerforadorTurno').innerText = operadorTurnoTexto;
+            document.getElementById('repGeologoTurno').innerText = geologoTurnoTexto;
+
+            let totalMetros = 0, totalRecuperado = 0, totalPagoFinal = 0;
+            let totalHQMet = 0, totalNQMet = 0;
+            let tbody = document.getElementById('repTablaBody');
+            tbody.innerHTML = '';
+
+            listaAvancesFiltrada.forEach((t, idx) => {
+                let met = parseFloat(t.hasta) - parseFloat(t.desde);
+                let rec = parseFloat(t.recuperado);
+                let lonM = met;
+                let pagoTramo = t.pagoEstandar ? parseFloat(t.pagoEstandar) : calcularMetrosAPagar(lonM, rec, t.meteorizacion);
+                
+                totalMetros += met; 
+                totalRecuperado += rec;
+                totalPagoFinal += pagoTramo;
+                if (t.diametro === 'HQ') totalHQMet += met; else totalNQMet += met;
+
+                let tr = document.createElement('tr');
+                tr.className = "border-b border-slate-200 hover:bg-slate-50";
+                tr.innerHTML = `<td class="p-2 border-r border-slate-200 font-bold">#${idx + 1}</td><td class="p-2 border-r border-slate-200">${t.desde}</td><td class="p-2 border-r border-slate-200">${t.hasta}</td><td class="p-2 border-r border-slate-200 font-bold">${met.toFixed(2)}</td><td class="p-2 border-r border-slate-200 font-bold text-slate-800">${t.diametro}</td><td class="p-2 border-r border-slate-200">${t.recuperado}</td><td class="p-2 border-r border-slate-200 font-bold ${parseFloat(t.porcentaje) < 70 ? 'text-amber-800' : 'text-slate-900'}">${t.porcentaje}%</td><td class="p-2 border-r border-slate-200">${t.meteorizacion}</td><td class="p-2 font-black text-slate-950 bg-slate-100">${pagoTramo.toFixed(2)} m</td>`;
+                tbody.appendChild(tr);
+            });
+
+            let targetNum = parseFloat(p.target) || 100.0;
+            let avGen = targetNum > 0 ? Math.min(100, (totalMetros / targetNum) * 100) : 0;
+            let recProm = totalMetros > 0 ? ((totalRecuperado / totalMetros) * 100).toFixed(1) : '0.0';
+
+            document.getElementById('repMetrajeTotal').innerText = totalMetros.toFixed(2) + " m";
+            document.getElementById('repRecPromedio').innerText = recProm + "%";
+            document.getElementById('repMetrosPagoTotal').innerText = totalPagoFinal.toFixed(2) + " m";
+            document.getElementById('repAvanceGen').innerText = avGen.toFixed(1) + "%";
+
+            document.getElementById('repMetrosHQRep').innerText = totalHQMet.toFixed(2) + " m";
+            document.getElementById('repMetrosNQRep').innerText = totalNQMet.toFixed(2) + " m";
+
+            document.getElementById('repObservacionesTexto').innerText = observacionesTurnoTexto;
+            if (p.estado === 'CULMINADO') {
+                document.getElementById('repMotivoCierreBox').innerHTML = `<b>Motivo de Cierre:</b> ${p.motivoCierre || 'CULMINADO'}`;
+            } else {
+                document.getElementById('repMotivoCierreBox').innerHTML = `<b>Estado:</b> Sondaje Activo en Operación`;
+            }
+
+            setTimeout(() => {
+                const canvasRep = document.getElementById('canvasReporte2D');
+                if (canvasRep) {
+                    const ctxR = canvasRep.getContext('2d');
+                    ctxR.clearRect(0, 0, canvasRep.width, canvasRep.height);
+                    dibujarPerfilEnCanvasVertical(ctxR, p, canvasRep.width, canvasRep.height, listaAvancesFiltrada, true);
+                }
+            }, 100);
+
+            const contenedorFirmas = document.getElementById('contenedorFirmasDSR');
+            if (modo === 'TURNO') {
+                contenedorFirmas.innerHTML = `
+                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 flex justify-between items-center flex-wrap gap-2 text-slate-800">
+                        <div><b>Perforador de Turno:</b> <span class="font-bold text-slate-900">${operadorTurnoTexto}</span></div>
+                        <div><b>Supervisor de Geología:</b> <span class="font-bold text-slate-900">${geologoTurnoTexto}</span></div>
+                    </div>
+                `;
+            } else {
+                contenedorFirmas.innerHTML = `
+                    <div class="grid grid-cols-2 gap-8 text-center pt-6">
+                        <div>
+                            <p class="font-bold uppercase text-slate-900 mb-8">Supervisor de Perforación</p>
+                            <p>_____________________________________</p>
+                            <p class="mt-1 font-semibold text-slate-700">Nombre y Apellido / Firma</p>
+                        </div>
+                        <div>
+                            <p class="font-bold uppercase text-slate-900 mb-8">Supervisor de Geología</p>
+                            <p>_____________________________________</p>
+                            <p class="mt-1 font-semibold text-slate-700">Nombre y Apellido / Firma</p>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        /* VISTA PREVIA Y EXPORTACIÓN A PDF CENTRADA (TAMAÑO CARTA EXACTO) */
+        function abrirVistaPreviaPDF(idElementoReporte) {
+            const elementoOriginal = document.getElementById(idElementoReporte);
+            if (!elementoOriginal) { alert("⚠️ No se encontró el reporte para previsualizar."); return; }
+            
+            elementoObjetivoActual = elementoOriginal;
+            const contenedorPreview = document.getElementById('contenedorPreviewInyectado');
+            contenedorPreview.innerHTML = '';
+            
+            const clon = elementoOriginal.cloneNode(true);
+            clon.style.display = 'block';
+            clon.style.width = '794px';
+            clon.style.margin = '0 auto';
+            contenedorPreview.appendChild(clon);
+            
+            document.getElementById('modalVistaPreviaPDF').classList.remove('hidden');
+        }
+
+        function cerrarModalVistaPrevia() {
+            document.getElementById('modalVistaPreviaPDF').classList.add('hidden');
+            elementoObjetivoActual = null;
+        }
+
+        async function descargarDesdeModalPDF() {
+            if (!elementoObjetivoActual) return;
+            
+            showToast("Generando PDF", "Procesando documento centrado...", "⏳");
+            
+            const opciones = {
+                margin:       10, // Margen uniforme de 10mm en todo el perímetro para perfecto centrado sin cortes
+                filename:     `DSR_${pozoActivoId || 'Sondaje'}_${Date.now()}.pdf`,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { 
+                    scale: 2, 
+                    useCORS: true, 
+                    logging: false, 
+                    letterRendering: true, 
+                    windowWidth: 794 // Ancho fijo controlado para mantener la escala exacta de la hoja Carta
+                },
+                jsPDF:        { unit: 'mm', format: 'letter', orientation: 'portrait' }
+            };
+
+            try {
+                await html2pdf().set(opciones).from(elementoObjetivoActual).save();
+                showToast("PDF Exportado", "El documento se descargó correctamente.", "✅");
+                cerrarModalVistaPrevia();
+            } catch (error) { 
+                console.error("Error al generar PDF:", error);
+                window.print(); 
+            }
+        }
+
+        function poblarSelectAdminBorrar() {
+            const sel = document.getElementById('adminSelectPozoBorrar');
+            if (!sel) return;
+            sel.innerHTML = '<option value="">-- Seleccionar Sondaje a Eliminar --</option>';
+            Object.keys(pozosData).forEach(k => {
+                let opt = document.createElement('option');
+                opt.value = k;
+                opt.text = "Sondaje: " + k + " (" + pozosData[k].proyecto + ")";
+                sel.appendChild(opt);
+            });
+        }
+
+        async function eliminarPozoEspecifico() {
+            if (perfilActual === 'GERENCIA') return;
+            let codigo = document.getElementById('adminSelectPozoBorrar').value;
+            if (!codigo) { alert("⚠️ Seleccione un sondaje."); return; }
+            if (confirm("⚠️ ¿Eliminar el sondaje " + codigo + "?")) {
+                delete pozosData[codigo];
+                if (pozoActivoId === codigo) { pozoActivoId = ''; localStorage.removeItem('jireth_pozo_activo'); }
+                await guardarYPersistirTodo();
+                refrescarSelectoresOperativos();
+                refrescarSelectorModuloUno();
+                poblarSelectTopografia();
+                poblarSelectCierre();
+                poblarSelectAdminBorrar();
+                renderizarSalaSituacional();
+                showToast("Sondaje Eliminado", "Borrado del sistema.", "🗑️");
+                location.reload();
+            }
+        }
+
+        function copiarReportePortapapeles() {
+            if (!pozoActivoId || !pozosData[pozoActivoId]) return;
+            let p = pozosData[pozoActivoId];
+            let texto = "=== COMPLEJO JIRETH C.A. — REPORTE DIARIO DE GEOLOGÍA (DSR) ===\nSondaje: " + p.codigo + " | Proyecto: " + p.proyecto + "\nEmpresa: " + p.empresa + " | Máquina: " + p.maquina + "\n===========================================================\n";
+            p.avances.forEach((t, i) => {
+                let lonM = parseFloat(t.hasta) - parseFloat(t.desde);
+                let pagVal = t.pagoEstandar ? t.pagoEstandar : calcularMetrosAPagar(lonM, parseFloat(t.recuperado), t.meteorizacion);
+                texto += `Tramo #${i+1}: ${t.desde}-${t.hasta}m | ${t.diametro} | Rec: ${t.recuperado}m (${t.porcentaje}%) | Pago: ${pagVal}m | ${t.meteorizacion}\n`;
+            });
+            navigator.clipboard.writeText(texto).then(() => { showToast("Copiado", "Resumen copiado al portapapeles.", "📋"); });
+        }
+
+        function exportarBackupJSON() {
+            let backup = { pozos: pozosData, turnos: turnosData, activo: pozoActivoId };
+            let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backup, null, 2));
+            let dlAnchorElem = document.createElement('a');
+            dlAnchorElem.setAttribute("href", dataStr);
+            dlAnchorElem.setAttribute("download", "jireth_geocore_backup_" + Date.now() + ".json");
+            dlAnchorElem.click();
+        }
+
+        function importarBackupJSON(event) {
+            if (perfilActual === 'GERENCIA') return;
+            let file = event.target.files[0];
+            if (!file) return;
+            let reader = new FileReader();
+            reader.onload = async function(e) {
+                try {
+                    let imp = JSON.parse(e.target.result);
+                    if (imp.pozos) {
+                        pozosData = imp.pozos;
+                        turnosData = imp.turnos || {};
+                        pozoActivoId = imp.activo || '';
+                        migrarRecalcularPagosEstandar();
+                        await guardarYPersistirTodo();
+                        refrescarSelectoresOperativos();
+                        refrescarSelectorModuloUno();
+                        poblarSelectTopografia();
+                        poblarSelectCierre();
+                        renderizarSalaSituacional();
+                        if (pozoActivoId) cargarDatosPozoEnFormularios(pozoActivoId);
+                        showToast("Respaldo Importado", "Base de datos restaurada con éxito.");
+                    } else { alert("❌ JSON inválido."); }
+                } catch(err) { alert("❌ Error: " + err); }
+            };
+            reader.readAsText(file);
+        }
+
+        async function guardarYPersistirTodo() {
+            localStorage.setItem('jireth_pozos', JSON.stringify(pozosData));
+            localStorage.setItem('jireth_turnos', JSON.stringify(turnosData));
+
+            const timestampActual = new Date().toISOString();
+            const payloadData = { pozos: pozosData, turnos: turnosData, actualizado: timestampActual };
+
+            if (navigator.onLine && supabaseClient) {
+                try {
+                    await procesarColaSincronizacion();
+                    const { error } = await supabaseClient.from('jireth_geocore').upsert({ id: 'db_principal', payload: payloadData });
+                    if (error) throw error;
+                    const indRed = document.getElementById('indicadorRed');
+                    if (indRed) {
+                        indRed.innerText = "(🟢 Sincronizado En Vivo)";
+                        indRed.className = "text-emerald-400 font-bold pulse-live";
+                    }
+                } catch(ex) { encolarSincronizacionLocal(payloadData); }
+            } else { encolarSincronizacionLocal(payloadData); }
+            actualizarBadgeSyncQueue();
+        }
+
+        function encolarSincronizacionLocal(payload) {
+            syncQueue.push({ id: 'db_principal', payload: payload, timestamp: Date.now() });
+            localStorage.setItem('jireth_sync_queue', JSON.stringify(syncQueue));
+            marcarModoOfflineVisual();
+            actualizarBadgeSyncQueue();
+        }
+
+        async function procesarColaSincronizacion() {
+            if (!navigator.onLine || !supabaseClient || syncQueue.length === 0) return;
+            try {
+                const ultimoCambio = syncQueue[syncQueue.length - 1];
+                const { error } = await supabaseClient.from('jireth_geocore').upsert({ id: ultimoCambio.id, payload: ultimoCambio.payload });
+                if (!error) {
+                    syncQueue = [];
+                    localStorage.setItem('jireth_sync_queue', JSON.stringify(syncQueue));
+                    actualizarBadgeSyncQueue();
+                }
+            } catch(e) { console.warn("Error sync queue:", e); }
+        }
+
+        async function sincronizarDesdeSupabaseCloud(mostrarAlerta = true) {
+            if (!navigator.onLine || !supabaseClient) {
+                if (mostrarAlerta) alert("⚠️ Estás en modo offline local.");
+                return;
+            }
+            try {
+                await procesarColaSincronizacion();
+                const { data, error } = await supabaseClient.from('jireth_geocore').select('payload').eq('id', 'db_principal').maybeSingle();
+                if (error) { if (mostrarAlerta) alert("⚠️ Error de conexión con Supabase."); return; }
+
+                if (data && data.payload) {
+                    if (data.payload.pozos && Object.keys(data.payload.pozos).length > 0) {
+                        pozosData = data.payload.pozos;
+                        localStorage.setItem('jireth_pozos', JSON.stringify(pozosData));
+                    }
+                    if (data.payload.turnos) {
+                        turnosData = data.payload.turnos;
+                        localStorage.setItem('jireth_turnos', JSON.stringify(turnosData));
+                    }
+                    migrarRecalcularPagosEstandar();
+                    refrescarSelectoresOperativos();
+                    refrescarSelectorModuloUno();
+                    poblarSelectTopografia();
+                    poblarSelectCierre();
+                    renderizarSalaSituacional();
+                    if (pozoActivoId && pozosData[pozoActivoId]) cargarDatosPozoEnFormularios(pozoActivoId);
+                    if (mostrarAlerta) showToast("Sincronizado", "Datos sincronizados con la nube.");
+                } else { await guardarYPersistirTodo(); }
+            } catch(e) { if (mostrarAlerta) alert("⚠️ Error al sincronizar con Supabase."); }
+        }
+
+        async function sincronizarConSupabaseReal() { 
+            if (!navigator.onLine) { alert("⚠️ No hay conexión a internet."); return; }
+            await sincronizarDesdeSupabaseCloud(true); 
+        }
+
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(reg => console.log('Service Worker registrado con éxito:', reg.scope))
+                    .catch(err => console.warn('Fallo en el registro del Service Worker:', err));
+            });
+        }
+    </script>
+</body>
+</html>
