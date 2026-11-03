@@ -11,7 +11,6 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- LIBRERÍA HTML2PDF PARA EXPORTACIÓN DIRECTA A PDF A 1 CLIC -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     
     <style>
@@ -87,7 +86,7 @@
         .pulse-live { animation: pulseGlow 1.8s infinite ease-in-out; }
 
         .logo-img-real {
-            height: 60px; width: auto; max-width: 180px; object-fit: contain;
+            height: 55px; width: auto; max-width: 170px; object-fit: contain;
             flex-shrink: 0; background: transparent !important; border: none !important; box-shadow: none !important;
         }
 
@@ -114,12 +113,35 @@
             color: #ffffff; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.35);
         }
 
-        /* ESTILOS DE IMPRESIÓN Y EXPORTACIÓN PDF HOJA CARTA EXACTA */
+        /* CONFIGURACIÓN EXACTA DE IMPRESIÓN PDF TAMAÑO CARTA CON CONTROL DE PÁGINAS */
+        #printable-area {
+            width: 100%;
+            max-width: 740px;
+            margin: 0 auto;
+            box-sizing: border-box;
+            background: #ffffff;
+            color: #0f172a;
+        }
+
         @media print {
-            body { background: white !important; color: black !important; }
+            @page {
+                size: letter portrait;
+                margin: 10mm 10mm 12mm 10mm;
+            }
+            body { background: white !important; color: black !important; padding: 0 !important; }
             .no-print, header, #sidebarMenu, #toastFeedback, #sidebarOverlay { display: none !important; }
-            #printable-area { border: none !important; box-shadow: none !important; padding: 0 !important; width: 100% !important; }
-            .avoid-break { page-break-inside: avoid !important; }
+            #printable-area { border: none !important; box-shadow: none !important; padding: 0 !important; width: 100% !important; max-width: 100% !important; }
+            
+            .page-break-before { page-break-before: always !important; break-before: page !important; }
+            .avoid-break { page-break-inside: avoid !important; break-inside: avoid !important; }
+            
+            thead { display: table-header-group !important; }
+            tr { page-break-inside: avoid !important; break-inside: avoid !important; }
+            
+            .print-header-repeat {
+                position: running(docHeader);
+                display: block;
+            }
         }
     </style>
 </head>
@@ -141,11 +163,6 @@
             <div class="text-center pt-2 space-y-3">
                 <div class="mx-auto flex items-center justify-center gap-3 bg-slate-950/80 p-3 rounded-2xl border border-slate-800 shadow-lg w-max">
                     <img src="1792941546023.jpg" class="logo-img-real" alt="Logo Jireth">
-                    <div class="text-left leading-tight">
-                        <div class="text-base font-black tracking-widest text-white">JIRETH <span class="text-sky-400 text-xs font-bold">GEOCORE</span></div>
-                        <div class="text-[10px] text-slate-400 font-extrabold uppercase tracking-wider">Complejo Jireth C.A.</div>
-                        <div class="text-[9px] text-slate-500 font-bold">Subsurface Intelligence & Logging System</div>
-                    </div>
                 </div>
 
                 <div class="py-1 space-y-1">
@@ -226,10 +243,6 @@
             <div class="flex items-center justify-between border-b border-slate-800 pb-4">
                 <div class="flex items-center gap-3">
                     <img src="1792941546023.jpg" class="logo-img-real" alt="Logo">
-                    <div>
-                        <h2 class="text-xs font-black uppercase text-white">Jireth GeoCore</h2>
-                        <p class="text-[10px] text-sky-400 font-bold">Menú Operativo Global</p>
-                    </div>
                 </div>
                 <button type="button" onclick="toggleSidebar()" class="w-8 h-8 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-black flex items-center justify-center">✕</button>
             </div>
@@ -312,96 +325,32 @@
             <div class="flex justify-between items-center flex-wrap gap-2 pb-3 border-b border-slate-800">
                 <div>
                     <h2 class="text-xl font-black text-white tracking-tight flex items-center gap-2">
-                        <span>🏠 Sala Situacional (Frentes Activos & Histórico por Empresa)</span>
+                        <span>🏠 Sala Situacional (Frentes Activos)</span>
                         <span class="text-xs bg-sky-950 text-sky-300 px-2.5 py-0.5 rounded-full border border-sky-800 font-mono-code pulse-live" id="contadorFrentesActivos">0 Activos</span>
                     </h2>
-                    <p class="text-xs text-slate-400 mt-0.5">Monitoreo directo en tiempo real de perforadoras operando y consulta de pozos culminados.</p>
+                    <p class="text-xs text-slate-400 mt-0.5">Monitoreo independiente en tiempo real de perforadoras operando.</p>
                 </div>
                 <button type="button" onclick="renderizarSalaSituacional()" class="bg-amber-950 hover:bg-amber-900 text-amber-200 border border-amber-700 px-3 py-2 rounded-xl text-xs font-bold transition shadow-sm">🔄 Actualizar En Vivo</button>
             </div>
 
-            <div id="boxFiltroEmpresaCulminados" class="hidden bg-slate-900/90 p-4 rounded-2xl border border-sky-900/60 space-y-3">
-                <div class="flex items-center gap-2 text-sky-400 font-black text-xs uppercase tracking-wider">
-                    <span>🏢 SIN FRENTES ACTIVOS — CONSULTA DE POZOS CULMINADOS POR EMPRESA</span>
+            <!-- CONTENEDOR DE FRENTES INACTIVOS (PANTALLA LIMPIA CON MENSAJE GERENCIAL) -->
+            <div id="boxSalaInactiva" class="hidden bg-slate-900/90 p-8 sm:p-12 rounded-3xl border border-slate-800 text-center space-y-4 my-6 shadow-2xl relative overflow-hidden">
+                <div class="w-16 h-16 mx-auto rounded-2xl bg-sky-950/60 border border-sky-800 flex items-center justify-center text-3xl shadow-inner pulse-live">
+                    🚜
                 </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-[10px] font-bold text-slate-300 uppercase mb-1">Seleccionar Empresa Titular / Cliente:</label>
-                        <select id="salaFiltroEmpresa" onchange="filtrarPozosCulminadosPorEmpresa()" class="input-field w-full px-3 text-xs font-bold text-white">
-                            <option value="">-- Seleccionar Empresa --</option>
-                            <option value="IVM C.A.">IVM C.A.</option>
-                            <option value="MINERÍA CARABOBO C.A.">MINERÍA CARABOBO C.A.</option>
-                            <option value="INDUSTRIAS AUDIT">INDUSTRIAS AUDIT</option>
-                            <option value="HAVILA 318">HAVILA 318</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-[10px] font-bold text-slate-300 uppercase mb-1">Seleccionar Sondaje Culminado a Visualizar:</label>
-                        <select id="salaSelectPozoCulminado" onchange="seleccionarPozoCulminadoSala(this.value)" class="input-field w-full px-3 text-xs font-bold text-white">
-                            <option value="">-- Seleccione un Pozo Culminado --</option>
-                        </select>
-                    </div>
+                <div class="max-w-xl mx-auto space-y-2">
+                    <h3 class="text-lg sm:text-xl font-black text-white uppercase tracking-wider">Frentes de Perforación en Tránsito Operativo</h3>
+                    <p class="text-xs sm:text-sm text-slate-400 font-medium leading-relaxed">
+                        Actualmente no se registran sondajes activos en ejecución. Las unidades de perforación se encuentran en proceso de mudanza, posicionamiento topográfico o apresto operacional hacia un nuevo blanco de exploración. La sala situacional se actualizará automáticamente al iniciar el próximo frente.
+                    </p>
+                </div>
+                <div class="pt-2">
+                    <span class="text-[10px] font-mono-code text-sky-400 uppercase tracking-widest bg-sky-950/80 px-3.5 py-1.5 rounded-full border border-sky-800">COMPLEJO JIRETH C.A. — SUBSURFACE INTELLIGENCE</span>
                 </div>
             </div>
 
-            <div id="gridSalaSituacional" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-
-            <div class="border-t border-slate-800 pt-4 space-y-4">
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                    <div class="bg-slate-900/90 p-3.5 rounded-2xl border-t-2 border-sky-500 shadow-sm relative overflow-hidden">
-                        <p class="text-[10px] text-sky-400 font-bold uppercase">Total Metros (Activos)</p>
-                        <p class="text-base font-black text-white font-mono-code mt-0.5" id="macroTotalMetros">0.00 m</p>
-                        <p class="text-[9px] text-slate-400 font-bold">Acumulado Frentes en Perforación</p>
-                    </div>
-                    <div class="bg-slate-900/90 p-3.5 rounded-2xl border-t-2 border-emerald-500 shadow-sm relative overflow-hidden">
-                        <p class="text-[10px] text-emerald-400 font-bold uppercase">Frentes Activos</p>
-                        <p class="text-base font-black text-white font-mono-code mt-0.5" id="macroFrentesActivos">0</p>
-                        <p class="text-[9px] text-slate-400 font-bold">Perforadoras Operando</p>
-                    </div>
-                    <div class="bg-slate-900/90 p-3.5 rounded-2xl border-t-2 border-purple-500 shadow-sm relative overflow-hidden">
-                        <p class="text-[10px] text-purple-400 font-bold uppercase">Eficiencia Testigo</p>
-                        <p class="text-base font-black text-white font-mono-code mt-0.5" id="macroRecuperacionGlobal">0.0%</p>
-                        <p class="text-[9px] text-slate-400 font-bold">Recuperación Testigo (%)</p>
-                    </div>
-                    <div class="bg-slate-900/90 p-3.5 rounded-2xl border-t-2 border-amber-500 shadow-sm relative overflow-hidden">
-                        <p class="text-[10px] text-amber-400 font-bold uppercase">Metros Pagables Totales</p>
-                        <p class="text-base font-black text-white font-mono-code mt-0.5" id="macroMetrosPagables">0.00 m</p>
-                        <p class="text-[9px] text-slate-400 font-bold">Según Estándar de Pago</p>
-                    </div>
-                </div>
-
-                <!-- VISUALIZADOR 2D VERTICAL HD -->
-                <div class="bg-slate-900/80 p-4 rounded-2xl border border-slate-800 space-y-3 shadow-sm pt-4">
-                    <div class="flex justify-between items-center flex-wrap gap-2">
-                        <h3 class="text-xs font-black text-white uppercase tracking-wider flex items-center gap-2">
-                            <span>📐 Visualizador de Perfil 2D & Log Litológico (Sala Situacional - Zoom HD Vertical)</span>
-                        </h3>
-                        <div class="flex items-center gap-2">
-                            <select id="selectPozoPerfilSala" onchange="renderizarPerfilSalaSituacionalCompleto()" class="input-field px-3 py-1.5 text-xs font-bold text-white">
-                                <option value="">-- Seleccionar Sondaje a Visualizar --</option>
-                            </select>
-                        </div>
-                    </div>
-                    
-                    <div class="grid grid-cols-1 lg:grid-cols-4 gap-3 items-start">
-                        <div class="lg:col-span-3 bg-slate-950 p-3 rounded-xl border border-slate-800 overflow-x-auto shadow-inner flex justify-center">
-                            <canvas id="canvasSalaSituacionalGrande" width="980" height="780" class="max-w-full h-auto bg-slate-950 rounded-lg shadow-md"></canvas>
-                        </div>
-                        <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2 text-xs">
-                            <p class="text-[11px] font-black text-sky-400 uppercase tracking-wider border-b border-slate-800 pb-1">🎨 Convención Litológica / Meteorización</p>
-                            <div class="space-y-1.5 pt-1">
-                                <div class="flex items-center gap-2 p-1.5 rounded bg-slate-900 border border-slate-800"><span class="w-3.5 h-3.5 rounded-full bg-yellow-200 inline-block border border-black/30"></span><span class="font-extrabold text-slate-200">Suelo / Relleno (&ge;70%)</span></div>
-                                <div class="flex items-center gap-2 p-1.5 rounded bg-slate-900 border border-slate-800"><span class="w-3.5 h-3.5 rounded-full bg-yellow-400 inline-block border border-black/30"></span><span class="font-extrabold text-slate-200">Saprolita (&ge;70%)</span></div>
-                                <div class="flex items-center gap-2 p-1.5 rounded bg-slate-900 border border-slate-800"><span class="w-3.5 h-3.5 rounded-full bg-amber-600 inline-block border border-black/30"></span><span class="font-extrabold text-slate-200">Saprock (&ge;70%)</span></div>
-                                <div class="flex items-center gap-2 p-1.5 rounded bg-slate-900 border border-slate-800"><span class="w-3.5 h-3.5 rounded-full bg-orange-500 inline-block border border-black/30"></span><span class="font-extrabold text-slate-200">Roca Oxidada (&ge;80%)</span></div>
-                                <div class="flex items-center gap-2 p-1.5 rounded bg-slate-900 border border-slate-800"><span class="w-3.5 h-3.5 rounded-full bg-sky-400 inline-block border border-black/30"></span><span class="font-extrabold text-slate-200">Roca Fracturada (&ge;70%)</span></div>
-                                <div class="flex items-center gap-2 p-1.5 rounded bg-slate-900 border border-slate-800"><span class="w-3.5 h-3.5 rounded-full bg-emerald-500 inline-block border border-black/30"></span><span class="font-extrabold text-slate-200">Roca Fresca (&ge;90%)</span></div>
-                                <div class="flex items-center gap-2 p-1.5 rounded bg-slate-900 border border-slate-800"><span class="w-3.5 h-3.5 rounded-full bg-amber-300 inline-block border border-black/30"></span><span class="font-extrabold text-slate-200">Zona de Veta (&ge;90%)</span></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <!-- CONTENEDOR DE FRENTES ACTIVOS (TARJETAS INDEPENDIENTES CON CANVAS 2D INTEGRADO) -->
+            <div id="contenedorFrentesActivosGrid" class="space-y-6"></div>
         </section>
 
         <!-- MÓDULO 1: APERTURA & LISTA DE POZOS -->
@@ -791,12 +740,12 @@
             </div>
         </section>
 
-        <!-- MÓDULO 5: REPOSITORIO & DSR (EXPORTACIÓN DIRECTA A PDF) -->
+        <!-- MÓDULO 5: REPOSITORIO & DSR (ESTÁNDAR CARTA CON CONTROL DE PÁGINAS) -->
         <section id="mod5" class="hidden space-y-4 card-pro p-5 sm:p-6">
             <div class="flex justify-between items-center flex-wrap gap-2">
                 <h2 class="text-xl font-black text-white tracking-tight">📑 Módulo: Repositorio & Informes DSR Oficiales</h2>
                 <div class="space-x-2">
-                    <button type="button" onclick="imprimirOExportarPDF()" class="bg-sky-600 hover:bg-sky-500 text-white font-black px-4 py-2 rounded-xl text-xs shadow-sm transition">📥 Descargar PDF Directo</button>
+                    <button type="button" onclick="imprimirOExportarPDF()" class="bg-sky-600 hover:bg-sky-500 text-white font-black px-4 py-2 rounded-xl text-xs shadow-sm transition">📥 Imprimir / Guardar PDF Nativo</button>
                     <button type="button" onclick="copiarReportePortapapeles()" class="bg-slate-700 hover:bg-slate-600 text-white font-black px-4 py-2 rounded-xl text-xs shadow-sm transition">📋 Copiar Resumen</button>
                 </div>
             </div>
@@ -815,7 +764,7 @@
                         <select id="repModoVista" onchange="generarReporteDSR()" class="input-field px-3 py-1.5 text-xs font-bold text-white">
                             <option value="TURNO">1. ⏱️ REPORTE DE TURNO</option>
                             <option value="ACUMULADO">2. 📈 REPORTE ACUMULADO DEL SONDAJE</option>
-                            <option value="CULMINADO">3. 🏁 REPORTE SONDAJE CULMINADO</option>
+                            <option value="CULMINADO">3. 🏁 REPORTE SONDAJE CULMINADO (OFICIAL)</option>
                         </select>
                     </div>
                     <div id="boxSelectTurnoRepo" class="hidden w-full sm:w-auto">
@@ -824,24 +773,25 @@
                     </div>
                 </div>
 
-                <!-- ÁREA IMPRIMIBLE DSR A TAMAÑO CARTA EXACTO -->
+                <!-- ÁREA IMPRIMIBLE DSR CONFIGURADA A HOJA CARTA EXACTA -->
                 <div id="printable-area" class="bg-white p-6 rounded-2xl border border-slate-200 space-y-4 text-xs text-slate-900 shadow-xl relative overflow-hidden">
                     
-                    <div class="border-b-2 border-slate-900 pb-3 flex justify-between items-center flex-wrap gap-3 px-2 pt-0">
-                        <div class="flex items-center gap-4">
-                            <img src="1792941546023.jpg" class="logo-img-real" alt="Logo Jireth">
-                            <div>
-                                <h3 class="text-sm font-black text-slate-900 uppercase tracking-tight" id="repTituloPrincipalDSR">REPORTE DE TURNO</h3>
-                                <p class="text-[9px] text-slate-600 font-extrabold uppercase">COMPLEJO JIRETH C.A. — COORDINACIÓN DE GEOLOGÍA</p>
+                    <!-- HOJA 1: CABECERA, KPIS, DATOS Y CANVAS 2D VERTICAL -->
+                    <div class="space-y-4">
+                        <div class="border-b-2 border-slate-900 pb-3 flex justify-between items-center flex-wrap gap-3 px-1 pt-0">
+                            <div class="flex items-center gap-4">
+                                <img src="1792941546023.jpg" class="logo-img-real" alt="Logo Jireth">
+                                <div>
+                                    <h3 class="text-sm font-black text-slate-900 uppercase tracking-tight" id="repTituloPrincipalDSR">REPORTE DE TURNO</h3>
+                                    <p class="text-[9px] text-slate-600 font-extrabold uppercase">COMPLEJO JIRETH C.A. — COORDINACIÓN DE GEOLOGÍA</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-xs font-mono-code text-slate-900 font-black" id="repCodigoHeader">S0000-ET</p>
+                                <p class="text-[10px] text-slate-600 font-bold" id="repFechaEmision">Fecha: --/--/---- | Turno: --</p>
                             </div>
                         </div>
-                        <div class="text-right">
-                            <p class="text-xs font-mono-code text-slate-900 font-black" id="repCodigoHeader">S0000-ET</p>
-                            <p class="text-[10px] text-slate-600 font-bold" id="repFechaEmision">Fecha: --/--/---- | Turno: --</p>
-                        </div>
-                    </div>
 
-                    <div class="printable-content-body space-y-4 pt-2">
                         <div class="grid grid-cols-4 gap-2 avoid-break">
                             <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 shadow-sm">
                                 <p class="text-[9px] text-slate-500 uppercase font-black">PROF. PERFORADA</p>
@@ -859,9 +809,9 @@
                                 <p class="text-[9px] text-slate-700 font-bold">Según Estándar</p>
                             </div>
                             <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 shadow-sm">
-                                <p class="text-[9px] text-slate-500 uppercase font-black">AVANCE GENERAL</p>
+                                <p class="text-[9px] text-slate-500 uppercase font-black">PROGRESO POZO</p>
                                 <p class="text-xs font-black text-slate-900 font-mono-code mt-0.5" id="repAvanceGen">0.0%</p>
-                                <p class="text-[9px] text-slate-500 font-bold">Progreso Pozo</p>
+                                <p class="text-[9px] text-slate-500 font-bold">Acumulado al Turno</p>
                             </div>
                         </div>
 
@@ -885,16 +835,16 @@
                             </div>
                         </div>
 
-                        <!-- PERFIL 2D EN REPORTE VERTICAL HD -->
+                        <!-- PERFIL 2D CANVAS VERTICAL HD (DENTRO DE LA HOJA 1) -->
                         <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-1.5 avoid-break shadow-sm">
                             <p class="text-[11px] font-black text-slate-900 uppercase tracking-wider" id="repTituloPerfil2D">📐 Perfil Topográfico 2D & Log Litológico (HD Vertical):</p>
                             <div class="grid grid-cols-1 md:grid-cols-4 gap-3 items-start bg-white p-2.5 rounded-lg border border-slate-200">
                                 <div class="md:col-span-3 flex justify-center">
-                                    <canvas id="canvasReporte2D" width="850" height="520" class="max-w-full h-auto bg-white rounded"></canvas>
+                                    <canvas id="canvasReporte2D" width="680" height="420" class="max-w-full h-auto bg-white rounded"></canvas>
                                 </div>
-                                <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 space-y-1.5 text-[10px]">
+                                <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200 space-y-1 text-[9px]">
                                     <p class="font-black text-slate-900 uppercase tracking-wider border-b border-slate-300 pb-0.5">🎨 Leyenda Litológica</p>
-                                    <div class="space-y-1 pt-1">
+                                    <div class="space-y-1 pt-0.5">
                                         <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-yellow-200 inline-block border border-slate-400"></span><span class="font-bold text-slate-800">Suelo / Relleno (&ge;70%)</span></div>
                                         <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-yellow-400 inline-block border border-slate-400"></span><span class="font-bold text-slate-800">Saprolita (&ge;70%)</span></div>
                                         <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-amber-600 inline-block border border-slate-400"></span><span class="font-bold text-slate-800">Saprock (&ge;70%)</span></div>
@@ -906,9 +856,12 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
 
+                    <!-- HOJA 2: SALTO DE PÁGINA LIMPIO PARA TABLA DE TRAMOS Y OBSERVACIONES -->
+                    <div class="page-break-before space-y-4 pt-4">
                         <div>
-                            <h4 class="text-[11px] font-black text-slate-900 uppercase tracking-wider mb-1.5">🪵 REGISTRO DETALLADO TRAMO A TRAMO (CON ESTÁNDAR DE PAGO)</h4>
+                            <h4 class="text-[11px] font-black text-slate-900 uppercase tracking-wider mb-1.5">🪵 REGISTRO DETALLADO TRAMO A TRAMO (AUDITORÍA DE PAGO)</h4>
                             <div class="overflow-x-auto border border-slate-300 rounded-xl shadow-sm">
                                 <table class="w-full text-left text-xs border-collapse">
                                     <thead class="bg-slate-900 text-white uppercase font-black border-b border-slate-400">
@@ -935,13 +888,14 @@
                             <p class="text-slate-600 text-xs mt-0.5 font-bold" id="repMotivoCierreBox"></p>
                         </div>
 
+                        <!-- CONTENEDOR DE FIRMAS SEGÚN REGLA DE NEGOCIO -->
                         <div class="pt-4 border-t-2 border-slate-200 text-xs text-slate-800 avoid-break" id="contenedorFirmasDSR"></div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- MÓDULO 6 (NUEVO): ESTADÍSTICAS & PROCESAMIENTO ANALÍTICO -->
+        <!-- MÓDULO 6: ESTADÍSTICAS & PROCESAMIENTO ANALÍTICO -->
         <section id="mod_estadisticas" class="hidden space-y-4 card-pro p-5 sm:p-6">
             <div class="flex justify-between items-center flex-wrap gap-2 pb-3 border-b border-slate-800">
                 <div>
@@ -988,7 +942,6 @@
 
             <!-- TABLERO DE GRÁFICAS INTERACTIVAS -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                <!-- GRÁFICA 1: AVANCE ACUMULADO POR POZO -->
                 <div class="bg-slate-900/80 p-4 rounded-2xl border border-slate-800 space-y-2 shadow-sm">
                     <h3 class="text-xs font-black text-white uppercase tracking-wider flex items-center justify-between">
                         <span>📈 Metros Perforados vs Target por Sondaje</span>
@@ -999,7 +952,6 @@
                     </div>
                 </div>
 
-                <!-- GRÁFICA 2: DISTRIBUCIÓN LITOLÓGICA -->
                 <div class="bg-slate-900/80 p-4 rounded-2xl border border-slate-800 space-y-2 shadow-sm">
                     <h3 class="text-xs font-black text-white uppercase tracking-wider flex items-center justify-between">
                         <span>🪨 Distribución Litológica Global</span>
@@ -1010,7 +962,6 @@
                     </div>
                 </div>
 
-                <!-- GRÁFICA 3: ANÁLISIS DE PAGO CONTRACTUAL -->
                 <div class="bg-slate-900/80 p-4 rounded-2xl border border-slate-800 space-y-2 shadow-sm">
                     <h3 class="text-xs font-black text-white uppercase tracking-wider flex items-center justify-between">
                         <span>💰 Metros Físicos vs Metros Pagables (Estándar de Pago)</span>
@@ -1021,7 +972,6 @@
                     </div>
                 </div>
 
-                <!-- GRÁFICA 4: EFICIENCIA POR TURNO -->
                 <div class="bg-slate-900/80 p-4 rounded-2xl border border-slate-800 space-y-2 shadow-sm">
                     <h3 class="text-xs font-black text-white uppercase tracking-wider flex items-center justify-between">
                         <span>⏱️ Avance por Turno (Diurno ☀️ vs Nocturno 🌙)</span>
@@ -1034,7 +984,7 @@
             </div>
         </section>
 
-        <!-- MÓDULO 7: ADMIN -->
+        <!-- MÓDULO 7: ADMIN & RESPALDOS -->
         <section id="mod6" class="hidden space-y-4 card-pro p-5 sm:p-6">
             <h2 class="text-xl font-black text-white tracking-tight">⚙️ Módulo: Administración, Respaldos & Seguridad</h2>
             
@@ -1050,12 +1000,19 @@
             </div>
 
             <div class="bg-slate-900/80 p-4 rounded-2xl border border-slate-800 space-y-3 shadow-sm">
-                <h3 class="text-xs font-black text-slate-200 uppercase tracking-wider">☁️ Respaldos JSON Local / Nube</h3>
+                <h3 class="text-xs font-black text-slate-200 uppercase tracking-wider">☁️ Respaldos JSON Local / Nube (Póliza Offline)</h3>
                 <div class="flex gap-2 flex-wrap pt-1">
-                    <button type="button" onclick="exportarBackupJSON()" class="bg-slate-800 hover:bg-slate-700 text-white px-4 py-2.5 rounded-xl text-xs font-black shadow-sm border border-slate-700">📥 Exportar JSON</button>
+                    <button type="button" onclick="exportarBackupJSON()" class="bg-slate-800 hover:bg-slate-700 text-white px-4 py-2.5 rounded-xl text-xs font-black shadow-sm border border-slate-700">📥 Exportar JSON Backup</button>
                     <label class="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2.5 rounded-xl text-xs font-black shadow-sm cursor-pointer border border-slate-600">
-                        📤 Importar JSON <input type="file" id="fileImportJSON" onchange="importarBackupJSON(event)" class="hidden" accept=".json">
+                        📤 Importar JSON Backup <input type="file" id="fileImportJSON" onchange="importarBackupJSON(event)" class="hidden" accept=".json">
                     </label>
+                </div>
+            </div>
+
+            <div class="bg-slate-900/80 p-4 rounded-2xl border border-slate-800 space-y-3 shadow-sm">
+                <h3 class="text-xs font-black text-sky-400 uppercase tracking-wider">📜 Log de Auditoría Minimalista (Trazabilidad de Registro)</h3>
+                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 h-40 overflow-y-auto font-mono-code text-[11px] text-slate-300 space-y-1" id="boxLogAuditoria">
+                    <p class="text-slate-500">// Inicando auditoría de eventos mineros...</p>
                 </div>
             </div>
         </section>
@@ -1078,10 +1035,10 @@
         let turnosData = JSON.parse(localStorage.getItem('jireth_turnos') || '{}');
         let turnoActivoObj = JSON.parse(localStorage.getItem('jireth_turno_activo') || 'null');
         let syncQueue = JSON.parse(localStorage.getItem('jireth_sync_queue') || '[]');
+        let auditLogs = JSON.parse(localStorage.getItem('jireth_audit_logs') || '[]');
         let indexEditandoAvance = null;
         let lastActivityTime = Date.now();
 
-        // INSTANCIAS DE GRÁFICAS CHART.JS
         let chartAvanceInst = null;
         let chartLitologiaInst = null;
         let chartPagosInst = null;
@@ -1092,6 +1049,29 @@
         let claveGeologos = localStorage.getItem('jireth_clave_geo');
         let claveGerencia = 'JIRETH2026';
         const PIN_MAESTRO = "2628";
+
+        function registrarLogAuditoria(accion, detalle) {
+            let logItem = `[${new Date().toLocaleString()}] ${accion}: ${detalle}`;
+            auditLogs.unshift(logItem);
+            if (auditLogs.length > 50) auditLogs.pop();
+            localStorage.setItem('jireth_audit_logs', JSON.stringify(auditLogs));
+            renderizarLogAuditoriaUI();
+        }
+
+        function renderizarLogAuditoriaUI() {
+            const box = document.getElementById('boxLogAuditoria');
+            if (!box) return;
+            box.innerHTML = '';
+            if (auditLogs.length === 0) {
+                box.innerHTML = '<p class="text-slate-500">// No hay eventos registrados aún.</p>';
+                return;
+            }
+            auditLogs.forEach(l => {
+                let p = document.createElement('p');
+                p.innerText = l;
+                box.appendChild(p);
+            });
+        }
 
         function showToast(titulo, mensaje, icono = '✅') {
             const toast = document.getElementById('toastFeedback');
@@ -1128,6 +1108,7 @@
             refrescarSelectorModuloUno();
             poblarSelectTopografia();
             actualizarBadgeSyncQueue();
+            renderizarLogAuditoriaUI();
             
             if (pozoActivoId && pozosData[pozoActivoId]) cargarDatosPozoEnFormularios(pozoActivoId);
             if (turnoActivoObj) actualizarBannerTurnoActivo();
@@ -1225,14 +1206,18 @@
         function intentarLoginGeo() {
             const val = document.getElementById('inputClaveGeo').value.trim();
             claveGeologos = localStorage.getItem('jireth_clave_geo') || 'Mina2628';
-            if (val === claveGeologos) entrarAlSistema("GEÓLOGOS (COMPLEJO JIRETH C.A.)");
-            else { alert("❌ Contraseña incorrecta."); document.getElementById('inputClaveGeo').value = ''; }
+            if (val === claveGeologos) {
+                registrarLogAuditoria("LOGIN EXITO", "Ingreso Perfil Geólogos");
+                entrarAlSistema("GEÓLOGOS (COMPLEJO JIRETH C.A.)");
+            } else { alert("❌ Contraseña incorrecta."); document.getElementById('inputClaveGeo').value = ''; }
         }
 
         function intentarLoginGer() {
             const val = document.getElementById('inputClaveGer').value.trim();
-            if (val === claveGerencia) { entrarAlSistema("GERENCIA / AUDITORÍA"); aplicarModoLecturaGerencia(); }
-            else { alert("❌ Contraseña incorrecta."); document.getElementById('inputClaveGer').value = ''; }
+            if (val === claveGerencia) {
+                registrarLogAuditoria("LOGIN EXITO", "Ingreso Perfil Gerencia");
+                entrarAlSistema("GERENCIA / AUDITORÍA"); aplicarModoLecturaGerencia();
+            } else { alert("❌ Contraseña incorrecta."); document.getElementById('inputClaveGer').value = ''; }
         }
 
         function mostrarBoxRescate() {
@@ -1251,6 +1236,7 @@
             if (pin === PIN_MAESTRO && nueva.length >= 4) {
                 claveGeologos = nueva;
                 localStorage.setItem('jireth_clave_geo', claveGeologos);
+                registrarLogAuditoria("CLAVE RESTABLECIDA", "Se usó PIN Maestro para cambiar clave de Geólogos");
                 showToast("Clave Restablecida", "Nueva contraseña asignada con éxito.");
                 document.getElementById('inputPinRescate').value = '';
                 document.getElementById('inputClaveNuevaRescate').value = '';
@@ -1309,48 +1295,27 @@
             return pct >= umbral ? lonManiobra : rec;
         }
 
+        /* LÓGICA REESTRUCTURADA SALA SITUACIONAL: 0 POZOS = PANTALLA LIMPIA CON MENSAJE FINO; POZOS ACTIVOS = TARJETAS INDEPENDIENTES CON CANVAS 2D NATIVO */
         function renderizarSalaSituacional() {
-            const grid = document.getElementById('gridSalaSituacional');
+            const gridContenedor = document.getElementById('contenedorFrentesActivosGrid');
+            const boxInactiva = document.getElementById('boxSalaInactiva');
             const contador = document.getElementById('contadorFrentesActivos');
-            const boxCulminados = document.getElementById('boxFiltroEmpresaCulminados');
-            if (!grid) return;
-            grid.innerHTML = '';
-
+            if (!gridContenedor || !boxInactiva) return;
+            
+            gridContenedor.innerHTML = '';
             let pozosKeys = Object.keys(pozosData);
             let pozosActivosKeys = pozosKeys.filter(k => pozosData[k].estado === 'ABIERTO');
 
             if (contador) contador.innerText = pozosActivosKeys.length + " Activos";
 
-            let totalMetrosGlobal = 0, totalRecGral = 0, cuentaTramosGral = 0, totalPagablesGlobal = 0;
-
-            const selPerfilSala = document.getElementById('selectPozoPerfilSala');
-            if (selPerfilSala) {
-                let valActual = selPerfilSala.value;
-                selPerfilSala.innerHTML = '<option value="">-- Seleccionar Sondaje a Visualizar --</option>';
-                let pozosParaPerfil = pozosActivosKeys.length > 0 ? pozosActivosKeys : pozosKeys;
-                pozosParaPerfil.forEach(k => {
-                    let opt = document.createElement('option');
-                    opt.value = k;
-                    opt.text = "Sondaje: " + k + " (" + pozosData[k].proyecto + ")";
-                    if (k === valActual || (!valActual && k === pozosParaPerfil[0])) opt.selected = true;
-                    selPerfilSala.appendChild(opt);
-                });
-            }
-
             if (pozosActivosKeys.length === 0) {
-                boxCulminados.classList.remove('hidden');
-                filtrarPozosCulminadosPorEmpresa();
-                document.getElementById('macroTotalMetros').innerText = "0.00 m";
-                document.getElementById('macroFrentesActivos').innerText = "0";
-                document.getElementById('macroRecuperacionGlobal').innerText = "0.0%";
-                document.getElementById('macroMetrosPagables').innerText = "0.00 m";
-                renderizarPerfilSalaSituacionalCompleto();
+                boxInactiva.classList.remove('hidden');
                 return;
             }
 
-            boxCulminados.classList.add('hidden');
+            boxInactiva.classList.add('hidden');
 
-            pozosActivosKeys.forEach(k => {
+            pozosActivosKeys.forEach((k, idx) => {
                 let p = pozosData[k];
                 let metPozo = 0, recPozoAcc = 0, pagPozoAcc = 0;
                 let targetPozo = parseFloat(p.target) || 100.0;
@@ -1364,104 +1329,75 @@
                     });
                 }
 
-                totalMetrosGlobal += metPozo;
-                totalRecGral += recPozoAcc;
-                cuentaTramosGral += metPozo;
-                totalPagablesGlobal += pagPozoAcc;
-
                 let pct = targetPozo > 0 ? Math.min(100, (metPozo / targetPozo) * 100) : 0;
                 let recPozoP = metPozo > 0 ? ((recPozoAcc / metPozo) * 100).toFixed(1) : '0.0';
 
-                let card = document.createElement('div');
-                card.className = "bg-slate-900/90 p-4.5 rounded-2xl border border-slate-800 space-y-3.5 shadow-md relative overflow-hidden flex flex-col justify-between";
-                card.innerHTML = `
-                    <div class="absolute top-0 left-0 right-0 h-1.5 bg-sky-500"></div>
-                    <div class="space-y-2">
-                        <div class="flex justify-between items-center">
-                            <span class="text-[10px] font-black uppercase tracking-wider bg-emerald-950 text-emerald-300 px-2.5 py-1 rounded-full border border-emerald-800 flex items-center gap-1.5">
+                let cardPozo = document.createElement('div');
+                cardPozo.className = "bg-slate-900/90 p-5 rounded-3xl border border-slate-800 space-y-4 shadow-xl relative overflow-hidden";
+                cardPozo.innerHTML = `
+                    <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-sky-500 to-indigo-500"></div>
+                    <div class="flex justify-between items-center flex-wrap gap-2">
+                        <div class="flex items-center gap-2.5">
+                            <span class="text-xs font-black uppercase tracking-wider bg-emerald-950 text-emerald-300 px-3 py-1 rounded-full border border-emerald-800 flex items-center gap-1.5">
                                 <span class="w-2 h-2 rounded-full bg-emerald-400 pulse-live inline-block"></span>
-                                ACTIVO
+                                FRENTE ACTIVO #${idx + 1}
                             </span>
-                            <span class="text-xs font-mono-code font-black text-sky-400">${p.codigo}</span>
+                            <h3 class="text-lg font-black text-white font-mono-code">${p.codigo}</h3>
                         </div>
-                        <div class="grid grid-cols-2 gap-2 pt-1 text-[11px]">
-                            <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800"><span class="text-slate-400 text-[9px] block uppercase font-bold">Cliente</span><span class="text-white font-extrabold truncate block">${p.empresa}</span></div>
-                            <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800"><span class="text-slate-400 text-[9px] block uppercase font-bold">Proyecto</span><span class="text-white font-extrabold truncate block">${p.proyecto}</span></div>
+                        <button type="button" onclick="irARepositorioSondaje('${p.codigo}')" class="bg-slate-800 hover:bg-slate-700 text-sky-400 px-3.5 py-1.5 rounded-xl text-xs font-extrabold border border-slate-700 transition">📑 Abrir Informe DSR</button>
+                    </div>
+
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+                        <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800">
+                            <span class="text-slate-400 text-[10px] block font-bold uppercase">Empresa / Proyecto</span>
+                            <span class="text-white font-black truncate block mt-0.5">${p.empresa} (${p.proyecto})</span>
+                        </div>
+                        <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800">
+                            <span class="text-slate-400 text-[10px] block font-bold uppercase">Progreso Perforación</span>
+                            <span class="text-sky-400 font-mono-code font-black block mt-0.5">${metPozo.toFixed(2)}m / ${targetPozo.toFixed(2)}m (${pct.toFixed(1)}%)</span>
+                        </div>
+                        <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800">
+                            <span class="text-slate-400 text-[10px] block font-bold uppercase">Recuperación Testigo</span>
+                            <span class="text-purple-400 font-mono-code font-black block mt-0.5">${recPozoP}%</span>
+                        </div>
+                        <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800">
+                            <span class="text-slate-400 text-[10px] block font-bold uppercase">Metros a Pagar</span>
+                            <span class="text-amber-400 font-mono-code font-black block mt-0.5">${pagPozoAcc.toFixed(2)} m</span>
                         </div>
                     </div>
-                    <div class="space-y-3 pt-2 border-t border-slate-800">
-                        <div class="flex justify-between items-center text-xs font-extrabold"><span class="text-slate-300">Progreso:</span><span class="text-white font-mono-code font-black">${metPozo.toFixed(2)}m / ${targetPozo.toFixed(2)}m (${pct.toFixed(1)}%)</span></div>
-                        <div class="w-full bg-slate-950 h-3 rounded-full overflow-hidden flex border border-slate-800 p-0.5 shadow-inner">
-                            <div class="bg-sky-600 h-full rounded" style="width: ${pct}%"></div>
+
+                    <!-- VISUALIZADOR 2D NATIVO INTEGRADO DIRECTO EN LA TARJETA (0 LISTAS DESPLEGABLES) -->
+                    <div class="bg-slate-950 p-3.5 rounded-2xl border border-slate-800 space-y-2">
+                        <p class="text-[11px] font-black text-slate-300 uppercase tracking-wider">📐 Perfil 2D & Log Litológico en Vivo (${p.codigo}):</p>
+                        <div class="grid grid-cols-1 lg:grid-cols-4 gap-3 items-start">
+                            <div class="lg:col-span-3 flex justify-center overflow-x-auto bg-slate-950 p-2 rounded-xl border border-slate-900">
+                                <canvas id="canvasSalaPozo_${p.codigo}" width="900" height="700" class="max-w-full h-auto bg-slate-950 rounded-lg shadow-md"></canvas>
+                            </div>
+                            <div class="bg-slate-900/90 p-3 rounded-xl border border-slate-800 space-y-1.5 text-[11px]">
+                                <p class="font-black text-sky-400 uppercase tracking-wider border-b border-slate-800 pb-1">🎨 Convención</p>
+                                <div class="space-y-1 pt-1">
+                                    <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-yellow-200 inline-block"></span><span>Suelo/Relleno (&ge;70%)</span></div>
+                                    <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-yellow-400 inline-block"></span><span>Saprolita (&ge;70%)</span></div>
+                                    <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-amber-600 inline-block"></span><span>Saprock (&ge;70%)</span></div>
+                                    <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-orange-500 inline-block"></span><span>Roca Oxidada (&ge;80%)</span></div>
+                                    <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-sky-400 inline-block"></span><span>Roca Fracturada (&ge;70%)</span></div>
+                                    <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-emerald-500 inline-block"></span><span>Roca Fresca (&ge;90%)</span></div>
+                                    <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-amber-300 inline-block"></span><span>Zona de Veta (&ge;90%)</span></div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="flex justify-between text-[10px] text-slate-300 font-bold px-1 bg-slate-950 p-2 rounded-xl border border-slate-800">
-                            <span class="text-purple-300">Recup: <b class="font-mono-code">${recPozoP}%</b></span>
-                            <span class="text-amber-300">A Pagar: <b class="font-mono-code">${pagPozoAcc.toFixed(2)}m</b></span>
-                        </div>
-                        <button type="button" onclick="irARepositorioSondaje('${p.codigo}')" class="w-full mt-1 bg-gradient-to-r from-sky-600 to-indigo-600 hover:from-sky-500 hover:to-indigo-500 text-white py-2.5 rounded-xl text-xs font-extrabold transition shadow-sm">📑 Ver en Repositorio</button>
                     </div>
                 `;
-                grid.appendChild(card);
+                gridContenedor.appendChild(cardPozo);
+
+                setTimeout(() => {
+                    const canvasPozo = document.getElementById(`canvasSalaPozo_${p.codigo}`);
+                    if (canvasPozo) {
+                        const ctxP = canvasPozo.getContext('2d');
+                        dibujarPerfilEnCanvasVertical(ctxP, p, canvasPozo.width, canvasPozo.height, p.avances, false);
+                    }
+                }, 50);
             });
-
-            let recPromGral = cuentaTramosGral > 0 ? ((totalRecGral / cuentaTramosGral) * 100).toFixed(1) : '0.0';
-
-            document.getElementById('macroTotalMetros').innerText = totalMetrosGlobal.toFixed(2) + " m";
-            document.getElementById('macroFrentesActivos').innerText = pozosActivosKeys.length;
-            document.getElementById('macroRecuperacionGlobal').innerText = recPromGral + "%";
-            document.getElementById('macroMetrosPagables').innerText = totalPagablesGlobal.toFixed(2) + " m";
-
-            renderizarPerfilSalaSituacionalCompleto();
-        }
-
-        function filtrarPozosCulminadosPorEmpresa() {
-            const empSel = document.getElementById('salaFiltroEmpresa').value;
-            const selPozoCul = document.getElementById('salaSelectPozoCulminado');
-            if (!selPozoCul) return;
-            selPozoCul.innerHTML = '<option value="">-- Seleccione un Pozo Culminado --</option>';
-            if (!empSel) return;
-
-            let culminados = Object.keys(pozosData).filter(k => pozosData[k].empresa === empSel && pozosData[k].estado === 'CULMINADO');
-            culminados.forEach(k => {
-                let opt = document.createElement('option');
-                opt.value = k;
-                opt.text = "Sondaje Culminado: " + k + " (" + pozosData[k].proyecto + ")";
-                selPozoCul.appendChild(opt);
-            });
-        }
-
-        function seleccionarPozoCulminadoSala(codigo) {
-            if (!codigo) return;
-            pozoActivoId = codigo;
-            localStorage.setItem('jireth_pozo_activo', pozoActivoId);
-            const selPerfil = document.getElementById('selectPozoPerfilSala');
-            if (selPerfil) selPerfil.value = codigo;
-            renderizarPerfilSalaSituacionalCompleto();
-        }
-
-        function renderizarPerfilSalaSituacionalCompleto() {
-            const canvas = document.getElementById('canvasSalaSituacionalGrande');
-            if (!canvas) return;
-            const ctx = canvas.getContext('2d');
-            const w = canvas.width;
-            const h = canvas.height;
-
-            ctx.fillStyle = '#020617';
-            ctx.fillRect(0, 0, w, h);
-
-            const sel = document.getElementById('selectPozoPerfilSala');
-            let pozoKey = sel ? sel.value : pozoActivoId;
-
-            if (!pozoKey || !pozosData[pozoKey]) {
-                ctx.fillStyle = '#64748b';
-                ctx.font = 'bold 13px "Plus Jakarta Sans"';
-                ctx.textAlign = 'center';
-                ctx.fillText('-- SELECCIONE UN SONDAJE PARA VISUALIZAR EL PERFIL 2D Y LOG LITOLÓGICO --', w / 2, h / 2);
-                return;
-            }
-
-            let p = pozosData[pozoKey];
-            dibujarPerfilEnCanvasVertical(ctx, p, w, h, p.avances, false);
         }
 
         function irARepositorioSondaje(codigo) {
@@ -1544,6 +1480,7 @@
 
             pozosData[codigo] = { codigo: codigo, empresa: empresa, proyecto: proyecto, maquina: 'GEOMAX', este: '', norte: '', cota: '', azimut: '', dip: '-', target: '', avances: [], estado: 'ABIERTO' };
             await guardarYPersistirTodo();
+            registrarLogAuditoria("CREACIÓN SONDAJE", `Pozo ${codigo} creado para ${empresa}`);
             pozoActivoId = codigo;
             localStorage.setItem('jireth_pozo_activo', pozoActivoId);
             refrescarSelectoresOperativos();
@@ -1637,6 +1574,7 @@
             p.target = document.getElementById('m2_target').value || '';
 
             await guardarYPersistirTodo();
+            registrarLogAuditoria("TOPOGRAFÍA ACTUALIZADA", `Pozo ${pozoActivoId} (Máq: ${maq})`);
             showToast("Topografía Guardada", "Datos actualizados correctamente.");
             document.getElementById('m2_btn_box').classList.add('hidden');
             ['m2_maquina', 'm2_este', 'm2_norte', 'm2_cota', 'm2_azimut', 'm2_dip', 'm2_target', 'm2_otra_maquina'].forEach(id => {
@@ -1857,6 +1795,7 @@
 
                 await guardarYPersistirTodo();
                 poblarSelectRetomarTurno();
+                registrarLogAuditoria("TURNO ACTUALIZADO", `Sondaje ${pozoActivoId} (${fecha} - ${jornada})`);
                 showToast("Turno Actualizado", "Los cambios del turno fueron guardados.");
                 cancelarEdicionTurno();
             } else {
@@ -1866,6 +1805,7 @@
                 localStorage.setItem('jireth_turnos', JSON.stringify(turnosData));
                 localStorage.setItem('jireth_turno_activo', JSON.stringify(turnoActivoObj));
                 
+                registrarLogAuditoria("TURNO INICIADO", `Sondaje ${pozoActivoId} - Geo: ${geologo} | Perf: ${perforador}`);
                 actualizarBannerTurnoActivo();
                 poblarSelectRetomarTurno();
                 showToast("Turno Iniciado", "Redirigiendo a Core Logging...");
@@ -1918,6 +1858,7 @@
                 }
                 document.getElementById('contenedorDetalleTurnoSeleccionado').classList.add('hidden');
                 await guardarYPersistirTodo();
+                registrarLogAuditoria("TURNO ELIMINADO", `ID: ${id}`);
                 poblarSelectRetomarTurno();
                 showToast("Turno Eliminado", "Registro eliminado correctamente.", "🗑️");
             }
@@ -1932,6 +1873,7 @@
             localStorage.setItem('jireth_turnos', JSON.stringify(turnosData));
 
             await guardarYPersistirTodo();
+            registrarLogAuditoria("TURNO FINALIZADO", `Sondaje ${turnoActivoObj.pozo}`);
             showToast("Turno Finalizado", "Turno guardado y cerrado.");
             turnoActivoObj = null;
             localStorage.removeItem('jireth_turno_activo');
@@ -2097,6 +2039,7 @@
             p.avances.sort((a, b) => parseFloat(a.desde) - parseFloat(b.desde));
 
             await guardarYPersistirTodo();
+            registrarLogAuditoria("REGISTRO TRAMO", `Pozo ${pozoActivoId} (${desde.toFixed(2)}-${hasta.toFixed(2)}m) Rec: ${recuperado.toFixed(2)}m`);
 
             actualizarTablaAvances();
             actualizarProgresoGrafico();
@@ -2155,6 +2098,7 @@
             if (confirm("¿Eliminar este tramo?")) {
                 pozosData[pozoActivoId].avances.splice(idx, 1);
                 await guardarYPersistirTodo();
+                registrarLogAuditoria("TRAMO ELIMINADO", `Pozo ${pozoActivoId} - Tramo #${idx+1}`);
                 actualizarTablaAvances();
                 actualizarProgresoGrafico();
                 verificarAjustarLockDiametro(pozosData[pozoActivoId]);
@@ -2244,12 +2188,8 @@
 
                 if (!grupoActual) {
                     grupoActual = {
-                        desde: desde,
-                        hasta: hasta,
-                        meteorizacion: lito,
-                        diametro: diam,
-                        totalLongitud: lon,
-                        totalRecuperado: rec
+                        desde: desde, hasta: hasta, meteorizacion: lito, diametro: diam,
+                        totalLongitud: lon, totalRecuperado: rec
                     };
                 } else {
                     if (grupoActual.meteorizacion === lito && Math.abs(grupoActual.hasta - desde) < 0.05 && grupoActual.diametro === diam) {
@@ -2259,12 +2199,8 @@
                     } else {
                         grupos.push(grupoActual);
                         grupoActual = {
-                            desde: desde,
-                            hasta: hasta,
-                            meteorizacion: lito,
-                            diametro: diam,
-                            totalLongitud: lon,
-                            totalRecuperado: rec
+                            desde: desde, hasta: hasta, meteorizacion: lito, diametro: diam,
+                            totalLongitud: lon, totalRecuperado: rec
                         };
                     }
                 }
@@ -2273,10 +2209,7 @@
             if (grupoActual) grupos.push(grupoActual);
 
             return grupos.map(g => ({
-                desde: g.desde,
-                hasta: g.hasta,
-                meteorizacion: g.meteorizacion,
-                diametro: g.diametro,
+                desde: g.desde, hasta: g.hasta, meteorizacion: g.meteorizacion, diametro: g.diametro,
                 porcentajeRecuperacion: g.totalLongitud > 0 ? ((g.totalRecuperado / g.totalLongitud) * 100).toFixed(1) : '0.0'
             }));
         }
@@ -2297,8 +2230,8 @@
             }
 
             let startX = w / 2;
-            let startY = 65;
-            let maxDrawHeight = h - 120;
+            let startY = 55;
+            let maxDrawHeight = h - 90;
             let scale = maxDrawHeight / targetRef;
 
             ctx.strokeStyle = esReporte ? '#cbd5e1' : '#334155';
@@ -2309,15 +2242,15 @@
             ctx.stroke();
 
             ctx.fillStyle = esReporte ? '#0f172a' : '#38bdf8';
-            ctx.font = 'bold 12px "JetBrains Mono"';
+            ctx.font = 'bold 11px "JetBrains Mono"';
             ctx.textAlign = 'center';
-            ctx.fillText('SUPERFICIE (Z=' + (p.cota || '0.00m') + ') | DIP: -' + dipVal + '° | AZ: ' + (p.azimut || '0') + '°', w / 2, startY - 18);
+            ctx.fillText('SUPERFICIE (Z=' + (p.cota || '0.00m') + ') | DIP: -' + dipVal + '° | AZ: ' + (p.azimut || '0') + '°', w / 2, startY - 14);
 
             let endX = startX + Math.cos(dipRad) * targetRef * scale * 0.25;
             let endY = startY + Math.sin(dipRad) * targetRef * scale;
 
             ctx.strokeStyle = esReporte ? '#e2e8f0' : '#1e293b';
-            ctx.lineWidth = esReporte ? 28 : 38;
+            ctx.lineWidth = esReporte ? 24 : 34;
             ctx.lineCap = 'round';
             ctx.beginPath();
             ctx.moveTo(startX, startY);
@@ -2336,7 +2269,7 @@
 
             let ultYIzquierda = -999;
             let ultYDerecha = -999;
-            const minSpaceY = 18;
+            const minSpaceY = 16;
 
             if (tramosAgrupados && tramosAgrupados.length > 0) {
                 tramosAgrupados.forEach((av) => {
@@ -2349,7 +2282,7 @@
                     let segEndX = startX + Math.cos(dipRad) * hTramo * scale * 0.25;
                     let segEndY = startY + Math.sin(dipRad) * hTramo * scale;
 
-                    let anchoTestigo = diam === 'HQ' ? (esReporte ? 24 : 36) : (esReporte ? 18 : 28);
+                    let anchoTestigo = diam === 'HQ' ? (esReporte ? 22 : 32) : (esReporte ? 16 : 24);
                     ctx.strokeStyle = colorMap[av.meteorizacion] || '#94a3b8';
                     ctx.lineWidth = anchoTestigo;
                     ctx.lineCap = 'butt';
@@ -2363,15 +2296,15 @@
                     ultYIzquierda = targetYIzq;
 
                     ctx.fillStyle = esReporte ? '#0284c7' : '#38bdf8';
-                    ctx.font = 'bold 11px "JetBrains Mono"';
+                    ctx.font = 'bold 10px "JetBrains Mono"';
                     ctx.textAlign = 'right';
-                    ctx.fillText(`${d.toFixed(1)}m - ${hTramo.toFixed(1)}m [Rec: ${av.porcentajeRecuperacion}%]`, segEndX - (anchoTestigo / 2 + 12), targetYIzq + 4);
+                    ctx.fillText(`${d.toFixed(1)}m - ${hTramo.toFixed(1)}m [Rec: ${av.porcentajeRecuperacion}%]`, segEndX - (anchoTestigo / 2 + 10), targetYIzq + 3);
 
                     ctx.strokeStyle = esReporte ? 'rgba(2, 132, 199, 0.4)' : 'rgba(56, 189, 248, 0.4)';
                     ctx.lineWidth = 1;
                     ctx.beginPath();
                     ctx.moveTo(segEndX - (anchoTestigo / 2 + 2), segEndY);
-                    ctx.lineTo(segEndX - (anchoTestigo / 2 + 10), targetYIzq);
+                    ctx.lineTo(segEndX - (anchoTestigo / 2 + 8), targetYIzq);
                     ctx.stroke();
 
                     let targetYDerecha = segEndY;
@@ -2379,31 +2312,31 @@
                     ultYDerecha = targetYDerecha;
 
                     ctx.fillStyle = esReporte ? '#0f172a' : '#f8fafc';
-                    ctx.font = 'bold 11px "Plus Jakarta Sans"';
+                    ctx.font = 'bold 10px "Plus Jakarta Sans"';
                     ctx.textAlign = 'left';
-                    ctx.fillText(`${av.meteorizacion} (${av.diametro})`, segEndX + (anchoTestigo / 2 + 12), targetYDerecha + 4);
+                    ctx.fillText(`${av.meteorizacion} (${av.diametro})`, segEndX + (anchoTestigo / 2 + 10), targetYDerecha + 3);
 
                     ctx.strokeStyle = esReporte ? 'rgba(15, 23, 42, 0.4)' : 'rgba(248, 250, 252, 0.4)';
                     ctx.lineWidth = 1;
                     ctx.beginPath();
                     ctx.moveTo(segEndX + (anchoTestigo / 2 + 2), segEndY);
-                    ctx.lineTo(segEndX + (anchoTestigo / 2 + 10), targetYDerecha);
+                    ctx.lineTo(segEndX + (anchoTestigo / 2 + 8), targetYDerecha);
                     ctx.stroke();
                 });
             }
 
             ctx.fillStyle = '#ef4444';
             ctx.beginPath();
-            ctx.arc(startX, startY, 7, 0, Math.PI * 2);
+            ctx.arc(startX, startY, 6, 0, Math.PI * 2);
             ctx.fill();
 
             ctx.fillStyle = esReporte ? '#0284c7' : '#38bdf8';
-            ctx.font = 'bold 15px "Plus Jakarta Sans"';
+            ctx.font = 'bold 13px "Plus Jakarta Sans"';
             ctx.textAlign = 'right';
-            ctx.fillText(p.codigo, w - 25, 30);
+            ctx.fillText(p.codigo, w - 20, 25);
             ctx.fillStyle = esReporte ? '#0f172a' : '#f8fafc';
-            ctx.font = 'bold 11px "JetBrains Mono"';
-            ctx.fillText(`Profundidad Total: ${maxProfundidadReal.toFixed(2)}m`, w - 25, 48);
+            ctx.font = 'bold 10px "JetBrains Mono"';
+            ctx.fillText(`Prof. Total: ${maxProfundidadReal.toFixed(2)}m`, w - 20, 40);
         }
 
         function cargarResumenCierrePozo() {
@@ -2469,6 +2402,7 @@
             pozosData[pozoActivoId].motivoCierre = motivo;
             pozosData[pozoActivoId].obsCierre = obs;
             await guardarYPersistirTodo();
+            registrarLogAuditoria("SONDAJE CULMINADO", `Pozo ${pozoActivoId} cerrado. Motivo: ${motivo}`);
             refrescarSelectoresOperativos();
             refrescarSelectorModuloUno();
             poblarSelectTopografia();
@@ -2486,6 +2420,7 @@
                 delete pozosData[pozoActivoId].motivoCierre;
                 delete pozosData[pozoActivoId].obsCierre;
                 await guardarYPersistirTodo();
+                registrarLogAuditoria("SONDAJE REACTIVADO", `Pozo ${pozoActivoId} retornado a estado ABIERTO`);
                 refrescarSelectoresOperativos();
                 refrescarSelectorModuloUno();
                 poblarSelectTopografia();
@@ -2511,17 +2446,26 @@
             });
         }
 
+        /* LÓGICA DE REPORTES DSR AJUSTADA SEGÚN REGLAS DE NEGOCIO Y FIRMAS */
         function generarReporteDSR() {
             if (!pozoActivoId || !pozosData[pozoActivoId]) return;
             let p = pozosData[pozoActivoId];
-            let modo = document.getElementById('repModoVista').value;
+            let modoSelect = document.getElementById('repModoVista');
+            let modo = modoSelect.value;
             let boxTurno = document.getElementById('boxSelectTurnoRepo');
             
-            if (modo === 'CULMINADO' && p.estado !== 'CULMINADO') {
-                alert(`⚠️ ALERTA: El sondaje (${p.codigo}) está ACTIVO. Debe culminarlo en el Módulo 4.`);
-                document.getElementById('repModoVista').value = 'ACUMULADO';
-                generarReporteDSR();
-                return;
+            // VALIDACIÓN Y FILTRADO INTELIGENTE DE OPCIONES
+            if (p.estado === 'ABIERTO') {
+                if (modo === 'CULMINADO') {
+                    alert(`⚠️ ALERTA: El sondaje (${p.codigo}) está ACTIVO. Para emitir informe de culminado debe cerrarlo en el Módulo 4.`);
+                    modoSelect.value = 'ACUMULADO';
+                    modo = 'ACUMULADO';
+                }
+            } else if (p.estado === 'CULMINADO') {
+                if (modo === 'ACUMULADO') {
+                    modoSelect.value = 'CULMINADO';
+                    modo = 'CULMINADO';
+                }
             }
 
             if (modo === 'TURNO') {
@@ -2534,7 +2478,7 @@
                 document.getElementById('repTituloPerfil2D').innerText = "📐 Perfil Topográfico 2D & Log Litológico (Acumulado General - Zoom HD Vertical):";
             } else if (modo === 'CULMINADO') {
                 boxTurno.classList.add('hidden');
-                document.getElementById('repTituloPrincipalDSR').innerText = "REPORTE SONDAJE CULMINADO";
+                document.getElementById('repTituloPrincipalDSR').innerText = "REPORTE SONDAJE CULMINADO (OFICIAL)";
                 document.getElementById('repTituloPerfil2D').innerText = "📐 Perfil Topográfico 2D & Log Litológico (Sondaje Culminado - Zoom HD Vertical):";
             }
 
@@ -2544,6 +2488,9 @@
             let fechaReporte = new Date().toLocaleDateString();
             let jornadaTexto = "DIURNO";
             let observacionesTurnoTexto = "SIN NOVEDADES REGISTRADAS.";
+
+            // CÁLCULO DEL PROGRESO ACUMULADO REAL HASTA ESE TURNO O TOTAL
+            let totalMetrosHastaTurno = 0;
 
             if (modo === 'TURNO') {
                 let turnoSelId = document.getElementById('repTurnoSelect').value;
@@ -2555,12 +2502,19 @@
                     jornadaTexto = tObj.jornada;
                     observacionesTurnoTexto = tObj.observaciones || "SIN NOVEDADES EN EL TURNO.";
                     listaAvancesFiltrada = p.avances.filter(item => item.turnoId === turnoSelId);
+
+                    // Acumulado hasta este turno
+                    p.avances.forEach(av => {
+                        let met = parseFloat(av.hasta) - parseFloat(av.desde);
+                        if (av.turnoId <= turnoSelId) totalMetrosHastaTurno += met;
+                    });
                 }
             } else {
-                operadorTurnoTexto = "ACUMULADO GENERAL";
+                operadorTurnoTexto = "MULTIDISCIPLINARIO";
                 geologoTurnoTexto = "SUPERVISIÓN GENERAL DE GEOLOGÍA";
                 listaAvancesFiltrada = p.avances;
                 observacionesTurnoTexto = p.obsCierre || "REGISTRO GENERAL DEL SONDAJE.";
+                p.avances.forEach(av => { totalMetrosHastaTurno += (parseFloat(av.hasta) - parseFloat(av.desde)); });
             }
 
             document.getElementById('repFechaEmision').innerText = "Fecha: " + fechaReporte + " | Turno: " + jornadaTexto;
@@ -2601,13 +2555,13 @@
             });
 
             let targetNum = parseFloat(p.target) || 100.0;
-            let avGen = targetNum > 0 ? Math.min(100, (totalMetros / targetNum) * 100) : 0;
+            let avGenAcc = targetNum > 0 ? Math.min(100, (totalMetrosHastaTurno / targetNum) * 100) : 0;
             let recProm = totalMetros > 0 ? ((totalRecuperado / totalMetros) * 100).toFixed(1) : '0.0';
 
             document.getElementById('repMetrajeTotal').innerText = totalMetros.toFixed(2) + " m";
             document.getElementById('repRecPromedio').innerText = recProm + "%";
             document.getElementById('repMetrosPagoTotal').innerText = totalPagoFinal.toFixed(2) + " m";
-            document.getElementById('repAvanceGen').innerText = avGen.toFixed(1) + "%";
+            document.getElementById('repAvanceGen').innerText = avGenAcc.toFixed(1) + "%";
 
             document.getElementById('repMetrosHQRep').innerText = totalHQMet.toFixed(2) + " m";
             document.getElementById('repMetrosNQRep').innerText = totalNQMet.toFixed(2) + " m";
@@ -2628,6 +2582,7 @@
                 }
             }, 100);
 
+            // CONTROL ESTRICTO DE SECCIÓN DE FIRMAS Y FIRMANTES
             const contenedorFirmas = document.getElementById('contenedorFirmasDSR');
             if (modo === 'TURNO') {
                 contenedorFirmas.innerHTML = `
@@ -2636,52 +2591,42 @@
                         <div><b>Supervisor de Geología:</b> <span class="font-bold text-slate-900">${geologoTurnoTexto}</span></div>
                     </div>
                 `;
-            } else {
+            } else if (modo === 'ACUMULADO') {
                 contenedorFirmas.innerHTML = `
-                    <div class="grid grid-cols-2 gap-8 text-center pt-6">
+                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 text-center text-slate-700 font-semibold text-[11px]">
+                        Registro Consolidado y Acumulado del Proyecto — Supervisión Multidisciplinaria de Ingeniería y Geología | Complejo Jireth C.A.
+                    </div>
+                `;
+            } else if (modo === 'CULMINADO') {
+                contenedorFirmas.innerHTML = `
+                    <div class="grid grid-cols-2 gap-8 text-center pt-8">
                         <div>
-                            <p class="font-bold uppercase text-slate-900 mb-8">Supervisor de Perforación</p>
+                            <p class="font-bold uppercase text-slate-900 mb-10">Supervisor de Perforación</p>
                             <p>_____________________________________</p>
-                            <p class="mt-1 font-semibold text-slate-700">Nombre y Apellido / Firma</p>
+                            <p class="mt-1 font-bold text-slate-900">Nombre y Apellido / Firma a Mano</p>
                         </div>
                         <div>
-                            <p class="font-bold uppercase text-slate-900 mb-8">Supervisor de Geología</p>
+                            <p class="font-bold uppercase text-slate-900 mb-10">Supervisor de Geología</p>
                             <p>_____________________________________</p>
-                            <p class="mt-1 font-semibold text-slate-700">Nombre y Apellido / Firma</p>
+                            <p class="mt-1 font-bold text-slate-900">Nombre y Apellido / Firma a Mano</p>
                         </div>
                     </div>
                 `;
             }
         }
 
-        /* FUNCIÓN DE EXPORTACIÓN DIRECTA A PDF A 1 CLIC */
-        async function imprimirOExportarPDF() {
+        /* EXPORTACIÓN E IMPRESIÓN NATIVA NÍTIDA REDIRIGIDA A LA VISTA PREVIA DEL NAVEGADOR */
+        function imprimirOExportarPDF() {
             const elemento = document.getElementById('printable-area');
             if (!elemento) {
                 alert("⚠️ No hay reporte visible para exportar.");
                 return;
             }
-
-            showToast("Generando PDF", "Procesando documento a tamaño Carta...", "⏳");
-
-            const opciones = {
-                margin:       [8, 8, 10, 8],
-                filename:     `DSR_${pozoActivoId || 'Sondaje'}_${Date.now()}.pdf`,
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, useCORS: true, logging: false },
-                jsPDF:        { unit: 'mm', format: 'letter', orientation: 'portrait' }
-            };
-
-            try {
-                await html2pdf().set(opciones).from(elemento).save();
-                showToast("PDF Exportado", "El archivo se ha descargado correctamente.", "✅");
-            } catch (error) {
-                console.error("Error al generar el PDF:", error);
-                window.print();
-            }
+            showToast("Abriendo Impresión", "Cargando vista previa en formato Carta...", "📄");
+            setTimeout(() => { window.print(); }, 500);
         }
 
-        /* LÓGICA DEL NUEVO MÓDULO DE ESTADÍSTICAS & PROCESAMIENTO ANALÍTICO */
+        /* LÓGICA DEL MÓDULO DE ESTADÍSTICAS & PROCESAMIENTO ANALÍTICO (BI) */
         function renderizarEstadisticasGlobales() {
             const empFiltro = document.getElementById('filtroEstadisticasEmpresa').value;
             let pozosKeys = Object.keys(pozosData);
@@ -2752,7 +2697,6 @@
                 }
             });
 
-            // KPI CALCS
             let velProm = totalTurnosContados > 0 ? (totalMetrosFisicos / totalTurnosContados) : 0;
             let recGralPct = totalMetrosFisicos > 0 ? ((totalRecuperadoM / totalMetrosFisicos) * 100) : 0;
 
@@ -2761,7 +2705,6 @@
             document.getElementById('kpiEstMetrosPago').innerText = totalMetrosPagables.toFixed(2) + " m";
             document.getElementById('kpiEstTotalPozos').innerText = pozosKeys.length;
 
-            // RENDERIZAR CHART 1: AVANCE VS TARGET
             if (chartAvanceInst) chartAvanceInst.destroy();
             const ctx1 = document.getElementById('chartAvancePozos').getContext('2d');
             chartAvanceInst = new Chart(ctx1, {
@@ -2776,7 +2719,6 @@
                 options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#f8fafc', font: { family: 'Plus Jakarta Sans', weight: 'bold' } } } }, scales: { x: { ticks: { color: '#94a3b8' } }, y: { ticks: { color: '#94a3b8' } } } }
             });
 
-            // RENDERIZAR CHART 2: LITOLOGÍA DOUGHNUT
             if (chartLitologiaInst) chartLitologiaInst.destroy();
             const ctx2 = document.getElementById('chartLitologiaPie').getContext('2d');
             chartLitologiaInst = new Chart(ctx2, {
@@ -2791,7 +2733,6 @@
                 options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { color: '#f8fafc', font: { family: 'Plus Jakarta Sans', size: 10, weight: 'bold' } } } } }
             });
 
-            // RENDERIZAR CHART 3: COMPARATIVA PAGOS
             if (chartPagosInst) chartPagosInst.destroy();
             const ctx3 = document.getElementById('chartComparativaPagos').getContext('2d');
             chartPagosInst = new Chart(ctx3, {
@@ -2806,7 +2747,6 @@
                 options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#f8fafc', font: { family: 'Plus Jakarta Sans', weight: 'bold' } } } }, scales: { x: { ticks: { color: '#94a3b8' } }, y: { ticks: { color: '#94a3b8' } } } }
             });
 
-            // RENDERIZAR CHART 4: TURNOS
             if (chartTurnosInst) chartTurnosInst.destroy();
             const ctx4 = document.getElementById('chartTurnosRendimiento').getContext('2d');
             chartTurnosInst = new Chart(ctx4, {
@@ -2842,6 +2782,7 @@
                 delete pozosData[codigo];
                 if (pozoActivoId === codigo) { pozoActivoId = ''; localStorage.removeItem('jireth_pozo_activo'); }
                 await guardarYPersistirTodo();
+                registrarLogAuditoria("SONDAJE ELIMINADO", `Pozo ${codigo} borrado permanentemente`);
                 refrescarSelectoresOperativos();
                 refrescarSelectorModuloUno();
                 poblarSelectTopografia();
@@ -2866,12 +2807,13 @@
         }
 
         function exportarBackupJSON() {
-            let backup = { pozos: pozosData, turnos: turnosData, activo: pozoActivoId };
+            let backup = { pozos: pozosData, turnos: turnosData, activo: pozoActivoId, logs: auditLogs };
             let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backup, null, 2));
             let dlAnchorElem = document.createElement('a');
             dlAnchorElem.setAttribute("href", dataStr);
             dlAnchorElem.setAttribute("download", "jireth_geocore_backup_" + Date.now() + ".json");
             dlAnchorElem.click();
+            registrarLogAuditoria("BACKUP EXPORTADO", "Respaldo JSON descargado localmente");
         }
 
         function importarBackupJSON(event) {
@@ -2886,8 +2828,10 @@
                         pozosData = imp.pozos;
                         turnosData = imp.turnos || {};
                         pozoActivoId = imp.activo || '';
+                        auditLogs = imp.logs || [];
                         migrarRecalcularPagosEstandar();
                         await guardarYPersistirTodo();
+                        registrarLogAuditoria("BACKUP IMPORTADO", "Base de datos restaurada desde archivo JSON");
                         refrescarSelectoresOperativos();
                         refrescarSelectorModuloUno();
                         poblarSelectTopografia();
@@ -2904,9 +2848,10 @@
         async function guardarYPersistirTodo() {
             localStorage.setItem('jireth_pozos', JSON.stringify(pozosData));
             localStorage.setItem('jireth_turnos', JSON.stringify(turnosData));
+            localStorage.setItem('jireth_audit_logs', JSON.stringify(auditLogs));
 
             const timestampActual = new Date().toISOString();
-            const payloadData = { pozos: pozosData, turnos: turnosData, actualizado: timestampActual };
+            const payloadData = { pozos: pozosData, turnos: turnosData, logs: auditLogs, actualizado: timestampActual };
 
             if (navigator.onLine && supabaseClient) {
                 try {
@@ -2962,12 +2907,17 @@
                         turnosData = data.payload.turnos;
                         localStorage.setItem('jireth_turnos', JSON.stringify(turnosData));
                     }
+                    if (data.payload.logs) {
+                        auditLogs = data.payload.logs;
+                        localStorage.setItem('jireth_audit_logs', JSON.stringify(auditLogs));
+                    }
                     migrarRecalcularPagosEstandar();
                     refrescarSelectoresOperativos();
                     refrescarSelectorModuloUno();
                     poblarSelectTopografia();
                     poblarSelectCierre();
                     renderizarSalaSituacional();
+                    renderizarLogAuditoriaUI();
                     if (pozoActivoId && pozosData[pozoActivoId]) cargarDatosPozoEnFormularios(pozoActivoId);
                     if (mostrarAlerta) showToast("Sincronizado", "Datos sincronizados con la nube.");
                 } else { await guardarYPersistirTodo(); }
