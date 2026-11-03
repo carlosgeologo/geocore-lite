@@ -136,7 +136,7 @@
         }
 
         .logo-img-print {
-            height: 55px; width: auto; max-width: 170px; object-fit: contain;
+            height: 68px; width: auto; max-width: 210px; object-fit: contain;
             display: none;
         }
 
@@ -159,7 +159,7 @@
         @media print {
             @page {
                 size: letter portrait;
-                margin: 10mm 10mm 15mm 10mm;
+                margin: 12mm 12mm 15mm 12mm;
                 @bottom-right {
                     content: "Página " counter(page) " de " counter(pages);
                     font-size: 8pt;
@@ -169,7 +169,7 @@
                 }
             }
             body { background: white !important; color: black !important; padding: 0 !important; }
-            .no-print, header, .nav-horizontal-bar, #toastFeedback { display: none !important; }
+            .no-print, header, .nav-horizontal-bar, #toastFeedback, select, input, button { display: none !important; }
             #printable-area { border: none !important; box-shadow: none !important; padding: 0 !important; width: 100% !important; max-width: 100% !important; display: block !important; }
             
             .logo-img-print { display: block !important; }
@@ -936,7 +936,7 @@
                         <span>Estadísticas & Procesamiento de Datos de Perforación</span>
                         <span class="text-xs bg-emerald-950 text-emerald-300 px-2.5 py-0.5 rounded-full border border-emerald-800 font-mono-code">BI GeoCore</span>
                     </h2>
-                    <p class="text-xs text-slate-400 mt-0.5">Indicadores clave de rendimiento (KPIs), rendimiento por máquina y análisis litológico contractual.</p>
+                    <p class="text-xs text-slate-400 mt-0.5">Indicadores clave de rendimiento (KPIs), rendimiento mensual y análisis litológico contractual.</p>
                 </div>
                 <div class="flex items-center gap-2">
                     <select id="filtroEstadisticasEmpresa" onchange="renderizarEstadisticasGlobales()" class="input-field px-3 py-1.5 text-xs font-bold text-white">
@@ -977,7 +977,7 @@
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 <div class="bg-slate-900/80 p-4 rounded-2xl border border-slate-800 space-y-2 shadow-sm">
                     <h3 class="text-xs font-black text-white uppercase tracking-wider flex items-center justify-between">
-                        <span>📈 Metros Perforados vs Target por Sondaje</span>
+                        <span>📈 Metros Perforados vs Target por Sondaje (Activos & Faltantes)</span>
                         <span class="text-[10px] text-sky-400 font-mono-code">Progreso Físico</span>
                     </h3>
                     <div class="relative h-64 w-full">
@@ -997,7 +997,7 @@
 
                 <div class="bg-slate-900/80 p-4 rounded-2xl border border-slate-800 space-y-2 shadow-sm">
                     <h3 class="text-xs font-black text-white uppercase tracking-wider flex items-center justify-between">
-                        <span>💰 Metros Físicos vs Metros Pagables (Estándar de Pago)</span>
+                        <span>💰 Metros Físicos vs Metros Pagables por Empresa</span>
                         <span class="text-[10px] text-emerald-400 font-mono-code">Auditoría Gerencial</span>
                     </h3>
                     <div class="relative h-64 w-full">
@@ -1007,11 +1007,11 @@
 
                 <div class="bg-slate-900/80 p-4 rounded-2xl border border-slate-800 space-y-2 shadow-sm">
                     <h3 class="text-xs font-black text-white uppercase tracking-wider flex items-center justify-between">
-                        <span>⏱️ Avance por Turno (Diurno ☀️ vs Nocturno 🌙)</span>
-                        <span class="text-[10px] text-purple-400 font-mono-code">Rendimiento Operativo</span>
+                        <span>📊 Rendimiento de Perforación por Mes (Últimos 2 Meses)</span>
+                        <span id="badgeCrecimientoMensual" class="text-[10px] bg-emerald-950 text-emerald-300 px-2 py-0.5 rounded border border-emerald-800 font-mono-code">📈 Crecimiento Positivo</span>
                     </h3>
                     <div class="relative h-64 w-full">
-                        <canvas id="chartTurnosRendimiento"></canvas>
+                        <canvas id="chartRendimientoMensual"></canvas>
                     </div>
                 </div>
             </div>
@@ -1075,7 +1075,7 @@
         let chartAvanceInst = null;
         let chartLitologiaInst = null;
         let chartPagosInst = null;
-        let chartTurnosInst = null;
+        let chartRendimientoMensualInst = null;
 
         if (!localStorage.getItem('jireth_clave_geo')) localStorage.setItem('jireth_clave_geo', 'Mina2628');
         localStorage.setItem('jireth_clave_ger', 'JIRETH2026');
@@ -1354,6 +1354,7 @@
 
                 let pct = targetPozo > 0 ? Math.min(100, (metPozo / targetPozo) * 100) : 0;
                 let recPozoP = metPozo > 0 ? ((recPozoAcc / metPozo) * 100).toFixed(1) : '0.0';
+                let faltantePozo = Math.max(0, targetPozo - metPozo);
 
                 let cardPozo = document.createElement('div');
                 cardPozo.className = "bg-slate-900/90 p-5 rounded-3xl border border-slate-800 space-y-4 shadow-xl relative overflow-hidden";
@@ -1376,8 +1377,8 @@
                             <span class="text-white font-black truncate block mt-0.5">${p.empresa} (${p.proyecto})</span>
                         </div>
                         <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800">
-                            <span class="text-slate-400 text-[10px] block font-bold uppercase">Progreso Perforación</span>
-                            <span class="text-sky-400 font-mono-code font-black block mt-0.5">${metPozo.toFixed(2)}m / ${targetPozo.toFixed(2)}m (${pct.toFixed(1)}%)</span>
+                            <span class="text-slate-400 text-[10px] block font-bold uppercase">Progreso / Faltante</span>
+                            <span class="text-sky-400 font-mono-code font-black block mt-0.5">${metPozo.toFixed(2)}m / Target: ${targetPozo.toFixed(2)}m (Falta: ${faltantePozo.toFixed(2)}m)</span>
                         </div>
                         <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800">
                             <span class="text-slate-400 text-[10px] block font-bold uppercase">Recuperación Testigo</span>
@@ -1459,7 +1460,7 @@
                 if (p.estado === 'ABIERTO') {
                     let opt = document.createElement('option');
                     opt.value = k;
-                    opt.text = "Sondaje Activo: " + k + " (" + p.proyecto + ")";
+                    opt.text = "Sondaje Activo: " + k + " [" + p.empresa + "]";
                     sel.appendChild(opt);
                 }
             });
@@ -1522,7 +1523,7 @@
                 if (p.estado === 'ABIERTO') {
                     let opt = document.createElement('option');
                     opt.value = k;
-                    opt.text = "Sondaje: " + k + " (" + p.proyecto + ")";
+                    opt.text = "Sondaje: " + k + " [" + p.empresa + "]";
                     if (k === pozoActivoId) opt.selected = true;
                     sel.appendChild(opt);
                 }
@@ -1618,7 +1619,7 @@
                     if (p.estado === 'ABIERTO') {
                         let opt = document.createElement('option');
                         opt.value = k;
-                        opt.text = "Sondaje Activo: " + k + " (" + p.proyecto + ")";
+                        opt.text = "Sondaje Activo: " + k + " [" + p.empresa + "]";
                         if (k === pozoActivoId) opt.selected = true;
                         sel.appendChild(opt);
                     }
@@ -1675,7 +1676,7 @@
                 let p = pozosData[k];
                 let opt = document.createElement('option');
                 opt.value = k;
-                opt.text = "Sondaje: " + k + " (" + p.proyecto + ") - [" + p.estado + "]";
+                opt.text = "Sondaje: " + k + " [" + p.empresa + "] - [" + p.estado + "]";
                 if (k === pozoActivoId) opt.selected = true;
                 sel.appendChild(opt);
             });
@@ -1711,7 +1712,7 @@
                 let p = pozosData[k];
                 let opt = document.createElement('option');
                 opt.value = k;
-                opt.text = "Sondaje: " + k + " (" + p.proyecto + ") - [" + p.estado + "]";
+                opt.text = "Sondaje: " + k + " [" + p.empresa + "] - [" + p.estado + "]";
                 if (k === pozoActivoId) opt.selected = true;
                 sel.appendChild(opt);
             });
@@ -2044,7 +2045,8 @@
                 desde: desde.toFixed(2), hasta: hasta.toFixed(2), diametro: diametro,
                 recuperado: recuperado.toFixed(2), porcentaje: (((recuperado / lonManiobra) * 100)).toFixed(1),
                 meteorizacion: meteorizacion, pagoEstandar: metrosPago.toFixed(2),
-                turnoId: turnoActivoObj.id, perforador: turnoActivoObj.perforador, geologoTurno: turnoActivoObj.geologo
+                turnoId: turnoActivoObj.id, perforador: turnoActivoObj.perforador, geologoTurno: turnoActivoObj.geologo,
+                fechaTurno: turnoActivoObj.fecha
             };
 
             if (indexEditandoAvance !== null) {
@@ -2362,6 +2364,7 @@
             });
             let target = parseFloat(p.target) || 100.0;
             let recGralPozo = totalMetros > 0 ? ((totalRec / totalMetros) * 100).toFixed(1) : '0.0';
+            let faltantePozo = Math.max(0, target - totalMetros);
 
             container.innerHTML = `
                 <div class="space-y-3">
@@ -2378,7 +2381,7 @@
                         <div><b>Inclinación (Dip):</b> <span class="font-mono-code text-slate-200">${p.dip || '-'}°</span></div>
                         <div><b>Azimut (°):</b> <span class="font-mono-code text-slate-200">${p.azimut || '0'}°</span></div>
                         <div><b>Prof. Target:</b> <span class="font-mono-code text-slate-200">${target} m</span></div>
-                        <div><b>Total Perforado:</b> <span class="font-mono-code text-sky-300 font-bold">${totalMetros.toFixed(2)} m</span></div>
+                        <div><b>Total Perforado:</b> <span class="font-mono-code text-sky-300 font-bold">${totalMetros.toFixed(2)} m (Falta: ${faltantePozo.toFixed(2)}m)</span></div>
                         <div><b>Recuperación Gral:</b> <span class="font-mono-code text-purple-300 font-bold">${recGralPozo}%</span></div>
                         <div><b>Total Metros a Pagar:</b> <span class="font-mono-code text-amber-300 font-bold">${totalPago.toFixed(2)} m</span></div>
                     </div>
@@ -2471,10 +2474,15 @@
                 }
             }
 
+            let fechaTurnoStr = "";
             if (modo === 'TURNO') {
                 boxTurno.classList.remove('hidden');
                 document.getElementById('repTituloPrincipalDSR').innerText = "REPORTE DE TURNO";
                 document.getElementById('repTituloPerfil2D').innerText = "📐 Perfil Topográfico 2D & Log Litológico (Tramos del Turno - Zoom HD Vertical):";
+                let turnoSelId = document.getElementById('repTurnoSelect').value;
+                if (turnoSelId && turnosData[turnoSelId]) {
+                    fechaTurnoStr = "_" + turnosData[turnoSelId].fecha;
+                }
             } else if (modo === 'ACUMULADO') {
                 boxTurno.classList.add('hidden');
                 document.getElementById('repTituloPrincipalDSR').innerText = "REPORTE ACUMULADO DEL SONDAJE";
@@ -2483,6 +2491,15 @@
                 boxTurno.classList.add('hidden');
                 document.getElementById('repTituloPrincipalDSR').innerText = "REPORTE SONDAJE CULMINADO (OFICIAL)";
                 document.getElementById('repTituloPerfil2D').innerText = "📐 Perfil Topográfico 2D & Log Litológico (Sondaje Culminado - Zoom HD Vertical):";
+            }
+
+            // Actualizar document.title dinámicamente para descarga/impresión de PDF limpia
+            if (modo === 'TURNO') {
+                document.title = `REPORTE_TURNO_${p.codigo}${fechaTurnoStr}`;
+            } else if (modo === 'ACUMULADO') {
+                document.title = `REPORTE_ACUMULADO_${p.codigo}`;
+            } else {
+                document.title = `REPORTE_CULMINADO_${p.codigo}`;
             }
 
             let listaAvancesFiltrada = [];
@@ -2518,7 +2535,7 @@
             }
 
             document.getElementById('repFechaEmision').innerText = "Fecha: " + fechaReporte + " | Turno: " + jornadaTexto;
-            document.getElementById('repCodigoHeader').innerText = p.codigo;
+            document.getElementById('repCodigoHeader').innerText = p.codigo + " [" + p.empresa + "]";
             document.getElementById('repEmpresa').innerText = p.empresa;
             document.getElementById('repProyecto').innerText = p.proyecto;
             document.getElementById('repMaquina').innerText = p.maquina;
@@ -2647,13 +2664,27 @@
             let pozosTargets = [];
             let pozosMetrosPagados = [];
 
-            let turnosDiurnosMetros = 0;
-            let turnosNocturnosMetros = 0;
+            // Agrupación por empresa para la gráfica de pagos
+            let empresaPagosMap = {};
+
+            // Agrupación de rendimiento por mes (últimos 2 meses)
+            let mesActualMetros = 0;
+            let mesAnteriorMetros = 0;
+            const now = new Date();
+            const mesActualStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+            
+            let prevDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+            const mesAnteriorStr = `${prevDate.getFullYear()}-${String(prevDate.getMonth() + 1).padStart(2, '0')}`;
 
             pozosKeys.forEach(k => {
                 let p = pozosData[k];
-                pozosLabels.push(p.codigo);
+                let labelPozo = `${p.codigo} [${p.empresa}]`;
+                pozosLabels.push(labelPozo);
                 let metP = 0, pagP = 0;
+
+                if (!empresaPagosMap[p.empresa]) {
+                    empresaPagosMap[p.empresa] = { fisico: 0, pagable: 0 };
+                }
 
                 if (p.avances) {
                     p.avances.forEach(av => {
@@ -2668,8 +2699,21 @@
                         totalMetrosPagables += pag;
                         totalRecuperadoM += rec;
 
+                        empresaPagosMap[p.empresa].fisico += met;
+                        empresaPagosMap[p.empresa].pagable += pag;
+
                         if (litoMap[lito] !== undefined) litoMap[lito] += met;
                         else litoMap[lito] = met;
+
+                        // Evaluar fecha del avance o turno para rendimiento mensual
+                        let fechaTramo = av.fechaTurno || (av.turnoId && turnosData[av.turnoId] ? turnosData[av.turnoId].fecha : null);
+                        if (fechaTramo) {
+                            if (fechaTramo.startsWith(mesActualStr)) mesActualMetros += met;
+                            else if (fechaTramo.startsWith(mesAnteriorStr)) mesAnteriorMetros += met;
+                        } else {
+                            // Por defecto al mes actual si no tiene fecha explícita
+                            mesActualMetros += met;
+                        }
                     });
                 }
 
@@ -2682,15 +2726,6 @@
                 let t = turnosData[tk];
                 if (empFiltro === 'TODAS' || (pozosData[t.pozo] && pozosData[t.pozo].empresa === empFiltro)) {
                     totalTurnosContados++;
-                    let p = pozosData[t.pozo];
-                    let metTurno = 0;
-                    if (p && p.avances) {
-                        p.avances.filter(av => av.turnoId === tk).forEach(av => {
-                            metTurno += (parseFloat(av.hasta) - parseFloat(av.desde));
-                        });
-                    }
-                    if (t.jornada === 'DIURNO') turnosDiurnosMetros += metTurno;
-                    else turnosNocturnosMetros += metTurno;
                 }
             });
 
@@ -2701,6 +2736,18 @@
             document.getElementById('kpiEstRecuperacion').innerText = recGralPct.toFixed(1) + "%";
             document.getElementById('kpiEstMetrosPago').innerText = totalMetrosPagables.toFixed(2) + " m";
             document.getElementById('kpiEstTotalPozos').innerText = pozosKeys.length;
+
+            // Badge de crecimiento mensual dinámico
+            const badgeCrecimiento = document.getElementById('badgeCrecimientoMensual');
+            if (badgeCrecimiento) {
+                if (mesActualMetros >= mesAnteriorMetros) {
+                    badgeCrecimiento.innerText = "📈 Crecimiento Positivo (+" + (mesActualMetros - mesAnteriorMetros).toFixed(1) + "m)";
+                    badgeCrecimiento.className = "text-[10px] bg-emerald-950 text-emerald-300 px-2 py-0.5 rounded border border-emerald-800 font-mono-code";
+                } else {
+                    badgeCrecimiento.innerText = "📉 Variación Negativa (-" + (mesAnteriorMetros - mesActualMetros).toFixed(1) + "m)";
+                    badgeCrecimiento.className = "text-[10px] bg-rose-950 text-rose-300 px-2 py-0.5 rounded border border-rose-800 font-mono-code";
+                }
+            }
 
             if (chartAvanceInst) chartAvanceInst.destroy();
             const ctx1 = document.getElementById('chartAvancePozos').getContext('2d');
@@ -2735,27 +2782,30 @@
             chartPagosInst = new Chart(ctx3, {
                 type: 'bar',
                 data: {
-                    labels: pozosLabels,
+                    labels: Object.keys(empresaPagosMap),
                     datasets: [
-                        { label: 'Metros Físicos Perforados', data: pozosMetrosPerforados, backgroundColor: '#38bdf8' },
-                        { label: 'Metros Pagables (Estándar)', data: pozosMetrosPagados, backgroundColor: '#f59e0b' }
+                        { label: 'Metros Físicos (m)', data: Object.values(empresaPagosMap).map(e => e.fisico), backgroundColor: '#38bdf8' },
+                        { label: 'Metros Pagables (m)', data: Object.values(empresaPagosMap).map(e => e.pagable), backgroundColor: '#f59e0b' }
                     ]
                 },
                 options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#f8fafc', font: { family: 'Plus Jakarta Sans', weight: 'bold' } } } }, scales: { x: { ticks: { color: '#94a3b8' } }, y: { ticks: { color: '#94a3b8' } } } }
             });
 
-            if (chartTurnosInst) chartTurnosInst.destroy();
-            const ctx4 = document.getElementById('chartTurnosRendimiento').getContext('2d');
-            chartTurnosInst = new Chart(ctx4, {
-                type: 'doughnut',
+            if (chartRendimientoMensualInst) chartRendimientoMensualInst.destroy();
+            const ctx4 = document.getElementById('chartRendimientoMensual').getContext('2d');
+            chartRendimientoMensualInst = new Chart(ctx4, {
+                type: 'bar',
                 data: {
-                    labels: ['☀️ Turno Diurno (m)', '🌙 Turno Nocturno (m)'],
+                    labels: ['Mes Anterior (' + mesAnteriorStr + ')', 'Mes Actual (' + mesActualStr + ')'],
                     datasets: [{
-                        data: [turnosDiurnosMetros, turnosNocturnosMetros],
-                        backgroundColor: ['#0284c7', '#6366f1']
+                        label: 'Metros Perforados (m)',
+                        data: [mesAnteriorMetros, mesActualMetros],
+                        backgroundColor: ['#6366f1', '#10b981'],
+                        borderColor: ['#4f46e5', '#059669'],
+                        borderWidth: 2
                     }]
                 },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: '#f8fafc', font: { family: 'Plus Jakarta Sans', weight: 'bold' } } } } }
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#f8fafc', font: { family: 'Plus Jakarta Sans', weight: 'bold' } } } }, scales: { x: { ticks: { color: '#94a3b8' } }, y: { ticks: { color: '#94a3b8' } } } }
             });
         }
 
@@ -2766,7 +2816,7 @@
             Object.keys(pozosData).forEach(k => {
                 let opt = document.createElement('option');
                 opt.value = k;
-                opt.text = "Sondaje: " + k + " (" + pozosData[k].proyecto + ")";
+                opt.text = "Sondaje: " + k + " [" + pozosData[k].empresa + "]";
                 sel.appendChild(opt);
             });
         }
@@ -2794,7 +2844,7 @@
         function copiarReportePortapapeles() {
             if (!pozoActivoId || !pozosData[pozoActivoId]) return;
             let p = pozosData[pozoActivoId];
-            let texto = "=== COMPLEJO JIRETH C.A. — REPORTE DIARIO DE GEOLOGÍA (DSR) ===\nSondaje: " + p.codigo + " | Proyecto: " + p.proyecto + "\nEmpresa: " + p.empresa + " | Máquina: " + p.maquina + "\n===========================================================\n";
+            let texto = "=== COMPLEJO JIRETH C.A. — REPORTE DIARIO DE GEOLOGÍA (DSR) ===\nSondaje: " + p.codigo + " [" + p.empresa + "] | Proyecto: " + p.proyecto + "\nEmpresa: " + p.empresa + " | Máquina: " + p.maquina + "\n===========================================================\n";
             p.avances.forEach((t, i) => {
                 let lonM = parseFloat(t.hasta) - parseFloat(t.desde);
                 let pagVal = t.pagoEstandar ? t.pagoEstandar : calcularMetrosAPagar(lonM, parseFloat(t.recuperado), t.meteorizacion);
