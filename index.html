@@ -121,6 +121,22 @@
             background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(51, 65, 85, 0.8);
             box-shadow: 0 2px 6px rgba(0,0,0,0.4);
         }
+
+        /* ESTILOS ESPECÍFICOS PARA CONTROL DE MÁRGENES Y SALTOS EN PDF */
+        @media print {
+            body { background: #ffffff !important; color: #000000 !important; }
+            #printable-area {
+                width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                box-shadow: none !important;
+                border: none !important;
+            }
+        }
+        .avoid-break {
+            break-inside: avoid;
+            page-break-inside: avoid;
+        }
     </style>
 </head>
 <body class="min-h-screen antialiased selection:bg-sky-600 selection:text-white bg-geocore-master text-slate-100">
@@ -823,7 +839,7 @@
                 <!-- ÁREA IMPRIMIBLE DSR CON LOGO AMPLIO SIN BORDES Y TAMAÑO CARTA EXACTO -->
                 <div id="printable-area" class="bg-white p-6 rounded-2xl border border-slate-200 space-y-4 text-xs text-slate-900 shadow-xl relative overflow-hidden">
                     
-                    <div class="border-b-2 border-slate-900 pb-3 flex justify-between items-center flex-wrap gap-3 px-6 pt-0">
+                    <div class="border-b-2 border-slate-900 pb-3 flex justify-between items-center flex-wrap gap-3 px-6 pt-0 avoid-break">
                         <div class="flex items-center gap-4">
                             <img src="1792941546023.jpg" class="logo-img-real" alt="Logo Jireth">
                             <div>
@@ -903,7 +919,7 @@
                             </div>
                         </div>
 
-                        <div>
+                        <div class="avoid-break">
                             <h4 class="text-[11px] font-black text-slate-900 uppercase tracking-wider mb-1.5">🪵 REGISTRO DETALLADO TRAMO A TRAMO (CON ESTÁNDAR DE PAGO)</h4>
                             <div class="overflow-x-auto border border-slate-300 rounded-xl shadow-sm">
                                 <table class="w-full text-left text-xs border-collapse">
@@ -2550,7 +2566,7 @@
             }
         }
 
-        /* FUNCIÓN DE EXPORTACIÓN DIRECTA A PDF A 1 CLIC (SIN DIÁLOGO DE CHROME) */
+        /* FUNCIÓN DE EXPORTACIÓN DIRECTA A PDF OPTIMIZADA CON MÁRGENES Y SALTOS SEGUROS */
         async function imprimirOExportarPDF() {
             const elemento = document.getElementById('printable-area');
             if (!elemento) {
@@ -2558,19 +2574,25 @@
                 return;
             }
 
-            showToast("Generando PDF", "Procesando documento a tamaño Carta...", "⏳");
+            showToast("Generando PDF", "Procesando documento a tamaño Carta con márgenes optimizados...", "⏳");
 
             const opciones = {
-                margin:       [8, 8, 10, 8],
+                margin:       [10, 10, 10, 10], // Márgenes precisos de 10mm en todos los lados
                 filename:     `DSR_${pozoActivoId || 'Sondaje'}_${Date.now()}.pdf`,
                 image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, useCORS: true, logging: false },
+                html2canvas:  { 
+                    scale: 2, 
+                    useCORS: true, 
+                    logging: false, 
+                    letterRendering: true,
+                    windowWidth: 900 // Ancho fijo estandarizado para evitar desbordes laterales en la captura
+                },
                 jsPDF:        { unit: 'mm', format: 'letter', orientation: 'portrait' }
             };
 
             try {
                 await html2pdf().set(opciones).from(elemento).save();
-                showToast("PDF Exportado", "El archivo se ha descargado correctamente.", "✅");
+                showToast("PDF Exportado", "El archivo se ha descargado correctamente con los márgenes ajustados.", "✅");
             } catch (error) {
                 console.error("Error al generar el PDF:", error);
                 window.print();
