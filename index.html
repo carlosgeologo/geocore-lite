@@ -33,11 +33,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
-        
-        /* Ocultar elementos en pantalla normal que son solo para impresión */
         .print-only { display: none !important; }
 
-        /* Estilos estrictos para impresión y PDF en formato Carta (Letter: 216mm x 279mm) */
         @media print {
             body {
                 background: #ffffff !important;
@@ -53,7 +50,6 @@
             .print-only {
                 display: block !important;
             }
-            /* Contenedor exclusivo para impresión en hoja Carta */
             #dsr-report-paper {
                 display: block !important;
                 width: 100% !important;
@@ -68,7 +64,6 @@
                 size: letter portrait;
                 margin: 12mm 10mm 12mm 10mm;
             }
-            /* Control de saltos de página obligatorios sin superposiciones */
             .page-break-after {
                 page-break-after: always !important;
                 break-after: page !important;
@@ -79,7 +74,6 @@
                 page-break-inside: avoid !important;
                 break-inside: avoid !important;
             }
-            /* Repetir cabeceras de tabla automáticamente en cada nueva hoja */
             thead {
                 display: table-header-group !important;
             }
@@ -87,7 +81,6 @@
                 page-break-inside: avoid !important;
                 break-inside: avoid !important;
             }
-            /* Numeración de página automatizada con contadores CSS estándar */
             @page {
                 @bottom-right {
                     content: "Página " counter(page) " de " counter(pages);
@@ -107,14 +100,10 @@
 </head>
 <body class="bg-brand-dark text-slate-100 min-h-screen flex flex-col selection:bg-sky-500 selection:text-white">
 
-    <!-- APP WRAPPER (Oculto al imprimir) -->
     <div id="app-container" class="flex flex-col min-h-screen no-print">
-        
-        <!-- HEADER NATIVO PANTALLA (TEMA OSCURO: ISOTIPO VECTORIAL "JJ" + TIPOGRAFÍA CORPORATIVA) -->
         <header class="bg-slate-900/90 border-b border-slate-800 sticky top-0 z-40 backdrop-blur-md">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
                 <div class="flex items-center space-x-3">
-                    <!-- Isotipo vectorizado corporativo "JJ" en pantalla -->
                     <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-600 to-sky-400 flex items-center justify-center font-black text-white text-lg tracking-tighter shadow-lg shadow-sky-500/20 border border-sky-300/30">
                         JJ
                     </div>
@@ -124,7 +113,6 @@
                     </div>
                 </div>
 
-                <!-- Estado de Sincronización u Opciones -->
                 <div class="flex items-center space-x-3">
                     <span id="sync-status-badge" class="hidden sm:inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
                         <span class="w-2 h-2 mr-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Sistema Listo (Offline First)
@@ -136,7 +124,6 @@
             </div>
         </header>
 
-        <!-- BARRA DE NAVEGACIÓN DE MÓDULOS -->
         <nav class="bg-slate-900/50 border-b border-slate-800/80 overflow-x-auto">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex space-x-2 py-2">
                 <button onclick="app.switchTab('sala')" id="nav-sala" class="nav-tab px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition bg-sky-600 text-white shadow-md shadow-sky-600/30">
@@ -160,10 +147,7 @@
             </div>
         </nav>
 
-        <!-- CONTENIDO PRINCIPAL DE LOS MÓDULOS -->
         <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8">
-            
-            <!-- MÓDULO 0: SALA SITUACIONAL (DESACOPLADA E INDEPENDIENTE) -->
             <section id="tab-sala" class="tab-content space-y-6">
                 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-xl">
                     <div>
@@ -174,14 +158,9 @@
                         + Registrar Nuevo Sondaje DDH
                     </button>
                 </div>
-
-                <!-- Contenedor dinámico de frentes activos (Tarjetas desacopladas o mensaje gerencial) -->
-                <div id="sala-frentes-container" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    <!-- Inyección dinámica JS -->
-                </div>
+                <div id="sala-frentes-container" class="grid grid-cols-1 lg:grid-cols-3 gap-6"></div>
             </section>
 
-            <!-- MÓDULO 1: GESTIÓN DE POZOS (DDH) -->
             <section id="tab-pozos" class="tab-content hidden space-y-6">
                 <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-xl space-y-6">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -206,15 +185,12 @@
                                     <th class="py-3.5 px-4 text-right">Acciones</th>
                                 </tr>
                             </thead>
-                            <tbody id="tabla-pozos-body" class="divide-y divide-slate-800/60 text-sm text-slate-300">
-                                <!-- Inyección JS -->
-                            </tbody>
+                            <tbody id="tabla-pozos-body" class="divide-y divide-slate-800/60 text-sm text-slate-300"></tbody>
                         </table>
                     </div>
                 </div>
             </section>
 
-            <!-- MÓDULO 2 & 3: TRAMOS Y LOGEO LITOLÓGICO -->
             <section id="tab-tramos" class="tab-content hidden space-y-6">
                 <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-xl space-y-6">
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -223,9 +199,7 @@
                             <p class="text-sm text-slate-400">Control de maniobras, porcentaje de recuperación y litología registrada.</p>
                         </div>
                         <div class="flex items-center space-x-3">
-                            <select id="select-pozo-tramos" onchange="app.loadTramosForPozo(this.value)" class="bg-slate-950 border border-slate-700 text-white text-sm rounded-xl px-3.5 py-2.5 focus:ring-2 focus:ring-sky-500 outline-none">
-                                <!-- Opciones inyectadas -->
-                            </select>
+                            <select id="select-pozo-tramos" onchange="app.loadTramosForPozo(this.value)" class="bg-slate-950 border border-slate-700 text-white text-sm rounded-xl px-3.5 py-2.5 focus:ring-2 focus:ring-sky-500 outline-none"></select>
                             <button onclick="app.openTramoModal()" class="px-4 py-2.5 bg-sky-600 hover:bg-sky-500 text-white font-semibold rounded-xl text-sm transition whitespace-nowrap shadow-lg shadow-sky-600/30">
                                 + Registrar Tramo
                             </button>
@@ -246,15 +220,12 @@
                                     <th class="py-3.5 px-3 text-right">Acciones</th>
                                 </tr>
                             </thead>
-                            <tbody id="tabla-tramos-body" class="divide-y divide-slate-800/60 text-sm text-slate-300">
-                                <!-- Inyección JS -->
-                            </tbody>
+                            <tbody id="tabla-tramos-body" class="divide-y divide-slate-800/60 text-sm text-slate-300"></tbody>
                         </table>
                     </div>
                 </div>
             </section>
 
-            <!-- MÓDULO 4: TOPOGRAFÍA Y VISUALIZADOR 2D VERTICAL -->
             <section id="tab-topografia" class="tab-content hidden space-y-6">
                 <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-xl space-y-6">
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -262,18 +233,14 @@
                             <h2 class="text-xl font-bold text-white">Visualizador 2D Vertical & Perfil Geológico</h2>
                             <p class="text-sm text-slate-400">Renderizado vectorial en Canvas con anchos de testigo HQ (36px) vs NQ (28px).</p>
                         </div>
-                        <select id="select-pozo-perfil" onchange="app.renderizarPerfil2D(this.value)" class="bg-slate-950 border border-slate-700 text-white text-sm rounded-xl px-3.5 py-2.5 focus:ring-2 focus:ring-sky-500 outline-none">
-                            <!-- Opciones -->
-                        </select>
+                        <select id="select-pozo-perfil" onchange="app.renderizarPerfil2D(this.value)" class="bg-slate-950 border border-slate-700 text-white text-sm rounded-xl px-3.5 py-2.5 focus:ring-2 focus:ring-sky-500 outline-none"></select>
                     </div>
                     <div id="perfil-2d-container" class="bg-slate-950 p-6 rounded-2xl border border-slate-800 flex flex-col items-center justify-center min-h-[480px]">
-                        <!-- Canvas 2D HD Vertical -->
                         <canvas id="canvasPerfil2D" class="w-full max-w-3xl h-[450px] object-contain"></canvas>
                     </div>
                 </div>
             </section>
 
-            <!-- MÓDULO 5: REPOSITORIO & INFORMES DSR OFICIALES (PREVIEW & IMPRESIÓN PURE) -->
             <section id="tab-repo" class="tab-content hidden space-y-6">
                 <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-xl space-y-6">
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -286,42 +253,33 @@
                         </button>
                     </div>
 
-                    <!-- Panel de Selecciones DSR -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-slate-950 p-4 rounded-xl border border-slate-800">
                         <div>
                             <label class="block text-xs font-semibold text-slate-400 uppercase mb-1">1. Seleccionar Sondaje en Repositorio:</label>
-                            <select id="dsr-select-pozo" onchange="app.actualizarOpcionesDSR()" class="w-full bg-slate-900 border border-slate-700 text-white text-sm rounded-xl px-3.5 py-2.5 outline-none focus:border-sky-500">
-                                <!-- Opciones inyectadas -->
-                            </select>
+                            <select id="dsr-select-pozo" onchange="app.actualizarOpcionesDSR()" class="w-full bg-slate-900 border border-slate-700 text-white text-sm rounded-xl px-3.5 py-2.5 outline-none focus:border-sky-500"></select>
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-slate-400 uppercase mb-1">2. Seleccionar Tipo de Reporte DSR:</label>
                             <select id="dsr-select-tipo" onchange="app.renderizarVistaPreviaDSR()" class="w-full bg-slate-900 border border-slate-700 text-white text-sm rounded-xl px-3.5 py-2.5 outline-none focus:border-sky-500">
-                                <option value="turno">1. Reporte Diario por Turno (Diurno/Nocturno)</option>
+                                <option value="turno">1. Reporte Diario por Turno (Geología / Operaciones)</option>
                                 <option value="acumulado">2. Reporte Acumulado Consolidado del Sondaje</option>
                                 <option value="culminado" id="opt-culminado-type" disabled>3. Reporte Sondaje Culminado (Oficial con Firmas)</option>
                             </select>
                         </div>
                     </div>
 
-                    <!-- VISTA PREVIA INTERACTIVA EN PANTALLA (Simulación exacta de 2 Hojas Carta) -->
                     <div class="bg-slate-950 p-6 rounded-xl border border-slate-800 overflow-x-auto flex justify-center">
-                        <div id="dsr-preview-box" class="w-[740px] bg-white text-slate-900 p-8 rounded shadow-2xl space-y-8">
-                            <!-- Inyección dinámica estructurada de Hoja 1 y Hoja 2 -->
-                        </div>
+                        <div id="dsr-preview-box" class="w-[740px] bg-white text-slate-900 p-8 rounded shadow-2xl space-y-8"></div>
                     </div>
                 </div>
             </section>
 
-            <!-- MÓDULO 6: ESTADÍSTICAS & ANALÍTICA BI -->
             <section id="tab-bi" class="tab-content hidden space-y-6">
                 <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-xl space-y-6">
                     <div>
                         <h2 class="text-xl font-bold text-white">Analítica BI y Rendimiento de Perforación</h2>
                         <p class="text-sm text-slate-400">Métricas consolidadas, distribución litológica y comparativa de metrajes.</p>
                     </div>
-
-                    <!-- Tarjetas KPIs BI -->
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                         <div class="bg-slate-950 p-5 rounded-xl border border-slate-800">
                             <span class="text-xs font-semibold text-slate-400 uppercase">Metraje Perforado Total</span>
@@ -340,34 +298,23 @@
                             <div class="text-2xl font-black text-amber-400 mt-1" id="kpi-culminados">0</div>
                         </div>
                     </div>
-
-                    <!-- Gráficas BI Interactivas -->
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         <div class="bg-slate-950 p-5 rounded-xl border border-slate-800">
                             <h3 class="text-sm font-bold text-white mb-4">Avance Metrado por Sondaje (Físico vs Target)</h3>
-                            <div class="h-64 flex items-center justify-center">
-                                <canvas id="chartMetraje"></canvas>
-                            </div>
+                            <div class="h-64 flex items-center justify-center"><canvas id="chartMetraje"></canvas></div>
                         </div>
                         <div class="bg-slate-950 p-5 rounded-xl border border-slate-800">
                             <h3 class="text-sm font-bold text-white mb-4">Distribución Litológica Global (%)</h3>
-                            <div class="h-64 flex items-center justify-center">
-                                <canvas id="chartLitologia"></canvas>
-                            </div>
+                            <div class="h-64 flex items-center justify-center"><canvas id="chartLitologia"></canvas></div>
                         </div>
                     </div>
                 </div>
             </section>
-
         </main>
     </div>
 
-    <!-- PLANTILLA EXCLUSIVA PARA IMPRESIÓN Y PDF (FORMATO HOJA CARTA OFICIAL) -->
-    <div id="dsr-report-paper" class="print-only">
-        <!-- Inyección dinámica de la plantilla estructurada para la impresora / navegador PDF -->
-    </div>
+    <div id="dsr-report-paper" class="print-only"></div>
 
-    <!-- MODAL CONFIGURACIÓN, RESPALDOS JSON & LOG AUDITORÍA -->
     <div id="modal-settings" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-lg p-6 space-y-6 shadow-2xl">
             <div class="flex justify-between items-center border-b border-slate-800 pb-3">
@@ -388,9 +335,7 @@
                 <hr class="border-slate-800">
                 <div>
                     <h4 class="font-bold text-white mb-2">Log de Auditoría Minimalista</h4>
-                    <div id="audit-log-container" class="bg-slate-950 p-3 rounded-xl max-h-44 overflow-y-auto text-xs font-mono text-slate-400 space-y-1">
-                        <!-- Inyección de logs -->
-                    </div>
+                    <div id="audit-log-container" class="bg-slate-950 p-3 rounded-xl max-h-44 overflow-y-auto text-xs font-mono text-slate-400 space-y-1"></div>
                 </div>
             </div>
             <div class="flex justify-end pt-2">
@@ -399,7 +344,6 @@
         </div>
     </div>
 
-    <!-- MODAL NUEVO/EDITAR POZO -->
     <div id="modal-pozo" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-2xl p-6 space-y-6 shadow-2xl max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center border-b border-slate-800 pb-3">
@@ -471,7 +415,6 @@
         </div>
     </div>
 
-    <!-- MODAL NUEVO TRAMO / CORRIDA -->
     <div id="modal-tramo" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-xl p-6 space-y-6 shadow-2xl max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center border-b border-slate-800 pb-3">
@@ -515,10 +458,6 @@
                     </select>
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-slate-400 uppercase mb-1">Perforador de Turno</label>
-                    <input type="text" id="tramo-operador" required placeholder="MULTIDISCIPLINARIO" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2 text-white outline-none">
-                </div>
-                <div>
                     <label class="block text-xs font-semibold text-slate-400 uppercase mb-1">Geólogo Supervisor</label>
                     <input type="text" id="tramo-geologo-turno" required placeholder="CARLOS RODRÍGUEZ" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2 text-white outline-none">
                 </div>
@@ -530,7 +469,6 @@
         </div>
     </div>
 
-    <!-- SCRIPT PRINCIPAL ARQUITECTURA JIRETH GEOCORE LITE -->
     <script>
         class JirethGeoCore {
             constructor() {
@@ -551,12 +489,12 @@
                         estado: 'CULMINADO',
                         motivo: 'Target estratigráfico alcanzado con éxito',
                         tramos: [
-                            { corrida: 1, desde: 0.0, hasta: 4.5, avance: 4.5, diametro: 'HQ', recuperados: 3.5, litologia: 'SUELO / RELLENO', operador: 'JUAN PÉREZ', geologoTurno: 'CARLOS RODRÍGUEZ' },
-                            { corrida: 2, desde: 4.5, hasta: 16.5, avance: 12.0, diametro: 'HQ', recuperados: 11.0, litologia: 'SAPROLITA', operador: 'JUAN PÉREZ', geologoTurno: 'CARLOS RODRÍGUEZ' },
-                            { corrida: 3, desde: 16.5, hasta: 43.5, avance: 27.0, diametro: 'HQ', recuperados: 25.0, litologia: 'SAPROCK', operador: 'LUIS GÓMEZ', geologoTurno: 'CARLOS RODRÍGUEZ' },
-                            { corrida: 4, desde: 43.5, hasta: 60.0, avance: 16.5, diametro: 'HQ', recuperados: 13.0, litologia: 'ROCA OXIDADA', operador: 'LUIS GÓMEZ', geologoTurno: 'CARLOS RODRÍGUEZ' },
-                            { corrida: 5, desde: 60.0, hasta: 73.5, avance: 13.5, diametro: 'NQ', recuperados: 12.0, litologia: 'ROCA OXIDADA', operador: 'PEDRO RIVAS', geologoTurno: 'CARLOS RODRÍGUEZ' },
-                            { corrida: 6, desde: 73.5, hasta: 108.0, avance: 34.5, diametro: 'NQ', recuperados: 34.0, litologia: 'ROCA FRESCA', operador: 'PEDRO RIVAS', geologoTurno: 'CARLOS RODRÍGUEZ' }
+                            { corrida: 1, desde: 0.0, hasta: 4.5, avance: 4.5, diametro: 'HQ', recuperados: 3.5, litologia: 'SUELO / RELLENO', geologoTurno: 'CARLOS RODRÍGUEZ' },
+                            { corrida: 2, desde: 4.5, hasta: 16.5, avance: 12.0, diametro: 'HQ', recuperados: 11.0, litologia: 'SAPROLITA', geologoTurno: 'CARLOS RODRÍGUEZ' },
+                            { corrida: 3, desde: 16.5, hasta: 43.5, avance: 27.0, diametro: 'HQ', recuperados: 25.0, litologia: 'SAPROCK', geologoTurno: 'CARLOS RODRÍGUEZ' },
+                            { corrida: 4, desde: 43.5, hasta: 60.0, avance: 16.5, diametro: 'HQ', recuperados: 13.0, litologia: 'ROCA OXIDADA', geologoTurno: 'CARLOS RODRÍGUEZ' },
+                            { corrida: 5, desde: 60.0, hasta: 73.5, avance: 13.5, diametro: 'NQ', recuperados: 12.0, litologia: 'ROCA OXIDADA', geologoTurno: 'CARLOS RODRÍGUEZ' },
+                            { corrida: 6, desde: 73.5, hasta: 108.0, avance: 34.5, diametro: 'NQ', recuperados: 34.0, litologia: 'ROCA FRESCA', geologoTurno: 'CARLOS RODRÍGUEZ' }
                         ]
                     }
                 ];
@@ -628,7 +566,6 @@
                 else box.classList.add('hidden');
             }
 
-            // MÓDULO 0: SALA SITUACIONAL DINÁMICA
             renderSala() {
                 const container = document.getElementById('sala-frentes-container');
                 const activos = this.pozos.filter(p => p.estado === 'EN OPERACIÓN');
@@ -679,7 +616,6 @@
                 }).join('');
             }
 
-            // MÓDULO 1: POZOS
             renderPozosTable() {
                 const tbody = document.getElementById('tabla-pozos-body');
                 tbody.innerHTML = this.pozos.map(p => {
@@ -785,7 +721,6 @@
                 }
             }
 
-            // MÓDULO 2 & 3: TRAMOS
             populateSelects() {
                 const sels = ['select-pozo-tramos', 'select-pozo-perfil', 'dsr-select-pozo'];
                 sels.forEach(sId => {
@@ -853,7 +788,6 @@
                     avance: parseFloat((hasta - desde).toFixed(2)),
                     recuperados: parseFloat(document.getElementById('tramo-recuperados').value),
                     litologia: document.getElementById('tramo-litologia').value,
-                    operador: document.getElementById('tramo-operador').value.toUpperCase(),
                     geologoTurno: document.getElementById('tramo-geologo-turno').value.toUpperCase()
                 };
 
@@ -873,7 +807,6 @@
                 }
             }
 
-            // MÓDULO 4: PERFIL 2D VERTICAL HD
             renderizarPerfil2D(pozoId) {
                 const pozo = this.pozos.find(x => x.id === pozoId);
                 const canvas = document.getElementById('canvasPerfil2D');
@@ -941,7 +874,6 @@
                 });
             }
 
-            // MÓDULO 5: REPOSITORIO & INFORMES DSR OFICIALES (VISTA PREVIA Y HOJAS CARTA EXACTAS)
             actualizarOpcionesDSR() {
                 const pozoId = document.getElementById('dsr-select-pozo').value;
                 const pozo = this.pozos.find(x => x.id === pozoId);
@@ -971,7 +903,7 @@
                 const totalMetros = pozo.tramos.reduce((acc, t) => acc + (parseFloat(t.avance) || 0), 0);
                 const recGlobal = totalMetros > 0 ? (pozo.tramos.reduce((acc, t) => acc + (parseFloat(t.recuperados) || 0), 0) / totalMetros * 100).toFixed(1) : 0;
                 const progGlobal = Math.min(100, (totalMetros / pozo.target) * 100).toFixed(1);
-                const ultimoTramo = pozo.tramos[pozo.tramos.length - 1] || { operador: 'N/A', geologoTurno: 'N/A' };
+                const ultimoTramo = pozo.tramos[pozo.tramos.length - 1] || { geologoTurno: 'N/A' };
 
                 let tituloReporte = tipoRepo === 'turno' ? 'REPORTE DIARIO DE TURNO (DSR)' : (tipoRepo === 'acumulado' ? 'REPORTE ACUMULADO DEL SONDAJE' : 'REPORTE SONDAJE CULMINADO (OFICIAL)');
 
@@ -990,13 +922,10 @@
                     </div>
                 `;
 
-                // HTML Estructurado en Dos Páginas Exactas para Carta sin solapamientos
                 const htmlTemplate = `
                     <div class="space-y-8">
-                        <!-- HOJA 1: Membrete con Logo JPG, KPIs, Datos Básicos y Perfil 2D -->
                         <div class="page-break-after flex flex-col justify-between min-h-[960px] bg-white text-slate-900 p-2">
                             <div>
-                                <!-- Membrete con Logo JPG Oficial (Sin repetir texto) -->
                                 <div class="flex justify-between items-center border-b-2 border-slate-900 pb-3 mb-4">
                                     <img src="1792941546023.jpg" alt="Logo Complejo Jireth" class="h-12 object-contain">
                                     <div class="text-right">
@@ -1006,7 +935,6 @@
                                     </div>
                                 </div>
 
-                                <!-- KPIs Ejecutivos -->
                                 <div class="grid grid-cols-4 gap-2 mb-4">
                                     <div class="bg-slate-50 p-2.5 rounded border border-slate-300 text-center">
                                         <span class="text-[8px] font-bold text-slate-600 uppercase block">PROF. PERFORADA</span>
@@ -1030,7 +958,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Datos de Ubicación -->
                                 <div class="grid grid-cols-2 gap-3 bg-slate-50 p-3 rounded border border-slate-300 text-[10px] mb-4">
                                     <div>
                                         <p><strong>Zona / Proyecto:</strong> ${pozo.proyecto}</p>
@@ -1042,13 +969,11 @@
                                     <div>
                                         <p><strong>Cota Z:</strong> ${pozo.cota.toFixed(2)} m</p>
                                         <p><strong>Dip / Azimut:</strong> ${pozo.dip}° / ${pozo.azimut}°</p>
-                                        <p><strong>Operador:</strong> ${tipoRepo === 'turno' ? ultimoTramo.operador : 'MULTIDISCIPLINARIO'}</p>
-                                        <p><strong>Geólogo Responsable:</strong> ${tipoRepo === 'turno' ? ultimoTramo.geologoTurno : pozo.geologo}</p>
+                                        <p><strong>Geólogo Responsable:</strong> ${pozo.geologo}</p>
                                         <p><strong>Estado Sondaje:</strong> ${pozo.estado}</p>
                                     </div>
                                 </div>
 
-                                <!-- Perfil 2D Vertical en Hoja 1 -->
                                 <div>
                                     <h3 class="text-[10px] font-bold uppercase text-slate-700 mb-1">Visualización Gráfica Perfil 2D Vertical</h3>
                                     ${canvasHtml}
@@ -1059,10 +984,8 @@
                             </div>
                         </div>
 
-                        <!-- HOJA 2 EN ADELANTE: Tabla de Tramos Detallada y Firmas -->
                         <div class="flex flex-col justify-between min-h-[960px] bg-white text-slate-900 p-2">
                             <div>
-                                <!-- Membrete repetido para control corporativo -->
                                 <div class="flex justify-between items-center border-b-2 border-slate-900 pb-3 mb-4">
                                     <img src="1792941546023.jpg" alt="Logo Complejo Jireth" class="h-10 object-contain">
                                     <div class="text-right">
@@ -1071,7 +994,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Tabla Detallada -->
                                 <div class="space-y-2 mb-6">
                                     <h3 class="text-xs font-bold uppercase text-slate-700">Registro Detallado Tramo a Tramo</h3>
                                     <table class="w-full text-left border-collapse text-[9px]">
@@ -1110,27 +1032,26 @@
                                 </div>
                             </div>
 
-                            <!-- Bloque de Firmas / Cierre según Tipo de Reporte -->
                             <div class="pt-6 border-t border-slate-300 text-xs mt-auto">
                                 ${tipoRepo === 'turno' ? `
                                     <div class="text-slate-600 text-center italic text-[10px]">
-                                        Reporte de Turno Operativo — Registrado por el Geólogo Supervisor y Perforador de Turno.
+                                        Reporte Operativo de Geología — Registrado por el Geólogo Supervisor.
                                     </div>
                                 ` : (tipoRepo === 'acumulado' ? `
                                     <div class="text-slate-600 text-center italic text-[10px]">
-                                        Registro Consolidado y Acumulado del Proyecto — Supervisión Multidisciplinaria de Ingeniería y Geología | Complejo Jireth C.A.
+                                        Registro Consolidado y Acumulado del Proyecto — Coordinación de Geología | Complejo Jireth C.A.
                                     </div>
                                 ` : `
                                     <div class="grid grid-cols-2 gap-12 pt-6">
                                         <div class="text-center">
                                             <div class="border-b border-slate-900 pb-8 mb-2"></div>
-                                            <p class="font-bold uppercase text-[10px] text-slate-900">Supervisor de Geología</p>
+                                            <p class="font-bold uppercase text-[10px] text-slate-900">Coordinador de Geología</p>
                                             <p class="text-[9px] text-slate-600">${pozo.geologo}</p>
                                         </div>
                                         <div class="text-center">
                                             <div class="border-b border-slate-900 pb-8 mb-2"></div>
-                                            <p class="font-bold uppercase text-[10px] text-slate-900">Supervisor de Perforación</p>
-                                            <p class="text-[9px] text-slate-600">CONTRATISTA ${pozo.empresa}</p>
+                                            <p class="font-bold uppercase text-[10px] text-slate-900">Gerencia de Operaciones</p>
+                                            <p class="text-[9px] text-slate-600">COMPLEJO JIRETH C.A.</p>
                                         </div>
                                     </div>
                                 `)}
@@ -1147,7 +1068,6 @@
                 window.print();
             }
 
-            // MÓDULO 6: BI & ANALÍTICA
             renderBiAnalytics() {
                 const totalMetros = this.pozos.reduce((acc, p) => acc + p.tramos.reduce((a, t) => a + (parseFloat(t.avance) || 0), 0), 0);
                 const activos = this.pozos.filter(p => p.estado === 'EN OPERACIÓN').length;
