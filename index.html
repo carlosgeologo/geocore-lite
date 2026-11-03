@@ -11,7 +11,6 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700;800&display=swap');
@@ -85,9 +84,21 @@
         }
         .pulse-live { animation: pulseGlow 1.8s infinite ease-in-out; }
 
-        .logo-img-real {
+        /* LOGO ESTILIZADO PARA PANTALLA (CSS / SVG Minimalista) */
+        .logo-svg-screen {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(15, 23, 42, 0.95);
+            padding: 8px 14px;
+            border-radius: 0.75rem;
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+        }
+
+        .logo-img-print {
             height: 55px; width: auto; max-width: 170px; object-fit: contain;
-            flex-shrink: 0; background: transparent !important; border: none !important; box-shadow: none !important;
+            display: none; /* Oculto en pantalla, visible solo en impresión */
         }
 
         #toastFeedback {
@@ -126,22 +137,28 @@
         @media print {
             @page {
                 size: letter portrait;
-                margin: 10mm 10mm 12mm 10mm;
+                margin: 10mm 10mm 15mm 10mm;
+                @bottom-right {
+                    content: "Página " counter(page) " de " counter(pages);
+                    font-size: 8pt;
+                    font-family: 'Plus Jakarta Sans', sans-serif;
+                    color: #64748b;
+                    font-weight: bold;
+                }
             }
             body { background: white !important; color: black !important; padding: 0 !important; }
             .no-print, header, #sidebarMenu, #toastFeedback, #sidebarOverlay { display: none !important; }
-            #printable-area { border: none !important; box-shadow: none !important; padding: 0 !important; width: 100% !important; max-width: 100% !important; }
+            #printable-area { border: none !important; box-shadow: none !important; padding: 0 !important; width: 100% !important; max-width: 100% !important; display: block !important; }
             
+            .logo-img-print { display: block !important; }
+            .logo-svg-screen { display: none !important; }
+
             .page-break-before { page-break-before: always !important; break-before: page !important; }
+            .page-break-after { page-break-after: always !important; break-after: page !important; }
             .avoid-break { page-break-inside: avoid !important; break-inside: avoid !important; }
             
             thead { display: table-header-group !important; }
             tr { page-break-inside: avoid !important; break-inside: avoid !important; }
-            
-            .print-header-repeat {
-                position: running(docHeader);
-                display: block;
-            }
         }
     </style>
 </head>
@@ -161,8 +178,10 @@
             <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-sky-500 via-indigo-500 to-sky-500 laser-line"></div>
             
             <div class="text-center pt-2 space-y-3">
-                <div class="mx-auto flex items-center justify-center gap-3 bg-slate-950/80 p-3 rounded-2xl border border-slate-800 shadow-lg w-max">
-                    <img src="1792941546023.jpg" class="logo-img-real" alt="Logo Jireth">
+                <!-- LOGO ESTILIZADO EN PANTALLA (CSS/SVG) -->
+                <div class="mx-auto flex items-center justify-center gap-2.5 logo-svg-screen w-max">
+                    <div class="w-8 h-8 rounded-lg bg-sky-600 flex items-center justify-center font-black text-white text-xs shadow-md">JJ</div>
+                    <span class="text-base font-black tracking-widest text-white">JIRETH <span class="text-sky-400">GEOCORE</span></span>
                 </div>
 
                 <div class="py-1 space-y-1">
@@ -238,11 +257,12 @@
 
     <!-- SIDEBAR MENU GLOBAL -->
     <div id="sidebarOverlay" class="fixed inset-0 bg-slate-950/70 z-50 hidden backdrop-blur-md transition-opacity" onclick="toggleSidebar()"></div>
-    <aside id="sidebarMenu" class="fixed top-0 left-0 bottom-0 w-80 z-50 shadow-2xl p-5 flex flex-col justify-between -translate-x-full overflow-y-auto">
+    <aside id="sidebarMenu" class="fixed top-0 left-0 bottom-0 w-80 z-50 shadow-2xl p-5 flex flex-col justify-between -translate-x-full overflow-y-auto no-print">
         <div class="space-y-6">
             <div class="flex items-center justify-between border-b border-slate-800 pb-4">
-                <div class="flex items-center gap-3">
-                    <img src="1792941546023.jpg" class="logo-img-real" alt="Logo">
+                <div class="logo-svg-screen">
+                    <div class="w-7 h-7 rounded-lg bg-sky-600 flex items-center justify-center font-black text-white text-xs">JJ</div>
+                    <span class="text-sm font-black tracking-widest text-white">JIRETH <span class="text-sky-400">GEOCORE</span></span>
                 </div>
                 <button type="button" onclick="toggleSidebar()" class="w-8 h-8 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-black flex items-center justify-center">✕</button>
             </div>
@@ -291,11 +311,17 @@
     <div id="appPrincipal" class="hidden space-y-4 max-w-7xl mx-auto pb-16 sm:pb-6">
         
         <!-- CABECERA PRINCIPAL STICKY -->
-        <header class="header-sticky-master px-4 py-3 rounded-b-2xl flex justify-between items-center flex-wrap gap-3 shadow-xl">
+        <header class="header-sticky-master px-4 py-3 rounded-b-2xl flex justify-between items-center flex-wrap gap-3 shadow-xl no-print">
             <div class="flex items-center gap-3">
                 <button type="button" onclick="toggleSidebar()" class="w-10 h-10 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 flex items-center justify-center text-white font-black shadow-md transition" title="Menú Principal">☰</button>
                 <button type="button" onclick="switchTab('mod_sala')" class="w-10 h-10 rounded-xl bg-sky-600 hover:bg-sky-500 text-white flex items-center justify-center font-black shadow-md transition" title="Ir a Sala Situacional">🏠</button>
-                <img src="1792941546023.jpg" class="logo-img-real" alt="Logo">
+                
+                <!-- LOGO ESTILIZADO EN PANTALLA -->
+                <div class="logo-svg-screen">
+                    <div class="w-6 h-6 rounded bg-sky-600 flex items-center justify-center font-black text-white text-[10px]">JJ</div>
+                    <span class="text-xs font-black tracking-widest text-white">JIRETH <span class="text-sky-400">GEOCORE</span></span>
+                </div>
+
                 <div>
                     <h1 class="text-base font-black text-white tracking-tight flex items-center gap-1.5">
                         <span>Jireth GeoCore Lite</span>
@@ -306,7 +332,10 @@
             </div>
             
             <div id="cardBienvenidaUsuario" class="hidden sm:flex items-center gap-3 bg-slate-900/80 px-3.5 py-1.5 rounded-xl border border-slate-800 text-xs shadow-sm">
-                <img src="1792941546023.jpg" class="logo-img-real" style="height: 35px;" alt="Logo">
+                <div class="logo-svg-screen" style="padding: 4px 8px;">
+                    <div class="w-5 h-5 rounded bg-sky-600 flex items-center justify-center font-black text-white text-[9px]">JJ</div>
+                    <span class="text-[10px] font-black tracking-wider text-white">JIRETH</span>
+                </div>
                 <div>
                     <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Sesión Activa Pro</p>
                     <p class="text-white font-extrabold" id="lblNombreUsuarioLogueado">Operador Autorizado</p>
@@ -333,7 +362,7 @@
                 <button type="button" onclick="renderizarSalaSituacional()" class="bg-amber-950 hover:bg-amber-900 text-amber-200 border border-amber-700 px-3 py-2 rounded-xl text-xs font-bold transition shadow-sm">🔄 Actualizar En Vivo</button>
             </div>
 
-            <!-- CONTENEDOR DE FRENTES INACTIVOS (PANTALLA LIMPIA CON MENSAJE GERENCIAL) -->
+            <!-- CONTENEDOR DE FRENTES INACTIVOS -->
             <div id="boxSalaInactiva" class="hidden bg-slate-900/90 p-8 sm:p-12 rounded-3xl border border-slate-800 text-center space-y-4 my-6 shadow-2xl relative overflow-hidden">
                 <div class="w-16 h-16 mx-auto rounded-2xl bg-sky-950/60 border border-sky-800 flex items-center justify-center text-3xl shadow-inner pulse-live">
                     🚜
@@ -349,7 +378,7 @@
                 </div>
             </div>
 
-            <!-- CONTENEDOR DE FRENTES ACTIVOS (TARJETAS INDEPENDIENTES CON CANVAS 2D INTEGRADO) -->
+            <!-- CONTENEDOR DE FRENTES ACTIVOS (TARJETAS CON CANVAS 2D) -->
             <div id="contenedorFrentesActivosGrid" class="space-y-6"></div>
         </section>
 
@@ -776,11 +805,11 @@
                 <!-- ÁREA IMPRIMIBLE DSR CONFIGURADA A HOJA CARTA EXACTA -->
                 <div id="printable-area" class="bg-white p-6 rounded-2xl border border-slate-200 space-y-4 text-xs text-slate-900 shadow-xl relative overflow-hidden">
                     
-                    <!-- HOJA 1: CABECERA, KPIS, DATOS Y CANVAS 2D VERTICAL -->
-                    <div class="space-y-4">
+                    <!-- HOJA 1: CABECERA CON JPG, KPIS, DATOS Y CANVAS 2D VERTICAL -->
+                    <div class="space-y-4 page-break-after">
                         <div class="border-b-2 border-slate-900 pb-3 flex justify-between items-center flex-wrap gap-3 px-1 pt-0">
                             <div class="flex items-center gap-4">
-                                <img src="1792941546023.jpg" class="logo-img-real" alt="Logo Jireth">
+                                <img src="1792941546023.jpg" class="logo-img-print" alt="Logo Jireth">
                                 <div>
                                     <h3 class="text-sm font-black text-slate-900 uppercase tracking-tight" id="repTituloPrincipalDSR">REPORTE DE TURNO</h3>
                                     <p class="text-[9px] text-slate-600 font-extrabold uppercase">COMPLEJO JIRETH C.A. — COORDINACIÓN DE GEOLOGÍA</p>
@@ -840,7 +869,7 @@
                             <p class="text-[11px] font-black text-slate-900 uppercase tracking-wider" id="repTituloPerfil2D">📐 Perfil Topográfico 2D & Log Litológico (HD Vertical):</p>
                             <div class="grid grid-cols-1 md:grid-cols-4 gap-3 items-start bg-white p-2.5 rounded-lg border border-slate-200">
                                 <div class="md:col-span-3 flex justify-center">
-                                    <canvas id="canvasReporte2D" width="680" height="420" class="max-w-full h-auto bg-white rounded"></canvas>
+                                    <canvas id="canvasReporte2D" width="680" height="380" class="max-w-full h-auto bg-white rounded"></canvas>
                                 </div>
                                 <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200 space-y-1 text-[9px]">
                                     <p class="font-black text-slate-900 uppercase tracking-wider border-b border-slate-300 pb-0.5">🎨 Leyenda Litológica</p>
@@ -859,7 +888,7 @@
                     </div>
 
                     <!-- HOJA 2: SALTO DE PÁGINA LIMPIO PARA TABLA DE TRAMOS Y OBSERVACIONES -->
-                    <div class="page-break-before space-y-4 pt-4">
+                    <div class="space-y-4 pt-2">
                         <div>
                             <h4 class="text-[11px] font-black text-slate-900 uppercase tracking-wider mb-1.5">🪵 REGISTRO DETALLADO TRAMO A TRAMO (AUDITORÍA DE PAGO)</h4>
                             <div class="overflow-x-auto border border-slate-300 rounded-xl shadow-sm">
@@ -1012,7 +1041,7 @@
             <div class="bg-slate-900/80 p-4 rounded-2xl border border-slate-800 space-y-3 shadow-sm">
                 <h3 class="text-xs font-black text-sky-400 uppercase tracking-wider">📜 Log de Auditoría Minimalista (Trazabilidad de Registro)</h3>
                 <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 h-40 overflow-y-auto font-mono-code text-[11px] text-slate-300 space-y-1" id="boxLogAuditoria">
-                    <p class="text-slate-500">// Inicando auditoría de eventos mineros...</p>
+                    <p class="text-slate-500">// Iniciando auditoría de eventos mineros...</p>
                 </div>
             </div>
         </section>
@@ -1295,7 +1324,6 @@
             return pct >= umbral ? lonManiobra : rec;
         }
 
-        /* LÓGICA REESTRUCTURADA SALA SITUACIONAL: 0 POZOS = PANTALLA LIMPIA CON MENSAJE FINO; POZOS ACTIVOS = TARJETAS INDEPENDIENTES CON CANVAS 2D NATIVO */
         function renderizarSalaSituacional() {
             const gridContenedor = document.getElementById('contenedorFrentesActivosGrid');
             const boxInactiva = document.getElementById('boxSalaInactiva');
@@ -1366,7 +1394,6 @@
                         </div>
                     </div>
 
-                    <!-- VISUALIZADOR 2D NATIVO INTEGRADO DIRECTO EN LA TARJETA (0 LISTAS DESPLEGABLES) -->
                     <div class="bg-slate-950 p-3.5 rounded-2xl border border-slate-800 space-y-2">
                         <p class="text-[11px] font-black text-slate-300 uppercase tracking-wider">📐 Perfil 2D & Log Litológico en Vivo (${p.codigo}):</p>
                         <div class="grid grid-cols-1 lg:grid-cols-4 gap-3 items-start">
@@ -2230,8 +2257,8 @@
             }
 
             let startX = w / 2;
-            let startY = 55;
-            let maxDrawHeight = h - 90;
+            let startY = 50;
+            let maxDrawHeight = h - 70;
             let scale = maxDrawHeight / targetRef;
 
             ctx.strokeStyle = esReporte ? '#cbd5e1' : '#334155';
@@ -2250,7 +2277,7 @@
             let endY = startY + Math.sin(dipRad) * targetRef * scale;
 
             ctx.strokeStyle = esReporte ? '#e2e8f0' : '#1e293b';
-            ctx.lineWidth = esReporte ? 24 : 34;
+            ctx.lineWidth = esReporte ? 22 : 34;
             ctx.lineCap = 'round';
             ctx.beginPath();
             ctx.moveTo(startX, startY);
@@ -2269,7 +2296,7 @@
 
             let ultYIzquierda = -999;
             let ultYDerecha = -999;
-            const minSpaceY = 16;
+            const minSpaceY = 15;
 
             if (tramosAgrupados && tramosAgrupados.length > 0) {
                 tramosAgrupados.forEach((av) => {
@@ -2282,7 +2309,7 @@
                     let segEndX = startX + Math.cos(dipRad) * hTramo * scale * 0.25;
                     let segEndY = startY + Math.sin(dipRad) * hTramo * scale;
 
-                    let anchoTestigo = diam === 'HQ' ? (esReporte ? 22 : 32) : (esReporte ? 16 : 24);
+                    let anchoTestigo = diam === 'HQ' ? (esReporte ? 20 : 32) : (esReporte ? 14 : 24);
                     ctx.strokeStyle = colorMap[av.meteorizacion] || '#94a3b8';
                     ctx.lineWidth = anchoTestigo;
                     ctx.lineCap = 'butt';
@@ -2296,47 +2323,30 @@
                     ultYIzquierda = targetYIzq;
 
                     ctx.fillStyle = esReporte ? '#0284c7' : '#38bdf8';
-                    ctx.font = 'bold 10px "JetBrains Mono"';
+                    ctx.font = 'bold 9px "JetBrains Mono"';
                     ctx.textAlign = 'right';
-                    ctx.fillText(`${d.toFixed(1)}m - ${hTramo.toFixed(1)}m [Rec: ${av.porcentajeRecuperacion}%]`, segEndX - (anchoTestigo / 2 + 10), targetYIzq + 3);
-
-                    ctx.strokeStyle = esReporte ? 'rgba(2, 132, 199, 0.4)' : 'rgba(56, 189, 248, 0.4)';
-                    ctx.lineWidth = 1;
-                    ctx.beginPath();
-                    ctx.moveTo(segEndX - (anchoTestigo / 2 + 2), segEndY);
-                    ctx.lineTo(segEndX - (anchoTestigo / 2 + 8), targetYIzq);
-                    ctx.stroke();
+                    ctx.fillText(`${d.toFixed(1)}m-${hTramo.toFixed(1)}m [Rec:${av.porcentajeRecuperacion}%]`, segEndX - (anchoTestigo / 2 + 8), targetYIzq + 3);
 
                     let targetYDerecha = segEndY;
                     if (targetYDerecha - ultYDerecha < minSpaceY) targetYDerecha = ultYDerecha + minSpaceY;
                     ultYDerecha = targetYDerecha;
 
                     ctx.fillStyle = esReporte ? '#0f172a' : '#f8fafc';
-                    ctx.font = 'bold 10px "Plus Jakarta Sans"';
+                    ctx.font = 'bold 9px "Plus Jakarta Sans"';
                     ctx.textAlign = 'left';
-                    ctx.fillText(`${av.meteorizacion} (${av.diametro})`, segEndX + (anchoTestigo / 2 + 10), targetYDerecha + 3);
-
-                    ctx.strokeStyle = esReporte ? 'rgba(15, 23, 42, 0.4)' : 'rgba(248, 250, 252, 0.4)';
-                    ctx.lineWidth = 1;
-                    ctx.beginPath();
-                    ctx.moveTo(segEndX + (anchoTestigo / 2 + 2), segEndY);
-                    ctx.lineTo(segEndX + (anchoTestigo / 2 + 8), targetYDerecha);
-                    ctx.stroke();
+                    ctx.fillText(`${av.meteorizacion} (${av.diametro})`, segEndX + (anchoTestigo / 2 + 8), targetYDerecha + 3);
                 });
             }
 
             ctx.fillStyle = '#ef4444';
             ctx.beginPath();
-            ctx.arc(startX, startY, 6, 0, Math.PI * 2);
+            ctx.arc(startX, startY, 5, 0, Math.PI * 2);
             ctx.fill();
 
             ctx.fillStyle = esReporte ? '#0284c7' : '#38bdf8';
-            ctx.font = 'bold 13px "Plus Jakarta Sans"';
+            ctx.font = 'bold 12px "Plus Jakarta Sans"';
             ctx.textAlign = 'right';
-            ctx.fillText(p.codigo, w - 20, 25);
-            ctx.fillStyle = esReporte ? '#0f172a' : '#f8fafc';
-            ctx.font = 'bold 10px "JetBrains Mono"';
-            ctx.fillText(`Prof. Total: ${maxProfundidadReal.toFixed(2)}m`, w - 20, 40);
+            ctx.fillText(p.codigo, w - 20, 22);
         }
 
         function cargarResumenCierrePozo() {
@@ -2446,7 +2456,6 @@
             });
         }
 
-        /* LÓGICA DE REPORTES DSR AJUSTADA SEGÚN REGLAS DE NEGOCIO Y FIRMAS */
         function generarReporteDSR() {
             if (!pozoActivoId || !pozosData[pozoActivoId]) return;
             let p = pozosData[pozoActivoId];
@@ -2454,7 +2463,6 @@
             let modo = modoSelect.value;
             let boxTurno = document.getElementById('boxSelectTurnoRepo');
             
-            // VALIDACIÓN Y FILTRADO INTELIGENTE DE OPCIONES
             if (p.estado === 'ABIERTO') {
                 if (modo === 'CULMINADO') {
                     alert(`⚠️ ALERTA: El sondaje (${p.codigo}) está ACTIVO. Para emitir informe de culminado debe cerrarlo en el Módulo 4.`);
@@ -2488,8 +2496,6 @@
             let fechaReporte = new Date().toLocaleDateString();
             let jornadaTexto = "DIURNO";
             let observacionesTurnoTexto = "SIN NOVEDADES REGISTRADAS.";
-
-            // CÁLCULO DEL PROGRESO ACUMULADO REAL HASTA ESE TURNO O TOTAL
             let totalMetrosHastaTurno = 0;
 
             if (modo === 'TURNO') {
@@ -2503,7 +2509,6 @@
                     observacionesTurnoTexto = tObj.observaciones || "SIN NOVEDADES EN EL TURNO.";
                     listaAvancesFiltrada = p.avances.filter(item => item.turnoId === turnoSelId);
 
-                    // Acumulado hasta este turno
                     p.avances.forEach(av => {
                         let met = parseFloat(av.hasta) - parseFloat(av.desde);
                         if (av.turnoId <= turnoSelId) totalMetrosHastaTurno += met;
@@ -2582,7 +2587,6 @@
                 }
             }, 100);
 
-            // CONTROL ESTRICTO DE SECCIÓN DE FIRMAS Y FIRMANTES
             const contenedorFirmas = document.getElementById('contenedorFirmasDSR');
             if (modo === 'TURNO') {
                 contenedorFirmas.innerHTML = `
@@ -2615,7 +2619,6 @@
             }
         }
 
-        /* EXPORTACIÓN E IMPRESIÓN NATIVA NÍTIDA REDIRIGIDA A LA VISTA PREVIA DEL NAVEGADOR */
         function imprimirOExportarPDF() {
             const elemento = document.getElementById('printable-area');
             if (!elemento) {
@@ -2626,7 +2629,6 @@
             setTimeout(() => { window.print(); }, 500);
         }
 
-        /* LÓGICA DEL MÓDULO DE ESTADÍSTICAS & PROCESAMIENTO ANALÍTICO (BI) */
         function renderizarEstadisticasGlobales() {
             const empFiltro = document.getElementById('filtroEstadisticasEmpresa').value;
             let pozosKeys = Object.keys(pozosData);
