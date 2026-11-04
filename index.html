@@ -37,9 +37,9 @@
 
         /* ANIMACIÓN CINEMATOGRÁFICA DE LA IMAGEN PROTAGONISTA (KEN BURNS) */
         @keyframes zoomCinematic {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
+            0% { transform: scale(1); filter: brightness(0.9); }
+            50% { transform: scale(1.06); filter: brightness(1.05); }
+            100% { transform: scale(1); filter: brightness(0.9); }
         }
         .splash-bg-animated {
             position: absolute;
@@ -47,37 +47,55 @@
             background-image: url('Gemini_Generated_Image_m89jgem89jgem89j.jfif');
             background-size: cover;
             background-position: center;
-            animation: zoomCinematic 16s infinite ease-in-out;
+            animation: zoomCinematic 18s infinite ease-in-out;
             z-index: 0;
         }
 
         /* BARRIDO LÁSER HOLOGRÁFICO */
         @keyframes laserScanH {
             0% { top: 0%; opacity: 0.1; }
-            50% { opacity: 0.9; }
+            50% { opacity: 0.8; }
             100% { top: 100%; opacity: 0.1; }
         }
         .laser-scanner-line {
             position: absolute; left: 0; right: 0; height: 3px;
             background: linear-gradient(90deg, transparent, #38bdf8, #ffffff, #38bdf8, transparent);
-            box-shadow: 0 0 20px #38bdf8, 0 0 40px #0284c7;
-            animation: laserScanH 4s infinite ease-in-out;
+            box-shadow: 0 0 25px #38bdf8, 0 0 50px #0284c7;
+            animation: laserScanH 4.5s infinite ease-in-out;
             z-index: 3;
             pointer-events: none;
         }
 
         /* FASE DE RECONSTRUCCIÓN VECTORIAL HOLOGRÁFICA */
         @keyframes fadeInHolo {
-            0% { opacity: 0; filter: blur(4px); transform: scale(0.98); }
+            0% { opacity: 0; filter: blur(6px); transform: scale(0.97); }
             100% { opacity: 1; filter: blur(0px); transform: scale(1); }
         }
         .holo-reconstruction-layer {
             position: absolute;
             inset: 0;
-            background: radial-gradient(circle at center, rgba(56, 189, 248, 0.12) 0%, transparent 70%);
-            animation: fadeInHolo 2.5s ease-out forwards;
+            background: radial-gradient(circle at center, rgba(56, 189, 248, 0.15) 0%, rgba(2, 6, 23, 0.6) 80%);
+            animation: fadeInHolo 3s ease-out forwards;
             z-index: 2;
             pointer-events: none;
+        }
+
+        /* ANIMACIÓN DE APARICIÓN CENTRAL HOLLYWOOD */
+        @keyframes cinematicFloat {
+            0% { opacity: 0; transform: translateY(20px) scale(0.95); filter: blur(4px); }
+            100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0px); }
+        }
+        .splash-central-card {
+            animation: cinematicFloat 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        /* CIRCULO DE CARGA DINÁMICO NIVEL MUNDIAL */
+        @keyframes spinRing {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .spinner-ring {
+            animation: spinRing 2.5s linear infinite;
         }
 
         .header-sticky-master {
@@ -185,45 +203,78 @@
 </div>
 
 <!-- ==========================================================================
-     PANTALLA DE BIENVENIDA CINEMATOGRÁFICA 100% IMAGEN PROTAGONISTA[cite: 2]
-     (Sin recuadros estorbosos, reconstrucción holográfica en vivo)
+     PANTALLA DE BIENVENIDA CINEMATOGRÁFICA 100% IMAGEN PROTAGONISTA
+     (Centro absoluto tanto en móvil como en PC: Círculo de carga + Logo Minimalista + Títulos + Botón Único de Iniciar Sesión)
      ========================================================================== -->
-<div id="pantallaSplash" class="fixed inset-0 z-50 flex flex-col justify-between p-6 sm:p-10 overflow-hidden cursor-pointer" onclick="transicionarSplashALogin()">
+<div id="pantallaSplash" class="fixed inset-0 z-50 flex flex-col items-center justify-center p-4 overflow-hidden">
     <!-- Fondo Animado Cinemático (Ken Burns) -->
     <div class="splash-bg-animated"></div>
     
-    <!-- Capa de Oscurecimiento Gradual Mínimo para máxima visibilidad de la imagen -->
-    <div class="absolute inset-0 bg-slate-950/40 backdrop-blur-[0.5px]"></div>
+    <!-- Capa de Oscurecimiento Gradual para máxima legibilidad estilo Hollywood -->
+    <div class="absolute inset-0 bg-slate-950/60 backdrop-blur-[1px]"></div>
 
-    <!-- Barrido Láser Holográfico Superior -->
+    <!-- Barrido Láser Holográfico -->
     <div class="laser-scanner-line"></div>
 
     <!-- Capa de Reconstrucción Vectorial Geológica -->
     <div class="holo-reconstruction-layer"></div>
 
-    <!-- ZONA SUPERIOR: Indicador sutil de reconstrucción CAD en tiempo real -->
-    <div class="relative z-10 flex justify-between items-center flex-wrap gap-2">
-        <div class="bg-slate-950/80 backdrop-blur-md px-4 py-2 rounded-xl border border-sky-500/40 shadow-2xl flex items-center gap-2.5">
-            <div class="w-2.5 h-2.5 rounded-full bg-sky-400 animate-ping"></div>
-            <span id="splashStatusText" class="text-[11px] font-mono-code text-sky-300 font-extrabold uppercase tracking-widest">RECONSTRUCCIÓN HOLOGRÁFICA: ESCANEANDO TOPOGRAFÍA...</span>
-        </div>
-        <div class="bg-slate-950/80 backdrop-blur-md px-4 py-2 rounded-xl border border-slate-700 text-right">
-            <span class="text-[10px] font-mono-code text-slate-400 font-bold uppercase tracking-widest">COMPLEJO JIRETH C.A. — 2026</span>
-        </div>
-    </div>
+    <!-- TARJETA CENTRAL FLOTANTE MINIMALISTA DE ALTO IMPACTO -->
+    <div class="relative z-10 splash-central-card card-pro p-6 sm:p-10 rounded-3xl max-w-lg w-full text-center space-y-6 mx-4 border border-sky-500/40 shadow-2xl">
+        
+        <!-- Línea superior de brillo acentuado -->
+        <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-sky-400 via-indigo-500 to-sky-400 rounded-t-3xl"></div>
 
-    <!-- ZONA INFERIOR: Barra de progreso imperceptible y llamado táctil a ingresar -->
-    <div class="relative z-10 space-y-3 max-w-md mx-auto w-full text-center pb-4">
-        <div class="w-full bg-slate-950/80 backdrop-blur-md h-1.5 rounded-full overflow-hidden border border-sky-500/30 p-0.5">
-            <div id="splashProgressBar" class="bg-gradient-to-r from-sky-400 via-indigo-500 to-sky-400 h-full rounded-full transition-all duration-700 w-0 shadow-lg shadow-sky-500/50"></div>
+        <!-- Círculo de Carga Animado Dinámico & Logo Vectorial Minimalista en el Centro -->
+        <div class="relative w-24 h-24 mx-auto flex items-center justify-center">
+            <!-- Anillo de carga giratorio -->
+            <div class="absolute inset-0 rounded-full border-2 border-dashed border-sky-400/60 spinner-ring"></div>
+            <!-- Anillo interno estático de pulso -->
+            <div class="absolute inset-2 rounded-full bg-sky-950/80 border border-sky-500/30 animate-pulse"></div>
+            
+            <!-- Logo Vectorial Minimalista JJ -->
+            <div class="relative z-10 flex items-center justify-center">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-sky-500 to-indigo-600 flex items-center justify-center font-black text-white text-base shadow-lg shadow-sky-500/40 tracking-wider">JJ</div>
+            </div>
         </div>
-        <div class="inline-block bg-slate-950/90 hover:bg-sky-950/90 text-sky-300 hover:text-white px-6 py-3 rounded-2xl border border-sky-400/50 text-xs font-black tracking-widest uppercase shadow-2xl transition-all animate-pulse">
-            TOCA EN CUALQUIER PARTE PARA ACCEDER AL SISTEMA 🚀
+
+        <!-- Títulos de Bienvenida y Sistema de Integración -->
+        <div class="space-y-2">
+            <span class="text-[10px] font-mono-code uppercase tracking-widest text-sky-400 bg-sky-950/80 px-3.5 py-1 rounded-full border border-sky-800/80">
+                COMPLEJO JIRETH C.A. — 2026
+            </span>
+            <h2 class="text-xl sm:text-2xl font-black text-white tracking-wider uppercase drop-shadow-md">
+                BIENVENIDO AL SISTEMA JIRETH CORE
+            </h2>
+            <p class="text-xs sm:text-sm text-slate-300 font-semibold leading-relaxed max-w-md mx-auto">
+                Sistema Integral de Integración y Control de Sondajes Diamantinos, Topografía y Modelado Geológico.
+            </p>
+        </div>
+
+        <!-- Estado de Carga / Inicialización -->
+        <div class="space-y-2 pt-1">
+            <div id="splashStatusText" class="text-[11px] font-mono-code text-sky-300 font-extrabold uppercase tracking-widest">
+                INICIALIZANDO NÚCLEO HOLOGRÁFICO...
+            </div>
+            <div class="w-full bg-slate-950/90 h-1.5 rounded-full overflow-hidden border border-sky-500/30 p-0.5 max-w-xs mx-auto">
+                <div id="splashProgressBar" class="bg-gradient-to-r from-sky-400 via-indigo-500 to-sky-400 h-full rounded-full transition-all duration-700 w-0 shadow-lg shadow-sky-500/50"></div>
+            </div>
+        </div>
+
+        <!-- Botón Único de Iniciar Sesión (Redirige al Módulo de Usuarios / Login) -->
+        <div class="pt-2">
+            <button type="button" onclick="transicionarSplashALogin()" id="btnIniciarSplash" class="btn-field w-full bg-gradient-to-r from-sky-600 via-indigo-600 to-sky-600 hover:from-sky-500 hover:to-indigo-500 text-white text-sm font-black shadow-xl shadow-sky-950/80 uppercase tracking-widest transition-all transform hover:scale-[1.02]">
+                🚀 INICIAR SESIÓN EN EL SISTEMA
+            </button>
+        </div>
+
+        <div class="text-center pt-1">
+            <span class="text-[10px] font-mono-code text-slate-500 font-bold uppercase tracking-widest">by: carlosgeologo • Pro Edition</span>
         </div>
     </div>
 </div>
 
-<!-- PANTALLA DE ACCESO (LOGIN) -->
+<!-- PANTALLA DE ACCESO / MÓDULO DE USUARIOS (LOGIN) -->
 <div id="pantallaLogin" class="hidden fixed inset-0 bg-geocore-master z-40 flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
     <div class="card-pro p-5 sm:p-8 rounded-3xl w-full max-w-md space-y-5 relative overflow-hidden my-auto text-white shadow-2xl">
         <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-sky-500 via-indigo-500 to-sky-500"></div>
@@ -235,7 +286,7 @@
             </div>
 
             <div class="py-1 space-y-1">
-                <span class="text-[10px] uppercase tracking-widest font-extrabold text-sky-400 bg-sky-950/60 px-3 py-1 rounded-full border border-sky-800/60">Portal de Autenticación Minera</span>
+                <span class="text-[10px] uppercase tracking-widest font-extrabold text-sky-400 bg-sky-950/60 px-3 py-1 rounded-full border border-sky-800/60">Módulo de Usuarios & Autenticación</span>
                 <h2 class="text-xl sm:text-3xl font-black text-white tracking-widest mt-2 uppercase drop-shadow-md">INICIAR SESIÓN</h2>
                 <p class="text-xs text-slate-400 font-medium">Control Integrado de Sondajes Diamantinos</p>
             </div>
@@ -1124,16 +1175,16 @@
     let claveGerencia = 'JIRETH2026';
     const PIN_MAESTRO = "2628";
 
-    // SECUENCIA DE RECONSTRUCCIÓN HOLOGRÁFICA EN VIVO DE LA IMAGEN PROTAGONISTA
+    // SECUENCIA DE CARGA DINÁMICA NIVEL MUNDIAL DEL SPLASH
     window.addEventListener('DOMContentLoaded', () => {
         let progressBar = document.getElementById('splashProgressBar');
         let statusText = document.getElementById('splashStatusText');
 
         let steps = [
-            { width: '25%', text: 'RECONSTRUCCIÓN: ESCANEANDO CURVAS DE NIVEL TOPOGRÁFICAS...' },
-            { width: '55%', text: 'VECTORIZACIÓN: PROYECTANDO COLLARS Y VECTORES DE SONDAJE...' },
-            { width: '85%', text: 'SINCRONIZACIÓN: ESTABLECIENDO MALLA LITOLÓGICA 3D...' },
-            { width: '100%', text: '¡HOLOGRAFÍA COMPLETADA! LISTO PARA OPERAR.' }
+            { width: '30%', text: 'INICIALIZANDO NÚCLEO HOLOGRÁFICO...' },
+            { width: '65%', text: 'CARGANDO MALLAS DE TOPOGRAFÍA Y SONDAJES...' },
+            { width: '90%', text: 'ESTABLECIENDO CONEXIÓN CLOUD PRO...' },
+            { width: '100%', text: '¡SISTEMA LISTO PARA INICIAR SESIÓN!' }
         ];
 
         let currentStep = 0;
@@ -1145,15 +1196,17 @@
             } else {
                 clearInterval(interval);
             }
-        }, 800);
+        }, 700);
     });
 
+    // TRANSICIÓN AL MÓDULO DE USUARIOS / LOGIN
     function transicionarSplashALogin() {
         const splash = document.getElementById('pantallaSplash');
         const login = document.getElementById('pantallaLogin');
         
-        splash.style.transition = 'opacity 0.6s ease';
+        splash.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
         splash.style.opacity = '0';
+        splash.style.transform = 'scale(1.05)';
         setTimeout(() => {
             splash.classList.add('hidden');
             login.classList.remove('hidden');
@@ -1431,7 +1484,6 @@
 
             let pct = targetPozo > 0 ? Math.min(100, (metPozo / targetPozo) * 100) : 0;
             let recPozoP = metPozo > 0 ? ((recPozoAcc / metPozo) * 100).toFixed(1) : '0.0';
-            let faltantePozo = Math.max(0, targetPozo - metPozo);
 
             let cardPozo = document.createElement('div');
             cardPozo.className = "bg-slate-900/90 p-4 sm:p-5 rounded-3xl border border-slate-800 space-y-4 shadow-xl relative overflow-hidden";
