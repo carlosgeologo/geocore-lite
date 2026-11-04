@@ -1,266 +1,282 @@
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#020617">
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Jireth GeoCore Lite Pro</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#020617">
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
 
-<style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700;800&display=swap');
-    
-    body {
-        font-family: 'Plus Jakarta Sans', sans-serif;
-        background-color: #020617;
-        color: #f8fafc;
-    }
-    .font-mono-code { font-family: 'JetBrains Mono', monospace; }
-    
-    .bg-geocore-master {
-        background-color: #020617;
-        background-image: linear-gradient(to bottom, rgba(2, 6, 23, 0.45), rgba(2, 6, 23, 0.75)), url('Gemini_Generated_Image_m89jgem89jgem89j.jfif');
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        background-attachment: fixed;
-    }
-
-    .header-sticky-master {
-        position: sticky;
-        top: 0;
-        z-index: 50;
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
-        background: rgba(15, 23, 42, 0.90);
-        border-bottom: 1px solid rgba(51, 65, 85, 0.6);
-    }
-
-    /* BARRA DE NAVEGACIÓN HORIZONTAL DESLIZABLE (MOBILE & DESKTOP) */
-    .nav-horizontal-bar {
-        display: flex;
-        overflow-x: auto;
-        white-space: nowrap;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none;
-        gap: 8px;
-        padding: 8px 4px;
-        background: rgba(15, 23, 42, 0.95);
-        border-bottom: 1px solid rgba(51, 65, 85, 0.5);
-        position: sticky;
-        top: 65px;
-        z-index: 40;
-    }
-    .nav-horizontal-bar::-webkit-scrollbar { display: none; }
-
-    .nav-item-pill {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        padding: 8px 14px;
-        border-radius: 0.75rem;
-        font-weight: 700;
-        font-size: 11px;
-        color: #94a3b8;
-        background: rgba(30, 41, 59, 0.6);
-        border: 1px solid rgba(51, 65, 85, 0.5);
-        transition: all 0.2s ease;
-        cursor: pointer;
-        flex-shrink: 0;
-    }
-    .nav-item-pill:hover { background-color: rgba(51, 65, 85, 0.8); color: #ffffff; }
-    .nav-item-pill.active {
-        background: linear-gradient(135deg, #0284c7 0%, #1e40af 100%);
-        color: #ffffff;
-        border-color: #38bdf8;
-        box-shadow: 0 4px 12px rgba(2, 132, 199, 0.4);
-    }
-
-    .card-pro {
-        background: rgba(15, 23, 42, 0.88);
-        border: 1px solid rgba(51, 65, 85, 0.6);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        box-shadow: 0 25px 35px -10px rgba(0, 0, 0, 0.65), 0 10px 15px -5px rgba(0, 0, 0, 0.4);
-        border-radius: 1.25rem;
-    }
-
-    .btn-field { 
-        min-height: 46px; font-weight: 800; border-radius: 0.75rem; letter-spacing: 0.025em;
-        transition: all 0.2s ease-in-out; box-shadow: 0 4px 14px rgba(0,0,0,0.35);
-    }
-    .btn-field:active { transform: scale(0.98); }
-    
-    .input-field { 
-        min-height: 46px; border: 1.5px solid rgba(51, 65, 85, 0.8); font-weight: 700;
-        background-color: rgba(9, 13, 22, 0.9); color: #f8fafc; border-radius: 0.75rem;
-        transition: all 0.2s ease;
-    }
-    .input-field:focus {
-        border-color: #38bdf8; outline: none;
-        box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.25); background-color: #020617;
-    }
-
-    @keyframes laserMove {
-        0% { transform: translateX(-100%); opacity: 0.2; }
-        50% { opacity: 1; }
-        100% { transform: translateX(100%); opacity: 0.2; }
-    }
-    .laser-line { position: relative; overflow: hidden; }
-    .laser-line::after {
-        content: ''; position: absolute; top: 0; left: 0; height: 100%; width: 60%;
-        background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.9), #0284c7, transparent);
-        animation: laserMove 2.5s infinite linear;
-    }
-
-    @keyframes pulseGlow {
-        0%, 100% { opacity: 1; transform: scale(1); filter: drop-shadow(0 0 6px rgba(56, 189, 248, 0.5)); }
-        50% { opacity: 0.5; transform: scale(0.96); filter: drop-shadow(0 0 2px rgba(56, 189, 248, 0.2)); }
-    }
-    .pulse-live { animation: pulseGlow 1.8s infinite ease-in-out; }
-
-    .logo-svg-screen {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        background: rgba(15, 23, 42, 0.95);
-        padding: 8px 14px;
-        border-radius: 0.75rem;
-        border: 1px solid rgba(56, 189, 248, 0.3);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-    }
-
-    .logo-img-print {
-        height: 48px; width: auto; max-width: 170px; object-fit: contain;
-        display: none;
-    }
-
-    #toastFeedback {
-        position: fixed; bottom: 24px; right: 24px; z-index: 100;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        transform: translateY(100px); opacity: 0;
-    }
-    #toastFeedback.show { transform: translateY(0); opacity: 1; }
-
-    #printable-area {
-        width: 100%;
-        max-width: 800px;
-        margin: 0 auto;
-        box-sizing: border-box;
-        background: #ffffff;
-        color: #0f172a;
-    }
-
-    .dsr-header-print-fixed {
-        display: none;
-    }
-
-    /* ==========================================================================
-       CONFIGURACIÓN DEFINITIVA DE IMPRESIÓN (PDF & PRINT)
-       ========================================================================== */
-    @media print {
-        @page {
-            size: letter portrait;
-            margin: 30mm 10mm 15mm 10mm; /* Margen superior amplio para garantizar espacio al membrete fixed */
-            @bottom-right {
-                content: "Página " counter(page) " de " counter(pages);
-                font-size: 8pt;
-                font-family: 'Plus Jakarta Sans', sans-serif;
-                color: #0f172a;
-                font-weight: bold;
-            }
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700;800&display=swap');
+        
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            background: #ffffff !important;
-            color: #000000 !important;
-            padding: 0 !important;
-            margin: 0 !important;
-            -webkit-print-color-adjust: exact !important;
-            print-color-adjust: exact !important;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #020617;
+            color: #f8fafc;
+            overflow-x: hidden;
+        }
+        .font-mono-code { font-family: 'JetBrains Mono', monospace; }
+        
+        .bg-geocore-master {
+            background-color: #020617;
+            background-image: linear-gradient(to bottom, rgba(2, 6, 23, 0.55), rgba(2, 6, 23, 0.85)), url('Gemini_Generated_Image_m89jgem89jgem89j.jfif');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
         }
 
-        /* Ocultar elementos de UI, menú, botones y selectores */
-        .no-print, header, nav, .nav-horizontal-bar, #toastFeedback, select, input, button, .input-field, #boxSelectoresRepoPadre {
-            display: none !important;
+        .header-sticky-master {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            background: rgba(15, 23, 42, 0.92);
+            border-bottom: 1px solid rgba(51, 65, 85, 0.6);
         }
 
-        /* Ocultar todos los módulos salvo el Repositorio de Informes */
-        #mod_sala, #mod1, #mod2, #mod3_turno, #mod3_logging, #mod4, #mod_estadisticas, #mod6 {
-            display: none !important;
+        /* BARRA DE NAVEGACIÓN HORIZONTAL DESLIZABLE (MOBILE, TABLET & DESKTOP) */
+        .nav-horizontal-bar {
+            display: flex;
+            overflow-x: auto;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            gap: 8px;
+            padding: 8px 12px;
+            background: rgba(15, 23, 42, 0.95);
+            border-bottom: 1px solid rgba(51, 65, 85, 0.6);
+            position: sticky;
+            top: 60px;
+            z-index: 40;
+            user-select: none;
+        }
+        .nav-horizontal-bar::-webkit-scrollbar { display: none; }
+
+        .nav-item-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            border-radius: 0.85rem;
+            font-weight: 800;
+            font-size: 12px;
+            letter-spacing: 0.015em;
+            color: #cbd5e1;
+            background: rgba(30, 41, 59, 0.85);
+            border: 1px solid rgba(71, 85, 105, 0.6);
+            transition: all 0.25s ease-in-out;
+            cursor: pointer;
+            flex-shrink: 0;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        }
+        .nav-item-pill:hover { 
+            background-color: rgba(51, 65, 85, 0.95); 
+            color: #ffffff;
+            border-color: #38bdf8;
+        }
+        .nav-item-pill.active {
+            background: linear-gradient(135deg, #0284c7 0%, #1e40af 100%);
+            color: #ffffff;
+            border-color: #38bdf8;
+            box-shadow: 0 4px 14px rgba(2, 132, 199, 0.5);
+            transform: translateY(-1px);
         }
 
-        #mod5 {
-            display: block !important;
-            border: none !important;
-            box-shadow: none !important;
-            background: transparent !important;
-            padding: 0 !important;
-            margin: 0 !important;
+        .card-pro {
+            background: rgba(15, 23, 42, 0.88);
+            border: 1px solid rgba(51, 65, 85, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.65), 0 8px 12px -5px rgba(0, 0, 0, 0.4);
+            border-radius: 1.25rem;
         }
+
+        .btn-field { 
+            min-height: 46px; font-weight: 800; border-radius: 0.75rem; letter-spacing: 0.025em;
+            transition: all 0.2s ease-in-out; box-shadow: 0 4px 14px rgba(0,0,0,0.35);
+        }
+        .btn-field:active { transform: scale(0.98); }
+        
+        .input-field { 
+            min-height: 46px; border: 1.5px solid rgba(51, 65, 85, 0.8); font-weight: 700;
+            background-color: rgba(9, 13, 22, 0.9); color: #f8fafc; border-radius: 0.75rem;
+            transition: all 0.2s ease;
+        }
+        .input-field:focus {
+            border-color: #38bdf8; outline: none;
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.25); background-color: #020617;
+        }
+
+        @keyframes laserMove {
+            0% { transform: translateX(-100%); opacity: 0.2; }
+            50% { opacity: 1; }
+            100% { transform: translateX(100%); opacity: 0.2; }
+        }
+        .laser-line { position: relative; overflow: hidden; }
+        .laser-line::after {
+            content: ''; position: absolute; top: 0; left: 0; height: 100%; width: 60%;
+            background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.9), #0284c7, transparent);
+            animation: laserMove 2.5s infinite linear;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 1; transform: scale(1); filter: drop-shadow(0 0 6px rgba(56, 189, 248, 0.5)); }
+            50% { opacity: 0.5; transform: scale(0.96); filter: drop-shadow(0 0 2px rgba(56, 189, 248, 0.2)); }
+        }
+        .pulse-live { animation: pulseGlow 1.8s infinite ease-in-out; }
+
+        .logo-svg-screen {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(15, 23, 42, 0.95);
+            padding: 8px 14px;
+            border-radius: 0.75rem;
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+        }
+
+        .logo-img-print {
+            height: 48px; width: auto; max-width: 170px; object-fit: contain;
+            display: none;
+        }
+
+        #toastFeedback {
+            position: fixed; bottom: 24px; right: 24px; z-index: 100;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateY(100px); opacity: 0;
+        }
+        #toastFeedback.show { transform: translateY(0); opacity: 1; }
 
         #printable-area {
-            border: none !important;
-            box-shadow: none !important;
-            padding: 0 !important;
-            margin: 0 !important;
-            width: 100% !important;
-            max-width: 100% !important;
-            background: #ffffff !important;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            box-sizing: border-box;
+            background: #ffffff;
+            color: #0f172a;
         }
 
-        /* MEMBRETE IMPRESO REPETIBLE EN TODAS LAS PÁGINAS */
         .dsr-header-print-fixed {
-            display: flex !important;
-            position: fixed;
-            top: -24mm;
-            left: 0;
-            right: 0;
-            height: 20mm;
-            border-bottom: 2px solid #0f172a;
-            background: #ffffff !important;
-            justify-content: space-between;
-            align-items: center;
-            padding-bottom: 4px;
-            z-index: 99999;
+            display: none;
         }
 
-        .logo-img-print { display: block !important; }
-        .logo-svg-screen { display: none !important; }
+        /* CONFIGURACIÓN DE IMPRESIÓN (PDF & PRINT) */
+        @media print {
+            @page {
+                size: letter portrait;
+                margin: 30mm 10mm 15mm 10mm;
+                @bottom-right {
+                    content: "Página " counter(page) " de " counter(pages);
+                    font-size: 8pt;
+                    font-family: 'Plus Jakarta Sans', sans-serif;
+                    color: #0f172a;
+                    font-weight: bold;
+                }
+            }
 
-        /* Ajuste estricto de tablas para evitar colisiones con encabezados */
-        table {
-            width: 100% !important;
-            border-collapse: collapse !important;
-            page-break-inside: auto;
-            margin-top: 6px !important;
+            body {
+                background: #ffffff !important;
+                color: #000000 !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            .no-print, header, nav, .nav-horizontal-bar, #toastFeedback, select, input, button, .input-field, #boxSelectoresRepoPadre {
+                display: none !important;
+            }
+
+            #mod_sala, #mod1, #mod2, #mod3_turno, #mod3_logging, #mod4, #mod_estadisticas, #mod6 {
+                display: none !important;
+            }
+
+            #mod5 {
+                display: block !important;
+                border: none !important;
+                box-shadow: none !important;
+                background: transparent !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+
+            #printable-area {
+                border: none !important;
+                box-shadow: none !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                background: #ffffff !important;
+            }
+
+            .dsr-header-print-fixed {
+                display: flex !important;
+                position: fixed;
+                top: -24mm;
+                left: 0;
+                right: 0;
+                height: 20mm;
+                border-bottom: 2px solid #0f172a;
+                background: #ffffff !important;
+                justify-content: space-between;
+                align-items: center;
+                padding-bottom: 4px;
+                z-index: 99999;
+            }
+
+            .logo-img-print { display: block !important; }
+            .logo-svg-screen { display: none !important; }
+
+            table {
+                width: 100% !important;
+                border-collapse: collapse !important;
+                page-break-inside: auto;
+                margin-top: 6px !important;
+            }
+
+            thead {
+                display: table-header-group !important;
+            }
+
+            tr {
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+
+            th {
+                background-color: #0f172a !important;
+                color: #ffffff !important;
+                border: 1px solid #334155 !important;
+                padding: 5px 6px !important;
+                font-size: 8pt !important;
+            }
+
+            td {
+                border: 1px solid #cbd5e1 !important;
+                padding: 4px 6px !important;
+                font-size: 8pt !important;
+            }
+
+            .page-break-after { page-break-after: always !important; break-after: page !important; }
+            .avoid-break { page-break-inside: avoid !important; break-inside: avoid !important; }
         }
-
-        thead {
-            display: table-header-group !important; /* Repetir encabezado de tabla en cada salto */
-        }
-
-        tr {
-            page-break-inside: avoid !important;
-            break-inside: avoid !important;
-        }
-
-        th {
-            background-color: #0f172a !important;
-            color: #ffffff !important;
-            border: 1px solid #334155 !important;
-            padding: 5px 6px !important;
-            font-size: 8pt !important;
-        }
-
-        td {
-            border: 1px solid #cbd5e1 !important;
-            padding: 4px 6px !important;
-            font-size: 8pt !important;
-        }
-
-        .page-break-after { page-break-after: always !important; break-after: page !important; }
-        .avoid-break { page-break-inside: avoid !important; break-inside: avoid !important; }
-    }
-</style>
+    </style>
+</head>
+<body class="bg-geocore-master min-h-screen">
 
 <div id="toastFeedback" class="card-pro px-5 py-3 border-l-4 border-emerald-500 flex items-center gap-3 shadow-2xl">
     <span class="text-lg" id="toastIcon">✅</span>
@@ -271,8 +287,8 @@
 </div>
 
 <!-- PANTALLA DE ACCESO (LOGIN) -->
-<div id="pantallaLogin" class="fixed inset-0 bg-geocore-master z-50 flex items-center justify-center p-4 overflow-y-auto">
-    <div class="card-pro p-6 sm:p-8 rounded-3xl w-full max-w-md space-y-6 relative overflow-hidden my-auto text-white">
+<div id="pantallaLogin" class="fixed inset-0 bg-geocore-master z-50 flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+    <div class="card-pro p-5 sm:p-8 rounded-3xl w-full max-w-md space-y-5 relative overflow-hidden my-auto text-white shadow-2xl">
         <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-sky-500 via-indigo-500 to-sky-500 laser-line"></div>
         
         <div class="text-center pt-2 space-y-3">
@@ -283,7 +299,7 @@
 
             <div class="py-1 space-y-1">
                 <span class="text-[10px] uppercase tracking-widest font-extrabold text-sky-400 bg-sky-950/60 px-3 py-1 rounded-full border border-sky-800/60">Portal de Autenticación Minera</span>
-                <h2 class="text-2xl sm:text-3xl font-black text-white tracking-widest mt-2 uppercase drop-shadow-md">INICIAR SESIÓN</h2>
+                <h2 class="text-xl sm:text-3xl font-black text-white tracking-widest mt-2 uppercase drop-shadow-md">INICIAR SESIÓN</h2>
                 <p class="text-xs text-slate-400 font-medium">Control Integrado de Sondajes Diamantinos</p>
             </div>
         </div>
@@ -293,7 +309,7 @@
                 👷 GEÓLOGOS
             </button>
             <button type="button" onclick="seleccionarPerfil('GERENCIA')" id="btnPerfilGer" class="py-3 px-2 rounded-2xl text-xs font-black border-2 border-slate-800 bg-slate-950 text-slate-400 transition-all">
-                👔 GERENCIA (REPOSITORIO)
+                👔 GERENCIA
             </button>
         </div>
 
@@ -352,27 +368,27 @@
     </div>
 </div>
 
-<!-- APLICACIÓN PRINCIPAL (PANEL DE CONTROL) -->
-<div id="appPrincipal" class="hidden space-y-4 max-w-7xl mx-auto pb-16 sm:pb-6">
+<!-- APLICACIÓN PRINCIPAL (PANEL DE CONTROL RESPONSIVO) -->
+<div id="appPrincipal" class="hidden space-y-4 max-w-7xl mx-auto px-2 sm:px-4 pb-16 sm:pb-6">
     
     <!-- CABECERA PRINCIPAL STICKY -->
-    <header class="header-sticky-master px-4 py-3 rounded-b-2xl flex justify-between items-center flex-wrap gap-3 shadow-xl no-print">
-        <div class="flex items-center gap-3">
-            <div class="logo-svg-screen">
+    <header class="header-sticky-master px-3 sm:px-4 py-2.5 rounded-b-2xl flex justify-between items-center flex-wrap gap-2 shadow-xl no-print">
+        <div class="flex items-center gap-2.5">
+            <div class="logo-svg-screen !py-1 !px-2.5">
                 <div class="w-6 h-6 rounded bg-sky-600 flex items-center justify-center font-black text-white text-[10px]">JJ</div>
                 <span class="text-xs font-black tracking-widest text-white">JIRETH <span class="text-sky-400">GEOCORE</span></span>
             </div>
 
             <div>
-                <h1 class="text-base font-black text-white tracking-tight flex items-center gap-1.5">
+                <h1 class="text-xs sm:text-base font-black text-white tracking-tight flex items-center gap-1.5">
                     <span>Jireth GeoCore Lite</span>
-                    <span class="text-sky-400 font-extrabold text-[10px] bg-sky-950 px-2 py-0.5 rounded border border-sky-800">Cloud Pro</span>
+                    <span class="text-sky-400 font-extrabold text-[9px] sm:text-[10px] bg-sky-950 px-1.5 py-0.5 rounded border border-sky-800">Cloud Pro</span>
                 </h1>
-                <p class="text-[11px] text-slate-400 font-medium">Complejo Jireth C.A. <span id="indicadorRed" class="text-emerald-400 font-bold pulse-live">(🟢 Sincronizado En Vivo)</span></p>
+                <p class="text-[10px] sm:text-[11px] text-slate-400 font-medium">Complejo Jireth C.A. <span id="indicadorRed" class="text-emerald-400 font-bold pulse-live">(🟢 Sincronizado)</span></p>
             </div>
         </div>
         
-        <div id="cardBienvenidaUsuario" class="hidden sm:flex items-center gap-3 bg-slate-900/80 px-3.5 py-1.5 rounded-xl border border-slate-800 text-xs shadow-sm">
+        <div id="cardBienvenidaUsuario" class="hidden md:flex items-center gap-3 bg-slate-900/80 px-3.5 py-1.5 rounded-xl border border-slate-800 text-xs shadow-sm">
             <div class="logo-svg-screen" style="padding: 4px 8px;">
                 <div class="w-5 h-5 rounded bg-sky-600 flex items-center justify-center font-black text-white text-[9px]">JJ</div>
                 <span class="text-[10px] font-black tracking-wider text-white">JIRETH</span>
@@ -383,58 +399,58 @@
             </div>
         </div>
 
-        <div class="flex gap-2 flex-wrap items-center">
-            <span id="badgeSyncQueue" class="hidden bg-amber-950 text-amber-300 border border-amber-700 text-[10px] px-2.5 py-1 rounded-lg font-black font-mono-code">⏳ 0 Pendientes</span>
-            <button type="button" onclick="sincronizarConSupabaseReal()" class="text-xs bg-slate-800 text-slate-200 px-3 py-2 rounded-xl font-extrabold border border-slate-700 hover:bg-slate-700 transition shadow-sm">🔄 Sincronizar Cloud</button>
-            <button type="button" onclick="cerrarSesion()" class="text-xs bg-rose-950 text-rose-300 px-3 py-2 rounded-xl font-extrabold border border-rose-800 hover:bg-rose-900 transition shadow-sm">🚪 Salir</button>
+        <div class="flex gap-1.5 sm:gap-2 flex-wrap items-center">
+            <span id="badgeSyncQueue" class="hidden bg-amber-950 text-amber-300 border border-amber-700 text-[10px] px-2 py-1 rounded-lg font-black font-mono-code">⏳ 0 Pendientes</span>
+            <button type="button" onclick="sincronizarConSupabaseReal()" class="text-[11px] sm:text-xs bg-slate-800 text-slate-200 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl font-extrabold border border-slate-700 hover:bg-slate-700 transition shadow-sm">🔄 Sincronizar</button>
+            <button type="button" onclick="cerrarSesion()" class="text-[11px] sm:text-xs bg-rose-950 text-rose-300 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl font-extrabold border border-rose-800 hover:bg-rose-900 transition shadow-sm">🚪 Salir</button>
         </div>
     </header>
 
-    <!-- BARRA DE NAVEGACIÓN HORIZONTAL DESLIZABLE -->
-    <nav class="nav-horizontal-bar no-print px-4">
+    <!-- BARRA DE NAVEGACIÓN HORIZONTAL DESLIZABLE (RESPONSIVA) -->
+    <nav class="nav-horizontal-bar no-print">
         <button type="button" onclick="switchTab('mod_sala')" id="tab-btn-mod_sala" class="nav-item-pill active">
-            <svg class="w-4 h-4 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+            <svg class="w-4 h-4 stroke-current shrink-0" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
             Sala Situacional
         </button>
         <button type="button" onclick="switchTab('mod1')" id="tab-btn-mod1" class="nav-item-pill">
-            <svg class="w-4 h-4 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+            <svg class="w-4 h-4 stroke-current shrink-0" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
             Lista de Pozos
         </button>
         <button type="button" onclick="switchTab('mod2')" id="tab-btn-mod2" class="nav-item-pill">
-            <svg class="w-4 h-4 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            <svg class="w-4 h-4 stroke-current shrink-0" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
             Ficha Topográfica
         </button>
         <button type="button" onclick="switchTab('mod3_turno')" id="tab-btn-mod3_turno" class="nav-item-pill">
-            <svg class="w-4 h-4 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <svg class="w-4 h-4 stroke-current shrink-0" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
             Gestión de Turnos
         </button>
         <button type="button" onclick="switchTab('mod3_logging')" id="tab-btn-mod3_logging" class="nav-item-pill">
-            <svg class="w-4 h-4 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            <svg class="w-4 h-4 stroke-current shrink-0" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
             Core Logging & Avances
         </button>
         <button type="button" onclick="switchTab('mod4')" id="tab-btn-mod4" class="nav-item-pill">
-            <svg class="w-4 h-4 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <svg class="w-4 h-4 stroke-current shrink-0" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
             Cierre & Evaluación
         </button>
         <button type="button" onclick="switchTab('mod5')" id="tab-btn-mod5" class="nav-item-pill">
-            <svg class="w-4 h-4 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"/></svg>
+            <svg class="w-4 h-4 stroke-current shrink-0" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"/></svg>
             Repositorio DSR
         </button>
         <button type="button" onclick="switchTab('mod_estadisticas')" id="tab-btn-mod_estadisticas" class="nav-item-pill">
-            <svg class="w-4 h-4 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+            <svg class="w-4 h-4 stroke-current shrink-0" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
             Estadísticas BI
         </button>
         <button type="button" onclick="switchTab('mod6')" id="tab-btn-mod6" class="nav-item-pill">
-            <svg class="w-4 h-4 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            <svg class="w-4 h-4 stroke-current shrink-0" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
             Administración
         </button>
     </nav>
 
     <!-- MÓDULO 0: SALA SITUACIONAL -->
-    <section id="mod_sala" class="space-y-4 card-pro p-5 sm:p-6">
+    <section id="mod_sala" class="space-y-4 card-pro p-4 sm:p-6">
         <div class="flex justify-between items-center flex-wrap gap-2 pb-3 border-b border-slate-800">
             <div>
-                <h2 class="text-xl font-black text-white tracking-tight flex items-center gap-2">
+                <h2 class="text-lg sm:text-xl font-black text-white tracking-tight flex items-center gap-2">
                     <span>Sala Situacional (Frentes Activos)</span>
                     <span class="text-xs bg-sky-950 text-sky-300 px-2.5 py-0.5 rounded-full border border-sky-800 font-mono-code pulse-live" id="contadorFrentesActivos">0 Activos</span>
                 </h2>
@@ -443,16 +459,16 @@
             <button type="button" onclick="renderizarSalaSituacional()" class="bg-amber-950 hover:bg-amber-900 text-amber-200 border border-amber-700 px-3 py-2 rounded-xl text-xs font-bold transition shadow-sm">🔄 Actualizar En Vivo</button>
         </div>
 
-        <div id="boxSalaInactiva" class="hidden bg-slate-900/90 p-8 sm:p-12 rounded-3xl border border-slate-800 text-center space-y-4 my-6 shadow-2xl relative overflow-hidden">
+        <div id="boxSalaInactiva" class="hidden bg-slate-900/90 p-6 sm:p-12 rounded-3xl border border-slate-800 text-center space-y-4 my-4 shadow-2xl relative overflow-hidden">
             <div class="w-16 h-16 mx-auto rounded-2xl bg-sky-950/60 border border-sky-800 flex items-center justify-center text-3xl shadow-inner pulse-live">🚜</div>
             <div class="max-w-xl mx-auto space-y-2">
-                <h3 class="text-lg sm:text-xl font-black text-white uppercase tracking-wider">Frentes de Perforación en Tránsito Operativo</h3>
+                <h3 class="text-base sm:text-xl font-black text-white uppercase tracking-wider">Frentes de Perforación en Tránsito Operativo</h3>
                 <p class="text-xs sm:text-sm text-slate-400 font-medium leading-relaxed">
                     Actualmente no se registran sondajes activos en ejecución. Las unidades de perforación se encuentran en proceso de mudanza, posicionamiento topográfico o apresto operacional hacia un nuevo blanco de exploración. La sala situacional se actualizará automáticamente al iniciar el próximo frente.
                 </p>
             </div>
             <div class="pt-2">
-                <span class="text-[10px] font-mono-code text-sky-400 uppercase tracking-widest bg-sky-950/80 px-3.5 py-1.5 rounded-full border border-sky-800">COMPLEJO JIRETH C.A. — SUBSURFACE INTELLIGENCE</span>
+                <span class="text-[9px] sm:text-[10px] font-mono-code text-sky-400 uppercase tracking-widest bg-sky-950/80 px-3.5 py-1.5 rounded-full border border-sky-800">COMPLEJO JIRETH C.A. — SUBSURFACE INTELLIGENCE</span>
             </div>
         </div>
 
@@ -460,8 +476,8 @@
     </section>
 
     <!-- MÓDULO 1: APERTURA & LISTA DE POZOS -->
-    <section id="mod1" class="hidden space-y-4 card-pro p-5 sm:p-6">
-        <h2 class="text-xl font-black text-white tracking-tight flex items-center gap-2">Lista de Pozos & Apertura de Nuevo Sondaje</h2>
+    <section id="mod1" class="hidden space-y-4 card-pro p-4 sm:p-6">
+        <h2 class="text-lg sm:text-xl font-black text-white tracking-tight flex items-center gap-2">Lista de Pozos & Apertura de Nuevo Sondaje</h2>
         <p class="text-xs text-slate-300 font-medium">Seleccione un sondaje activo de la lista para ir directamente a la gestión de turnos, o registre uno nuevo.</p>
         
         <div class="space-y-4">
@@ -505,19 +521,19 @@
     </section>
 
     <!-- MÓDULO 2: TOPOGRAFÍA -->
-    <section id="mod2" class="hidden space-y-4 card-pro p-5 sm:p-6">
+    <section id="mod2" class="hidden space-y-4 card-pro p-4 sm:p-6">
         <div class="flex justify-between items-center flex-wrap gap-2">
-            <h2 class="text-xl font-black text-white tracking-tight">Ficha Topográfica (Paso 2)</h2>
-            <div class="flex items-center gap-2">
-                <select id="m2_selectPozoActivo" onchange="seleccionarPozoTopografia(this.value)" class="input-field px-3 py-1.5 text-xs font-bold text-white">
+            <h2 class="text-lg sm:text-xl font-black text-white tracking-tight">Ficha Topográfica (Paso 2)</h2>
+            <div class="flex items-center gap-2 w-full sm:w-auto">
+                <select id="m2_selectPozoActivo" onchange="seleccionarPozoTopografia(this.value)" class="input-field flex-1 sm:flex-none px-3 py-1.5 text-xs font-bold text-white">
                     <option value="">-- Seleccionar Sondaje a Editar --</option>
                 </select>
-                <button type="button" id="btnHabilitarTopo" onclick="habilitarEdicionTopo()" class="bg-slate-800 hover:bg-slate-700 text-white font-extrabold px-3 py-2 rounded-xl text-xs shadow-sm transition border border-slate-700">✏️ Habilitar Edición</button>
+                <button type="button" id="btnHabilitarTopo" onclick="habilitarEdicionTopo()" class="bg-slate-800 hover:bg-slate-700 text-white font-extrabold px-3 py-2 rounded-xl text-xs shadow-sm transition border border-slate-700 shrink-0">✏️ Editar</button>
             </div>
         </div>
         
         <div id="contenedorTopografia" class="hidden space-y-4">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Perforadora / Máquina *</label>
                     <select id="m2_maquina" disabled onchange="toggleOtraMaquina()" class="input-field w-full px-4 text-sm font-bold">
@@ -559,14 +575,14 @@
             
             <div id="m2_btn_box" class="hidden pt-2 flex gap-2">
                 <button type="button" onclick="guardarTopografia()" class="btn-field flex-1 bg-gradient-to-r from-sky-600 to-indigo-600 hover:from-sky-500 hover:to-indigo-500 text-white text-sm font-bold shadow-lg">💾 Guardar Topografía y Continuar</button>
-                <button type="button" onclick="cancelarEdicionTopo()" class="bg-rose-950 hover:bg-rose-900 text-rose-200 border border-rose-700 px-5 py-2.5 rounded-xl text-xs font-black shadow-sm">❌ Cancelar</button>
+                <button type="button" onclick="cancelarEdicionTopo()" class="bg-rose-950 hover:bg-rose-900 text-rose-200 border border-rose-700 px-4 sm:px-5 py-2.5 rounded-xl text-xs font-black shadow-sm">❌ Cancelar</button>
             </div>
         </div>
     </section>
 
     <!-- MÓDULO 3A: TURNOS -->
-    <section id="mod3_turno" class="hidden space-y-4 card-pro p-5 sm:p-6">
-        <h2 class="text-xl font-black text-white tracking-tight">Gestión, Apertura & Edición de Turnos (Paso 3)</h2>
+    <section id="mod3_turno" class="hidden space-y-4 card-pro p-4 sm:p-6">
+        <h2 class="text-lg sm:text-xl font-black text-white tracking-tight">Gestión, Apertura & Edición de Turnos (Paso 3)</h2>
         <p class="text-xs text-slate-300 font-medium">Seleccione un sondaje activo primero para desplegar los campos de apertura o historial.</p>
 
         <div class="bg-slate-900/80 p-3.5 rounded-2xl border border-slate-800 shadow-sm">
@@ -644,8 +660,8 @@
 
                     <div class="flex gap-2 flex-wrap pt-1">
                         <button type="button" onclick="retomarTurnoSeleccionado()" class="btn-field flex-1 bg-slate-800 hover:bg-slate-700 text-white text-xs font-extrabold shadow-md border border-slate-700">▶️ Retomar Turno e Ir a Logging</button>
-                        <button type="button" onclick="cargarTurnoParaEditar()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-4 py-2.5 rounded-xl font-extrabold text-xs shadow-sm border border-slate-700">✏️ Editar Datos Turno</button>
-                        <button type="button" onclick="eliminarTurnoSeleccionado()" class="bg-rose-950 hover:bg-rose-900 text-rose-300 border border-rose-800 px-4 py-2.5 rounded-xl font-extrabold text-xs shadow-sm">🗑️ Borrar Turno</button>
+                        <button type="button" onclick="cargarTurnoParaEditar()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-3.5 py-2.5 rounded-xl font-extrabold text-xs shadow-sm border border-slate-700">✏️ Editar Datos Turno</button>
+                        <button type="button" onclick="eliminarTurnoSeleccionado()" class="bg-rose-950 hover:bg-rose-900 text-rose-300 border border-rose-800 px-3.5 py-2.5 rounded-xl font-extrabold text-xs shadow-sm">🗑️ Borrar Turno</button>
                     </div>
                 </div>
             </div>
@@ -653,8 +669,8 @@
     </section>
 
     <!-- MÓDULO 3B: CORE LOGGING -->
-    <section id="mod3_logging" class="hidden space-y-4 card-pro p-5 sm:p-6">
-        <h2 class="text-xl font-black text-white tracking-tight">Core Logging & Avances (Paso 4)</h2>
+    <section id="mod3_logging" class="hidden space-y-4 card-pro p-4 sm:p-6">
+        <h2 class="text-lg sm:text-xl font-black text-white tracking-tight">Core Logging & Avances (Paso 4)</h2>
         
         <div class="bg-slate-900/80 p-3.5 rounded-2xl border border-slate-800 shadow-sm">
             <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">🎯 Seleccionar Sondaje Activo a Registrar:</label>
@@ -682,31 +698,31 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3">
                 <div class="bg-slate-900/90 p-3.5 rounded-2xl border-t-2 border-sky-500 shadow-sm">
-                    <p class="text-[10px] text-sky-400 font-bold uppercase">Metraje Acumulado</p>
-                    <p class="text-sm sm:text-base font-black text-white font-mono-code mt-0.5" id="cardMetrajeAcum">0.00 m</p>
-                    <p class="text-[9px] text-slate-400 font-bold" id="cardTargetSub">Target: 100.00 m</p>
+                    <p class="text-[9px] sm:text-[10px] text-sky-400 font-bold uppercase">Metraje Acumulado</p>
+                    <p class="text-xs sm:text-base font-black text-white font-mono-code mt-0.5" id="cardMetrajeAcum">0.00 m</p>
+                    <p class="text-[8px] sm:text-[9px] text-slate-400 font-bold" id="cardTargetSub">Target: 100.00 m</p>
                 </div>
                 <div class="bg-slate-900/90 p-3.5 rounded-2xl border-t-2 border-purple-500 shadow-sm">
-                    <p class="text-[10px] text-purple-400 font-bold uppercase">Recuperación Global</p>
-                    <p class="text-sm sm:text-base font-black text-white font-mono-code mt-0.5" id="cardRecGlobal">0.0%</p>
-                    <p class="text-[9px] text-slate-400 font-bold">Promedio Testigo</p>
+                    <p class="text-[9px] sm:text-[10px] text-purple-400 font-bold uppercase">Recuperación Global</p>
+                    <p class="text-xs sm:text-base font-black text-white font-mono-code mt-0.5" id="cardRecGlobal">0.0%</p>
+                    <p class="text-[8px] sm:text-[9px] text-slate-400 font-bold">Promedio Testigo</p>
                 </div>
                 <div class="bg-slate-900/90 p-3.5 rounded-2xl border-t-2 border-emerald-500 shadow-sm">
-                    <p class="text-[10px] text-emerald-400 font-bold uppercase">Avance General</p>
-                    <p class="text-sm sm:text-base font-black text-white font-mono-code mt-0.5" id="cardAvanceGen">0.0%</p>
-                    <p class="text-[9px] text-slate-400 font-bold">Progreso del Pozo</p>
+                    <p class="text-[9px] sm:text-[10px] text-emerald-400 font-bold uppercase">Avance General</p>
+                    <p class="text-xs sm:text-base font-black text-white font-mono-code mt-0.5" id="cardAvanceGen">0.0%</p>
+                    <p class="text-[8px] sm:text-[9px] text-slate-400 font-bold">Progreso del Pozo</p>
                 </div>
                 <div class="bg-slate-900/90 p-3.5 rounded-2xl border-t-2 border-amber-500 shadow-sm">
-                    <p class="text-[10px] text-amber-400 font-bold uppercase">Total Metros a Pagar</p>
-                    <p class="text-sm sm:text-base font-black text-white font-mono-code mt-0.5" id="cardMetrosPago">0.00 m</p>
-                    <p class="text-[9px] text-slate-400 font-bold">Según Estándar de Pago</p>
+                    <p class="text-[9px] sm:text-[10px] text-amber-400 font-bold uppercase">Total Metros a Pagar</p>
+                    <p class="text-xs sm:text-base font-black text-white font-mono-code mt-0.5" id="cardMetrosPago">0.00 m</p>
+                    <p class="text-[8px] sm:text-[9px] text-slate-400 font-bold">Según Estándar</p>
                 </div>
             </div>
 
-            <!-- PERFIL 2D CANVAS VERTICAL HD -->
-            <div class="bg-slate-900/80 p-4 rounded-2xl border border-slate-800 space-y-3 shadow-sm">
+            <!-- PERFIL 2D CANVAS VERTICAL HD RESPONSIVO -->
+            <div class="bg-slate-900/80 p-3.5 sm:p-4 rounded-2xl border border-slate-800 space-y-3 shadow-sm">
                 <div class="flex justify-between items-center flex-wrap gap-2">
                     <h3 class="text-xs font-black text-white uppercase tracking-wider flex items-center gap-2">
                         <span>Perfil Topográfico 2D & Log Litológico en Tiempo Real (Zoom HD Vertical)</span>
@@ -714,12 +730,12 @@
                 </div>
                 
                 <div class="grid grid-cols-1 lg:grid-cols-4 gap-3 items-start">
-                    <div class="lg:col-span-3 bg-slate-950 p-3 rounded-xl border border-slate-800 overflow-x-auto shadow-inner flex justify-center">
+                    <div class="lg:col-span-3 bg-slate-950 p-2 sm:p-3 rounded-xl border border-slate-800 overflow-x-auto shadow-inner flex justify-center">
                         <canvas id="canvasPerfil2D" width="940" height="780" class="max-w-full h-auto bg-slate-950 rounded-lg shadow-md"></canvas>
                     </div>
-                    <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2 text-xs">
-                        <p class="text-[11px] font-black text-sky-400 uppercase tracking-wider border-b border-slate-800 pb-1">🎨 Convención Litológica / Meteorización</p>
-                        <div class="space-y-1.5 pt-1">
+                    <div class="bg-slate-950 p-3 sm:p-4 rounded-xl border border-slate-800 space-y-2 text-xs">
+                        <p class="text-[10px] sm:text-[11px] font-black text-sky-400 uppercase tracking-wider border-b border-slate-800 pb-1">🎨 Convención Litológica / Meteorización</p>
+                        <div class="space-y-1.5 pt-1 text-[11px]">
                             <div class="flex items-center gap-2 p-1.5 rounded bg-slate-900 border border-slate-800"><span class="w-3.5 h-3.5 rounded-full bg-yellow-200 inline-block border border-black/30"></span><span class="font-extrabold text-slate-200">Suelo / Relleno (&ge;70%)</span></div>
                             <div class="flex items-center gap-2 p-1.5 rounded bg-slate-900 border border-slate-800"><span class="w-3.5 h-3.5 rounded-full bg-yellow-400 inline-block border border-black/30"></span><span class="font-extrabold text-slate-200">Saprolita (&ge;70%)</span></div>
                             <div class="flex items-center gap-2 p-1.5 rounded bg-slate-900 border border-slate-800"><span class="w-3.5 h-3.5 rounded-full bg-amber-600 inline-block border border-black/30"></span><span class="font-extrabold text-slate-200">Saprock (&ge;70%)</span></div>
@@ -732,17 +748,17 @@
                 </div>
             </div>
 
-            <div class="bg-slate-900/80 p-4 rounded-2xl border border-slate-800 space-y-2.5 shadow-sm">
-                <div class="flex justify-between items-center text-xs font-extrabold">
+            <div class="bg-slate-900/80 p-3.5 sm:p-4 rounded-2xl border border-slate-800 space-y-2.5 shadow-sm">
+                <div class="flex justify-between items-center text-xs font-extrabold flex-wrap gap-1">
                     <span class="text-slate-300 uppercase tracking-wider">📈 Progreso Analítico por Diámetro</span>
-                    <span id="lblProgresoTexto" class="text-sky-400 font-mono-code font-black">0.00 m / 100.00 m (0.0%)</span>
+                    <span id="lblProgresoTexto" class="text-sky-400 font-mono-code font-black text-[11px] sm:text-xs">0.00 m / 100.00 m (0.0%)</span>
                 </div>
                 <div class="w-full bg-slate-950 h-4 rounded-xl overflow-hidden flex border border-slate-800 p-0.5 shadow-inner">
                     <div id="barHQ" class="bg-sky-600 h-full rounded-l-lg transition-all duration-300" title="Tramo HQ"></div>
                     <div id="barNQ" class="bg-amber-600 h-full transition-all duration-300" title="Tramo NQ"></div>
                     <div id="barPendiente" class="bg-slate-800 h-full rounded-r-lg transition-all duration-300" title="Pendiente"></div>
                 </div>
-                <div class="flex gap-4 text-[11px] text-slate-300 pt-1 font-bold">
+                <div class="flex gap-2 sm:gap-4 text-[10px] sm:text-[11px] text-slate-300 pt-1 font-bold flex-wrap">
                     <span><b class="text-sky-500">■</b> HQ (<span id="txtMetrosHQ">0.00</span>m)</span>
                     <span><b class="text-amber-500">■</b> NQ (<span id="txtMetrosNQ">0.00</span>m)</span>
                     <span><b class="text-slate-600">■</b> Pendiente (<span id="txtMetrosPend">100.00</span>m)</span>
@@ -772,7 +788,7 @@
                             <option value="HQ">HQ</option>
                             <option value="NQ">NQ</option>
                         </select>
-                        <p id="lblNotaLockDiametro" class="hidden text-[9px] text-amber-400 font-bold mt-1 leading-tight">🔒 Diámetro fijado en NQ por reducción física en maniobra anterior.</p>
+                        <p id="lblNotaLockDiametro" class="hidden text-[9px] text-amber-400 font-bold mt-1 leading-tight">🔒 Diámetro fijado en NQ por reducción física previa.</p>
                     </div>
                     <div>
                         <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Metros Recuperados *</label>
@@ -781,18 +797,18 @@
                     <div>
                         <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Litología / Meteorización *</label>
                         <select id="m3_meteorizacion" class="input-field w-full px-3.5 text-xs font-bold text-white">
-                            <option value="SUELO / RELLENO">a. Suelo / Relleno (Umbral &ge;70%)</option>
-                            <option value="SAPROLITA">b. Saprolita (Umbral &ge;70%)</option>
-                            <option value="SAPROCK">c. Saprock (Umbral &ge;70%)</option>
-                            <option value="ROCA OXIDADA">d. Roca Oxidada (Umbral &ge;80%)</option>
-                            <option value="ROCA FRACTURADA">e. Roca Fracturada (Umbral &ge;70%)</option>
-                            <option value="ROCA FRESCA">f. Roca Fresca (Umbral &ge;90%)</option>
-                            <option value="ZONA DE VETA">g. Zona de Veta (Umbral &ge;90%)</option>
+                            <option value="SUELO / RELLENO">a. Suelo / Relleno (&ge;70%)</option>
+                            <option value="SAPROLITA">b. Saprolita (&ge;70%)</option>
+                            <option value="SAPROCK">c. Saprock (&ge;70%)</option>
+                            <option value="ROCA OXIDADA">d. Roca Oxidada (&ge;80%)</option>
+                            <option value="ROCA FRACTURADA">e. Roca Fracturada (&ge;70%)</option>
+                            <option value="ROCA FRESCA">f. Roca Fresca (&ge;90%)</option>
+                            <option value="ZONA DE VETA">g. Zona de Veta (&ge;90%)</option>
                         </select>
                     </div>
                     <div class="sm:col-span-3 flex gap-2 pt-1">
                         <button type="button" id="btnGuardarAvance" onclick="guardarAvance()" class="btn-field flex-1 bg-gradient-to-r from-sky-600 to-indigo-600 hover:from-sky-500 hover:to-indigo-500 text-white text-xs font-extrabold shadow-lg">➕ Guardar Avance Tramo</button>
-                        <button type="button" id="btnCancelarEdicion" onclick="cancelarEdicionAvance()" class="hidden bg-rose-900 hover:bg-rose-800 text-white px-5 font-extrabold text-xs shadow-sm">❌ Cancelar</button>
+                        <button type="button" id="btnCancelarEdicion" onclick="cancelarEdicionAvance()" class="hidden bg-rose-900 hover:bg-rose-800 text-white px-4 font-extrabold text-xs shadow-sm">❌ Cancelar</button>
                     </div>
                 </div>
 
@@ -811,8 +827,8 @@
     </section>
 
     <!-- MÓDULO 4: CIERRE -->
-    <section id="mod4" class="hidden space-y-4 card-pro p-5 sm:p-6">
-        <h2 class="text-xl font-black text-white tracking-tight">Cierre & Evaluación Exhaustiva del Sondaje</h2>
+    <section id="mod4" class="hidden space-y-4 card-pro p-4 sm:p-6">
+        <h2 class="text-lg sm:text-xl font-black text-white tracking-tight">Cierre & Evaluación Exhaustiva del Sondaje</h2>
         <p class="text-xs text-slate-300">Evaluación y cierre oficial del sondaje.</p>
 
         <div class="bg-slate-900/80 p-3.5 rounded-2xl border border-slate-800 shadow-sm">
@@ -847,12 +863,12 @@
     </section>
 
     <!-- MÓDULO 5: REPOSITORIO & DSR -->
-    <section id="mod5" class="hidden space-y-4 card-pro p-5 sm:p-6">
+    <section id="mod5" class="hidden space-y-4 card-pro p-4 sm:p-6">
         <div class="flex justify-between items-center flex-wrap gap-2 no-print">
-            <h2 class="text-xl font-black text-white tracking-tight">Repositorio & Informes DSR Oficiales</h2>
-            <div class="space-x-2">
-                <button type="button" onclick="imprimirOExportarPDF()" class="bg-sky-600 hover:bg-sky-500 text-white font-black px-4 py-2 rounded-xl text-xs shadow-sm transition">📥 Imprimir / Guardar PDF Nativo</button>
-                <button type="button" onclick="copiarReportePortapapeles()" class="bg-slate-700 hover:bg-slate-600 text-white font-black px-4 py-2 rounded-xl text-xs shadow-sm transition">📋 Copiar Resumen</button>
+            <h2 class="text-lg sm:text-xl font-black text-white tracking-tight">Repositorio & Informes DSR Oficiales</h2>
+            <div class="space-x-2 flex flex-wrap gap-1">
+                <button type="button" onclick="imprimirOExportarPDF()" class="bg-sky-600 hover:bg-sky-500 text-white font-black px-3.5 py-2 rounded-xl text-xs shadow-sm transition">📥 Imprimir / PDF Nativo</button>
+                <button type="button" onclick="copiarReportePortapapeles()" class="bg-slate-700 hover:bg-slate-600 text-white font-black px-3.5 py-2 rounded-xl text-xs shadow-sm transition">📋 Copiar Resumen</button>
             </div>
         </div>
 
@@ -882,9 +898,9 @@
             </div>
 
             <!-- ÁREA IMPRIMIBLE DSR CONFIGURADA A HOJA CARTA EXACTA -->
-            <div id="printable-area" class="bg-white p-6 rounded-2xl border border-slate-200 space-y-4 text-xs text-slate-900 shadow-xl relative overflow-hidden">
+            <div id="printable-area" class="bg-white p-4 sm:p-6 rounded-2xl border border-slate-200 space-y-4 text-xs text-slate-900 shadow-xl relative overflow-hidden">
                 
-                <!-- MEMBRETE ÚNICO REPETIBLE FIJO (MÓDULO DE IMPRESIÓN) -->
+                <!-- MEMBRETE FIJO PARA IMPRESIÓN -->
                 <div class="dsr-header-print-fixed">
                     <div class="flex items-center gap-3">
                         <img src="1792941546023.jpg" class="logo-img-print" alt="Logo Jireth">
@@ -901,7 +917,7 @@
 
                 <!-- HOJA 1: RESUMEN GENERAL, PERFIL 2D & KPIs -->
                 <div class="space-y-4 page-break-after">
-                    <!-- CABECERA EN PANTALLA (OCULTA EN IMPRESIÓN PARA EVITAR REPETICIÓN DUPLICADA) -->
+                    <!-- CABECERA EN PANTALLA -->
                     <div class="border-b-2 border-slate-900 pb-3 flex justify-between items-center flex-wrap gap-3 px-1 pt-0 no-print">
                         <div class="flex items-center gap-4">
                             <div class="w-8 h-8 rounded-lg bg-sky-600 flex items-center justify-center font-black text-white text-xs">JJ</div>
@@ -916,7 +932,7 @@
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-4 gap-2 avoid-break">
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 avoid-break">
                         <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 shadow-sm">
                             <p class="text-[9px] text-slate-500 uppercase font-black">PROF. PERFORADA</p>
                             <p class="text-xs font-black text-slate-900 font-mono-code mt-0.5" id="repMetrajeTotal">0.00 m</p>
@@ -963,7 +979,7 @@
                     <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-1.5 avoid-break shadow-sm">
                         <p class="text-[11px] font-black text-slate-900 uppercase tracking-wider" id="repTituloPerfil2D">📐 Perfil Topográfico 2D & Log Litológico (HD Vertical):</p>
                         <div class="grid grid-cols-1 md:grid-cols-4 gap-3 items-start bg-white p-2.5 rounded-lg border border-slate-200">
-                            <div class="md:col-span-3 flex justify-center">
+                            <div class="md:col-span-3 flex justify-center overflow-x-auto">
                                 <canvas id="canvasReporte2D" width="680" height="380" class="max-w-full h-auto bg-white rounded"></canvas>
                             </div>
                             <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200 space-y-1 text-[9px]">
@@ -982,7 +998,7 @@
                     </div>
                 </div>
 
-                <!-- HOJA 2 EN ADELANTE: REGISTRO DE TABLAS DETALLADAS -->
+                <!-- HOJA 2: REGISTRO DETALLADO DE TABLAS -->
                 <div class="space-y-4 pt-2">
                     <div>
                         <h4 class="text-[11px] font-black text-slate-900 uppercase tracking-wider mb-1.5">🪵 REGISTRO DETALLADO TRAMO A TRAMO (AUDITORÍA DE PAGO)</h4>
@@ -1019,17 +1035,17 @@
     </section>
 
     <!-- MÓDULO 6: ESTADÍSTICAS & PROCESAMIENTO ANALÍTICO -->
-    <section id="mod_estadisticas" class="hidden space-y-4 card-pro p-5 sm:p-6">
+    <section id="mod_estadisticas" class="hidden space-y-4 card-pro p-4 sm:p-6">
         <div class="flex justify-between items-center flex-wrap gap-2 pb-3 border-b border-slate-800">
             <div>
-                <h2 class="text-xl font-black text-white tracking-tight flex items-center gap-2">
-                    <span>Estadísticas & Procesamiento de Datos de Perforación</span>
+                <h2 class="text-lg sm:text-xl font-black text-white tracking-tight flex items-center gap-2">
+                    <span>Estadísticas & Procesamiento de Datos</span>
                     <span class="text-xs bg-emerald-950 text-emerald-300 px-2.5 py-0.5 rounded-full border border-emerald-800 font-mono-code">BI GeoCore</span>
                 </h2>
                 <p class="text-xs text-slate-400 mt-0.5">Indicadores clave de rendimiento (KPIs), rendimiento mensual y análisis litológico contractual.</p>
             </div>
-            <div class="flex items-center gap-2">
-                <select id="filtroEstadisticasEmpresa" onchange="renderizarEstadisticasGlobales()" class="input-field px-3 py-1.5 text-xs font-bold text-white">
+            <div class="flex items-center gap-2 w-full sm:w-auto">
+                <select id="filtroEstadisticasEmpresa" onchange="renderizarEstadisticasGlobales()" class="input-field w-full sm:w-auto px-3 py-1.5 text-xs font-bold text-white">
                     <option value="TODAS">🏢 Todas las Empresas / Proyectos</option>
                     <option value="IVM C.A.">IVM C.A.</option>
                     <option value="MINERÍA CARABOBO C.A.">MINERÍA CARABOBO C.A.</option>
@@ -1039,36 +1055,36 @@
             </div>
         </div>
 
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <div class="bg-slate-900/90 p-4 rounded-2xl border-t-2 border-sky-500 shadow-sm">
-                <p class="text-[10px] text-sky-400 font-bold uppercase">Rendimiento Promedio</p>
-                <p class="text-lg font-black text-white font-mono-code mt-0.5" id="kpiEstVelocidad">0.00 m/turno</p>
-                <p class="text-[9px] text-slate-400 font-bold">Avance Diario Proyectado</p>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3">
+            <div class="bg-slate-900/90 p-3.5 sm:p-4 rounded-2xl border-t-2 border-sky-500 shadow-sm">
+                <p class="text-[9px] sm:text-[10px] text-sky-400 font-bold uppercase">Rendimiento Promedio</p>
+                <p class="text-sm sm:text-lg font-black text-white font-mono-code mt-0.5" id="kpiEstVelocidad">0.00 m/turno</p>
+                <p class="text-[8px] sm:text-[9px] text-slate-400 font-bold">Avance Diario Proyectado</p>
             </div>
-            <div class="bg-slate-900/90 p-4 rounded-2xl border-t-2 border-purple-500 shadow-sm">
-                <p class="text-[10px] text-purple-400 font-bold uppercase">Calidad del Testigo</p>
-                <p class="text-lg font-black text-white font-mono-code mt-0.5" id="kpiEstRecuperacion">0.0%</p>
-                <p class="text-[9px] text-slate-400 font-bold">Porcentaje de Recuperación</p>
+            <div class="bg-slate-900/90 p-3.5 sm:p-4 rounded-2xl border-t-2 border-purple-500 shadow-sm">
+                <p class="text-[9px] sm:text-[10px] text-purple-400 font-bold uppercase">Calidad del Testigo</p>
+                <p class="text-sm sm:text-lg font-black text-white font-mono-code mt-0.5" id="kpiEstRecuperacion">0.0%</p>
+                <p class="text-[8px] sm:text-[9px] text-slate-400 font-bold">Porcentaje de Recuperación</p>
             </div>
-            <div class="bg-slate-900/90 p-4 rounded-2xl border-t-2 border-amber-500 shadow-sm">
-                <p class="text-[10px] text-amber-400 font-bold uppercase">Eficiencia Contractual</p>
-                <p class="text-lg font-black text-white font-mono-code mt-0.5" id="kpiEstMetrosPago">0.00 m</p>
-                <p class="text-[9px] text-slate-400 font-bold">Aprobado para Pago</p>
+            <div class="bg-slate-900/90 p-3.5 sm:p-4 rounded-2xl border-t-2 border-amber-500 shadow-sm">
+                <p class="text-[9px] sm:text-[10px] text-amber-400 font-bold uppercase">Eficiencia Contractual</p>
+                <p class="text-sm sm:text-lg font-black text-white font-mono-code mt-0.5" id="kpiEstMetrosPago">0.00 m</p>
+                <p class="text-[8px] sm:text-[9px] text-slate-400 font-bold">Aprobado para Pago</p>
             </div>
-            <div class="bg-slate-900/90 p-4 rounded-2xl border-t-2 border-emerald-500 shadow-sm">
-                <p class="text-[10px] text-emerald-400 font-bold uppercase">Pozos Evaluados</p>
-                <p class="text-lg font-black text-white font-mono-code mt-0.5" id="kpiEstTotalPozos">0</p>
-                <p class="text-[9px] text-slate-400 font-bold">Activos & Culminados</p>
+            <div class="bg-slate-900/90 p-3.5 sm:p-4 rounded-2xl border-t-2 border-emerald-500 shadow-sm">
+                <p class="text-[9px] sm:text-[10px] text-emerald-400 font-bold uppercase">Pozos Evaluados</p>
+                <p class="text-sm sm:text-lg font-black text-white font-mono-code mt-0.5" id="kpiEstTotalPozos">0</p>
+                <p class="text-[8px] sm:text-[9px] text-slate-400 font-bold">Activos & Culminados</p>
             </div>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <div class="bg-slate-900/80 p-4 rounded-2xl border border-slate-800 space-y-2 shadow-sm">
                 <h3 class="text-xs font-black text-white uppercase tracking-wider flex items-center justify-between">
-                    <span>📈 Metros Perforados vs Target por Sondaje (Activos & Faltantes)</span>
+                    <span>📈 Metros Perforados vs Target por Sondaje</span>
                     <span class="text-[10px] text-sky-400 font-mono-code">Progreso Físico</span>
                 </h3>
-                <div class="relative h-64 w-full">
+                <div class="relative h-60 sm:h-64 w-full">
                     <canvas id="chartAvancePozos"></canvas>
                 </div>
             </div>
@@ -1078,27 +1094,27 @@
                     <span>🪨 Distribución Litológica Global</span>
                     <span class="text-[10px] text-amber-400 font-mono-code">% Meteorización</span>
                 </h3>
-                <div class="relative h-64 w-full flex justify-center">
+                <div class="relative h-60 sm:h-64 w-full flex justify-center">
                     <canvas id="chartLitologiaPie"></canvas>
                 </div>
             </div>
 
             <div class="bg-slate-900/80 p-4 rounded-2xl border border-slate-800 space-y-2 shadow-sm">
                 <h3 class="text-xs font-black text-white uppercase tracking-wider flex items-center justify-between">
-                    <span>💰 Metros Físicos vs Metros Pagables por Empresa</span>
+                    <span>💰 Metros Físicos vs Metros Pagables</span>
                     <span class="text-[10px] text-emerald-400 font-mono-code">Auditoría Gerencial</span>
                 </h3>
-                <div class="relative h-64 w-full">
+                <div class="relative h-60 sm:h-64 w-full">
                     <canvas id="chartComparativaPagos"></canvas>
                 </div>
             </div>
 
             <div class="bg-slate-900/80 p-4 rounded-2xl border border-slate-800 space-y-2 shadow-sm">
                 <h3 class="text-xs font-black text-white uppercase tracking-wider flex items-center justify-between">
-                    <span>📊 Rendimiento de Perforación por Mes (Últimos 2 Meses)</span>
-                    <span id="badgeCrecimientoMensual" class="text-[10px] bg-emerald-950 text-emerald-300 px-2 py-0.5 rounded border border-emerald-800 font-mono-code">📈 Crecimiento Positivo</span>
+                    <span>📊 Rendimiento de Perforación por Mes</span>
+                    <span id="badgeCrecimientoMensual" class="text-[10px] bg-emerald-950 text-emerald-300 px-2 py-0.5 rounded border border-emerald-800 font-mono-code">📈 Crecimiento</span>
                 </h3>
-                <div class="relative h-64 w-full">
+                <div class="relative h-60 sm:h-64 w-full">
                     <canvas id="chartRendimientoMensual"></canvas>
                 </div>
             </div>
@@ -1106,8 +1122,8 @@
     </section>
 
     <!-- MÓDULO 7: ADMIN & RESPALDOS -->
-    <section id="mod6" class="hidden space-y-4 card-pro p-5 sm:p-6">
-        <h2 class="text-xl font-black text-white tracking-tight">Administración, Respaldos & Seguridad</h2>
+    <section id="mod6" class="hidden space-y-4 card-pro p-4 sm:p-6">
+        <h2 class="text-lg sm:text-xl font-black text-white tracking-tight">Administración, Respaldos & Seguridad</h2>
         
         <div class="bg-slate-900/80 p-4 rounded-2xl border border-slate-800 space-y-3 shadow-sm">
             <h3 class="text-xs font-black text-rose-400 uppercase tracking-wider">🗑️ Gestión y Eliminación Individual de Pozos</h3>
@@ -1116,7 +1132,7 @@
                 <select id="adminSelectPozoBorrar" class="input-field flex-1 px-3.5 text-xs font-bold text-white">
                     <option value="">-- Seleccionar Sondaje a Eliminar --</option>
                 </select>
-                <button type="button" onclick="eliminarPozoEspecifico()" class="bg-rose-950 hover:bg-rose-900 text-rose-300 border border-rose-800 px-4 py-2.5 rounded-xl text-xs font-black shadow-sm">❌ Eliminar Sondaje Seleccionado</button>
+                <button type="button" onclick="eliminarPozoEspecifico()" class="bg-rose-950 hover:bg-rose-900 text-rose-300 border border-rose-800 px-4 py-2.5 rounded-xl text-xs font-black shadow-sm">❌ Eliminar Sondaje</button>
             </div>
         </div>
 
@@ -1131,7 +1147,7 @@
         </div>
 
         <div class="bg-slate-900/80 p-4 rounded-2xl border border-slate-800 space-y-3 shadow-sm">
-            <h3 class="text-xs font-black text-sky-400 uppercase tracking-wider">📜 Log de Auditoría Minimalista (Trazabilidad de Registro)</h3>
+            <h3 class="text-xs font-black text-sky-400 uppercase tracking-wider">📜 Log de Auditoría Minimalista (Trazabilidad)</h3>
             <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 h-40 overflow-y-auto font-mono-code text-[11px] text-slate-300 space-y-1" id="boxLogAuditoria">
                 <p class="text-slate-500">// Iniciando auditoría de eventos mineros...</p>
             </div>
@@ -1218,7 +1234,7 @@
         }
     }, 30000);
 
-    ['mousemove', 'keydown', 'click', 'scroll'].forEach(evt => {
+    ['mousemove', 'keydown', 'click', 'scroll', 'touchstart'].forEach(evt => {
         window.addEventListener(evt, () => { lastActivityTime = Date.now(); });
     });
 
@@ -1255,7 +1271,7 @@
     function marcarModoOfflineVisual() {
         const indRed = document.getElementById('indicadorRed');
         if (indRed) {
-            indRed.innerText = "(🟡 Modo Campo - Local)";
+            indRed.innerText = "(🟡 Modo Campo)";
             indRed.className = "text-amber-400 font-bold";
         }
     }
@@ -1264,7 +1280,7 @@
     window.addEventListener('online', async () => {
         const indRed = document.getElementById('indicadorRed');
         if (indRed) {
-            indRed.innerText = "(🟢 Sincronizado En Vivo)";
+            indRed.innerText = "(🟢 Sincronizado)";
             indRed.className = "text-emerald-400 font-bold pulse-live";
         }
         await sincronizarConSupabaseReal();
@@ -1445,46 +1461,46 @@
             let faltantePozo = Math.max(0, targetPozo - metPozo);
 
             let cardPozo = document.createElement('div');
-            cardPozo.className = "bg-slate-900/90 p-5 rounded-3xl border border-slate-800 space-y-4 shadow-xl relative overflow-hidden";
+            cardPozo.className = "bg-slate-900/90 p-4 sm:p-5 rounded-3xl border border-slate-800 space-y-4 shadow-xl relative overflow-hidden";
             cardPozo.innerHTML = `
                 <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-sky-500 to-indigo-500"></div>
                 <div class="flex justify-between items-center flex-wrap gap-2">
                     <div class="flex items-center gap-2.5">
-                        <span class="text-xs font-black uppercase tracking-wider bg-emerald-950 text-emerald-300 px-3 py-1 rounded-full border border-emerald-800 flex items-center gap-1.5">
+                        <span class="text-[10px] font-black uppercase tracking-wider bg-emerald-950 text-emerald-300 px-2.5 py-1 rounded-full border border-emerald-800 flex items-center gap-1.5">
                             <span class="w-2 h-2 rounded-full bg-emerald-400 pulse-live inline-block"></span>
-                            FRENTE ACTIVO #${idx + 1}
+                            ACTIVO #${idx + 1}
                         </span>
-                        <h3 class="text-lg font-black text-white font-mono-code">${p.codigo}</h3>
+                        <h3 class="text-base sm:text-lg font-black text-white font-mono-code">${p.codigo}</h3>
                     </div>
-                    <button type="button" onclick="irARepositorioSondaje('${p.codigo}')" class="bg-slate-800 hover:bg-slate-700 text-sky-400 px-3.5 py-1.5 rounded-xl text-xs font-extrabold border border-slate-700 transition">📑 Abrir Informe DSR</button>
+                    <button type="button" onclick="irARepositorioSondaje('${p.codigo}')" class="bg-slate-800 hover:bg-slate-700 text-sky-400 px-3 py-1.5 rounded-xl text-xs font-extrabold border border-slate-700 transition">📑 Informe DSR</button>
                 </div>
 
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
-                    <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800">
-                        <span class="text-slate-400 text-[10px] block font-bold uppercase">Empresa / Proyecto</span>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs">
+                    <div class="bg-slate-950 p-2.5 sm:p-3 rounded-2xl border border-slate-800">
+                        <span class="text-slate-400 text-[9px] sm:text-[10px] block font-bold uppercase">Empresa / Proyecto</span>
                         <span class="text-white font-black truncate block mt-0.5">${p.empresa} (${p.proyecto})</span>
                     </div>
-                    <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800">
-                        <span class="text-slate-400 text-[10px] block font-bold uppercase">Progreso / Faltante</span>
-                        <span class="text-sky-400 font-mono-code font-black block mt-0.5">${metPozo.toFixed(2)}m / Target: ${targetPozo.toFixed(2)}m (Falta: ${faltantePozo.toFixed(2)}m)</span>
+                    <div class="bg-slate-950 p-2.5 sm:p-3 rounded-2xl border border-slate-800">
+                        <span class="text-slate-400 text-[9px] sm:text-[10px] block font-bold uppercase">Progreso / Faltante</span>
+                        <span class="text-sky-400 font-mono-code font-black block mt-0.5">${metPozo.toFixed(2)}m / Target: ${targetPozo.toFixed(2)}m</span>
                     </div>
-                    <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800">
-                        <span class="text-slate-400 text-[10px] block font-bold uppercase">Recuperación Testigo</span>
+                    <div class="bg-slate-950 p-2.5 sm:p-3 rounded-2xl border border-slate-800">
+                        <span class="text-slate-400 text-[9px] sm:text-[10px] block font-bold uppercase">Recuperación</span>
                         <span class="text-purple-400 font-mono-code font-black block mt-0.5">${recPozoP}%</span>
                     </div>
-                    <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800">
-                        <span class="text-slate-400 text-[10px] block font-bold uppercase">Metros a Pagar</span>
+                    <div class="bg-slate-950 p-2.5 sm:p-3 rounded-2xl border border-slate-800">
+                        <span class="text-slate-400 text-[9px] sm:text-[10px] block font-bold uppercase">Metros a Pagar</span>
                         <span class="text-amber-400 font-mono-code font-black block mt-0.5">${pagPozoAcc.toFixed(2)} m</span>
                     </div>
                 </div>
 
-                <div class="bg-slate-950 p-3.5 rounded-2xl border border-slate-800 space-y-2">
-                    <p class="text-[11px] font-black text-slate-300 uppercase tracking-wider">📐 Perfil 2D & Log Litológico en Vivo (${p.codigo}):</p>
+                <div class="bg-slate-950 p-3 sm:p-3.5 rounded-2xl border border-slate-800 space-y-2">
+                    <p class="text-[10px] sm:text-[11px] font-black text-slate-300 uppercase tracking-wider">📐 Perfil 2D & Log Litológico en Vivo (${p.codigo}):</p>
                     <div class="grid grid-cols-1 lg:grid-cols-4 gap-3 items-start">
                         <div class="lg:col-span-3 flex justify-center overflow-x-auto bg-slate-950 p-2 rounded-xl border border-slate-900">
                             <canvas id="canvasSalaPozo_${p.codigo}" width="900" height="700" class="max-w-full h-auto bg-slate-950 rounded-lg shadow-md"></canvas>
                         </div>
-                        <div class="bg-slate-900/90 p-3 rounded-xl border border-slate-800 space-y-1.5 text-[11px]">
+                        <div class="bg-slate-900/90 p-2.5 sm:p-3 rounded-xl border border-slate-800 space-y-1.5 text-[10px] sm:text-[11px]">
                             <p class="font-black text-sky-400 uppercase tracking-wider border-b border-slate-800 pb-1">🎨 Convención</p>
                             <div class="space-y-1 pt-1">
                                 <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-yellow-200 inline-block"></span><span>Suelo/Relleno (&ge;70%)</span></div>
@@ -2994,7 +3010,7 @@
                 if (error) throw error;
                 const indRed = document.getElementById('indicadorRed');
                 if (indRed) {
-                    indRed.innerText = "(🟢 Sincronizado En Vivo)";
+                    indRed.innerText = "(🟢 Sincronizado)";
                     indRed.className = "text-emerald-400 font-bold pulse-live";
                 }
             } catch(ex) { encolarSincronizacionLocal(payloadData); }
@@ -3066,8 +3082,10 @@
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             navigator.serviceWorker.register('./sw.js')
-                .then(reg => console.log('Service Worker registrado con éxito:', reg.scope))
-                .catch(err => console.warn('Fallo en el registro del Service Worker:', err));
+                .then(reg => console.log('Service Worker registrado:', reg.scope))
+                .catch(err => console.warn('Fallo SW:', err));
         });
     }
 </script>
+</body>
+</html>
