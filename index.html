@@ -46,7 +46,7 @@
             border-bottom: 1px solid rgba(51, 65, 85, 0.6);
         }
 
-        /* BARRA DE NAVEGACIÓN HORIZONTAL DESLIZABLE (MOBILE, TABLET & DESKTOP) */
+        /* BARRA DE NAVEGACIÓN HORIZONTAL DESLIZABLE */
         .nav-horizontal-bar {
             display: flex;
             overflow-x: auto;
@@ -137,6 +137,13 @@
         }
         .pulse-live { animation: pulseGlow 1.8s infinite ease-in-out; }
 
+        @keyframes drillDown {
+            0% { transform: translateY(-20px); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateY(20px); opacity: 0; }
+        }
+        .drill-animation { animation: drillDown 2s infinite ease-in-out; }
+
         .logo-svg-screen {
             display: flex;
             align-items: center;
@@ -169,11 +176,8 @@
             color: #0f172a;
         }
 
-        .dsr-header-print-fixed {
-            display: none;
-        }
+        .dsr-header-print-fixed { display: none; }
 
-        /* CONFIGURACIÓN DE IMPRESIÓN (PDF & PRINT) */
         @media print {
             @page {
                 size: letter portrait;
@@ -186,93 +190,22 @@
                     font-weight: bold;
                 }
             }
-
-            body {
-                background: #ffffff !important;
-                color: #000000 !important;
-                padding: 0 !important;
-                margin: 0 !important;
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
-            }
-
-            .no-print, header, nav, .nav-horizontal-bar, #toastFeedback, select, input, button, .input-field, #boxSelectoresRepoPadre {
-                display: none !important;
-            }
-
-            #mod_sala, #mod1, #mod2, #mod3_turno, #mod3_logging, #mod4, #mod_estadisticas, #mod6 {
-                display: none !important;
-            }
-
-            #mod5 {
-                display: block !important;
-                border: none !important;
-                box-shadow: none !important;
-                background: transparent !important;
-                padding: 0 !important;
-                margin: 0 !important;
-            }
-
-            #printable-area {
-                border: none !important;
-                box-shadow: none !important;
-                padding: 0 !important;
-                margin: 0 !important;
-                width: 100% !important;
-                max-width: 100% !important;
-                background: #ffffff !important;
-            }
-
+            body { background: #ffffff !important; color: #000000 !important; padding: 0 !important; margin: 0 !important; }
+            .no-print, header, nav, .nav-horizontal-bar, #toastFeedback, select, input, button, .input-field, #boxSelectoresRepoPadre { display: none !important; }
+            #mod_sala, #mod1, #mod2, #mod3_turno, #mod3_logging, #mod4, #mod_estadisticas, #mod6 { display: none !important; }
+            #mod5 { display: block !important; border: none !important; box-shadow: none !important; background: transparent !important; padding: 0 !important; margin: 0 !important; }
+            #printable-area { border: none !important; box-shadow: none !important; padding: 0 !important; margin: 0 !important; width: 100% !important; max-width: 100% !important; background: #ffffff !important; }
             .dsr-header-print-fixed {
-                display: flex !important;
-                position: fixed;
-                top: -24mm;
-                left: 0;
-                right: 0;
-                height: 20mm;
-                border-bottom: 2px solid #0f172a;
-                background: #ffffff !important;
-                justify-content: space-between;
-                align-items: center;
-                padding-bottom: 4px;
-                z-index: 99999;
+                display: flex !important; position: fixed; top: -24mm; left: 0; right: 0; height: 20mm;
+                border-bottom: 2px solid #0f172a; background: #ffffff !important; justify-content: space-between; align-items: center; padding-bottom: 4px; z-index: 99999;
             }
-
             .logo-img-print { display: block !important; }
             .logo-svg-screen { display: none !important; }
-
-            table {
-                width: 100% !important;
-                border-collapse: collapse !important;
-                page-break-inside: auto;
-                margin-top: 6px !important;
-            }
-
-            thead {
-                display: table-header-group !important;
-            }
-
-            tr {
-                page-break-inside: avoid !important;
-                break-inside: avoid !important;
-            }
-
-            th {
-                background-color: #0f172a !important;
-                color: #ffffff !important;
-                border: 1px solid #334155 !important;
-                padding: 5px 6px !important;
-                font-size: 8pt !important;
-            }
-
-            td {
-                border: 1px solid #cbd5e1 !important;
-                padding: 4px 6px !important;
-                font-size: 8pt !important;
-            }
-
-            .page-break-after { page-break-after: always !important; break-after: page !important; }
-            .avoid-break { page-break-inside: avoid !important; break-inside: avoid !important; }
+            table { width: 100% !important; border-collapse: collapse !important; page-break-inside: auto; margin-top: 6px !important; }
+            thead { display: table-header-group !important; }
+            tr { page-break-inside: avoid !important; break-inside: avoid !important; }
+            th { background-color: #0f172a !important; color: #ffffff !important; border: 1px solid #334155 !important; padding: 5px 6px !important; font-size: 8pt !important; }
+            td { border: 1px solid #cbd5e1 !important; padding: 4px 6px !important; font-size: 8pt !important; }
         }
     </style>
 </head>
@@ -286,8 +219,49 @@
     </div>
 </div>
 
+<!-- ==========================================================================
+     PANTALLA DE BIENVENIDA ANIMADA (SPLASH SCREEN - ÚLTIMO GRITO)
+     ========================================================================== -->
+<div id="pantallaSplash" class="fixed inset-0 bg-geocore-master z-50 flex items-center justify-center p-4">
+    <div class="card-pro p-8 sm:p-12 rounded-3xl w-full max-w-lg text-center space-y-6 relative overflow-hidden shadow-2xl border border-sky-500/40">
+        <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-sky-500 via-indigo-500 to-sky-500 laser-line"></div>
+        
+        <!-- Icono Animado Representando Sondaje Diamantino & Topografía -->
+        <div class="relative w-24 h-24 mx-auto flex items-center justify-center">
+            <div class="absolute inset-0 rounded-2xl bg-sky-600/20 border border-sky-400/40 pulse-live"></div>
+            <div class="absolute inset-2 rounded-xl bg-slate-950 flex flex-col items-center justify-center border border-slate-800 shadow-inner">
+                <span class="text-2xl">⛏️</span>
+                <div class="w-12 h-1 bg-sky-400 rounded-full mt-2 drill-animation"></div>
+            </div>
+        </div>
+
+        <div class="space-y-3">
+            <span class="text-[10px] uppercase tracking-widest font-extrabold text-sky-400 bg-sky-950/80 px-3 py-1 rounded-full border border-sky-800/80">Subsurface Intelligence Pro</span>
+            <h1 class="text-2xl sm:text-3xl font-black text-white tracking-wider uppercase drop-shadow-lg">BIENVENIDOS AL SISTEMA JIRETH CORE</h1>
+            <p class="text-xs sm:text-sm text-slate-300 font-bold tracking-wide uppercase text-sky-200/90">Control Integrado de Sondajes Diamantinos</p>
+        </div>
+
+        <div class="py-2">
+            <div class="w-full bg-slate-950 h-2 rounded-full overflow-hidden border border-slate-800 p-0.5">
+                <div id="splashProgressBar" class="bg-gradient-to-r from-sky-500 to-indigo-600 h-full rounded-full transition-all duration-700 w-0"></div>
+            </div>
+            <p id="splashStatusText" class="text-[10px] font-mono-code text-slate-400 mt-2 uppercase">Inicializando motor geotécnico y modelos 2D...</p>
+        </div>
+
+        <div id="boxSplashBoton" class="hidden pt-2">
+            <button type="button" onclick="transicionarSplashALogin()" class="btn-field w-full bg-gradient-to-r from-sky-600 to-indigo-600 hover:from-sky-500 hover:to-indigo-500 text-white text-sm font-black shadow-xl shadow-sky-900/50 flex items-center justify-center gap-2">
+                🚀 INICIAR SESIÓN EN GEOCORE
+            </button>
+        </div>
+
+        <div class="text-center pt-2 border-t border-slate-800/80">
+            <span class="text-[10px] font-mono-code text-slate-500 font-bold uppercase tracking-widest">by: carlosgeologo 2026</span>
+        </div>
+    </div>
+</div>
+
 <!-- PANTALLA DE ACCESO (LOGIN) -->
-<div id="pantallaLogin" class="fixed inset-0 bg-geocore-master z-50 flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+<div id="pantallaLogin" class="hidden fixed inset-0 bg-geocore-master z-40 flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
     <div class="card-pro p-5 sm:p-8 rounded-3xl w-full max-w-md space-y-5 relative overflow-hidden my-auto text-white shadow-2xl">
         <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-sky-500 via-indigo-500 to-sky-500 laser-line"></div>
         
@@ -363,7 +337,7 @@
         </div>
 
         <div class="text-center pt-3 border-t border-slate-800/80">
-            <span class="text-[10px] font-mono-code text-slate-500 font-bold uppercase tracking-widest">by: carlosgeologo — 2026</span>
+            <span class="text-[10px] font-mono-code text-slate-500 font-bold uppercase tracking-widest">by: carlosgeologo 2026</span>
         </div>
     </div>
 </div>
@@ -406,7 +380,7 @@
         </div>
     </header>
 
-    <!-- BARRA DE NAVEGACIÓN HORIZONTAL DESLIZABLE (RESPONSIVA) -->
+    <!-- BARRA DE NAVEGACIÓN HORIZONTAL DESLIZABLE -->
     <nav class="nav-horizontal-bar no-print">
         <button type="button" onclick="switchTab('mod_sala')" id="tab-btn-mod_sala" class="nav-item-pill active">
             <svg class="w-4 h-4 stroke-current shrink-0" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
@@ -1186,6 +1160,45 @@
     let claveGeologos = localStorage.getItem('jireth_clave_geo');
     let claveGerencia = 'JIRETH2026';
     const PIN_MAESTRO = "2628";
+
+    // LÓGICA DE ANIMACIÓN SPLASH SCREEN DE BIENVENIDA
+    window.addEventListener('DOMContentLoaded', () => {
+        let progressBar = document.getElementById('splashProgressBar');
+        let statusText = document.getElementById('splashStatusText');
+        let boxBoton = document.getElementById('boxSplashBoton');
+
+        let steps = [
+            { width: '25%', text: 'Escaneando topografía y curvas de nivel...' },
+            { width: '55%', text: 'Calibrando brocas HQ/NQ de perforación diamantina...' },
+            { width: '85%', text: 'Sincronizando base de datos geológica offline...' },
+            { width: '100%', text: '¡Sistema Jireth Core listo para operar!' }
+        ];
+
+        let currentStep = 0;
+        let interval = setInterval(() => {
+            if (currentStep < steps.length) {
+                progressBar.style.width = steps[currentStep].width;
+                statusText.innerText = steps[currentStep].text;
+                currentStep++;
+            } else {
+                clearInterval(interval);
+                document.querySelector('.drill-animation').style.display = 'none';
+                boxBoton.classList.remove('hidden');
+            }
+        }, 850);
+    });
+
+    function transicionarSplashALogin() {
+        const splash = document.getElementById('pantallaSplash');
+        const login = document.getElementById('pantallaLogin');
+        
+        splash.style.transition = 'opacity 0.5s ease';
+        splash.style.opacity = '0';
+        setTimeout(() => {
+            splash.classList.add('hidden');
+            login.classList.remove('hidden');
+        }, 500);
+    }
 
     function registrarLogAuditoria(accion, detalle) {
         let logItem = `[${new Date().toLocaleString()}] ${accion}: ${detalle}`;
