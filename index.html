@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Jireth GeoCore Lite Pro</title>
+    <title>Jireth GeoCore Lite - Cinematic Pro Edition</title>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#020617">
 
@@ -21,6 +21,8 @@
             background-color: #020617;
             color: #f8fafc;
             overflow-x: hidden;
+            margin: 0;
+            padding: 0;
         }
         .font-mono-code { font-family: 'JetBrains Mono', monospace; }
         
@@ -36,7 +38,7 @@
         /* ANIMACIÓN CINEMATOGRÁFICA DE LA IMAGEN PROTAGONISTA (KEN BURNS) */
         @keyframes zoomCinematic {
             0% { transform: scale(1); }
-            50% { transform: scale(1.06); }
+            50% { transform: scale(1.05); }
             100% { transform: scale(1); }
         }
         .splash-bg-animated {
@@ -45,31 +47,38 @@
             background-image: url('Gemini_Generated_Image_m89jgem89jgem89j.jfif');
             background-size: cover;
             background-position: center;
-            animation: zoomCinematic 14s infinite ease-in-out;
+            animation: zoomCinematic 16s infinite ease-in-out;
             z-index: 0;
         }
 
-        /* BARRIDO LÁSER TOPOGRÁFICO HORIZONTAL */
+        /* BARRIDO LÁSER HOLOGRÁFICO */
         @keyframes laserScanH {
             0% { top: 0%; opacity: 0.1; }
-            50% { opacity: 0.8; }
+            50% { opacity: 0.9; }
             100% { top: 100%; opacity: 0.1; }
         }
         .laser-scanner-line {
             position: absolute; left: 0; right: 0; height: 3px;
             background: linear-gradient(90deg, transparent, #38bdf8, #ffffff, #38bdf8, transparent);
-            box-shadow: 0 0 15px #38bdf8, 0 0 30px #0284c7;
-            animation: laserScanH 3.5s infinite ease-in-out;
-            z-index: 2;
+            box-shadow: 0 0 20px #38bdf8, 0 0 40px #0284c7;
+            animation: laserScanH 4s infinite ease-in-out;
+            z-index: 3;
             pointer-events: none;
         }
 
-        /* PULSO DE SONDAJES Y DRILL */
-        @keyframes pulseGlow {
-            0%, 100% { opacity: 1; transform: scale(1); filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.6)); }
-            50% { opacity: 0.4; transform: scale(0.95); filter: drop-shadow(0 0 2px rgba(56, 189, 248, 0.2)); }
+        /* FASE DE RECONSTRUCCIÓN VECTORIAL HOLOGRÁFICA */
+        @keyframes fadeInHolo {
+            0% { opacity: 0; filter: blur(4px); transform: scale(0.98); }
+            100% { opacity: 1; filter: blur(0px); transform: scale(1); }
         }
-        .pulse-live { animation: pulseGlow 1.8s infinite ease-in-out; }
+        .holo-reconstruction-layer {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at center, rgba(56, 189, 248, 0.12) 0%, transparent 70%);
+            animation: fadeInHolo 2.5s ease-out forwards;
+            z-index: 2;
+            pointer-events: none;
+        }
 
         .header-sticky-master {
             position: sticky; top: 0; z-index: 50;
@@ -110,7 +119,7 @@
 
         .btn-field { 
             min-height: 48px; font-weight: 800; border-radius: 0.75rem; letter-spacing: 0.025em;
-            transition: all 0.2s ease-in-out; box-shadow: 0 4px 14px rgba(0,0,0,0.35);
+            transition: all 0.2s ease-in-out; box-shadow: 0 4px 14px rgba(0,0,0,0.35); cursor: pointer;
         }
         .btn-field:active { transform: scale(0.98); }
         
@@ -176,52 +185,40 @@
 </div>
 
 <!-- ==========================================================================
-     PANTALLA DE BIENVENIDA CINEMATOGRÁFICA (SPLASH SCREEN PRO)
+     PANTALLA DE BIENVENIDA CINEMATOGRÁFICA 100% IMAGEN PROTAGONISTA[cite: 2]
+     (Sin recuadros estorbosos, reconstrucción holográfica en vivo)
      ========================================================================== -->
-<div id="pantallaSplash" class="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-hidden">
-    <!-- Capa 1: Imagen Protagonista con Animación Cinemática de Zoom y Profundidad -->
+<div id="pantallaSplash" class="fixed inset-0 z-50 flex flex-col justify-between p-6 sm:p-10 overflow-hidden cursor-pointer" onclick="transicionarSplashALogin()">
+    <!-- Fondo Animado Cinemático (Ken Burns) -->
     <div class="splash-bg-animated"></div>
     
-    <!-- Capa 2: Filtro Oscuro con Degradado minero profesional -->
-    <div class="absolute inset-0 bg-slate-950/75 backdrop-blur-[2px]"></div>
+    <!-- Capa de Oscurecimiento Gradual Mínimo para máxima visibilidad de la imagen -->
+    <div class="absolute inset-0 bg-slate-950/40 backdrop-blur-[0.5px]"></div>
 
-    <!-- Capa 3: Barrido Láser Topográfico -->
+    <!-- Barrido Láser Holográfico Superior -->
     <div class="laser-scanner-line"></div>
 
-    <!-- Capa 4: Tarjeta Central Holográfica de Alto Impacto -->
-    <div class="card-pro p-6 sm:p-10 rounded-3xl w-full max-w-lg text-center space-y-6 relative z-10 overflow-hidden shadow-2xl border border-sky-400/50">
-        <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-sky-400 via-indigo-500 to-sky-400"></div>
-        
-        <!-- Icono Central de Perforación Diamantina con Pulso Vivo -->
-        <div class="relative w-24 h-24 mx-auto flex items-center justify-center">
-            <div class="absolute inset-0 rounded-2xl bg-sky-500/20 border border-sky-400/50 pulse-live"></div>
-            <div class="absolute inset-2 rounded-xl bg-slate-950/90 flex flex-col items-center justify-center border border-slate-800 shadow-inner">
-                <span class="text-3xl">⛏️</span>
-                <span class="text-[9px] font-mono-code text-sky-400 font-extrabold mt-1 tracking-widest">DIAMOND DRILL</span>
-            </div>
-        </div>
+    <!-- Capa de Reconstrucción Vectorial Geológica -->
+    <div class="holo-reconstruction-layer"></div>
 
-        <div class="space-y-3">
-            <span class="text-[10px] uppercase tracking-widest font-extrabold text-sky-300 bg-sky-950/90 px-3 py-1 rounded-full border border-sky-700/80 shadow-sm">Subsurface Intelligence & Modeling</span>
-            <h1 class="text-2xl sm:text-3xl font-black text-white tracking-wider uppercase drop-shadow-lg">BIENVENIDOS AL SISTEMA JIRETH CORE</h1>
-            <p class="text-xs sm:text-sm text-sky-200 font-bold tracking-wide uppercase">Control Integrado de Sondajes Diamantinos</p>
+    <!-- ZONA SUPERIOR: Indicador sutil de reconstrucción CAD en tiempo real -->
+    <div class="relative z-10 flex justify-between items-center flex-wrap gap-2">
+        <div class="bg-slate-950/80 backdrop-blur-md px-4 py-2 rounded-xl border border-sky-500/40 shadow-2xl flex items-center gap-2.5">
+            <div class="w-2.5 h-2.5 rounded-full bg-sky-400 animate-ping"></div>
+            <span id="splashStatusText" class="text-[11px] font-mono-code text-sky-300 font-extrabold uppercase tracking-widest">RECONSTRUCCIÓN HOLOGRÁFICA: ESCANEANDO TOPOGRAFÍA...</span>
         </div>
-
-        <div class="py-2 space-y-2">
-            <div class="w-full bg-slate-950 h-2.5 rounded-full overflow-hidden border border-slate-800 p-0.5 shadow-inner">
-                <div id="splashProgressBar" class="bg-gradient-to-r from-sky-400 via-indigo-500 to-sky-400 h-full rounded-full transition-all duration-700 w-0 shadow-lg shadow-sky-500/50"></div>
-            </div>
-            <p id="splashStatusText" class="text-[10px] font-mono-code text-slate-300 uppercase tracking-wider">Cargando malla tridimensional y curvas de nivel...</p>
+        <div class="bg-slate-950/80 backdrop-blur-md px-4 py-2 rounded-xl border border-slate-700 text-right">
+            <span class="text-[10px] font-mono-code text-slate-400 font-bold uppercase tracking-widest">COMPLEJO JIRETH C.A. — 2026</span>
         </div>
+    </div>
 
-        <div id="boxSplashBoton" class="hidden pt-2">
-            <button type="button" onclick="transicionarSplashALogin()" class="btn-field w-full bg-gradient-to-r from-sky-600 via-indigo-600 to-sky-600 hover:from-sky-500 hover:to-indigo-500 text-white text-sm font-black shadow-2xl shadow-sky-500/40 flex items-center justify-center gap-2 border border-sky-400/40">
-                🚀 INICIAR SESIÓN EN GEOCORE
-            </button>
+    <!-- ZONA INFERIOR: Barra de progreso imperceptible y llamado táctil a ingresar -->
+    <div class="relative z-10 space-y-3 max-w-md mx-auto w-full text-center pb-4">
+        <div class="w-full bg-slate-950/80 backdrop-blur-md h-1.5 rounded-full overflow-hidden border border-sky-500/30 p-0.5">
+            <div id="splashProgressBar" class="bg-gradient-to-r from-sky-400 via-indigo-500 to-sky-400 h-full rounded-full transition-all duration-700 w-0 shadow-lg shadow-sky-500/50"></div>
         </div>
-
-        <div class="text-center pt-2 border-t border-slate-800/80">
-            <span class="text-[10px] font-mono-code text-slate-400 font-bold uppercase tracking-widest">by: carlosgeologo 2026</span>
+        <div class="inline-block bg-slate-950/90 hover:bg-sky-950/90 text-sky-300 hover:text-white px-6 py-3 rounded-2xl border border-sky-400/50 text-xs font-black tracking-widest uppercase shadow-2xl transition-all animate-pulse">
+            TOCA EN CUALQUIER PARTE PARA ACCEDER AL SISTEMA 🚀
         </div>
     </div>
 </div>
@@ -1127,17 +1124,16 @@
     let claveGerencia = 'JIRETH2026';
     const PIN_MAESTRO = "2628";
 
-    // LÓGICA DE ANIMACIÓN CINEMATOGRÁFICA DE BIENVENIDA
+    // SECUENCIA DE RECONSTRUCCIÓN HOLOGRÁFICA EN VIVO DE LA IMAGEN PROTAGONISTA
     window.addEventListener('DOMContentLoaded', () => {
         let progressBar = document.getElementById('splashProgressBar');
         let statusText = document.getElementById('splashStatusText');
-        let boxBoton = document.getElementById('boxSplashBoton');
 
         let steps = [
-            { width: '25%', text: 'Sincronizando imagen satelital y modelo digital del terreno...' },
-            { width: '55%', text: 'Calibrando pozos, collares y vectores de perforación diamantina...' },
-            { width: '85%', text: 'Estableciendo enlace con bases de datos litológicas...' },
-            { width: '100%', text: '¡Sistema Jireth Core Pro listo para operar!' }
+            { width: '25%', text: 'RECONSTRUCCIÓN: ESCANEANDO CURVAS DE NIVEL TOPOGRÁFICAS...' },
+            { width: '55%', text: 'VECTORIZACIÓN: PROYECTANDO COLLARS Y VECTORES DE SONDAJE...' },
+            { width: '85%', text: 'SINCRONIZACIÓN: ESTABLECIENDO MALLA LITOLÓGICA 3D...' },
+            { width: '100%', text: '¡HOLOGRAFÍA COMPLETADA! LISTO PARA OPERAR.' }
         ];
 
         let currentStep = 0;
@@ -1148,9 +1144,8 @@
                 currentStep++;
             } else {
                 clearInterval(interval);
-                boxBoton.classList.remove('hidden');
             }
-        }, 900);
+        }, 800);
     });
 
     function transicionarSplashALogin() {
