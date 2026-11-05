@@ -51,7 +51,7 @@
             z-index: 0;
         }
 
-        /* TRAZOS CALQUEADOS SOBRE LAS LÍNEAS DE SONDAJE DE LA IMAGEN */
+        /* TRAZOS CALQUEADOS SOBRE LAS LÍNEAS DE SONDAJE */
         .sondaje-svg-overlay {
             position: absolute;
             inset: 0;
@@ -75,7 +75,7 @@
             animation: pulseLineTrace 3.5s infinite linear;
         }
 
-        /* PUNTOS NODALES MULTICICLOS SOBRE LOS VÉRTICES DE LAS LÍNEAS */
+        /* PUNTOS NODALES MULTICICLOS */
         @keyframes nodePulseMultiColor {
             0% { transform: scale(0.7); opacity: 0.4; box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.8); }
             50% { transform: scale(1.5); opacity: 1; box-shadow: 0 0 20px 10px rgba(236, 72, 153, 0.6); background-color: #ec4899; }
@@ -102,42 +102,103 @@
             animation: multiColorSpin 1.8s linear infinite;
         }
 
-        /* APARICIÓN FLUIDA */
+        .splash-central-content {
+            animation: cinematicFloat 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
         @keyframes cinematicFloat {
             0% { opacity: 0; transform: scale(0.95); }
             100% { opacity: 1; transform: scale(1); }
-        }
-        .splash-central-content {
-            animation: cinematicFloat 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
         .header-sticky-master {
             position: sticky; top: 0; z-index: 50;
             backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-            background: rgba(15, 23, 42, 0.92);
+            background: rgba(15, 23, 42, 0.94);
             border-bottom: 1px solid rgba(51, 65, 85, 0.6);
         }
 
-        .nav-horizontal-bar {
-            display: flex; overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch;
-            scrollbar-width: none; gap: 8px; padding: 8px 12px;
-            background: rgba(15, 23, 42, 0.95); border-bottom: 1px solid rgba(51, 65, 85, 0.6);
-            position: sticky; top: 60px; z-index: 40; user-select: none;
+        /* BARRA INFERIOR FIJA NATIVA (BOTTOM NAV BAR) */
+        .bottom-nav-fixed {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 64px;
+            background: rgba(2, 6, 23, 0.96);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(51, 65, 85, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            z-index: 50;
+            padding-bottom: env(safe-area-inset-bottom);
         }
-        .nav-horizontal-bar::-webkit-scrollbar { display: none; }
 
-        .nav-item-pill {
-            display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px;
-            border-radius: 0.85rem; font-weight: 800; font-size: 12px; letter-spacing: 0.015em;
-            color: #cbd5e1; background: rgba(30, 41, 59, 0.85);
-            border: 1px solid rgba(71, 85, 105, 0.6); transition: all 0.25s ease-in-out; cursor: pointer; flex-shrink: 0;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        .bottom-nav-item {
+            flex: 1;
+            display: flex;
+            flex-col;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #94a3b8;
+            font-size: 10px;
+            font-weight: 700;
+            gap: 3px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border: none;
+            background: transparent;
         }
-        .nav-item-pill:hover { background-color: rgba(51, 65, 85, 0.95); color: #ffffff; border-color: #38bdf8; }
-        .nav-item-pill.active {
-            background: linear-gradient(135deg, #0284c7 0%, #1e40af 100%);
-            color: #ffffff; border-color: #38bdf8;
-            box-shadow: 0 4px 14px rgba(2, 132, 199, 0.5); transform: translateY(-1px);
+
+        .bottom-nav-item.active {
+            color: #38bdf8;
+            font-weight: 900;
+        }
+
+        .bottom-nav-item.active svg {
+            stroke: #38bdf8;
+            transform: translateY(-2px);
+            filter: drop-shadow(0 0 6px rgba(56, 189, 248, 0.6));
+        }
+
+        /* MENÚ LATERAL DESPLEGABLE (DRAWER) */
+        .drawer-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(2, 6, 23, 0.75);
+            backdrop-filter: blur(6px);
+            z-index: 60;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .drawer-overlay.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .drawer-content {
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 310px;
+            max-width: 85vw;
+            background: #090d16;
+            border-left: 1px solid rgba(51, 65, 85, 0.8);
+            z-index: 70;
+            transform: translateX(100%);
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+            box-shadow: -10px 0 30px rgba(0, 0, 0, 0.8);
+        }
+
+        .drawer-overlay.open .drawer-content {
+            transform: translateX(0);
         }
 
         .card-pro {
@@ -173,7 +234,7 @@
         .logo-img-print { height: 48px; width: auto; max-width: 170px; object-fit: contain; display: none; }
 
         #toastFeedback {
-            position: fixed; bottom: 24px; right: 24px; z-index: 100;
+            position: fixed; bottom: 80px; right: 24px; z-index: 100;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); transform: translateY(100px); opacity: 0;
         }
         #toastFeedback.show { transform: translateY(0); opacity: 1; }
@@ -187,7 +248,7 @@
                 @bottom-right { content: "Página " counter(page) " de " counter(pages); font-size: 8pt; font-family: 'Plus Jakarta Sans', sans-serif; color: #0f172a; font-weight: bold; }
             }
             body { background: #ffffff !important; color: #000000 !important; padding: 0 !important; margin: 0 !important; }
-            .no-print, header, nav, .nav-horizontal-bar, #toastFeedback, select, input, button, .input-field, #boxSelectoresRepoPadre { display: none !important; }
+            .no-print, header, nav, .bottom-nav-fixed, .drawer-overlay, #toastFeedback, select, input, button, .input-field, #boxSelectoresRepoPadre { display: none !important; }
             #mod_sala, #mod1, #mod2, #mod3_turno, #mod3_logging, #mod4, #mod_estadisticas, #mod6 { display: none !important; }
             #mod5 { display: block !important; border: none !important; box-shadow: none !important; background: transparent !important; padding: 0 !important; margin: 0 !important; }
             #printable-area { border: none !important; box-shadow: none !important; padding: 0 !important; margin: 0 !important; width: 100% !important; max-width: 100% !important; background: #ffffff !important; }
@@ -219,34 +280,25 @@
      SPLASH SCREEN CINEMATOGRÁFICA (LOGO MINIMALISTA + ARO MULTICOLOR + LÍNEAS)
      ========================================================================== -->
 <div id="pantallaSplash" class="fixed inset-0 z-50 flex flex-col items-center justify-center p-4 overflow-hidden bg-slate-950/20 opacity-0 transition-opacity duration-1000">
-    <!-- Fondo Animado (Ken Burns) con total visibilidad de la imagen -->
     <div class="splash-bg-animated"></div>
     <div class="absolute inset-0 bg-slate-950/15 backdrop-blur-[0.3px]"></div>
 
-    <!-- Trazos vectoriales calqueados exactamente sobre las líneas de sondaje de la imagen -->
     <svg class="sondaje-svg-overlay" viewBox="0 0 1000 1000" preserveAspectRatio="none">
         <path class="trace-path" d="M 150,200 Q 300,350 450,280 T 750,400 T 900,650" />
         <path class="trace-path" style="animation-delay: 0.8s;" d="M 100,500 Q 350,550 500,450 T 800,300 T 920,800" />
         <path class="trace-path" style="animation-delay: 1.5s;" d="M 200,800 Q 400,600 600,750 T 850,500" />
     </svg>
 
-    <!-- Puntos nodales multiciclos interactivos sobre las líneas -->
     <div class="sondaje-node-multi" style="top: 28%; left: 32%; animation-delay: 0s;"></div>
     <div class="sondaje-node-multi" style="top: 42%; left: 58%; animation-delay: 0.5s;"></div>
     <div class="sondaje-node-multi" style="top: 65%; left: 45%; animation-delay: 1.0s;"></div>
     <div class="sondaje-node-multi" style="top: 35%; left: 78%; animation-delay: 1.5s;"></div>
-    <div class="sondaje-node-multi" style="top: 75%; left: 70%; animation-delay: 0.8s;"></div>
-    <div class="sondaje-node-multi" style="top: 50%; left: 22%; animation-delay: 1.2s;"></div>
 
-    <!-- CONTENIDO CENTRAL: SÓLO LOGOTIPO MINIMALISTA Y ARO MULTICOLOR GIRANDO -->
     <div class="relative z-10 splash-central-content text-center flex flex-col items-center justify-center">
         <div class="relative w-32 h-32 flex items-center justify-center">
-            <!-- Anillo giratorio multicolor -->
             <div class="absolute inset-0 rounded-full border-[3px] border-dashed spinner-ring-multicolor"></div>
-            <!-- Círculo interno translúcido -->
             <div class="absolute inset-3 rounded-full bg-slate-950/70 border border-sky-400/40 backdrop-blur-md shadow-2xl"></div>
             
-            <!-- Logotipo Minimalista Central JJ -->
             <div class="relative z-10 flex items-center justify-center">
                 <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-sky-500 via-indigo-600 to-pink-600 flex items-center justify-center font-black text-white text-xl shadow-2xl shadow-sky-500/60 tracking-wider">JJ</div>
             </div>
@@ -336,11 +388,103 @@
     </div>
 </div>
 
+<!-- ==========================================================================
+     MENÚ DESPLEGABLE LATERAL DERECHO (DRAWER NATIVO)
+     ========================================================================== -->
+<div id="drawerMenuOverlay" class="drawer-overlay" onclick="cerrarMenuDrawer()">
+    <div class="drawer-content" onclick="event.stopPropagation()">
+        <!-- Encabezado Perfil Estilo App Nativa Banco -->
+        <div class="p-5 bg-gradient-to-b from-slate-900 to-slate-950 border-b border-slate-800 relative">
+            <button type="button" onclick="cerrarMenuDrawer()" class="absolute top-4 right-4 text-slate-400 hover:text-white p-1 rounded-lg">
+                ✕
+            </button>
+            
+            <div class="flex items-center gap-3 pt-2">
+                <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center text-white text-lg font-black shadow-lg border-2 border-sky-400/40">
+                    👤
+                </div>
+                <div>
+                    <h3 class="text-sm font-black text-white uppercase tracking-wider" id="drawerNombreUsuario">CARLOSGEOLOGO</h3>
+                    <p class="text-[10px] text-slate-400 font-mono-code" id="drawerFechaUltSesion">Sesión: --/--/---- --:--</p>
+                    <span class="inline-block mt-1 text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-sky-950 text-sky-400 border border-sky-800" id="drawerRolBadge">Geólogo Supervisor</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lista de Opciones del Menú Lateral -->
+        <div class="flex-1 overflow-y-auto p-4 space-y-1 text-xs font-bold text-slate-300">
+            <div class="text-[10px] uppercase font-black tracking-widest text-slate-500 px-3 py-1">Navegación General</div>
+            
+            <button type="button" onclick="switchTab('mod_sala'); cerrarMenuDrawer();" class="w-full flex items-center gap-3 px-3 py-3 rounded-xl hover:bg-slate-900 hover:text-white transition text-left">
+                <span>🏢</span>
+                <span>Sala Situacional</span>
+            </button>
+
+            <div class="text-[10px] uppercase font-black tracking-widest text-slate-500 px-3 py-1 pt-3">Módulos Especializados</div>
+            
+            <button type="button" onclick="switchTab('mod5'); cerrarMenuDrawer();" id="drawerBtnRepo" class="w-full flex items-center gap-3 px-3 py-3 rounded-xl hover:bg-slate-900 hover:text-white transition text-left">
+                <span>📁</span>
+                <span>Repositorio & Informes DSR</span>
+            </button>
+
+            <button type="button" onclick="switchTab('mod4'); cerrarMenuDrawer();" id="drawerBtnCierre" class="w-full flex items-center gap-3 px-3 py-3 rounded-xl hover:bg-slate-900 hover:text-white transition text-left">
+                <span>🔒</span>
+                <span>Cierre & Evaluación</span>
+            </button>
+
+            <button type="button" onclick="switchTab('mod6'); cerrarMenuDrawer();" id="drawerBtnAdmin" class="w-full flex items-center gap-3 px-3 py-3 rounded-xl hover:bg-slate-900 hover:text-white transition text-left">
+                <span>🛠️</span>
+                <span>Administración & Respaldos</span>
+            </button>
+
+            <div class="text-[10px] uppercase font-black tracking-widest text-slate-500 px-3 py-1 pt-3">Seguridad & Ajustes</div>
+
+            <button type="button" onclick="abrirModalCambiarClaves(); cerrarMenuDrawer();" id="drawerBtnClaves" class="w-full flex items-center gap-3 px-3 py-3 rounded-xl hover:bg-slate-900 hover:text-white transition text-left text-amber-400">
+                <span>🔑</span>
+                <span>Cambiar Claves Maestras</span>
+            </button>
+        </div>
+
+        <div class="p-4 border-t border-slate-800 bg-slate-950">
+            <button type="button" onclick="cerrarSesion()" class="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-rose-950/80 text-rose-300 font-extrabold text-xs border border-rose-800 hover:bg-rose-900 transition">
+                <span>🚪</span>
+                <span>Cerrar Sesión</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL CAMBIO DE CLAVES MAESTRAS -->
+<div id="modalCambioClaves" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="card-pro p-6 rounded-3xl w-full max-w-md space-y-4 text-white">
+        <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+            <h3 class="text-sm font-black text-amber-400 uppercase tracking-wider">🔑 Cambiar Claves Maestras</h3>
+            <button type="button" onclick="cerrarModalCambiarClaves()" class="text-slate-400 hover:text-white">✕</button>
+        </div>
+
+        <div class="space-y-3">
+            <div>
+                <label class="block text-xs font-extrabold text-slate-300 mb-1">Nueva Contraseña Geólogos *</label>
+                <input type="password" id="mClaveGeoNueva" class="input-field w-full px-3 text-sm font-bold" placeholder="Mínimo 4 caracteres">
+            </div>
+            <div>
+                <label class="block text-xs font-extrabold text-slate-300 mb-1">Nueva Contraseña Gerencia *</label>
+                <input type="password" id="mClaveGerNueva" class="input-field w-full px-3 text-sm font-bold" placeholder="Mínimo 4 caracteres">
+            </div>
+            <div class="pt-2">
+                <button type="button" onclick="guardarNuevasClavesMaestras()" class="btn-field w-full bg-gradient-to-r from-sky-600 to-indigo-600 text-white text-xs font-black shadow-lg">
+                    💾 Actualizar Contraseñas
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- APLICACIÓN PRINCIPAL (PANEL DE CONTROL RESPONSIVO) -->
-<div id="appPrincipal" class="hidden space-y-4 max-w-7xl mx-auto px-2 sm:px-4 pb-16 sm:pb-6">
+<div id="appPrincipal" class="hidden space-y-4 max-w-7xl mx-auto px-2 sm:px-4 pb-24 sm:pb-20">
     
-    <!-- CABECERA PRINCIPAL STICKY -->
-    <header class="header-sticky-master px-3 sm:px-4 py-2.5 rounded-b-2xl flex justify-between items-center flex-wrap gap-2 shadow-xl no-print">
+    <!-- CABECERA PRINCIPAL STICKY CON LOGO Y BOTÓN DE MENÚ LATERAL -->
+    <header class="header-sticky-master px-3 sm:px-4 py-2.5 rounded-b-2xl flex justify-between items-center shadow-xl no-print">
         <div class="flex items-center gap-2.5">
             <div class="logo-svg-screen !py-1 !px-2.5">
                 <div class="w-6 h-6 rounded bg-sky-600 flex items-center justify-center font-black text-white text-[10px]">JJ</div>
@@ -355,64 +499,17 @@
                 <p class="text-[10px] sm:text-[11px] text-slate-400 font-medium">Complejo Jireth C.A. <span id="indicadorRed" class="text-emerald-400 font-bold">(🟢 Sincronizado)</span></p>
             </div>
         </div>
-        
-        <div id="cardBienvenidaUsuario" class="hidden md:flex items-center gap-3 bg-slate-900/80 px-3.5 py-1.5 rounded-xl border border-slate-800 text-xs shadow-sm">
-            <div class="logo-svg-screen" style="padding: 4px 8px;">
-                <div class="w-5 h-5 rounded bg-sky-600 flex items-center justify-center font-black text-white text-[9px]">JJ</div>
-                <span class="text-[10px] font-black tracking-wider text-white">JIRETH</span>
-            </div>
-            <div>
-                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Sesión Activa Pro</p>
-                <p class="text-white font-extrabold" id="lblNombreUsuarioLogueado">Operador Autorizado</p>
-            </div>
-        </div>
 
-        <div class="flex gap-1.5 sm:gap-2 flex-wrap items-center">
-            <span id="badgeSyncQueue" class="hidden bg-amber-950 text-amber-300 border border-amber-700 text-[10px] px-2 py-1 rounded-lg font-black font-mono-code">⏳ 0 Pendientes</span>
-            <button type="button" onclick="sincronizarConSupabaseReal()" class="text-[11px] sm:text-xs bg-slate-800 text-slate-200 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl font-extrabold border border-slate-700 hover:bg-slate-700 transition shadow-sm">🔄 Sincronizar</button>
-            <button type="button" onclick="cerrarSesion()" class="text-[11px] sm:text-xs bg-rose-950 text-rose-300 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl font-extrabold border border-rose-800 hover:bg-rose-900 transition shadow-sm">🚪 Salir</button>
+        <div class="flex items-center gap-2">
+            <span id="badgeSyncQueue" class="hidden bg-amber-950 text-amber-300 border border-amber-700 text-[10px] px-2 py-1 rounded-lg font-black font-mono-code">⏳ 0</span>
+            <button type="button" onclick="sincronizarConSupabaseReal()" class="text-xs bg-slate-800 text-slate-200 px-2.5 py-1.5 rounded-xl font-extrabold border border-slate-700 hover:bg-slate-700 transition shadow-sm">🔄</button>
+            
+            <!-- Botón Menú Lateral Estilo Captura Ad junta -->
+            <button type="button" onclick="abrirMenuDrawer()" class="p-2 bg-slate-800 text-slate-200 rounded-xl border border-slate-700 hover:bg-slate-700 transition shadow-sm">
+                <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+            </button>
         </div>
     </header>
-
-    <!-- BARRA DE NAVEGACIÓN HORIZONTAL DESLIZABLE -->
-    <nav class="nav-horizontal-bar no-print">
-        <button type="button" onclick="switchTab('mod_sala')" id="tab-btn-mod_sala" class="nav-item-pill active">
-            <svg class="w-4 h-4 stroke-current shrink-0" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-            Sala Situacional
-        </button>
-        <button type="button" onclick="switchTab('mod1')" id="tab-btn-mod1" class="nav-item-pill">
-            <svg class="w-4 h-4 stroke-current shrink-0" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
-            Lista de Pozos
-        </button>
-        <button type="button" onclick="switchTab('mod2')" id="tab-btn-mod2" class="nav-item-pill">
-            <svg class="w-4 h-4 stroke-current shrink-0" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-            Ficha Topográfica
-        </button>
-        <button type="button" onclick="switchTab('mod3_turno')" id="tab-btn-mod3_turno" class="nav-item-pill">
-            <svg class="w-4 h-4 stroke-current shrink-0" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-            Gestión de Turnos
-        </button>
-        <button type="button" onclick="switchTab('mod3_logging')" id="tab-btn-mod3_logging" class="nav-item-pill">
-            <svg class="w-4 h-4 stroke-current shrink-0" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-            Core Logging & Avances
-        </button>
-        <button type="button" onclick="switchTab('mod4')" id="tab-btn-mod4" class="nav-item-pill">
-            <svg class="w-4 h-4 stroke-current shrink-0" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-            Cierre & Evaluación
-        </button>
-        <button type="button" onclick="switchTab('mod5')" id="tab-btn-mod5" class="nav-item-pill">
-            <svg class="w-4 h-4 stroke-current shrink-0" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"/></svg>
-            Repositorio DSR
-        </button>
-        <button type="button" onclick="switchTab('mod_estadisticas')" id="tab-btn-mod_estadisticas" class="nav-item-pill">
-            <svg class="w-4 h-4 stroke-current shrink-0" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
-            Estadísticas BI
-        </button>
-        <button type="button" onclick="switchTab('mod6')" id="tab-btn-mod6" class="nav-item-pill">
-            <svg class="w-4 h-4 stroke-current shrink-0" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-            Administración
-        </button>
-    </nav>
 
     <!-- MÓDULO 0: SALA SITUACIONAL -->
     <section id="mod_sala" class="space-y-4 card-pro p-4 sm:p-6">
@@ -432,11 +529,8 @@
             <div class="max-w-xl mx-auto space-y-2">
                 <h3 class="text-base sm:text-xl font-black text-white uppercase tracking-wider">Frentes de Perforación en Tránsito Operativo</h3>
                 <p class="text-xs sm:text-sm text-slate-400 font-medium leading-relaxed">
-                    Actualmente no se registran sondajes activos en ejecución. Las unidades de perforación se encuentran en proceso de mudanza, posicionamiento topográfico o apresto operacional hacia un nuevo blanco de exploración. La sala situacional se actualizará automáticamente al iniciar el próximo frente.
+                    Actualmente no se registran sondajes activos en ejecución. Las unidades de perforación se encuentran en proceso de mudanza, posicionamiento topográfico o apresto operacional hacia un nuevo blanco de exploración.
                 </p>
-            </div>
-            <div class="pt-2">
-                <span class="text-[9px] sm:text-[10px] font-mono-code text-sky-400 uppercase tracking-widest bg-sky-950/80 px-3.5 py-1.5 rounded-full border border-sky-800">COMPLEJO JIRETH C.A. — SUBSURFACE INTELLIGENCE</span>
             </div>
         </div>
 
@@ -756,11 +850,11 @@
                             <option value="HQ">HQ</option>
                             <option value="NQ">NQ</option>
                         </select>
-                        <p id="lblNotaLockDiametro" class="hidden text-[9px] text-amber-400 font-bold mt-1 leading-tight">🔒 Diámetro fijado en NQ por reducción física previa.</p>
+                        <p id="lblNotaLockDiametro" class="hidden text-[9px] text-amber-400 font-bold mt-1 leading-tight">🔒 Diámetro fijado en NQ por reducción previa.</p>
                     </div>
                     <div>
                         <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Metros Recuperados *</label>
-                        <input type="text" id="m3_recuperado" class="input-field w-full px-3.5 text-xs font-mono-code font-extrabold text-white" placeholder="0.00 (Ingrese metraje)">
+                        <input type="text" id="m3_recuperado" class="input-field w-full px-3.5 text-xs font-mono-code font-extrabold text-white" placeholder="0.00">
                     </div>
                     <div>
                         <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Litología / Meteorización *</label>
@@ -867,8 +961,6 @@
 
             <!-- ÁREA IMPRIMIBLE DSR CONFIGURADA A HOJA CARTA EXACTA -->
             <div id="printable-area" class="bg-white p-4 sm:p-6 rounded-2xl border border-slate-200 space-y-4 text-xs text-slate-900 shadow-xl relative overflow-hidden">
-                
-                <!-- MEMBRETE FIJO PARA IMPRESIÓN -->
                 <div class="dsr-header-print-fixed">
                     <div class="flex items-center gap-3">
                         <img src="1792941546023.jpg" class="logo-img-print" alt="Logo Jireth">
@@ -883,9 +975,7 @@
                     </div>
                 </div>
 
-                <!-- HOJA 1: RESUMEN GENERAL, PERFIL 2D & KPIs -->
                 <div class="space-y-4 page-break-after">
-                    <!-- CABECERA EN PANTALLA -->
                     <div class="border-b-2 border-slate-900 pb-3 flex justify-between items-center flex-wrap gap-3 px-1 pt-0 no-print">
                         <div class="flex items-center gap-4">
                             <div class="w-8 h-8 rounded-lg bg-sky-600 flex items-center justify-center font-black text-white text-xs">JJ</div>
@@ -943,7 +1033,6 @@
                         </div>
                     </div>
 
-                    <!-- PERFIL 2D CANVAS VERTICAL HD -->
                     <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-1.5 avoid-break shadow-sm">
                         <p class="text-[11px] font-black text-slate-900 uppercase tracking-wider" id="repTituloPerfil2D">📐 Perfil Topográfico 2D & Log Litológico (HD Vertical):</p>
                         <div class="grid grid-cols-1 md:grid-cols-4 gap-3 items-start bg-white p-2.5 rounded-lg border border-slate-200">
@@ -966,7 +1055,6 @@
                     </div>
                 </div>
 
-                <!-- HOJA 2: REGISTRO DETALLADO DE TABLAS -->
                 <div class="space-y-4 pt-2">
                     <div>
                         <h4 class="text-[11px] font-black text-slate-900 uppercase tracking-wider mb-1.5">🪵 REGISTRO DETALLADO TRAMO A TRAMO (AUDITORÍA DE PAGO)</h4>
@@ -1123,6 +1211,32 @@
     </section>
 </div>
 
+<!-- ==========================================================================
+     BARRA INFERIOR FIJA NATIVA (5 BOTONES SIMÉTRICOS)
+     ========================================================================== -->
+<nav id="bottomNavMaster" class="bottom-nav-fixed hidden no-print">
+    <button type="button" onclick="switchTab('mod1')" id="bnav-mod1" class="bottom-nav-item">
+        <svg class="w-5 h-5 stroke-current fill-none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+        <span>Pozos</span>
+    </button>
+    <button type="button" onclick="switchTab('mod2')" id="bnav-mod2" class="bottom-nav-item">
+        <svg class="w-5 h-5 stroke-current fill-none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        <span>Topografía</span>
+    </button>
+    <button type="button" onclick="switchTab('mod3_turno')" id="bnav-mod3_turno" class="bottom-nav-item">
+        <svg class="w-5 h-5 stroke-current fill-none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        <span>Turnos</span>
+    </button>
+    <button type="button" onclick="switchTab('mod3_logging')" id="bnav-mod3_logging" class="bottom-nav-item">
+        <svg class="w-5 h-5 stroke-current fill-none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+        <span>Logging</span>
+    </button>
+    <button type="button" onclick="switchTab('mod_estadisticas')" id="bnav-mod_estadisticas" class="bottom-nav-item">
+        <svg class="w-5 h-5 stroke-current fill-none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+        <span>Estadísticas</span>
+    </button>
+</nav>
+
 <script>
     const SUPABASE_URL = "https://cjtseuctrbdvgagudyyr.supabase.co";
     const SUPABASE_KEY = "sb_publishable_4ElaI13qIakKqei9_-OiNA__PpbBBjX";
@@ -1150,22 +1264,19 @@
     let chartRendimientoMensualInst = null;
 
     if (!localStorage.getItem('jireth_clave_geo')) localStorage.setItem('jireth_clave_geo', 'Mina2628');
-    localStorage.setItem('jireth_clave_ger', 'JIRETH2026');
+    if (!localStorage.getItem('jireth_clave_ger')) localStorage.setItem('jireth_clave_ger', 'JIRETH2026');
+    
     let claveGeologos = localStorage.getItem('jireth_clave_geo');
-    let claveGerencia = 'JIRETH2026';
+    let claveGerencia = localStorage.getItem('jireth_clave_ger');
     const PIN_MAESTRO = "2628";
 
-    // SECUENCIA DE TRANSICIÓN AUTOMÁTICA DESDE LA SPLASH HACIA EL MÓDULO DE USUARIOS (LOGIN)
+    // SECUENCIA SPLASH SCREEN -> LOGIN
     window.addEventListener('DOMContentLoaded', () => {
         const splashScreen = document.getElementById('pantallaSplash');
         const loginScreen = document.getElementById('pantallaLogin');
 
-        // 1. Mostrar Splash de inmediato con fundido de entrada
-        setTimeout(() => {
-            splashScreen.classList.remove('opacity-0');
-        }, 50);
+        setTimeout(() => { splashScreen.classList.remove('opacity-0'); }, 50);
 
-        // 2. Al cabo de 3.2 segundos, transicionar suavemente al módulo de usuarios (Login)
         setTimeout(() => {
             splashScreen.style.transition = 'opacity 0.8s ease';
             splashScreen.classList.add('opacity-0');
@@ -1173,12 +1284,48 @@
             setTimeout(() => {
                 splashScreen.classList.add('hidden');
                 loginScreen.classList.remove('hidden');
-                setTimeout(() => {
-                    loginScreen.classList.remove('opacity-0');
-                }, 50);
+                setTimeout(() => { loginScreen.classList.remove('opacity-0'); }, 50);
             }, 800);
         }, 3200);
     });
+
+    function abrirMenuDrawer() {
+        document.getElementById('drawerMenuOverlay').classList.add('open');
+    }
+
+    function cerrarMenuDrawer() {
+        document.getElementById('drawerMenuOverlay').classList.remove('open');
+    }
+
+    function abrirModalCambiarClaves() {
+        if (perfilActual === 'GERENCIA') { alert("⚠️ Acción permitida únicamente para perfil Geólogos."); return; }
+        document.getElementById('mClaveGeoNueva').value = '';
+        document.getElementById('mClaveGerNueva').value = '';
+        document.getElementById('modalCambioClaves').classList.remove('hidden');
+    }
+
+    function cerrarModalCambiarClaves() {
+        document.getElementById('modalCambioClaves').classList.add('hidden');
+    }
+
+    function guardarNuevasClavesMaestras() {
+        let nGeo = document.getElementById('mClaveGeoNueva').value.trim();
+        let nGer = document.getElementById('mClaveGerNueva').value.trim();
+
+        if (nGeo.length < 4 || nGer.length < 4) {
+            alert("❌ Ambas contraseñas deben tener al menos 4 caracteres.");
+            return;
+        }
+
+        claveGeologos = nGeo;
+        claveGerencia = nGer;
+        localStorage.setItem('jireth_clave_geo', claveGeologos);
+        localStorage.setItem('jireth_clave_ger', claveGerencia);
+
+        registrarLogAuditoria("CLAVES MAESTRAS CAMBIADAS", "Se actualizaron las claves de Geólogos y Gerencia.");
+        showToast("Claves Actualizadas", "Las contraseñas maestras han sido guardadas con éxito.");
+        cerrarModalCambiarClaves();
+    }
 
     function registrarLogAuditoria(accion, detalle) {
         let logItem = `[${new Date().toLocaleString()}] ${accion}: ${detalle}`;
@@ -1218,14 +1365,15 @@
         if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 
+    // CIERRE POR INACTIVIDAD EXACTO A 15 MINUTOS (15 * 60 * 1000)
     setInterval(() => {
         if (document.getElementById('appPrincipal').classList.contains('hidden') === false) {
             if (Date.now() - lastActivityTime > 15 * 60 * 1000) {
-                alert("⏰ Sesión cerrada por inactividad.");
+                alert("⏰ Sesión cerrada automáticamente tras 15 minutos de inactividad por seguridad.");
                 cerrarSesion();
             }
         }
-    }, 30000);
+    }, 15000);
 
     ['mousemove', 'keydown', 'click', 'scroll', 'touchstart'].forEach(evt => {
         window.addEventListener(evt, () => { lastActivityTime = Date.now(); });
@@ -1256,7 +1404,7 @@
         const badge = document.getElementById('badgeSyncQueue');
         if (!badge) return;
         if (syncQueue.length > 0) {
-            badge.innerText = `⏳ ${syncQueue.length} Pendientes`;
+            badge.innerText = `⏳ ${syncQueue.length}`;
             badge.classList.remove('hidden');
         } else { badge.classList.add('hidden'); }
     }
@@ -1332,6 +1480,7 @@
 
     function intentarLoginGer() {
         const val = document.getElementById('inputClaveGer').value.trim();
+        claveGerencia = localStorage.getItem('jireth_clave_ger') || 'JIRETH2026';
         if (val === claveGerencia) {
             registrarLogAuditoria("LOGIN EXITO", "Ingreso Perfil Gerencia");
             entrarAlSistema("GERENCIA / AUDITORÍA"); aplicarModoLecturaGerencia();
@@ -1369,16 +1518,26 @@
         setTimeout(() => {
             loginScreen.classList.add('hidden');
             document.getElementById('appPrincipal').classList.remove('hidden');
-            document.getElementById('lblNombreUsuarioLogueado').innerText = rolTexto;
+            document.getElementById('bottomNavMaster').classList.remove('hidden');
+
+            document.getElementById('drawerNombreUsuario').innerText = perfilActual === 'GEOLOGOS' ? 'CARLOSGEOLOGO' : 'GERENCIA GENERAL';
+            document.getElementById('drawerFechaUltSesion').innerText = "Sesión: " + new Date().toLocaleString();
+            document.getElementById('drawerRolBadge').innerText = perfilActual === 'GEOLOGOS' ? 'Geólogo Supervisor' : 'Gerencia Audit';
+
             switchTab('mod_sala');
         }, 500);
     }
 
     function aplicarModoLecturaGerencia() {
-        ['tab-btn-mod1', 'tab-btn-mod2', 'tab-btn-mod3_turno', 'tab-btn-mod3_logging', 'tab-btn-mod4', 'tab-btn-mod6'].forEach(id => {
-            const el = document.getElementById(id);
-            if (el) el.style.display = 'none';
-        });
+        document.getElementById('bnav-mod1').style.display = 'none';
+        document.getElementById('bnav-mod2').style.display = 'none';
+        document.getElementById('bnav-mod3_turno').style.display = 'none';
+        document.getElementById('bnav-mod3_logging').style.display = 'none';
+
+        document.getElementById('drawerBtnCierre').style.display = 'none';
+        document.getElementById('drawerBtnAdmin').style.display = 'none';
+        document.getElementById('drawerBtnClaves').style.display = 'none';
+
         switchTab('mod_sala');
     }
 
@@ -1389,16 +1548,15 @@
         ['mod_sala', 'mod1', 'mod2', 'mod3_turno', 'mod3_logging', 'mod4', 'mod5', 'mod_estadisticas', 'mod6'].forEach(t => {
             const sec = document.getElementById(t);
             if (sec) sec.classList.add('hidden');
-            const btn = document.getElementById('tab-btn-' + t);
-            if (btn) btn.classList.remove('active');
+            const btnNav = document.getElementById('bnav-' + t);
+            if (btnNav) btnNav.classList.remove('active');
         });
+
         const selSec = document.getElementById(tabId);
         if (selSec) selSec.classList.remove('hidden');
-        const selBtn = document.getElementById('tab-btn-' + tabId);
-        if (selBtn) {
-            selBtn.classList.add('active');
-            selBtn.scrollIntoView({ behavior: 'smooth', inline: 'nearest', block: 'nearest' });
-        }
+
+        const selBnav = document.getElementById('bnav-' + tabId);
+        if (selBnav) selBnav.classList.add('active');
 
         if (tabId === 'mod_sala') renderizarSalaSituacional();
         if (tabId === 'mod1') refrescarSelectorModuloUno();
@@ -1410,6 +1568,8 @@
         if (tabId === 'mod5') poblarSelectRepositorioTodos();
         if (tabId === 'mod_estadisticas') renderizarEstadisticasGlobales();
         if (tabId === 'mod6') poblarSelectAdminBorrar();
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function calcularMetrosAPagar(lonManiobra, rec, litologia) {
@@ -2564,7 +2724,7 @@
         
         if (p.estado === 'ABIERTO') {
             if (modo === 'CULMINADO') {
-                alert(`⚠️ ALERTA: El sondaje (${p.codigo}) está ACTIVO. Para emitir informe de culminado debe cerrarlo en el Módulo 4.`);
+                alert(`⚠️ ALERTA: El sondaje (${p.codigo}) está ACTIVO. Para emitir informe de culminado debe cerrarlo en el Módulo de Cierre.`);
                 modoSelect.value = 'ACUMULADO';
                 modo = 'ACUMULADO';
             }
