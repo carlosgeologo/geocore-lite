@@ -117,14 +117,14 @@
             border-bottom: 1px solid rgba(51, 65, 85, 0.6);
         }
 
-        /* BARRA INFERIOR FIJA NATIVA (BOTTOM NAV BAR) */
+        /* BARRA INFERIOR FIJA NATIVA (BOTTOM NAV BAR) - REDISEÑADA CON CÁPSULA DE DESTACADO */
         .bottom-nav-fixed {
             position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
-            height: 64px;
-            background: rgba(2, 6, 23, 0.96);
+            height: 68px;
+            background: rgba(2, 6, 23, 0.98);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border-top: 1px solid rgba(51, 65, 85, 0.7);
@@ -138,7 +138,7 @@
         .bottom-nav-item {
             flex: 1;
             display: flex;
-            flex-col;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             height: 100%;
@@ -152,6 +152,23 @@
             background: transparent;
         }
 
+        .bottom-nav-item .nav-icon-container {
+            padding: 5px 14px;
+            border-radius: 9999px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(51, 65, 85, 0.5);
+        }
+
+        .bottom-nav-item.active .nav-icon-container {
+            background: rgba(56, 189, 248, 0.18);
+            border: 1px solid rgba(56, 189, 248, 0.5);
+            box-shadow: 0 0 14px rgba(56, 189, 248, 0.35);
+        }
+
         .bottom-nav-item.active {
             color: #38bdf8;
             font-weight: 900;
@@ -159,7 +176,7 @@
 
         .bottom-nav-item.active svg {
             stroke: #38bdf8;
-            transform: translateY(-2px);
+            transform: translateY(-1px);
             filter: drop-shadow(0 0 6px rgba(56, 189, 248, 0.6));
         }
 
@@ -389,7 +406,7 @@
 </div>
 
 <!-- ==========================================================================
-     MENÚ DESPLEGABLE LATERAL DERECHO (DRAWER NATIVO)
+     MENÚ DESPLEGABLE LATERAL DERECHO (DRAWER NATIVO - SIN SALA SITUACIONAL)
      ========================================================================== -->
 <div id="drawerMenuOverlay" class="drawer-overlay" onclick="cerrarMenuDrawer()">
     <div class="drawer-content" onclick="event.stopPropagation()">
@@ -411,16 +428,9 @@
             </div>
         </div>
 
-        <!-- Lista de Opciones del Menú Lateral -->
+        <!-- Lista de Opciones del Menú Lateral (Sin Sala Situacional) -->
         <div class="flex-1 overflow-y-auto p-4 space-y-1 text-xs font-bold text-slate-300">
-            <div class="text-[10px] uppercase font-black tracking-widest text-slate-500 px-3 py-1">Navegación General</div>
-            
-            <button type="button" onclick="switchTab('mod_sala'); cerrarMenuDrawer();" class="w-full flex items-center gap-3 px-3 py-3 rounded-xl hover:bg-slate-900 hover:text-white transition text-left">
-                <span>🏢</span>
-                <span>Sala Situacional</span>
-            </button>
-
-            <div class="text-[10px] uppercase font-black tracking-widest text-slate-500 px-3 py-1 pt-3">Módulos Especializados</div>
+            <div class="text-[10px] uppercase font-black tracking-widest text-slate-500 px-3 py-1">Módulos Especializados</div>
             
             <button type="button" onclick="switchTab('mod5'); cerrarMenuDrawer();" id="drawerBtnRepo" class="w-full flex items-center gap-3 px-3 py-3 rounded-xl hover:bg-slate-900 hover:text-white transition text-left">
                 <span>📁</span>
@@ -481,17 +491,23 @@
 </div>
 
 <!-- APLICACIÓN PRINCIPAL (PANEL DE CONTROL RESPONSIVO) -->
-<div id="appPrincipal" class="hidden space-y-4 max-w-7xl mx-auto px-2 sm:px-4 pb-24 sm:pb-20">
+<div id="appPrincipal" class="hidden space-y-4 max-w-7xl mx-auto px-2 sm:px-4 pb-28 sm:pb-24">
     
-    <!-- CABECERA PRINCIPAL STICKY CON LOGO Y BOTÓN DE MENÚ LATERAL -->
+    <!-- CABECERA PRINCIPAL STICKY CON ICONO SUPERIOR DE INICIO -->
     <header class="header-sticky-master px-3 sm:px-4 py-2.5 rounded-b-2xl flex justify-between items-center shadow-xl no-print">
         <div class="flex items-center gap-2.5">
+            <!-- Icono Superior Vectorial Minimalista para ir a Sala Situacional (Inicio) -->
+            <button type="button" onclick="switchTab('mod_sala')" class="p-2 bg-slate-800 text-sky-400 rounded-xl border border-slate-700 hover:bg-slate-700 transition shadow-sm flex items-center gap-1.5" title="Ir a Sala Situacional (Inicio)">
+                <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+                <span class="text-xs font-black hidden sm:inline">Inicio</span>
+            </button>
+
             <div class="logo-svg-screen !py-1 !px-2.5">
                 <div class="w-6 h-6 rounded bg-sky-600 flex items-center justify-center font-black text-white text-[10px]">JJ</div>
                 <span class="text-xs font-black tracking-widest text-white">JIRETH <span class="text-sky-400">GEOCORE</span></span>
             </div>
 
-            <div>
+            <div class="hidden md:block">
                 <h1 class="text-xs sm:text-base font-black text-white tracking-tight flex items-center gap-1.5">
                     <span>Jireth GeoCore Lite</span>
                     <span class="text-sky-400 font-extrabold text-[9px] sm:text-[10px] bg-sky-950 px-1.5 py-0.5 rounded border border-sky-800">Cloud Pro</span>
@@ -504,7 +520,7 @@
             <span id="badgeSyncQueue" class="hidden bg-amber-950 text-amber-300 border border-amber-700 text-[10px] px-2 py-1 rounded-lg font-black font-mono-code">⏳ 0</span>
             <button type="button" onclick="sincronizarConSupabaseReal()" class="text-xs bg-slate-800 text-slate-200 px-2.5 py-1.5 rounded-xl font-extrabold border border-slate-700 hover:bg-slate-700 transition shadow-sm">🔄</button>
             
-            <!-- Botón Menú Lateral Estilo Captura Ad junta -->
+            <!-- Botón Menú Lateral Drawer -->
             <button type="button" onclick="abrirMenuDrawer()" class="p-2 bg-slate-800 text-slate-200 rounded-xl border border-slate-700 hover:bg-slate-700 transition shadow-sm">
                 <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
             </button>
@@ -1212,27 +1228,37 @@
 </div>
 
 <!-- ==========================================================================
-     BARRA INFERIOR FIJA NATIVA (5 BOTONES SIMÉTRICOS)
+     BARRA INFERIOR FIJA NATIVA (5 BOTONES SIMÉTRICOS CON CÁPSULA DE DESTACADO)
      ========================================================================== -->
 <nav id="bottomNavMaster" class="bottom-nav-fixed hidden no-print">
     <button type="button" onclick="switchTab('mod1')" id="bnav-mod1" class="bottom-nav-item">
-        <svg class="w-5 h-5 stroke-current fill-none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+        <div class="nav-icon-container">
+            <svg class="w-6 h-6 stroke-current fill-none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+        </div>
         <span>Pozos</span>
     </button>
     <button type="button" onclick="switchTab('mod2')" id="bnav-mod2" class="bottom-nav-item">
-        <svg class="w-5 h-5 stroke-current fill-none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        <div class="nav-icon-container">
+            <svg class="w-6 h-6 stroke-current fill-none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        </div>
         <span>Topografía</span>
     </button>
     <button type="button" onclick="switchTab('mod3_turno')" id="bnav-mod3_turno" class="bottom-nav-item">
-        <svg class="w-5 h-5 stroke-current fill-none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        <div class="nav-icon-container">
+            <svg class="w-6 h-6 stroke-current fill-none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </div>
         <span>Turnos</span>
     </button>
     <button type="button" onclick="switchTab('mod3_logging')" id="bnav-mod3_logging" class="bottom-nav-item">
-        <svg class="w-5 h-5 stroke-current fill-none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+        <div class="nav-icon-container">
+            <svg class="w-6 h-6 stroke-current fill-none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+        </div>
         <span>Logging</span>
     </button>
     <button type="button" onclick="switchTab('mod_estadisticas')" id="bnav-mod_estadisticas" class="bottom-nav-item">
-        <svg class="w-5 h-5 stroke-current fill-none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+        <div class="nav-icon-container">
+            <svg class="w-6 h-6 stroke-current fill-none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+        </div>
         <span>Estadísticas</span>
     </button>
 </nav>
@@ -1543,8 +1569,10 @@
 
     function cerrarSesion() { location.reload(); }
 
+    /* SWITCH TAB OPTIMIZADO CON DIFERIMIENTO ASÍNCRONO (EVITA CONGELAMIENTO / JANK) */
     function switchTab(tabId) {
         if (perfilActual === 'GERENCIA' && tabId !== 'mod_sala' && tabId !== 'mod5' && tabId !== 'mod_estadisticas') tabId = 'mod_sala';
+        
         ['mod_sala', 'mod1', 'mod2', 'mod3_turno', 'mod3_logging', 'mod4', 'mod5', 'mod_estadisticas', 'mod6'].forEach(t => {
             const sec = document.getElementById(t);
             if (sec) sec.classList.add('hidden');
@@ -1558,16 +1586,19 @@
         const selBnav = document.getElementById('bnav-' + tabId);
         if (selBnav) selBnav.classList.add('active');
 
-        if (tabId === 'mod_sala') renderizarSalaSituacional();
-        if (tabId === 'mod1') refrescarSelectorModuloUno();
-        if (tabId === 'mod2') poblarSelectTopografia();
-        if (tabId === 'mod3_turno') verificarSeleccionTurnosModulo();
-        if (tabId === 'mod3_logging') { verificarSeleccionCoreLoggingModulo(); renderizarPerfil2D(); }
-        if (tabId === 'mod4') poblarSelectCierre();
-        if (tabId === 'mod3_turno' || tabId === 'mod3_logging' || tabId === 'mod4') refrescarSelectoresOperativos();
-        if (tabId === 'mod5') poblarSelectRepositorioTodos();
-        if (tabId === 'mod_estadisticas') renderizarEstadisticasGlobales();
-        if (tabId === 'mod6') poblarSelectAdminBorrar();
+        // Ejecución diferida para que la UI responda instantáneamente al clic del botón
+        setTimeout(() => {
+            if (tabId === 'mod_sala') renderizarSalaSituacional();
+            if (tabId === 'mod1') refrescarSelectorModuloUno();
+            if (tabId === 'mod2') poblarSelectTopografia();
+            if (tabId === 'mod3_turno') verificarSeleccionTurnosModulo();
+            if (tabId === 'mod3_logging') { verificarSeleccionCoreLoggingModulo(); renderizarPerfil2D(); }
+            if (tabId === 'mod4') poblarSelectCierre();
+            if (tabId === 'mod3_turno' || tabId === 'mod3_logging' || tabId === 'mod4') refrescarSelectoresOperativos();
+            if (tabId === 'mod5') poblarSelectRepositorioTodos();
+            if (tabId === 'mod_estadisticas') renderizarEstadisticasGlobales();
+            if (tabId === 'mod6') poblarSelectAdminBorrar();
+        }, 20);
 
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -1680,7 +1711,7 @@
                     const ctxP = canvasPozo.getContext('2d');
                     dibujarPerfilEnCanvasVertical(ctxP, p, canvasPozo.width, canvasPozo.height, p.avances, false);
                 }
-            }, 50);
+            }, 30);
         });
     }
 
