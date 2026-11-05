@@ -203,15 +203,17 @@
 </div>
 
 <!-- ==========================================================================
-     PANTALLA DE BIENVENIDA CINEMATOGRÁFICA 100% IMAGEN PROTAGONISTA
-     (Centro absoluto tanto en móvil como en PC: Círculo de carga + Logo Minimalista + Títulos + Botón Único de Iniciar Sesión)
+     PANTALLA DE BIENVENIDA (SPLASH SCREEN) AUTOMÁTICA
+     - Inicia en negro absoluto (ocultando el login).
+     - Desvanece suavemente para revelar la imagen de fondo con el logo y spinner.
+     - Tras 3.5 segundos, hace un fade-out suave para revelar el Login.
      ========================================================================== -->
-<div id="pantallaSplash" class="fixed inset-0 z-50 flex flex-col items-center justify-center p-4 overflow-hidden">
+<div id="pantallaSplash" class="fixed inset-0 z-50 flex flex-col items-center justify-center p-4 overflow-hidden bg-slate-950 opacity-0 transition-opacity duration-1000">
     <!-- Fondo Animado Cinemático (Ken Burns) -->
     <div class="splash-bg-animated"></div>
     
-    <!-- Capa de Oscurecimiento Gradual para máxima legibilidad estilo Hollywood -->
-    <div class="absolute inset-0 bg-slate-950/60 backdrop-blur-[1px]"></div>
+    <!-- Capa de Oscurecimiento Gradual para máxima legibilidad -->
+    <div class="absolute inset-0 bg-slate-950/70 backdrop-blur-[2px]"></div>
 
     <!-- Barrido Láser Holográfico -->
     <div class="laser-scanner-line"></div>
@@ -225,16 +227,16 @@
         <!-- Línea superior de brillo acentuado -->
         <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-sky-400 via-indigo-500 to-sky-400 rounded-t-3xl"></div>
 
-        <!-- Círculo de Carga Animado Dinámico & Logo Vectorial Minimalista en el Centro -->
-        <div class="relative w-24 h-24 mx-auto flex items-center justify-center">
-            <!-- Anillo de carga giratorio -->
-            <div class="absolute inset-0 rounded-full border-2 border-dashed border-sky-400/60 spinner-ring"></div>
+        <!-- Círculo de Carga Dinámico y Logo Vectorial Minimalista en el Centro exacto -->
+        <div class="relative w-28 h-28 mx-auto flex items-center justify-center">
+            <!-- Anillo de carga giratorio suave -->
+            <div class="absolute inset-0 rounded-full border-2 border-dashed border-sky-400/80 spinner-ring"></div>
             <!-- Anillo interno estático de pulso -->
-            <div class="absolute inset-2 rounded-full bg-sky-950/80 border border-sky-500/30 animate-pulse"></div>
+            <div class="absolute inset-2 rounded-full bg-sky-950/90 border border-sky-500/40 animate-pulse"></div>
             
             <!-- Logo Vectorial Minimalista JJ -->
             <div class="relative z-10 flex items-center justify-center">
-                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-sky-500 to-indigo-600 flex items-center justify-center font-black text-white text-base shadow-lg shadow-sky-500/40 tracking-wider">JJ</div>
+                <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-sky-500 to-indigo-600 flex items-center justify-center font-black text-white text-lg shadow-lg shadow-sky-500/40 tracking-wider">JJ</div>
             </div>
         </div>
 
@@ -261,21 +263,14 @@
             </div>
         </div>
 
-        <!-- Botón Único de Iniciar Sesión (Redirige al Módulo de Usuarios / Login) -->
-        <div class="pt-2">
-            <button type="button" onclick="transicionarSplashALogin()" id="btnIniciarSplash" class="btn-field w-full bg-gradient-to-r from-sky-600 via-indigo-600 to-sky-600 hover:from-sky-500 hover:to-indigo-500 text-white text-sm font-black shadow-xl shadow-sky-950/80 uppercase tracking-widest transition-all transform hover:scale-[1.02]">
-                🚀 INICIAR SESIÓN EN EL SISTEMA
-            </button>
-        </div>
-
-        <div class="text-center pt-1">
+        <div class="text-center pt-2">
             <span class="text-[10px] font-mono-code text-slate-500 font-bold uppercase tracking-widest">by: carlosgeologo • Pro Edition</span>
         </div>
     </div>
 </div>
 
 <!-- PANTALLA DE ACCESO / MÓDULO DE USUARIOS (LOGIN) -->
-<div id="pantallaLogin" class="hidden fixed inset-0 bg-geocore-master z-40 flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+<div id="pantallaLogin" class="hidden fixed inset-0 bg-geocore-master z-40 flex items-center justify-center p-3 sm:p-4 overflow-y-auto opacity-0 transition-opacity duration-1000">
     <div class="card-pro p-5 sm:p-8 rounded-3xl w-full max-w-md space-y-5 relative overflow-hidden my-auto text-white shadow-2xl">
         <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-sky-500 via-indigo-500 to-sky-500"></div>
         
@@ -1175,43 +1170,51 @@
     let claveGerencia = 'JIRETH2026';
     const PIN_MAESTRO = "2628";
 
-    // SECUENCIA DE CARGA DINÁMICA NIVEL MUNDIAL DEL SPLASH
+    // SECUENCIA DE CARGA DINÁMICA DE LA SPLASH SCREEN AUTOMÁTICA
     window.addEventListener('DOMContentLoaded', () => {
         let progressBar = document.getElementById('splashProgressBar');
         let statusText = document.getElementById('splashStatusText');
+        const splashScreen = document.getElementById('pantallaSplash');
+        const loginScreen = document.getElementById('pantallaLogin');
 
         let steps = [
             { width: '30%', text: 'INICIALIZANDO NÚCLEO HOLOGRÁFICO...' },
             { width: '65%', text: 'CARGANDO MALLAS DE TOPOGRAFÍA Y SONDAJES...' },
             { width: '90%', text: 'ESTABLECIENDO CONEXIÓN CLOUD PRO...' },
-            { width: '100%', text: '¡SISTEMA LISTO PARA INICIAR SESIÓN!' }
+            { width: '100%', text: '¡SISTEMA LISTO!' }
         ];
 
         let currentStep = 0;
+        
+        // 1. Iniciar con pantalla en negro absoluto y hacer fade-in de la Splash
+        setTimeout(() => {
+            splashScreen.classList.remove('opacity-0');
+        }, 50);
+
         let interval = setInterval(() => {
             if (currentStep < steps.length) {
-                progressBar.style.width = steps[currentStep].width;
-                statusText.innerText = steps[currentStep].text;
+                if(progressBar) progressBar.style.width = steps[currentStep].width;
+                if(statusText) statusText.innerText = steps[currentStep].text;
                 currentStep++;
             } else {
                 clearInterval(interval);
+                
+                // 2. Al cabo de 3.5 segundos, hacer fade-out de la splash y fade-in del Login de manera fluida
+                setTimeout(() => {
+                    splashScreen.style.transition = 'opacity 0.8s ease';
+                    splashScreen.classList.add('opacity-0');
+                    
+                    setTimeout(() => {
+                        splashScreen.classList.add('hidden');
+                        loginScreen.classList.remove('hidden');
+                        setTimeout(() => {
+                            loginScreen.classList.remove('opacity-0');
+                        }, 50);
+                    }, 800);
+                }, 800);
             }
         }, 700);
     });
-
-    // TRANSICIÓN AL MÓDULO DE USUARIOS / LOGIN
-    function transicionarSplashALogin() {
-        const splash = document.getElementById('pantallaSplash');
-        const login = document.getElementById('pantallaLogin');
-        
-        splash.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-        splash.style.opacity = '0';
-        splash.style.transform = 'scale(1.05)';
-        setTimeout(() => {
-            splash.classList.add('hidden');
-            login.classList.remove('hidden');
-        }, 600);
-    }
 
     function registrarLogAuditoria(accion, detalle) {
         let logItem = `[${new Date().toLocaleString()}] ${accion}: ${detalle}`;
@@ -1396,10 +1399,15 @@
     }
 
     function entrarAlSistema(rolTexto) {
-        document.getElementById('pantallaLogin').classList.add('hidden');
-        document.getElementById('appPrincipal').classList.remove('hidden');
-        document.getElementById('lblNombreUsuarioLogueado').innerText = rolTexto;
-        switchTab('mod_sala');
+        const loginScreen = document.getElementById('pantallaLogin');
+        loginScreen.style.transition = 'opacity 0.5s ease';
+        loginScreen.classList.add('opacity-0');
+        setTimeout(() => {
+            loginScreen.classList.add('hidden');
+            document.getElementById('appPrincipal').classList.remove('hidden');
+            document.getElementById('lblNombreUsuarioLogueado').innerText = rolTexto;
+            switchTab('mod_sala');
+        }, 500);
     }
 
     function aplicarModoLecturaGerencia() {
