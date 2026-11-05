@@ -35,10 +35,10 @@
             background-attachment: fixed;
         }
 
-        /* ANIMACIÓN CINEMATOGRÁFICA DE LA IMAGEN PROTAGONISTA (KEN BURNS) */
+        /* ANIMACIÓN DE LA IMAGEN DE FONDO (KEN BURNS) */
         @keyframes zoomCinematic {
             0% { transform: scale(1); filter: brightness(0.95); }
-            50% { transform: scale(1.05); filter: brightness(1.05); }
+            50% { transform: scale(1.04); filter: brightness(1.05); }
             100% { transform: scale(1); filter: brightness(0.95); }
         }
         .splash-bg-animated {
@@ -47,58 +47,68 @@
             background-image: url('Gemini_Generated_Image_m89jgem89jgem89j.jfif');
             background-size: cover;
             background-position: center;
-            animation: zoomCinematic 18s infinite ease-in-out;
+            animation: zoomCinematic 16s infinite ease-in-out;
             z-index: 0;
         }
 
-        /* BARRIDO LÁSER HOLOGRÁFICO SOBRE LÍNEAS DE SONDAJE */
-        @keyframes laserScanH {
-            0% { top: 0%; opacity: 0.1; }
-            50% { opacity: 0.9; }
-            100% { top: 100%; opacity: 0.1; }
-        }
-        .laser-scanner-line {
-            position: absolute; left: 0; right: 0; height: 3px;
-            background: linear-gradient(90deg, transparent, #38bdf8, #ffffff, #38bdf8, transparent);
-            box-shadow: 0 0 25px #38bdf8, 0 0 50px #0284c7;
-            animation: laserScanH 4s infinite ease-in-out;
-            z-index: 3;
+        /* TRAZOS CALQUEADOS SOBRE LAS LÍNEAS DE SONDAJE DE LA IMAGEN */
+        .sondaje-svg-overlay {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
             pointer-events: none;
         }
 
-        /* PUNTOS NODALES LUMINOSOS MULTICICLO EN LÍNEAS DE SONDAJE */
-        @keyframes nodePulseMulti {
-            0% { transform: scale(0.8); opacity: 0.3; box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.7); }
-            50% { transform: scale(1.4); opacity: 1; box-shadow: 0 0 15px 8px rgba(56, 189, 248, 0.4); }
-            100% { transform: scale(0.8); opacity: 0.3; box-shadow: 0 0 0 0 rgba(56, 189, 248, 0); }
+        @keyframes pulseLineTrace {
+            0% { stroke-opacity: 0.2; stroke-dashoffset: 100; }
+            50% { stroke-opacity: 0.9; stroke-dashoffset: 0; filter: drop-shadow(0.0 0.0 8px #38bdf8); }
+            100% { stroke-opacity: 0.2; stroke-dashoffset: -100; }
         }
-        .sondaje-node-glow {
+        .trace-path {
+            stroke: #38bdf8;
+            stroke-width: 2.5;
+            stroke-linecap: round;
+            fill: none;
+            stroke-dasharray: 12 6;
+            animation: pulseLineTrace 3.5s infinite linear;
+        }
+
+        /* PUNTOS NODALES MULTICICLOS SOBRE LOS VÉRTICES DE LAS LÍNEAS */
+        @keyframes nodePulseMultiColor {
+            0% { transform: scale(0.7); opacity: 0.4; box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.8); }
+            50% { transform: scale(1.5); opacity: 1; box-shadow: 0 0 20px 10px rgba(236, 72, 153, 0.6); background-color: #ec4899; }
+            100% { transform: scale(0.7); opacity: 0.4; box-shadow: 0 0 0 0 rgba(56, 189, 248, 0); }
+        }
+        .sondaje-node-multi {
             position: absolute;
-            width: 12px;
-            height: 12px;
+            width: 10px;
+            height: 10px;
             background-color: #38bdf8;
             border-radius: 50%;
             border: 2px solid #ffffff;
-            animation: nodePulseMulti 2.2s infinite cubic-bezier(0.4, 0, 0.6, 1);
+            animation: nodePulseMultiColor 2s infinite cubic-bezier(0.4, 0, 0.6, 1);
             z-index: 4;
         }
 
-        /* FASE DE APARICIÓN FLUIDA */
+        /* ANILLO MULTICOLOR GIRATORIO PARA EL LOGO MINIMALISTA */
+        @keyframes multiColorSpin {
+            0% { transform: rotate(0deg); border-top-color: #38bdf8; border-right-color: #ec4899; border-bottom-color: #10b981; border-left-color: #f59e0b; }
+            50% { transform: rotate(180deg); border-top-color: #f59e0b; border-right-color: #38bdf8; border-bottom-color: #ec4899; border-left-color: #10b981; }
+            100% { transform: rotate(360deg); border-top-color: #38bdf8; border-right-color: #ec4899; border-bottom-color: #10b981; border-left-color: #f59e0b; }
+        }
+        .spinner-ring-multicolor {
+            animation: multiColorSpin 1.8s linear infinite;
+        }
+
+        /* APARICIÓN FLUIDA */
         @keyframes cinematicFloat {
-            0% { opacity: 0; transform: translateY(15px) scale(0.97); }
-            100% { opacity: 1; transform: translateY(0) scale(1); }
+            0% { opacity: 0; transform: scale(0.95); }
+            100% { opacity: 1; transform: scale(1); }
         }
         .splash-central-content {
             animation: cinematicFloat 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-
-        /* CIRCULO DE CARGA DINÁMICO */
-        @keyframes spinRing {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        .spinner-ring {
-            animation: spinRing 2s linear infinite;
         }
 
         .header-sticky-master {
@@ -206,65 +216,40 @@
 </div>
 
 <!-- ==========================================================================
-     PANTALLA DE BIENVENIDA (SPLASH SCREEN) SIN RECUADRO AZUL - FONDO PURAMENTE VISIBLE
+     SPLASH SCREEN CINEMATOGRÁFICA (LOGO MINIMALISTA + ARO MULTICOLOR + LÍNEAS)
      ========================================================================== -->
-<div id="pantallaSplash" class="fixed inset-0 z-50 flex flex-col items-center justify-center p-4 overflow-hidden bg-slate-950/30 opacity-0 transition-opacity duration-1000">
-    <!-- Fondo Animado Cinemático (Ken Burns) con total visibilidad de la imagen -->
+<div id="pantallaSplash" class="fixed inset-0 z-50 flex flex-col items-center justify-center p-4 overflow-hidden bg-slate-950/20 opacity-0 transition-opacity duration-1000">
+    <!-- Fondo Animado (Ken Burns) con total visibilidad de la imagen -->
     <div class="splash-bg-animated"></div>
-    
-    <!-- Capa sutil opcional apenas perceptible para contraste (sin recuadros azules pesados) -->
-    <div class="absolute inset-0 bg-slate-950/20 backdrop-blur-[0.5px]"></div>
+    <div class="absolute inset-0 bg-slate-950/15 backdrop-blur-[0.3px]"></div>
 
-    <!-- Barrido Láser Holográfico sobre las líneas -->
-    <div class="laser-scanner-line"></div>
+    <!-- Trazos vectoriales calqueados exactamente sobre las líneas de sondaje de la imagen -->
+    <svg class="sondaje-svg-overlay" viewBox="0 0 1000 1000" preserveAspectRatio="none">
+        <path class="trace-path" d="M 150,200 Q 300,350 450,280 T 750,400 T 900,650" />
+        <path class="trace-path" style="animation-delay: 0.8s;" d="M 100,500 Q 350,550 500,450 T 800,300 T 920,800" />
+        <path class="trace-path" style="animation-delay: 1.5s;" d="M 200,800 Q 400,600 600,750 T 850,500" />
+    </svg>
 
-    <!-- Puntos Nodales Luminosos Multiciclo sobre las líneas de la imagen -->
-    <div class="sondaje-node-glow" style="top: 25%; left: 30%; animation-delay: 0s;"></div>
-    <div class="sondaje-node-glow" style="top: 40%; left: 65%; animation-delay: 0.6s;"></div>
-    <div class="sondaje-node-glow" style="top: 70%; left: 45%; animation-delay: 1.2s;"></div>
-    <div class="sondaje-node-glow" style="top: 35%; left: 80%; animation-delay: 1.8s;"></div>
+    <!-- Puntos nodales multiciclos interactivos sobre las líneas -->
+    <div class="sondaje-node-multi" style="top: 28%; left: 32%; animation-delay: 0s;"></div>
+    <div class="sondaje-node-multi" style="top: 42%; left: 58%; animation-delay: 0.5s;"></div>
+    <div class="sondaje-node-multi" style="top: 65%; left: 45%; animation-delay: 1.0s;"></div>
+    <div class="sondaje-node-multi" style="top: 35%; left: 78%; animation-delay: 1.5s;"></div>
+    <div class="sondaje-node-multi" style="top: 75%; left: 70%; animation-delay: 0.8s;"></div>
+    <div class="sondaje-node-multi" style="top: 50%; left: 22%; animation-delay: 1.2s;"></div>
 
-    <!-- CONTENIDO CENTRAL FLOTANTE (SIN CAJA AZUL, DIRECTAMENTE SOBRE EL FONDO) -->
-    <div class="relative z-10 splash-central-content text-center space-y-6 max-w-lg w-full px-4 mx-auto">
-        
-        <!-- Círculo de Carga Dinámico y Logotipo Exclusivo -->
-        <div class="relative w-28 h-28 mx-auto flex items-center justify-center">
-            <!-- Anillo de carga giratorio suave -->
-            <div class="absolute inset-0 rounded-full border-2 border-dashed border-sky-400 spinner-ring"></div>
-            <!-- Anillo interno estático de pulso -->
-            <div class="absolute inset-2 rounded-full bg-slate-950/60 border border-sky-400/50 animate-pulse"></div>
+    <!-- CONTENIDO CENTRAL: SÓLO LOGOTIPO MINIMALISTA Y ARO MULTICOLOR GIRANDO -->
+    <div class="relative z-10 splash-central-content text-center flex flex-col items-center justify-center">
+        <div class="relative w-32 h-32 flex items-center justify-center">
+            <!-- Anillo giratorio multicolor -->
+            <div class="absolute inset-0 rounded-full border-[3px] border-dashed spinner-ring-multicolor"></div>
+            <!-- Círculo interno translúcido -->
+            <div class="absolute inset-3 rounded-full bg-slate-950/70 border border-sky-400/40 backdrop-blur-md shadow-2xl"></div>
             
-            <!-- Logo Vectorial Minimalista JJ -->
+            <!-- Logotipo Minimalista Central JJ -->
             <div class="relative z-10 flex items-center justify-center">
-                <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-sky-500 to-indigo-600 flex items-center justify-center font-black text-white text-lg shadow-xl shadow-sky-500/50 tracking-wider">JJ</div>
+                <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-sky-500 via-indigo-600 to-pink-600 flex items-center justify-center font-black text-white text-xl shadow-2xl shadow-sky-500/60 tracking-wider">JJ</div>
             </div>
-        </div>
-
-        <!-- Títulos de Bienvenida y Sistema de Integración (Directo sobre la imagen) -->
-        <div class="space-y-2 drop-shadow-[0_4px_12px_rgba(0,0,0,0.9)]">
-            <span class="text-[10px] font-mono-code uppercase tracking-widest text-sky-300 bg-slate-900/80 px-3.5 py-1 rounded-full border border-sky-500/50">
-                COMPLEJO JIRETH C.A. — 2026
-            </span>
-            <h2 class="text-xl sm:text-3xl font-black text-white tracking-wider uppercase">
-                BIENVENIDO AL SISTEMA GEOCORE
-            </h2>
-            <p class="text-xs sm:text-sm text-slate-200 font-semibold leading-relaxed max-w-md mx-auto">
-                Sistema Integral de Sondajes Diamantinos, Topografía y Modelado Geológico.
-            </p>
-        </div>
-
-        <!-- Estado de Carga / Inicialización -->
-        <div class="space-y-2 pt-1">
-            <div id="splashStatusText" class="text-[11px] font-mono-code text-sky-300 font-extrabold uppercase tracking-widest drop-shadow">
-                INICIALIZANDO NÚCLEO HOLOGRÁFICO...
-            </div>
-            <div class="w-full bg-slate-950/80 h-1.5 rounded-full overflow-hidden border border-sky-500/40 p-0.5 max-w-xs mx-auto shadow-lg">
-                <div id="splashProgressBar" class="bg-gradient-to-r from-sky-400 via-indigo-500 to-sky-400 h-full rounded-full transition-all duration-700 w-0 shadow-lg shadow-sky-500/50"></div>
-            </div>
-        </div>
-
-        <div class="text-center pt-2 drop-shadow">
-            <span class="text-[10px] font-mono-code text-slate-300 font-bold uppercase tracking-widest">by: carlosgeologo • Pro Edition</span>
         </div>
     </div>
 </div>
@@ -367,7 +352,7 @@
                     <span>Jireth GeoCore Lite</span>
                     <span class="text-sky-400 font-extrabold text-[9px] sm:text-[10px] bg-sky-950 px-1.5 py-0.5 rounded border border-sky-800">Cloud Pro</span>
                 </h1>
-                <p class="text-[10px] sm:text-[11px] text-slate-400 font-medium">Complejo Jireth C.A. <span id="indicadorRed" class="text-emerald-400 font-bold pulse-live">(🟢 Sincronizado)</span></p>
+                <p class="text-[10px] sm:text-[11px] text-slate-400 font-medium">Complejo Jireth C.A. <span id="indicadorRed" class="text-emerald-400 font-bold">(🟢 Sincronizado)</span></p>
             </div>
         </div>
         
@@ -435,7 +420,7 @@
             <div>
                 <h2 class="text-lg sm:text-xl font-black text-white tracking-tight flex items-center gap-2">
                     <span>Sala Situacional (Frentes Activos)</span>
-                    <span class="text-xs bg-sky-950 text-sky-300 px-2.5 py-0.5 rounded-full border border-sky-800 font-mono-code pulse-live" id="contadorFrentesActivos">0 Activos</span>
+                    <span class="text-xs bg-sky-950 text-sky-300 px-2.5 py-0.5 rounded-full border border-sky-800 font-mono-code" id="contadorFrentesActivos">0 Activos</span>
                 </h2>
                 <p class="text-xs text-slate-400 mt-0.5">Monitoreo independiente en tiempo real de perforadoras operando.</p>
             </div>
@@ -443,7 +428,7 @@
         </div>
 
         <div id="boxSalaInactiva" class="hidden bg-slate-900/90 p-6 sm:p-12 rounded-3xl border border-slate-800 text-center space-y-4 my-4 shadow-2xl relative overflow-hidden">
-            <div class="w-16 h-16 mx-auto rounded-2xl bg-sky-950/60 border border-sky-800 flex items-center justify-center text-3xl shadow-inner pulse-live">🚜</div>
+            <div class="w-16 h-16 mx-auto rounded-2xl bg-sky-950/60 border border-sky-800 flex items-center justify-center text-3xl shadow-inner">🚜</div>
             <div class="max-w-xl mx-auto space-y-2">
                 <h3 class="text-base sm:text-xl font-black text-white uppercase tracking-wider">Frentes de Perforación en Tránsito Operativo</h3>
                 <p class="text-xs sm:text-sm text-slate-400 font-medium leading-relaxed">
@@ -1170,50 +1155,29 @@
     let claveGerencia = 'JIRETH2026';
     const PIN_MAESTRO = "2628";
 
-    // SECUENCIA DE CARGA DINÁMICA DE LA SPLASH SCREEN AUTOMÁTICA
+    // SECUENCIA DE TRANSICIÓN AUTOMÁTICA DESDE LA SPLASH HACIA EL MÓDULO DE USUARIOS (LOGIN)
     window.addEventListener('DOMContentLoaded', () => {
-        let progressBar = document.getElementById('splashProgressBar');
-        let statusText = document.getElementById('splashStatusText');
         const splashScreen = document.getElementById('pantallaSplash');
         const loginScreen = document.getElementById('pantallaLogin');
 
-        let steps = [
-            { width: '30%', text: 'INICIALIZANDO NÚCLEO HOLOGRÁFICO...' },
-            { width: '65%', text: 'CARGANDO MALLAS DE TOPOGRAFÍA Y SONDAJES...' },
-            { width: '90%', text: 'ESTABLECIENDO CONEXIÓN CLOUD PRO...' },
-            { width: '100%', text: '¡SISTEMA LISTO!' }
-        ];
-
-        let currentStep = 0;
-        
-        // 1. Iniciar con pantalla transparente y hacer fade-in de la Splash
+        // 1. Mostrar Splash de inmediato con fundido de entrada
         setTimeout(() => {
             splashScreen.classList.remove('opacity-0');
         }, 50);
 
-        let interval = setInterval(() => {
-            if (currentStep < steps.length) {
-                if(progressBar) progressBar.style.width = steps[currentStep].width;
-                if(statusText) statusText.innerText = steps[currentStep].text;
-                currentStep++;
-            } else {
-                clearInterval(interval);
-                
-                // 2. Al cabo de 3.5 segundos, hacer fade-out de la splash y fade-in del Login de manera fluida
+        // 2. Al cabo de 3.2 segundos, transicionar suavemente al módulo de usuarios (Login)
+        setTimeout(() => {
+            splashScreen.style.transition = 'opacity 0.8s ease';
+            splashScreen.classList.add('opacity-0');
+            
+            setTimeout(() => {
+                splashScreen.classList.add('hidden');
+                loginScreen.classList.remove('hidden');
                 setTimeout(() => {
-                    splashScreen.style.transition = 'opacity 0.8s ease';
-                    splashScreen.classList.add('opacity-0');
-                    
-                    setTimeout(() => {
-                        splashScreen.classList.add('hidden');
-                        loginScreen.classList.remove('hidden');
-                        setTimeout(() => {
-                            loginScreen.classList.remove('opacity-0');
-                        }, 50);
-                    }, 800);
-                }, 800);
-            }
-        }, 700);
+                    loginScreen.classList.remove('opacity-0');
+                }, 50);
+            }, 800);
+        }, 3200);
     });
 
     function registrarLogAuditoria(accion, detalle) {
@@ -1310,7 +1274,7 @@
         const indRed = document.getElementById('indicadorRed');
         if (indRed) {
             indRed.innerText = "(🟢 Sincronizado)";
-            indRed.className = "text-emerald-400 font-bold pulse-live";
+            indRed.className = "text-emerald-400 font-bold";
         }
         await sincronizarConSupabaseReal();
     });
@@ -1500,7 +1464,7 @@
                 <div class="flex justify-between items-center flex-wrap gap-2">
                     <div class="flex items-center gap-2.5">
                         <span class="text-[10px] font-black uppercase tracking-wider bg-emerald-950 text-emerald-300 px-2.5 py-1 rounded-full border border-emerald-800 flex items-center gap-1.5">
-                            <span class="w-2 h-2 rounded-full bg-emerald-400 pulse-live inline-block"></span>
+                            <span class="w-2 h-2 rounded-full bg-emerald-400 inline-block"></span>
                             ACTIVO #${idx + 1}
                         </span>
                         <h3 class="text-base sm:text-lg font-black text-white font-mono-code">${p.codigo}</h3>
@@ -3044,7 +3008,7 @@
                 const indRed = document.getElementById('indicadorRed');
                 if (indRed) {
                     indRed.innerText = "(🟢 Sincronizado)";
-                    indRed.className = "text-emerald-400 font-bold pulse-live";
+                    indRed.className = "text-emerald-400 font-bold";
                 }
             } catch(ex) { encolarSincronizacionLocal(payloadData); }
         } else { encolarSincronizacionLocal(payloadData); }
