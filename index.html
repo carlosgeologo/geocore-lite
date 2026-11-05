@@ -37,9 +37,9 @@
 
         /* ANIMACIÓN CINEMATOGRÁFICA DE LA IMAGEN PROTAGONISTA (KEN BURNS) */
         @keyframes zoomCinematic {
-            0% { transform: scale(1); filter: brightness(0.9); }
-            50% { transform: scale(1.06); filter: brightness(1.05); }
-            100% { transform: scale(1); filter: brightness(0.9); }
+            0% { transform: scale(1); filter: brightness(0.95); }
+            50% { transform: scale(1.05); filter: brightness(1.05); }
+            100% { transform: scale(1); filter: brightness(0.95); }
         }
         .splash-bg-animated {
             position: absolute;
@@ -51,51 +51,54 @@
             z-index: 0;
         }
 
-        /* BARRIDO LÁSER HOLOGRÁFICO */
+        /* BARRIDO LÁSER HOLOGRÁFICO SOBRE LÍNEAS DE SONDAJE */
         @keyframes laserScanH {
             0% { top: 0%; opacity: 0.1; }
-            50% { opacity: 0.8; }
+            50% { opacity: 0.9; }
             100% { top: 100%; opacity: 0.1; }
         }
         .laser-scanner-line {
             position: absolute; left: 0; right: 0; height: 3px;
             background: linear-gradient(90deg, transparent, #38bdf8, #ffffff, #38bdf8, transparent);
             box-shadow: 0 0 25px #38bdf8, 0 0 50px #0284c7;
-            animation: laserScanH 4.5s infinite ease-in-out;
+            animation: laserScanH 4s infinite ease-in-out;
             z-index: 3;
             pointer-events: none;
         }
 
-        /* FASE DE RECONSTRUCCIÓN VECTORIAL HOLOGRÁFICA */
-        @keyframes fadeInHolo {
-            0% { opacity: 0; filter: blur(6px); transform: scale(0.97); }
-            100% { opacity: 1; filter: blur(0px); transform: scale(1); }
+        /* PUNTOS NODALES LUMINOSOS MULTICICLO EN LÍNEAS DE SONDAJE */
+        @keyframes nodePulseMulti {
+            0% { transform: scale(0.8); opacity: 0.3; box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.7); }
+            50% { transform: scale(1.4); opacity: 1; box-shadow: 0 0 15px 8px rgba(56, 189, 248, 0.4); }
+            100% { transform: scale(0.8); opacity: 0.3; box-shadow: 0 0 0 0 rgba(56, 189, 248, 0); }
         }
-        .holo-reconstruction-layer {
+        .sondaje-node-glow {
             position: absolute;
-            inset: 0;
-            background: radial-gradient(circle at center, rgba(56, 189, 248, 0.15) 0%, rgba(2, 6, 23, 0.6) 80%);
-            animation: fadeInHolo 3s ease-out forwards;
-            z-index: 2;
-            pointer-events: none;
+            width: 12px;
+            height: 12px;
+            background-color: #38bdf8;
+            border-radius: 50%;
+            border: 2px solid #ffffff;
+            animation: nodePulseMulti 2.2s infinite cubic-bezier(0.4, 0, 0.6, 1);
+            z-index: 4;
         }
 
-        /* ANIMACIÓN DE APARICIÓN CENTRAL HOLLYWOOD */
+        /* FASE DE APARICIÓN FLUIDA */
         @keyframes cinematicFloat {
-            0% { opacity: 0; transform: translateY(20px) scale(0.95); filter: blur(4px); }
-            100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0px); }
+            0% { opacity: 0; transform: translateY(15px) scale(0.97); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
         }
-        .splash-central-card {
-            animation: cinematicFloat 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        .splash-central-content {
+            animation: cinematicFloat 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
-        /* CIRCULO DE CARGA DINÁMICO NIVEL MUNDIAL */
+        /* CIRCULO DE CARGA DINÁMICO */
         @keyframes spinRing {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
         .spinner-ring {
-            animation: spinRing 2.5s linear infinite;
+            animation: spinRing 2s linear infinite;
         }
 
         .header-sticky-master {
@@ -203,68 +206,65 @@
 </div>
 
 <!-- ==========================================================================
-     PANTALLA DE BIENVENIDA (SPLASH SCREEN) AUTOMÁTICA
-     - Inicia en negro absoluto (ocultando el login).
-     - Desvanece suavemente para revelar la imagen de fondo con el logo y spinner.
-     - Tras 3.5 segundos, hace un fade-out suave para revelar el Login.
+     PANTALLA DE BIENVENIDA (SPLASH SCREEN) SIN RECUADRO AZUL - FONDO PURAMENTE VISIBLE
      ========================================================================== -->
-<div id="pantallaSplash" class="fixed inset-0 z-50 flex flex-col items-center justify-center p-4 overflow-hidden bg-slate-950 opacity-0 transition-opacity duration-1000">
-    <!-- Fondo Animado Cinemático (Ken Burns) -->
+<div id="pantallaSplash" class="fixed inset-0 z-50 flex flex-col items-center justify-center p-4 overflow-hidden bg-slate-950/30 opacity-0 transition-opacity duration-1000">
+    <!-- Fondo Animado Cinemático (Ken Burns) con total visibilidad de la imagen -->
     <div class="splash-bg-animated"></div>
     
-    <!-- Capa de Oscurecimiento Gradual para máxima legibilidad -->
-    <div class="absolute inset-0 bg-slate-950/70 backdrop-blur-[2px]"></div>
+    <!-- Capa sutil opcional apenas perceptible para contraste (sin recuadros azules pesados) -->
+    <div class="absolute inset-0 bg-slate-950/20 backdrop-blur-[0.5px]"></div>
 
-    <!-- Barrido Láser Holográfico -->
+    <!-- Barrido Láser Holográfico sobre las líneas -->
     <div class="laser-scanner-line"></div>
 
-    <!-- Capa de Reconstrucción Vectorial Geológica -->
-    <div class="holo-reconstruction-layer"></div>
+    <!-- Puntos Nodales Luminosos Multiciclo sobre las líneas de la imagen -->
+    <div class="sondaje-node-glow" style="top: 25%; left: 30%; animation-delay: 0s;"></div>
+    <div class="sondaje-node-glow" style="top: 40%; left: 65%; animation-delay: 0.6s;"></div>
+    <div class="sondaje-node-glow" style="top: 70%; left: 45%; animation-delay: 1.2s;"></div>
+    <div class="sondaje-node-glow" style="top: 35%; left: 80%; animation-delay: 1.8s;"></div>
 
-    <!-- TARJETA CENTRAL FLOTANTE MINIMALISTA DE ALTO IMPACTO -->
-    <div class="relative z-10 splash-central-card card-pro p-6 sm:p-10 rounded-3xl max-w-lg w-full text-center space-y-6 mx-4 border border-sky-500/40 shadow-2xl">
+    <!-- CONTENIDO CENTRAL FLOTANTE (SIN CAJA AZUL, DIRECTAMENTE SOBRE EL FONDO) -->
+    <div class="relative z-10 splash-central-content text-center space-y-6 max-w-lg w-full px-4 mx-auto">
         
-        <!-- Línea superior de brillo acentuado -->
-        <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-sky-400 via-indigo-500 to-sky-400 rounded-t-3xl"></div>
-
-        <!-- Círculo de Carga Dinámico y Logo Vectorial Minimalista en el Centro exacto -->
+        <!-- Círculo de Carga Dinámico y Logotipo Exclusivo -->
         <div class="relative w-28 h-28 mx-auto flex items-center justify-center">
             <!-- Anillo de carga giratorio suave -->
-            <div class="absolute inset-0 rounded-full border-2 border-dashed border-sky-400/80 spinner-ring"></div>
+            <div class="absolute inset-0 rounded-full border-2 border-dashed border-sky-400 spinner-ring"></div>
             <!-- Anillo interno estático de pulso -->
-            <div class="absolute inset-2 rounded-full bg-sky-950/90 border border-sky-500/40 animate-pulse"></div>
+            <div class="absolute inset-2 rounded-full bg-slate-950/60 border border-sky-400/50 animate-pulse"></div>
             
             <!-- Logo Vectorial Minimalista JJ -->
             <div class="relative z-10 flex items-center justify-center">
-                <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-sky-500 to-indigo-600 flex items-center justify-center font-black text-white text-lg shadow-lg shadow-sky-500/40 tracking-wider">JJ</div>
+                <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-sky-500 to-indigo-600 flex items-center justify-center font-black text-white text-lg shadow-xl shadow-sky-500/50 tracking-wider">JJ</div>
             </div>
         </div>
 
-        <!-- Títulos de Bienvenida y Sistema de Integración -->
-        <div class="space-y-2">
-            <span class="text-[10px] font-mono-code uppercase tracking-widest text-sky-400 bg-sky-950/80 px-3.5 py-1 rounded-full border border-sky-800/80">
+        <!-- Títulos de Bienvenida y Sistema de Integración (Directo sobre la imagen) -->
+        <div class="space-y-2 drop-shadow-[0_4px_12px_rgba(0,0,0,0.9)]">
+            <span class="text-[10px] font-mono-code uppercase tracking-widest text-sky-300 bg-slate-900/80 px-3.5 py-1 rounded-full border border-sky-500/50">
                 COMPLEJO JIRETH C.A. — 2026
             </span>
-            <h2 class="text-xl sm:text-2xl font-black text-white tracking-wider uppercase drop-shadow-md">
-                BIENVENIDO AL SISTEMA JIRETH CORE
+            <h2 class="text-xl sm:text-3xl font-black text-white tracking-wider uppercase">
+                BIENVENIDO AL SISTEMA GEOCORE
             </h2>
-            <p class="text-xs sm:text-sm text-slate-300 font-semibold leading-relaxed max-w-md mx-auto">
-                Sistema Integral de Integración y Control de Sondajes Diamantinos, Topografía y Modelado Geológico.
+            <p class="text-xs sm:text-sm text-slate-200 font-semibold leading-relaxed max-w-md mx-auto">
+                Sistema Integral de Sondajes Diamantinos, Topografía y Modelado Geológico.
             </p>
         </div>
 
         <!-- Estado de Carga / Inicialización -->
         <div class="space-y-2 pt-1">
-            <div id="splashStatusText" class="text-[11px] font-mono-code text-sky-300 font-extrabold uppercase tracking-widest">
+            <div id="splashStatusText" class="text-[11px] font-mono-code text-sky-300 font-extrabold uppercase tracking-widest drop-shadow">
                 INICIALIZANDO NÚCLEO HOLOGRÁFICO...
             </div>
-            <div class="w-full bg-slate-950/90 h-1.5 rounded-full overflow-hidden border border-sky-500/30 p-0.5 max-w-xs mx-auto">
+            <div class="w-full bg-slate-950/80 h-1.5 rounded-full overflow-hidden border border-sky-500/40 p-0.5 max-w-xs mx-auto shadow-lg">
                 <div id="splashProgressBar" class="bg-gradient-to-r from-sky-400 via-indigo-500 to-sky-400 h-full rounded-full transition-all duration-700 w-0 shadow-lg shadow-sky-500/50"></div>
             </div>
         </div>
 
-        <div class="text-center pt-2">
-            <span class="text-[10px] font-mono-code text-slate-500 font-bold uppercase tracking-widest">by: carlosgeologo • Pro Edition</span>
+        <div class="text-center pt-2 drop-shadow">
+            <span class="text-[10px] font-mono-code text-slate-300 font-bold uppercase tracking-widest">by: carlosgeologo • Pro Edition</span>
         </div>
     </div>
 </div>
@@ -1186,7 +1186,7 @@
 
         let currentStep = 0;
         
-        // 1. Iniciar con pantalla en negro absoluto y hacer fade-in de la Splash
+        // 1. Iniciar con pantalla transparente y hacer fade-in de la Splash
         setTimeout(() => {
             splashScreen.classList.remove('opacity-0');
         }, 50);
