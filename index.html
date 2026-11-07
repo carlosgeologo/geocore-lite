@@ -265,7 +265,7 @@
             #printable-area { border: none !important; box-shadow: none !important; padding: 0 !important; margin: 0 !important; width: 100% !important; max-width: 100% !important; background: #ffffff !important; }
             .dsr-header-print-fixed {
                 display: flex !important; position: fixed; top: -24mm; left: 0; right: 0; height: 20mm;
-                border-bottom: 2px solid #0f172a; background: #ffffff !important; justify-content: space-between; align-items: center; padding-bottom: 4px; z-index: 99999;
+                border-bottom: 2px solid #0f172a; background: #ffffff !important; justify-space-between; align-items: center; padding-bottom: 4px; z-index: 99999;
             }
             .logo-img-print { display: block !important; }
             .logo-svg-screen { display: none !important; }
@@ -674,7 +674,15 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                     <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Perforador *</label>
-                    <input type="text" id="m3_perforador" onblur="forzarMayusculas(this)" class="input-field w-full px-3.5 text-xs font-extrabold uppercase text-white" placeholder="NOMBRE DEL PERFORADOR">
+                    <select id="m3_perforador_select" onchange="toggleOtroPerforador()" class="input-field w-full px-3.5 text-xs font-bold text-white">
+                        <option value="CARLOS PÉREZ">CARLOS PÉREZ</option>
+                        <option value="JEAN C.">JEAN C.</option>
+                        <option value="MIGUEL TORRES">MIGUEL TORRES</option>
+                        <option value="OTRO">Otro (Especificar)</option>
+                    </select>
+                    <div id="m3_otro_perforador_box" class="hidden mt-2">
+                        <input type="text" id="m3_perforador" onblur="forzarMayusculas(this)" class="input-field w-full px-3.5 text-xs font-extrabold uppercase text-white" placeholder="NOMBRE Y APELLIDO PERFORADOR">
+                    </div>
                 </div>
                 <div>
                     <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Supervisor GEÓLOGOS *</label>
@@ -980,7 +988,7 @@
                         <div class="space-y-1">
                             <p class="text-slate-900 font-black uppercase text-[11px] tracking-wider border-b border-slate-200 pb-0.5">SUPERVISIÓN Y DIÁMETROS</p>
                             <div><b>Inclinación (Dip) / Azimut:</b> <span id="repDipAzimut" class="font-mono-code text-slate-800">--</span></div>
-                            <div><b>Operador Perforadora:</b> <span id="repPerforadorTurno" class="text-slate-800 font-bold">--</span></div>
+                            <div><b>Operador Perforador:</b> <span id="repPerforadorTurno" class="text-slate-800 font-bold">--</span></div>
                             <div><b>Geólogo Responsable:</b> <span id="repGeologoTurno" class="text-slate-800 font-bold">--</span></div>
                             <div><b>Metros HQ / NQ:</b> <span id="repMetrosHQRep" class="font-mono-code text-slate-800 font-bold">0.00m</span> / <span id="repMetrosNQRep" class="font-mono-code text-slate-700 font-bold">0.00m</span></div>
                             <div><b>Estado Sondaje:</b> <span id="repEstadoPozo" class="font-bold text-slate-900">--</span></div>
@@ -1243,7 +1251,6 @@
     const PIN_MAESTRO = "2628";
 
     window.addEventListener('DOMContentLoaded', () => {
-        // Verificar si ya había una sesión activa guardada
         let sesionActiva = localStorage.getItem('jireth_sesion_activa') === 'true';
         if (sesionActiva) {
             document.getElementById('pantallaSplash').classList.add('hidden');
@@ -1292,6 +1299,17 @@
     function confirmarCierreSesion() {
         localStorage.removeItem('jireth_sesion_activa');
         location.reload();
+    }
+
+    function toggleOtroPerforador() {
+        const sel = document.getElementById('m3_perforador_select').value;
+        const box = document.getElementById('m3_otro_perforador_box');
+        if (sel === 'OTRO') {
+            box.classList.remove('hidden');
+        } else {
+            box.classList.add('hidden');
+            document.getElementById('m3_perforador').value = sel;
+        }
     }
 
     function guardarNuevasClavesMaestras() {
@@ -1508,7 +1526,6 @@
             document.getElementById('drawerFechaUltSesion').innerText = "Sesión: " + new Date().toLocaleString();
             document.getElementById('drawerRolBadge').innerText = perfilActual === 'GEOLOGOS' ? 'Geólogo Supervisor' : 'Gerencia Audit';
 
-            // REDIRECCIÓN OBLIGATORIA A SALA SITUACIONAL AL INICIAR SESIÓN
             switchTab('mod_sala');
         }, 500);
     }
@@ -1525,7 +1542,6 @@
         switchTab('mod_sala');
     }
 
-    /* SWITCH TAB OPTIMIZADO CON DIFERIMIENTO ASÍNCRONO */
     function switchTab(tabId) {
         if (perfilActual === 'GERENCIA' && tabId !== 'mod_sala' && tabId !== 'mod5' && tabId !== 'mod_estadisticas') tabId = 'mod_sala';
         
@@ -2030,7 +2046,8 @@
         
         let fecha = document.getElementById('m3_fecha').value;
         let jornada = document.getElementById('m3_turno').value;
-        let perforador = document.getElementById('m3_perforador').value.trim().toUpperCase();
+        let perfSelect = document.getElementById('m3_perforador_select').value;
+        let perforador = perfSelect === 'OTRO' ? document.getElementById('m3_perforador').value.trim().toUpperCase() : perfSelect;
         let geologo = document.getElementById('m3_geologo').value.trim().toUpperCase();
         let turnoEditId = document.getElementById('editTurnoId').value;
 
@@ -2074,7 +2091,9 @@
     function cancelarEdicionTurno() {
         document.getElementById('editTurnoId').value = '';
         document.getElementById('m3_fecha').valueAsDate = new Date();
-        document.getElementById('m3_perforador').value = '';
+        document.getElementById('m3_perforador_select').selectedIndex = 0;
+        document.getElementById('m3_otro_perforador_box').classList.add('hidden');
+        document.getElementById('m3_perforador').value = 'CARLOS PÉREZ';
         document.getElementById('m3_geologo').value = '';
         document.getElementById('tituloBoxTurno').innerText = "🚀 2. Apertura o Retome de Turno Operativo";
         document.getElementById('btnAccionTurno').innerText = "🚀 Aperturar Turno & Activar Logging";
@@ -2228,7 +2247,7 @@
         p.avances.sort((a, b) => parseFloat(a.desde) - parseFloat(b.desde));
 
         await guardarYPersistirTodo();
-        registrarLogAuditoria("REGISTRO TRAMO", `Pozo ${pozoActivoId} (${desde.toFixed(2)}-${hasta.toFixed(2)}m) Rec: ${recuperado.toFixed(2)}m`);
+        registrarLogAuditoria("REGISTRO TRAMO", `Pozo ${pozoActivoId} (${desde.toFixed(2)}-${hasta.toFixed(2)}m) Perf: ${turnoActivoObj.perforador}`);
 
         actualizarTablaAvances();
         actualizarProgresoGrafico();
@@ -2749,7 +2768,6 @@
         setTimeout(() => { window.print(); }, 500);
     }
 
-    /* MÓDULO ESTADÍSTICAS REORGANIZADO CON MENÚ DESPLEGABLE */
     function cambiarVistaEstadisticaMenu(val) {
         ['estContainer_KPI_GENERAL', 'estContainer_CHART_SECTION', 'estContainer_FILTRO_CRUZADO'].forEach(id => {
             const el = document.getElementById(id);
@@ -2787,7 +2805,6 @@
         let prevDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
         const mesAnteriorStr = `${prevDate.getFullYear()}-${String(prevDate.getMonth() + 1).padStart(2, '0')}`;
 
-        // Filtros cruzados opcionales
         let fPerf = (document.getElementById('filtroCruzadoPerforador').value || "").toUpperCase();
         let fMaq = document.getElementById('filtroCruzadoMaquina').value;
         let fTurno = document.getElementById('filtroCruzadoTurno').value;
@@ -2819,7 +2836,6 @@
                     let maqTramo = av.maquina || p.maquina || 'GEOMAX';
                     let jornadaTramo = av.jornada || 'DIURNO';
 
-                    // Evaluación filtro cruzado
                     let matchCruzado = true;
                     if (fPerf && !perfTramo.includes(fPerf)) matchCruzado = false;
                     if (fMaq !== 'TODAS' && maqTramo !== fMaq) matchCruzado = false;
