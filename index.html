@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Jireth GeoCore Lite - Cinematic Pro Edition</title>
+    <title>Jireth GeoCore Lite - Dynamic Drillers Edition</title>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#020617">
 
@@ -260,7 +260,7 @@
             }
             body { background: #ffffff !important; color: #000000 !important; padding: 0 !important; margin: 0 !important; }
             .no-print, header, nav, .bottom-nav-fixed, .drawer-overlay, #toastFeedback, select, input, button, .input-field, #boxSelectoresRepoPadre { display: none !important; }
-            #mod_sala, #mod1, #mod2, #mod_turnologging, #mod4, #mod_estadisticas, #mod6 { display: none !important; }
+            #mod_sala, #mod1, #mod2, #mod_turnologging, #mod_perforadores, #mod4, #mod_estadisticas, #mod6 { display: none !important; }
             #mod5 { display: block !important; border: none !important; box-shadow: none !important; background: transparent !important; padding: 0 !important; margin: 0 !important; }
             #printable-area { border: none !important; box-shadow: none !important; padding: 0 !important; margin: 0 !important; width: 100% !important; max-width: 100% !important; background: #ffffff !important; }
             .dsr-header-print-fixed {
@@ -426,6 +426,9 @@
 
         <div class="flex-1 overflow-y-auto p-4 space-y-1 text-xs font-bold text-slate-300">
             <div class="text-[10px] uppercase font-black tracking-widest text-slate-500 px-3 py-1">Módulos Especializados</div>
+            <button type="button" onclick="switchTab('mod_perforadores'); cerrarMenuDrawer();" id="drawerBtnPerforadores" class="w-full flex items-center gap-3 px-3 py-3 rounded-xl hover:bg-slate-900 hover:text-white transition text-left text-sky-400">
+                <span>👷</span><span>Módulo de Perforadores</span>
+            </button>
             <button type="button" onclick="switchTab('mod5'); cerrarMenuDrawer();" id="drawerBtnRepo" class="w-full flex items-center gap-3 px-3 py-3 rounded-xl hover:bg-slate-900 hover:text-white transition text-left">
                 <span>📁</span><span>Repositorio & Informes DSR</span>
             </button>
@@ -504,6 +507,55 @@
             </button>
         </div>
     </header>
+
+    <!-- MÓDULO: REGISTRO DE PERFORADORES (SIMPLIFICADO: NOMBRE Y APELLIDO ONLY) -->
+    <section id="mod_perforadores" class="hidden space-y-4 card-pro p-4 sm:p-6">
+        <div class="flex justify-between items-center flex-wrap gap-2 pb-3 border-b border-slate-800">
+            <div>
+                <h2 class="text-lg sm:text-xl font-black text-white tracking-tight flex items-center gap-2">
+                    <span>👷 Módulo de Perforadores</span>
+                    <span class="text-xs bg-sky-950 text-sky-300 px-2.5 py-0.5 rounded-full border border-sky-800 font-mono-code" id="cantPerforadoresBadge">0 Registrados</span>
+                </h2>
+                <p class="text-xs text-slate-400 mt-0.5">Registra la nómina de perforadores (Nombre y Apellido). Aparecerán automáticamente en la apertura del turno.</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+            <!-- Formulario de Registro -->
+            <div class="bg-slate-900/90 p-4 sm:p-5 rounded-2xl border border-slate-800 space-y-4 shadow-sm h-fit">
+                <h3 class="text-xs font-black text-white uppercase tracking-wider" id="tituloFormPerforador">➕ Registrar Perforador</h3>
+                <input type="hidden" id="editPerforadorIndex" value="">
+
+                <div>
+                    <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Nombre y Apellido *</label>
+                    <input type="text" id="mPerf_nombre" onblur="forzarMayusculas(this)" class="input-field w-full px-4 text-xs font-extrabold text-white uppercase" placeholder="EJ: PEDRO ALVARADO">
+                </div>
+
+                <div class="pt-1 flex gap-2">
+                    <button type="button" id="btnGuardarPerforador" onclick="guardarPerforador()" class="btn-field flex-1 bg-gradient-to-r from-sky-600 to-indigo-600 hover:from-sky-500 hover:to-indigo-500 text-white text-xs font-black shadow-lg">💾 Guardar</button>
+                    <button type="button" id="btnCancelarEditPerf" onclick="cancelarEdicionPerforador()" class="hidden bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 px-3 text-xs font-bold rounded-xl">❌ Cancelar</button>
+                </div>
+            </div>
+
+            <!-- Lista de Perforadores -->
+            <div class="md:col-span-2 space-y-3">
+                <h3 class="text-xs font-black text-slate-300 uppercase tracking-wider">📋 Lista de Perforadores Activos</h3>
+                <div class="overflow-x-auto border border-slate-800 rounded-2xl shadow-sm bg-slate-950">
+                    <table class="w-full text-left text-xs border-collapse">
+                        <thead class="bg-slate-900 text-slate-300 uppercase font-extrabold tracking-wider border-b border-slate-800">
+                            <tr>
+                                <th class="p-3">#</th>
+                                <th class="p-3">Nombre y Apellido</th>
+                                <th class="p-3 text-center">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablaPerforadoresBody" class="divide-y divide-slate-900 font-mono-code text-slate-200">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <!-- MÓDULO 0: SALA SITUACIONAL (INICIO POR DEFECTO) -->
     <section id="mod_sala" class="space-y-4 card-pro p-4 sm:p-6">
@@ -674,11 +726,8 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                     <label class="block text-xs font-extrabold text-slate-300 mb-1.5 uppercase tracking-wider">Perforador *</label>
+                    <!-- SELECTOR DE PERFORADORES DINÁMICO -->
                     <select id="m3_perforador_select" onchange="toggleOtroPerforador()" class="input-field w-full px-3.5 text-xs font-bold text-white">
-                        <option value="CARLOS PÉREZ">CARLOS PÉREZ</option>
-                        <option value="JEAN C.">JEAN C.</option>
-                        <option value="MIGUEL TORRES">MIGUEL TORRES</option>
-                        <option value="OTRO">Otro (Especificar)</option>
                     </select>
                     <div id="m3_otro_perforador_box" class="hidden mt-2">
                         <input type="text" id="m3_perforador" onblur="forzarMayusculas(this)" class="input-field w-full px-3.5 text-xs font-extrabold uppercase text-white" placeholder="NOMBRE Y APELLIDO PERFORADOR">
@@ -707,7 +756,7 @@
             </div>
         </div>
 
-        <!-- MÓDULO CORE LOGGING (Se despliega automáticamente al abrir turno activo) -->
+        <!-- MÓDULO CORE LOGGING -->
         <div id="contenedorCoreLogging" class="hidden space-y-4 pt-3 border-t border-slate-800">
             <div id="infoTurnoActivo" class="bg-slate-900/90 p-3.5 rounded-2xl border border-sky-500/50 flex justify-between items-center flex-wrap gap-2 text-xs shadow-sm">
                 <div>
@@ -1236,6 +1285,10 @@
     let pozoActivoId = localStorage.getItem('jireth_pozo_activo') || '';
     let turnosData = JSON.parse(localStorage.getItem('jireth_turnos') || '{}');
     let turnoActivoObj = JSON.parse(localStorage.getItem('jireth_turno_activo') || 'null');
+    
+    // NÓMINA DE PERFORADORES (SIMPLIFICADA: SOLO NOMBRE Y APELLIDO)
+    let perforadoresData = JSON.parse(localStorage.getItem('jireth_perforadores') || '["CARLOS PÉREZ", "JEAN C.", "MIGUEL TORRES"]');
+    
     let syncQueue = JSON.parse(localStorage.getItem('jireth_sync_queue') || '[]');
     let auditLogs = JSON.parse(localStorage.getItem('jireth_audit_logs') || '[]');
     let indexEditandoAvance = null;
@@ -1299,6 +1352,123 @@
     function confirmarCierreSesion() {
         localStorage.removeItem('jireth_sesion_activa');
         location.reload();
+    }
+
+    // --- MÓDULO DE REGISTRO & NÓMINA DE PERFORADORES ---
+    function renderizarTablaPerforadores() {
+        const tbody = document.getElementById('tablaPerforadoresBody');
+        const badge = document.getElementById('cantPerforadoresBadge');
+        if (!tbody) return;
+        
+        tbody.innerHTML = '';
+        if (badge) badge.innerText = `${perforadoresData.length} Registrados`;
+
+        if (perforadoresData.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="3" class="p-4 text-center text-slate-500 font-bold">No hay perforadores registrados.</td></tr>`;
+            return;
+        }
+
+        perforadoresData.forEach((nombre, idx) => {
+            let tr = document.createElement('tr');
+            tr.className = "hover:bg-slate-900 transition";
+            let tdAcciones = perfilActual === 'GERENCIA' ? `<td class="p-3 text-center text-slate-500">Lectura</td>` : `
+                <td class="p-3 text-center space-x-1">
+                    <button onclick="editarPerforador(${idx})" class="text-xs bg-slate-800 text-sky-400 px-2.5 py-1 rounded-lg border border-slate-700 shadow-sm font-bold hover:bg-slate-700">✏️ Editar</button>
+                    <button onclick="eliminarPerforador(${idx})" class="text-xs bg-rose-950 text-rose-300 px-2.5 py-1 rounded-lg border border-rose-800 shadow-sm font-bold hover:bg-rose-900">🗑️ Eliminar</button>
+                </td>
+            `;
+
+            tr.innerHTML = `
+                <td class="p-3 font-bold text-slate-400">#${idx + 1}</td>
+                <td class="p-3 font-extrabold text-white">${nombre}</td>
+                ${tdAcciones}
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    async function guardarPerforador() {
+        if (perfilActual === 'GERENCIA') return;
+        const inputNombre = document.getElementById('mPerf_nombre');
+        const idxEdit = document.getElementById('editPerforadorIndex').value;
+        let nombre = inputNombre.value.trim().toUpperCase();
+
+        if (!nombre) {
+            alert("❌ Ingrese el Nombre y Apellido del perforador.");
+            return;
+        }
+
+        if (idxEdit !== "") {
+            perforadoresData[parseInt(idxEdit)] = nombre;
+            registrarLogAuditoria("PERFORADOR ACTUALIZADO", `Nombre actualizado a ${nombre}`);
+            showToast("Perforador Actualizado", `Nombre actualizado a ${nombre}`);
+        } else {
+            if (perforadoresData.includes(nombre)) {
+                alert("⚠️ Este perforador ya se encuentra registrado.");
+                return;
+            }
+            perforadoresData.push(nombre);
+            registrarLogAuditoria("PERFORADOR REGISTRADO", `${nombre} añadido a la nómina`);
+            showToast("Perforador Registrado", `${nombre} añadido a la lista.`);
+        }
+
+        await guardarYPersistirTodo();
+        cancelarEdicionPerforador();
+        poblarSelectPerforadoresTurno();
+        renderizarTablaPerforadores();
+    }
+
+    function editarPerforador(idx) {
+        if (perfilActual === 'GERENCIA') return;
+        document.getElementById('mPerf_nombre').value = perforadoresData[idx];
+        document.getElementById('editPerforadorIndex').value = idx;
+        document.getElementById('tituloFormPerforador').innerText = "✏️ Editar Perforador";
+        document.getElementById('btnCancelarEditPerf').classList.remove('hidden');
+    }
+
+    function cancelarEdicionPerforador() {
+        document.getElementById('mPerf_nombre').value = '';
+        document.getElementById('editPerforadorIndex').value = '';
+        document.getElementById('tituloFormPerforador').innerText = "➕ Registrar Perforador";
+        document.getElementById('btnCancelarEditPerf').classList.add('hidden');
+    }
+
+    async function eliminarPerforador(idx) {
+        if (perfilActual === 'GERENCIA') return;
+        let nom = perforadoresData[idx];
+        if (confirm(`¿Desea eliminar a ${nom} de la lista de perforadores?`)) {
+            perforadoresData.splice(idx, 1);
+            await guardarYPersistirTodo();
+            registrarLogAuditoria("PERFORADOR ELIMINADO", `${nom} removido de la base de datos`);
+            poblarSelectPerforadoresTurno();
+            renderizarTablaPerforadores();
+            showToast("Eliminado", `${nom} removido de la lista.`, "🗑️");
+        }
+    }
+
+    function poblarSelectPerforadoresTurno() {
+        const select = document.getElementById('m3_perforador_select');
+        if (!select) return;
+        
+        let valActual = select.value;
+        select.innerHTML = '<option value="">-- Seleccionar Perforador --</option>';
+
+        perforadoresData.forEach(nombre => {
+            let opt = document.createElement('option');
+            opt.value = nombre;
+            opt.text = nombre;
+            select.appendChild(opt);
+        });
+
+        let optOtro = document.createElement('option');
+        optOtro.value = "OTRO";
+        optOtro.text = "➕ OTRO (ESPECIFICAR)";
+        optOtro.className = "font-black text-amber-400 bg-slate-900";
+        select.appendChild(optOtro);
+
+        if (perforadoresData.includes(valActual)) {
+            select.value = valActual;
+        }
     }
 
     function toggleOtroPerforador() {
@@ -1382,6 +1552,8 @@
     window.onload = async function() {
         document.getElementById('m3_fecha').valueAsDate = new Date();
         migrarRecalcularPagosEstandar();
+        poblarSelectPerforadoresTurno();
+        renderizarTablaPerforadores();
         refrescarSelectoresOperativos();
         refrescarSelectorModuloUno();
         poblarSelectTopografia();
@@ -1543,9 +1715,9 @@
     }
 
     function switchTab(tabId) {
-        if (perfilActual === 'GERENCIA' && tabId !== 'mod_sala' && tabId !== 'mod5' && tabId !== 'mod_estadisticas') tabId = 'mod_sala';
+        if (perfilActual === 'GERENCIA' && tabId !== 'mod_sala' && tabId !== 'mod5' && tabId !== 'mod_estadisticas' && tabId !== 'mod_perforadores') tabId = 'mod_sala';
         
-        ['mod_sala', 'mod1', 'mod2', 'mod_turnologging', 'mod4', 'mod5', 'mod_estadisticas', 'mod6'].forEach(t => {
+        ['mod_sala', 'mod1', 'mod2', 'mod_turnologging', 'mod_perforadores', 'mod4', 'mod5', 'mod_estadisticas', 'mod6'].forEach(t => {
             const sec = document.getElementById(t);
             if (sec) sec.classList.add('hidden');
             const btnNav = document.getElementById('bnav-' + t);
@@ -1562,7 +1734,8 @@
             if (tabId === 'mod_sala') renderizarSalaSituacional();
             if (tabId === 'mod1') refrescarSelectorModuloUno();
             if (tabId === 'mod2') poblarSelectTopografia();
-            if (tabId === 'mod_turnologging') { verificarSeleccionTurnoLoggingModulo(); renderizarPerfil2D(); }
+            if (tabId === 'mod_perforadores') renderizarTablaPerforadores();
+            if (tabId === 'mod_turnologging') { verificarSeleccionTurnoLoggingModulo(); renderizarPerfil2D(); poblarSelectPerforadoresTurno(); }
             if (tabId === 'mod4') poblarSelectCierre();
             if (tabId === 'mod_turnologging' || tabId === 'mod4') refrescarSelectoresOperativos();
             if (tabId === 'mod5') poblarSelectRepositorioTodos();
@@ -2093,7 +2266,7 @@
         document.getElementById('m3_fecha').valueAsDate = new Date();
         document.getElementById('m3_perforador_select').selectedIndex = 0;
         document.getElementById('m3_otro_perforador_box').classList.add('hidden');
-        document.getElementById('m3_perforador').value = 'CARLOS PÉREZ';
+        document.getElementById('m3_perforador').value = '';
         document.getElementById('m3_geologo').value = '';
         document.getElementById('tituloBoxTurno').innerText = "🚀 2. Apertura o Retome de Turno Operativo";
         document.getElementById('btnAccionTurno').innerText = "🚀 Aperturar Turno & Activar Logging";
@@ -3019,7 +3192,7 @@
     }
 
     function exportarBackupJSON() {
-        let backup = { pozos: pozosData, turnos: turnosData, activo: pozoActivoId, logs: auditLogs };
+        let backup = { pozos: pozosData, turnos: turnosData, perforadores: perforadoresData, activo: pozoActivoId, logs: auditLogs };
         let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backup, null, 2));
         let dlAnchorElem = document.createElement('a');
         dlAnchorElem.setAttribute("href", dataStr);
@@ -3039,11 +3212,14 @@
                 if (imp.pozos) {
                     pozosData = imp.pozos;
                     turnosData = imp.turnos || {};
+                    perforadoresData = imp.perforadores || ["CARLOS PÉREZ", "JEAN C.", "MIGUEL TORRES"];
                     pozoActivoId = imp.activo || '';
                     auditLogs = imp.logs || [];
                     migrarRecalcularPagosEstandar();
                     await guardarYPersistirTodo();
                     registrarLogAuditoria("BACKUP IMPORTADO", "Base de datos restaurada desde archivo JSON");
+                    poblarSelectPerforadoresTurno();
+                    renderizarTablaPerforadores();
                     refrescarSelectoresOperativos();
                     refrescarSelectorModuloUno();
                     poblarSelectTopografia();
@@ -3060,10 +3236,17 @@
     async function guardarYPersistirTodo() {
         localStorage.setItem('jireth_pozos', JSON.stringify(pozosData));
         localStorage.setItem('jireth_turnos', JSON.stringify(turnosData));
+        localStorage.setItem('jireth_perforadores', JSON.stringify(perforadoresData));
         localStorage.setItem('jireth_audit_logs', JSON.stringify(auditLogs));
 
         const timestampActual = new Date().toISOString();
-        const payloadData = { pozos: pozosData, turnos: turnosData, logs: auditLogs, actualizado: timestampActual };
+        const payloadData = { 
+            pozos: pozosData, 
+            turnos: turnosData, 
+            perforadores: perforadoresData, 
+            logs: auditLogs, 
+            actualizado: timestampActual 
+        };
 
         if (navigator.onLine && supabaseClient) {
             try {
@@ -3118,6 +3301,12 @@
                 if (data.payload.turnos) {
                     turnosData = data.payload.turnos;
                     localStorage.setItem('jireth_turnos', JSON.stringify(turnosData));
+                }
+                if (data.payload.perforadores) {
+                    perforadoresData = data.payload.perforadores;
+                    localStorage.setItem('jireth_perforadores', JSON.stringify(perforadoresData));
+                    poblarSelectPerforadoresTurno();
+                    renderizarTablaPerforadores();
                 }
                 if (data.payload.logs) {
                     auditLogs = data.payload.logs;
