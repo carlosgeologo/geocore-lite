@@ -24,7 +24,6 @@
             font-size: 16px;
         }
 
-        /* ESCALA FLUIDA Y ANCHO COMPLETO EN PANTALLA GRANDE (PC) */
         @media (min-width: 1024px) {
             html { font-size: 17px; }
             .main-container-fluid {
@@ -68,7 +67,6 @@
             box-shadow: 0 2px 12px rgba(15, 23, 42, 0.04);
         }
 
-        /* BARRA INFERIOR AMPLIADA Y CÓMODA */
         .bottom-nav-fixed {
             position: fixed;
             bottom: 0;
@@ -139,7 +137,6 @@
         }
         .btn-field:active { transform: scale(0.98); }
 
-        /* INPUTS A 16PX REAL (EVITA ZOOM AUTOMÁTICO EN MÓVIL Y MEJORA CAMPO) */
         .input-field {
             min-height: 48px; border: 1.5px solid #cbd5e1; font-weight: 700;
             background-color: #f8fafc; color: #0f172a; border-radius: 0.85rem; font-size: 1rem;
@@ -169,27 +166,29 @@
         #printable-area { width: 100%; max-width: 800px; margin: 0 auto; box-sizing: border-box; background: #ffffff; color: #0f172a; }
         .dsr-header-print-fixed { display: none; }
 
+        /* REGLAS ESTRICTAS DE IMPRESIÓN Y MÁRGENES PARA EVITAR DESPLAZAMIENTOS */
         @media print {
             @page {
-                size: letter portrait; margin: 30mm 10mm 15mm 10mm;
+                size: letter portrait; margin: 15mm 10mm 15mm 10mm;
                 @bottom-right { content: "Página " counter(page) " de " counter(pages); font-size: 8pt; font-family: sans-serif; color: #0f172a; font-weight: bold; }
             }
             body { background: #ffffff !important; color: #000000 !important; padding: 0 !important; margin: 0 !important; }
             .no-print, header, nav, .bottom-nav-fixed, .drawer-overlay, #toastFeedback, select, input, button, .input-field, #boxSelectoresRepoPadre { display: none !important; }
             #mod_sala, #mod1, #mod2, #mod_turnologging, #mod_perforadores, #mod4, #mod_estadisticas, #mod6 { display: none !important; }
             #mod5 { display: block !important; border: none !important; box-shadow: none !important; background: transparent !important; padding: 0 !important; margin: 0 !important; }
-            #printable-area { border: none !important; box-shadow: none !important; padding: 0 !important; margin: 0 !important; width: 100% !important; max-width: 100% !important; background: #ffffff !important; }
+            #printable-area { border: none !important; box-shadow: none !important; padding: 0 !important; margin: 0 !important; width: 100% !important; max-width: 100% !important; background: #ffffff !important; page-break-inside: avoid; }
             .dsr-header-print-fixed {
-                display: flex !important; position: fixed; top: -24mm; left: 0; right: 0; height: 20mm;
+                display: flex !important; position: fixed; top: -12mm; left: 0; right: 0; height: 16mm;
                 border-bottom: 2px solid #0f172a; background: #ffffff !important; justify-content: space-between; align-items: center; padding-bottom: 4px; z-index: 99999;
             }
             .logo-img-print { display: block !important; }
             .logo-svg-screen { display: none !important; }
-            table { width: 100% !important; border-collapse: collapse !important; page-break-inside: auto; margin-top: 6px !important; }
+            table { width: 100% !important; border-collapse: collapse !important; page-break-inside: auto; margin-top: 4px !important; }
             thead { display: table-header-group !important; }
             tr { page-break-inside: avoid !important; break-inside: avoid !important; }
-            th { background-color: #0f172a !important; color: #ffffff !important; border: 1px solid #334155 !important; padding: 6px 8px !important; font-size: 9pt !important; }
-            td { border: 1px solid #cbd5e1 !important; padding: 5px 8px !important; font-size: 9pt !important; }
+            th { background-color: #0f172a !important; color: #ffffff !important; border: 1px solid #334155 !important; padding: 4px 6px !important; font-size: 8pt !important; }
+            td { border: 1px solid #cbd5e1 !important; padding: 4px 6px !important; font-size: 8pt !important; }
+            .avoid-break { page-break-inside: avoid !important; break-inside: avoid !important; }
         }
     </style>
 </head>
@@ -968,7 +967,7 @@
                     <select id="repModoVista" onchange="generarReporteDSR()" class="input-field w-full sm:w-auto px-4 py-2 font-bold text-xs">
                         <option value="TURNO">1. REPORTE DE TURNO</option>
                         <option value="ACUMULADO">2. REPORTE ACUMULADO DEL SONDAJE</option>
-                        <option value="CULMINADO">3. REPORTE SONDAJE CULMINADO (OFICIAL)</option>
+                        <option id="optReporteCulminado" value="CULMINADO">3. REPORTE SONDAJE CULMINADO (OFICIAL)</option>
                     </select>
                 </div>
                 <div id="boxSelectTurnoRepo" class="hidden w-full sm:w-auto">
@@ -992,7 +991,7 @@
                     </div>
                 </div>
 
-                <div class="space-y-5 page-break-after">
+                <div class="space-y-5">
                     <div class="border-b-2 border-slate-900 pb-3.5 flex justify-between items-center flex-wrap gap-3 px-1 pt-0 no-print">
                         <div class="flex items-center gap-3">
                             <div class="w-9 h-9 rounded-xl bg-sky-600 flex items-center justify-center font-black text-white text-sm">JJ</div>
@@ -1047,6 +1046,22 @@
                             <div><b>Geólogo Responsable:</b> <span id="repGeologoTurno" class="text-slate-800 font-bold">--</span></div>
                             <div><b>Metros HQ / NQ:</b> <span id="repMetrosHQRep" class="font-mono-code text-slate-800 font-bold">0.00m</span> / <span id="repMetrosNQRep" class="font-mono-code text-slate-700 font-bold">0.00m</span></div>
                             <div><b>Estado Sondaje:</b> <span id="repEstadoPozo" class="font-bold text-slate-900">--</span></div>
+                        </div>
+                    </div>
+
+                    <!-- GRÁFICAS INTEGRADAS EN EL REPORTE DSR -->
+                    <div id="repBoxGraficasDSR" class="grid grid-cols-1 sm:grid-cols-2 gap-4 avoid-break">
+                        <div id="repBoxGraficaProgresoTarget" class="hidden bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2">
+                            <p class="text-xs font-black text-slate-900 uppercase tracking-wider">Progreso Actual vs Target (Pozos Activos):</p>
+                            <div class="relative h-48 w-full flex justify-center items-center bg-white p-2 rounded-lg border border-slate-200">
+                                <canvas id="chartRepProgresoTarget"></canvas>
+                            </div>
+                        </div>
+                        <div id="repBoxGraficaFisicoPagable" class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2">
+                            <p class="text-xs font-black text-slate-900 uppercase tracking-wider">Metros Físicos vs Metros Pagables:</p>
+                            <div class="relative h-48 w-full flex justify-center items-center bg-white p-2 rounded-lg border border-slate-200">
+                                <canvas id="chartRepFisicoPagable"></canvas>
+                            </div>
                         </div>
                     </div>
 
@@ -1107,7 +1122,7 @@
         </div>
     </section>
 
-    <!-- MÓDULO 6: ESTADÍSTICAS & ANALÍTICA (CON SELECTOR MENSUAL Y GRÁFICAS COMPLEMENTARIAS) -->
+    <!-- MÓDULO 6: ESTADÍSTICAS & ANALÍTICA -->
     <section id="mod_estadisticas" class="hidden space-y-5 card-pro p-5 sm:p-8">
         <div class="flex justify-between items-center flex-wrap gap-3 pb-4 border-b border-slate-200">
             <div>
@@ -1118,7 +1133,6 @@
                 <p class="text-sm text-slate-500 mt-1">Análisis por período mensual y métricas ejecutivas.</p>
             </div>
             <div class="flex items-center gap-3 w-full sm:w-auto flex-wrap">
-                <!-- SELECTOR MAESTRO DE PERÍODO MENSUAL -->
                 <select id="filtroEstadisticasMes" onchange="renderizarEstadisticasGlobales()" class="input-field px-4 py-2 font-bold text-xs bg-white text-sky-700 border-sky-300">
                     <option value="TODOS">Todos los Meses (Acumulado Histórico)</option>
                 </select>
@@ -1139,7 +1153,7 @@
                 <option value="METROS_EMPRESA">2. Metros Perforados por Empresas</option>
                 <option value="PROGRESO_ACTIVO">3. Progreso de Metros Actuales vs Target & % Avance (Pozos Activos)</option>
                 <option value="FISICOS_VS_PAGABLES">4. Metros Físicos vs Metros Pagables (Auditoría Contractual)</option>
-                <option value="RENDIMIENTO_MES">5. Rendimiento de Perforación por Mes</option>
+                <option value="RENDIMIENTO_MES">5. Rendimiento de Perforación por Mes (Rango Dinámico)</option>
                 <option value="RENDIMIENTO_OPERADOR">6. Rendimiento por Operador Perforador</option>
             </select>
         </div>
@@ -1169,12 +1183,12 @@
                 </div>
             </div>
 
-            <!-- GRÁFICAS COMPLEMENTARIAS MINIMALISTAS PARA KPIs -->
+            <!-- GRÁFICAS COMPLEMENTARIAS MINIMALISTAS PARA KPIs (SIN FECHAS SATURADAS) -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
                 <div class="card-sub p-5 space-y-3">
                     <h3 class="text-xs font-extrabold text-slate-900 uppercase tracking-wider flex items-center justify-between">
                         <span>Curva Analítica de Rendimiento (Turno a Turno)</span>
-                        <span class="text-xs text-sky-700 font-mono-code font-bold">Avance (m)</span>
+                        <span class="text-xs text-sky-700 font-mono-code font-bold">Avance Promedio (m/turno)</span>
                     </h3>
                     <div class="relative h-64 sm:h-72 w-full flex justify-center items-center bg-white p-3.5 rounded-2xl border border-slate-200">
                         <canvas id="chartKPI_Rendimiento"></canvas>
@@ -1183,7 +1197,7 @@
 
                 <div class="card-sub p-5 space-y-3">
                     <h3 class="text-xs font-extrabold text-slate-900 uppercase tracking-wider flex items-center justify-between">
-                        <span>Calidad del Testigo (% Recuperación por Turno)</span>
+                        <span>Calidad del Testigo (% Recuperación Secuencial)</span>
                         <span class="text-xs text-indigo-700 font-mono-code font-bold">Recup (%)</span>
                     </h3>
                     <div class="relative h-64 sm:h-72 w-full flex justify-center items-center bg-white p-3.5 rounded-2xl border border-slate-200">
@@ -1241,7 +1255,7 @@
     </section>
 </div>
 
-<!-- BARRA INFERIOR FIJA (ADAPTADA POR PERFIL: 5 TABS GEÓLOGOS / 3 TABS GERENCIA) -->
+<!-- BARRA INFERIOR FIJA -->
 <nav id="bottomNavMaster" class="bottom-nav-fixed hidden no-print">
     <button type="button" onclick="switchTab('mod1')" id="bnav-mod1" class="bottom-nav-item">
         <div class="nav-icon-container">
@@ -1301,6 +1315,8 @@
     let chartEstadisticaInst = null;
     let chartKpiRend = null;
     let chartKpiCal = null;
+    let chartRepProgresoInst = null;
+    let chartRepFisicoInst = null;
 
     if (!localStorage.getItem('jireth_clave_geo')) localStorage.setItem('jireth_clave_geo', 'Mina2628');
     if (!localStorage.getItem('jireth_clave_ger')) localStorage.setItem('jireth_clave_ger', 'JIRETH2026');
@@ -2172,6 +2188,17 @@
         verificarSeleccionRepositorioModulo();
         cargarDatosPozoEnFormularios(val);
         poblarSelectTurnosRepo();
+        
+        // REGLA: Si el pozo está CULMINADO, NO mostrar la opción de reporte culminado
+        const optCulminado = document.getElementById('optReporteCulminado');
+        const modoSelect = document.getElementById('repModoVista');
+        if (pozosData[pozoActivoId].estado === 'CULMINADO') {
+            if (optCulminado) optCulminado.style.display = 'none';
+            if (modoSelect.value === 'CULMINADO') modoSelect.value = 'ACUMULADO';
+        } else {
+            if (optCulminado) optCulminado.style.display = 'block';
+        }
+
         generarReporteDSR();
     }
 
@@ -2961,18 +2988,23 @@
             modo = 'ACUMULADO';
         }
 
+        const boxGraficaProgreso = document.getElementById('repBoxGraficaProgresoTarget');
+
         if (modo === 'TURNO') {
             boxTurno.classList.remove('hidden');
+            boxGraficaProgreso.classList.add('hidden');
             document.getElementById('repTituloPrincipalDSR').innerText = "REPORTE DE TURNO";
             document.getElementById('repTituloPrincipalDSRPrint').innerText = "REPORTE DE TURNO";
             document.getElementById('repTituloPerfil2D').innerText = "Perfil Topográfico 2D & Log Litológico (Tramos del Turno):";
         } else if (modo === 'ACUMULADO') {
             boxTurno.classList.add('hidden');
+            boxGraficaProgreso.classList.remove('hidden'); // Se muestra en acumulado
             document.getElementById('repTituloPrincipalDSR').innerText = "REPORTE ACUMULADO DEL SONDAJE";
             document.getElementById('repTituloPrincipalDSRPrint').innerText = "REPORTE ACUMULADO DEL SONDAJE";
             document.getElementById('repTituloPerfil2D').innerText = "Perfil Topográfico 2D & Log Litológico (Acumulado General):";
         } else {
             boxTurno.classList.add('hidden');
+            boxGraficaProgreso.classList.add('hidden');
             document.getElementById('repTituloPrincipalDSR').innerText = "REPORTE SONDAJE CULMINADO (OFICIAL)";
             document.getElementById('repTituloPrincipalDSRPrint').innerText = "REPORTE SONDAJE CULMINADO (OFICIAL)";
             document.getElementById('repTituloPerfil2D').innerText = "Perfil Topográfico 2D & Log Litológico (Sondaje Culminado):";
@@ -3069,6 +3101,39 @@
                 ctxR.clearRect(0, 0, canvasRep.width, canvasRep.height);
                 dibujarPerfilEnCanvasVertical(ctxR, p, canvasRep.width, canvasRep.height, listaAvancesFiltrada, true);
             }
+
+            // RENDERIZAR GRÁFICAS DENTRO DEL REPORTE DSR
+            if (typeof Chart !== 'undefined') {
+                if (chartRepProgresoInst) chartRepProgresoInst.destroy();
+                if (modo === 'ACUMULADO') {
+                    const ctxProgRep = document.getElementById('chartRepProgresoTarget').getContext('2d');
+                    chartRepProgresoInst = new Chart(ctxProgRep, {
+                        type: 'bar',
+                        data: {
+                            labels: [p.codigo],
+                            datasets: [
+                                { label: 'Perforado (m)', data: [totalMetrosHastaTurno], backgroundColor: '#10b981', borderRadius: 4 },
+                                { label: 'Target (m)', data: [targetNum], backgroundColor: '#cbd5e1', borderRadius: 4 }
+                            ]
+                        },
+                        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: true } } }
+                    });
+                }
+
+                if (chartRepFisicoInst) chartRepFisicoInst.destroy();
+                const ctxFisRep = document.getElementById('chartRepFisicoPagable').getContext('2d');
+                chartRepFisicoInst = new Chart(ctxFisRep, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Metros'],
+                        datasets: [
+                            { label: 'Físico (m)', data: [totalMetros], backgroundColor: '#0284c7', borderRadius: 4 },
+                            { label: 'Pagable (m)', data: [totalPagoFinal], backgroundColor: '#f59e0b', borderRadius: 4 }
+                        ]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: true } } }
+                });
+            }
         });
 
         const contenedorFirmas = document.getElementById('contenedorFirmasDSR');
@@ -3156,14 +3221,37 @@
         let pozosActivosProgresoLabels = [], pozosActivosActuales = [], pozosActivosTargets = [];
         let empresaPagosMap = {};
         let operadorMetrosMap = {};
-        let rendimientoTurnoLabels = [], rendimientoTurnoData = [];
-        let calidadTurnoLabels = [], calidadTurnoData = [];
+        let rendimientoSecuencialLabels = [], rendimientoSecuencialData = [];
+        let calidadSecuencialLabels = [], calidadSecuencialData = [];
 
-        let mesActualMetros = 0, mesAnteriorMetros = 0;
+        // Rango dinámico de meses (desde mes seleccionado hasta el mes actual)
+        let mesesRangoDinamico = [];
+        let metrosPorMesRango = {};
         const now = new Date();
-        const mesActualStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
-        let prevDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-        const mesAnteriorStr = `${prevDate.getFullYear()}-${String(prevDate.getMonth() + 1).padStart(2, '0')}`;
+        const anioActual = now.getFullYear();
+        const mesActualNum = now.getMonth() + 1;
+
+        let anioInicio = anioActual;
+        let mesInicioNum = 1;
+        if (mesFiltro !== 'TODOS') {
+            let partesFiltro = mesFiltro.split('-');
+            anioInicio = parseInt(partesFiltro[0]);
+            mesInicioNum = parseInt(partesFiltro[1]);
+        } else {
+            anioInicio = anioActual - 1; // Por defecto último año si es todos
+            mesInicioNum = 1;
+        }
+
+        let currY = anioInicio, currM = mesInicioNum;
+        const nombresMesesCorto = { 1:"Ene", 2:"Feb", 3:"Mar", 4:"Abr", 5:"May", 6:"Jun", 7:"Jul", 8:"Ago", 9:"Sep", 10:"Oct", 11:"Nov", 12:"Dic" };
+
+        while (currY < anioActual || (currY === anioActual && currM <= mesActualNum)) {
+            let mStr = `${currY}-${String(currM).padStart(2, '0')}`;
+            mesesRangoDinamico.push(mStr);
+            metrosPorMesRango[mStr] = 0;
+            currM++;
+            if (currM > 12) { currM = 1; currY++; }
+        }
 
         pozosKeys.forEach(k => {
             let p = pozosData[k];
@@ -3206,22 +3294,32 @@
                         if (!operadorMetrosMap[perf]) operadorMetrosMap[perf] = 0;
                         operadorMetrosMap[perf] += met;
 
-                        let labelTurnoKey = fAv ? `${fAv} (${av.jornada || 'D'})` : `Tramo`;
-                        rendimientoTurnoLabels.push(labelTurnoKey);
-                        rendimientoTurnoData.push(met);
+                        // Curva secuencial por turno (SIN FECHAS SATURADAS)
+                        rendimientoSecuencialData.push(met);
+                        rendimientoSecuencialLabels.push(`Turno ${rendimientoSecuencialData.length}`);
 
                         let pctRec = met > 0 ? ((rec / met) * 100).toFixed(1) : 0;
-                        calidadTurnoLabels.push(labelTurnoKey);
-                        calidadTurnoData.push(pctRec);
+                        calidadSecuencialData.push(pctRec);
+                        calidadSecuencialLabels.push(`Turno ${calidadSecuencialData.length}`);
                     }
 
-                    if (fAv) {
-                        if (fAv.startsWith(mesActualStr)) mesActualMetros += (parseFloat(av.hasta) - parseFloat(av.desde));
-                        else if (fAv.startsWith(mesAnteriorStr)) mesAnteriorMetros += (parseFloat(av.hasta) - parseFloat(av.desde));
+                    if (fAv && fAv.length >= 7) {
+                        let mesKey = fAv.substring(0, 7);
+                        if (metrosPorMesRango[mesKey] !== undefined) {
+                            metrosPorMesRango[mesKey] += (parseFloat(av.hasta) - parseFloat(av.desde));
+                        }
                     }
                 });
             }
         });
+
+        // FILTRADO ESTRICTO DE EMPRESAS SIN ACTIVIDAD (CERO ESPACIOS EN BLANCO)
+        let empresasConDatos = Object.keys(empresaMetrosMap).filter(emp => empresaMetrosMap[emp] > 0);
+        let metrosEmpresasActivas = empresasConDatos.map(emp => empresaMetrosMap[emp]);
+
+        let empresasPagosActivas = Object.keys(empresaPagosMap).filter(emp => empresaPagosMap[emp].fisico > 0);
+        let fisicoPagosActivos = empresasPagosActivas.map(emp => empresaPagosMap[emp].fisico);
+        let pagablePagosActivos = empresasPagosActivas.map(emp => empresaPagosMap[emp].pagable);
 
         Object.keys(turnosData).forEach(tk => {
             let t = turnosData[tk];
@@ -3241,7 +3339,6 @@
 
         if (typeof Chart === 'undefined') return;
 
-        // RENDERIZAR GRÁFICAS COMPLEMENTARIAS PARA VISTA 1 (KPIs)
         if (menuVista === 'KPI_GENERAL') {
             if (chartKpiRend) chartKpiRend.destroy();
             if (chartKpiCal) chartKpiCal.destroy();
@@ -3250,10 +3347,10 @@
             chartKpiRend = new Chart(ctxRend, {
                 type: 'line',
                 data: {
-                    labels: rendimientoTurnoLabels.length > 0 ? rendimientoTurnoLabels : ['Sin Registros'],
+                    labels: rendimientoSecuencialLabels.length > 0 ? rendimientoSecuencialLabels : ['Sin Registros'],
                     datasets: [{
-                        label: 'Avance por Tramo/Turno (m)',
-                        data: rendimientoTurnoData.length > 0 ? rendimientoTurnoData : [0],
+                        label: 'Avance Secuencial por Turno (m)',
+                        data: rendimientoSecuencialData.length > 0 ? rendimientoSecuencialData : [0],
                         borderColor: '#0284c7',
                         backgroundColor: 'rgba(2, 132, 199, 0.1)',
                         fill: true,
@@ -3266,14 +3363,17 @@
 
             const ctxCal = document.getElementById('chartKPI_Calidad').getContext('2d');
             chartKpiCal = new Chart(ctxCal, {
-                type: 'bar',
+                type: 'line',
                 data: {
-                    labels: calidadTurnoLabels.length > 0 ? calidadTurnoLabels : ['Sin Registros'],
+                    labels: calidadSecuencialLabels.length > 0 ? calidadSecuencialLabels : ['Sin Registros'],
                     datasets: [{
-                        label: '% Recuperación',
-                        data: calidadTurnoData.length > 0 ? calidadTurnoData : [0],
-                        backgroundColor: calidadTurnoData.map(val => parseFloat(val) < 70 ? '#f59e0b' : '#10b981'),
-                        borderRadius: 6
+                        label: '% Recuperación Turno',
+                        data: calidadSecuencialData.length > 0 ? calidadSecuencialData : [0],
+                        borderColor: '#10b981',
+                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                        fill: true,
+                        tension: 0.2,
+                        borderWidth: 2
                     }]
                 },
                 options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { max: 100 } } }
@@ -3292,13 +3392,13 @@
             };
 
             if (menuVista === 'METROS_EMPRESA') {
-                tituloGrafica.innerText = "Metros Perforados por Empresas";
-                subtituloGrafica.innerText = mesFiltro === 'TODOS' ? "Acumulado Histórico" : `Período: ${mesFiltro}`;
+                tituloGrafica.innerText = "Metros Perforados por Empresas (Activas)";
+                subtituloGrafica.innerText = "Cero espacios en blanco";
                 chartEstadisticaInst = new Chart(ctxD, {
                     type: 'bar',
                     data: {
-                        labels: Object.keys(empresaMetrosMap),
-                        datasets: [{ label: 'Metros Perforados (m)', data: Object.values(empresaMetrosMap), backgroundColor: '#0284c7', borderRadius: 8 }]
+                        labels: empresasConDatos,
+                        datasets: [{ label: 'Metros Perforados (m)', data: metrosEmpresasActivas, backgroundColor: '#0284c7', borderRadius: 8 }]
                     },
                     options: commonOptions
                 });
@@ -3317,27 +3417,33 @@
                     options: commonOptions
                 });
             } else if (menuVista === 'FISICOS_VS_PAGABLES') {
-                tituloGrafica.innerText = "Metros Físicos vs Metros Pagables";
+                tituloGrafica.innerText = "Metros Físicos vs Metros Pagables (Empresas Activas)";
                 subtituloGrafica.innerText = "Auditoría Contractual";
                 chartEstadisticaInst = new Chart(ctxD, {
                     type: 'bar',
                     data: {
-                        labels: Object.keys(empresaPagosMap),
+                        labels: empresasPagosActivas,
                         datasets: [
-                            { label: 'Metros Físicos (m)', data: Object.values(empresaPagosMap).map(e => e.fisico), backgroundColor: '#0284c7', borderRadius: 6 },
-                            { label: 'Metros Pagables (m)', data: Object.values(empresaPagosMap).map(e => e.pagable), backgroundColor: '#f59e0b', borderRadius: 6 }
+                            { label: 'Metros Físicos (m)', data: fisicoPagosActivos, backgroundColor: '#0284c7', borderRadius: 6 },
+                            { label: 'Metros Pagables (m)', data: pagablePagosActivos, backgroundColor: '#f59e0b', borderRadius: 6 }
                         ]
                     },
                     options: commonOptions
                 });
             } else if (menuVista === 'RENDIMIENTO_MES') {
-                tituloGrafica.innerText = "Rendimiento de Perforación por Mes";
-                subtituloGrafica.innerText = "Comparativa Mensual";
+                tituloGrafica.innerText = "Rendimiento de Perforación por Rango Dinámico de Meses";
+                subtituloGrafica.innerText = "Evolución cronológica progresiva";
+                let labelsMesesFormateados = mesesRangoDinamico.map(mStr => {
+                    let parts = mStr.split('-');
+                    return `${nombresMesesCorto[parseInt(parts[1])] || parts[1]} ${parts[0]}`;
+                });
+                let dataMesesValores = mesesRangoDinamico.map(mStr => metrosPorMesRango[mStr]);
+
                 chartEstadisticaInst = new Chart(ctxD, {
                     type: 'bar',
                     data: {
-                        labels: ['Mes Anterior (' + mesAnteriorStr + ')', 'Mes Actual (' + mesActualStr + ')'],
-                        datasets: [{ label: 'Metros Perforados (m)', data: [mesAnteriorMetros, mesActualMetros], backgroundColor: ['#6366f1', '#10b981'], borderRadius: 8 }]
+                        labels: labelsMesesFormateados,
+                        datasets: [{ label: 'Metros Perforados (m)', data: dataMesesValores, backgroundColor: '#6366f1', borderRadius: 8 }]
                     },
                     options: commonOptions
                 });
