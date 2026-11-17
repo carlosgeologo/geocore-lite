@@ -163,32 +163,100 @@
         }
         #toastFeedback.show { transform: translateY(0); opacity: 1; }
 
-        #printable-area { width: 100%; max-width: 800px; margin: 0 auto; box-sizing: border-box; background: #ffffff; color: #0f172a; }
+        #printable-area { width: 100%; max-width: 820px; margin: 0 auto; box-sizing: border-box; background: #ffffff; color: #0f172a; }
         .dsr-header-print-fixed { display: none; }
 
         /* REGLAS ESTRICTAS DE IMPRESIÓN Y MÁRGENES PARA EVITAR DESPLAZAMIENTOS */
         @media print {
             @page {
-                size: letter portrait; margin: 15mm 10mm 15mm 10mm;
-                @bottom-right { content: "Página " counter(page) " de " counter(pages); font-size: 8pt; font-family: sans-serif; color: #0f172a; font-weight: bold; }
+                size: letter portrait;
+                margin: 18mm 10mm 15mm 10mm;
+                @bottom-right {
+                    content: "Página " counter(page) " de " counter(pages);
+                    font-size: 8pt;
+                    font-family: sans-serif;
+                    color: #0f172a;
+                    font-weight: bold;
+                }
             }
-            body { background: #ffffff !important; color: #000000 !important; padding: 0 !important; margin: 0 !important; }
-            .no-print, header, nav, .bottom-nav-fixed, .drawer-overlay, #toastFeedback, select, input, button, .input-field, #boxSelectoresRepoPadre { display: none !important; }
-            #mod_sala, #mod1, #mod2, #mod_turnologging, #mod_perforadores, #mod4, #mod_estadisticas, #mod6 { display: none !important; }
-            #mod5 { display: block !important; border: none !important; box-shadow: none !important; background: transparent !important; padding: 0 !important; margin: 0 !important; }
-            #printable-area { border: none !important; box-shadow: none !important; padding: 0 !important; margin: 0 !important; width: 100% !important; max-width: 100% !important; background: #ffffff !important; page-break-inside: avoid; }
+            body {
+                background: #ffffff !important;
+                color: #000000 !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                width: 100% !important;
+            }
+            .no-print, header, nav, .bottom-nav-fixed, .drawer-overlay, #toastFeedback, select, input, button, .input-field, #boxSelectoresRepoPadre, #boxOpcionesInformesBar {
+                display: none !important;
+            }
+            #mod_sala, #mod1, #mod2, #mod_turnologging, #mod_perforadores, #mod4, #mod_estadisticas, #mod6 {
+                display: none !important;
+            }
+            #mod5 {
+                display: block !important;
+                border: none !important;
+                box-shadow: none !important;
+                background: transparent !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                width: 100% !important;
+            }
+            #printable-area {
+                border: none !important;
+                box-shadow: none !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                background: #ffffff !important;
+            }
             .dsr-header-print-fixed {
-                display: flex !important; position: fixed; top: -12mm; left: 0; right: 0; height: 16mm;
-                border-bottom: 2px solid #0f172a; background: #ffffff !important; justify-content: space-between; align-items: center; padding-bottom: 4px; z-index: 99999;
+                display: flex !important;
+                position: fixed;
+                top: -15mm;
+                left: 0;
+                right: 0;
+                height: 14mm;
+                border-bottom: 2px solid #0f172a;
+                background: #ffffff !important;
+                justify-content: space-between;
+                align-items: center;
+                padding-bottom: 3px;
+                z-index: 99999;
             }
             .logo-img-print { display: block !important; }
             .logo-svg-screen { display: none !important; }
-            table { width: 100% !important; border-collapse: collapse !important; page-break-inside: auto; margin-top: 4px !important; }
+            table {
+                width: 100% !important;
+                table-layout: fixed !important;
+                border-collapse: collapse !important;
+                page-break-inside: auto;
+                margin-top: 4px !important;
+            }
             thead { display: table-header-group !important; }
             tr { page-break-inside: avoid !important; break-inside: avoid !important; }
-            th { background-color: #0f172a !important; color: #ffffff !important; border: 1px solid #334155 !important; padding: 4px 6px !important; font-size: 8pt !important; }
-            td { border: 1px solid #cbd5e1 !important; padding: 4px 6px !important; font-size: 8pt !important; }
-            .avoid-break { page-break-inside: avoid !important; break-inside: avoid !important; }
+            th {
+                background-color: #0f172a !important;
+                color: #ffffff !important;
+                border: 1px solid #334155 !important;
+                padding: 4px 4px !important;
+                font-size: 7.5pt !important;
+                word-wrap: break-word !important;
+            }
+            td {
+                border: 1px solid #cbd5e1 !important;
+                padding: 4px 4px !important;
+                font-size: 7.5pt !important;
+                word-wrap: break-word !important;
+            }
+            .avoid-break {
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+            canvas {
+                max-width: 100% !important;
+                height: auto !important;
+            }
         }
     </style>
 </head>
@@ -202,6 +270,24 @@
     <div class="min-w-0">
         <p class="text-sm font-extrabold text-slate-900 truncate" id="toastTitle">Acción Completada</p>
         <p class="text-xs text-slate-600 font-medium truncate" id="toastMessage">Los datos han sido guardados.</p>
+    </div>
+</div>
+
+<!-- MODAL DETALLE DE PUNTO EN GRÁFICA -->
+<div id="modalDetalleGrafica" class="hidden fixed inset-0 z-50 bg-slate-900/50 flex items-center justify-center p-4" onclick="cerrarModalDetalleGrafica()">
+    <div class="card-pro p-6 w-full max-w-sm space-y-4 border-t-4 border-t-sky-600" onclick="event.stopPropagation()">
+        <div class="flex justify-between items-center border-b border-slate-200 pb-2.5">
+            <h3 class="text-sm font-black text-slate-900 uppercase tracking-wider flex items-center gap-2" id="modalDetalleTitulo">
+                Detalle Operativo
+            </h3>
+            <button type="button" onclick="cerrarModalDetalleGrafica()" class="text-slate-400 hover:text-slate-700 p-1">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+        <div id="modalDetalleCuerpo" class="space-y-2 text-xs text-slate-700 font-medium"></div>
+        <div class="pt-2">
+            <button type="button" onclick="cerrarModalDetalleGrafica()" class="w-full bg-slate-900 hover:bg-slate-800 text-white py-2.5 rounded-xl text-xs font-extrabold">Cerrar Detalle</button>
+        </div>
     </div>
 </div>
 
@@ -945,7 +1031,7 @@
                     <span>Imprimir / PDF</span>
                 </button>
                 <button type="button" onclick="copiarReportePortapapeles()" class="bg-slate-100 hover:bg-slate-200 text-slate-800 font-extrabold px-4 py-2.5 rounded-xl text-xs border border-slate-200 transition flex items-center gap-2">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 0 012-2h2a2 2 0 012 2"/></svg>
                     <span>Copiar Resumen</span>
                 </button>
             </div>
@@ -966,7 +1052,7 @@
                     <label class="block text-xs font-bold text-slate-600 uppercase mb-1.5">Seleccionar Tipo de Informe:</label>
                     <select id="repModoVista" onchange="generarReporteDSR()" class="input-field w-full sm:w-auto px-4 py-2 font-bold text-xs">
                         <option value="TURNO">1. REPORTE DE TURNO</option>
-                        <option value="ACUMULADO">2. REPORTE ACUMULADO DEL SONDAJE</option>
+                        <option id="optReporteAcumulado" value="ACUMULADO">2. REPORTE ACUMULADO DEL SONDAJE</option>
                         <option id="optReporteCulminado" value="CULMINADO">3. REPORTE SONDAJE CULMINADO (OFICIAL)</option>
                     </select>
                 </div>
@@ -1049,17 +1135,32 @@
                         </div>
                     </div>
 
-                    <!-- GRÁFICAS INTEGRADAS EN EL REPORTE DSR -->
+                    <!-- BLOQUE DE LAS 4 GRÁFICAS ANALÍTICAS INTEGRADAS EN EL REPORTE DSR -->
                     <div id="repBoxGraficasDSR" class="grid grid-cols-1 sm:grid-cols-2 gap-4 avoid-break">
-                        <div id="repBoxGraficaProgresoTarget" class="hidden bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2">
-                            <p class="text-xs font-black text-slate-900 uppercase tracking-wider">Progreso Actual vs Target (Pozos Activos):</p>
-                            <div class="relative h-48 w-full flex justify-center items-center bg-white p-2 rounded-lg border border-slate-200">
+                        <div id="repBoxGraficaRendimiento" class="bg-slate-50 p-3.5 rounded-xl border border-slate-200 space-y-1.5">
+                            <p class="text-[11px] font-black text-slate-900 uppercase tracking-wider">Curva Analítica de Rendimiento (Turnos):</p>
+                            <div class="relative h-44 w-full flex justify-center items-center bg-white p-2 rounded-lg border border-slate-200">
+                                <canvas id="chartRepRendimiento"></canvas>
+                            </div>
+                        </div>
+
+                        <div id="repBoxGraficaCalidad" class="bg-slate-50 p-3.5 rounded-xl border border-slate-200 space-y-1.5">
+                            <p class="text-[11px] font-black text-slate-900 uppercase tracking-wider">Calidad del Testigo por Meteorización:</p>
+                            <div class="relative h-44 w-full flex justify-center items-center bg-white p-2 rounded-lg border border-slate-200">
+                                <canvas id="chartRepCalidad"></canvas>
+                            </div>
+                        </div>
+
+                        <div id="repBoxGraficaProgresoTarget" class="hidden bg-slate-50 p-3.5 rounded-xl border border-slate-200 space-y-1.5">
+                            <p class="text-[11px] font-black text-slate-900 uppercase tracking-wider">Progreso Actual vs Target (Pozo Activo):</p>
+                            <div class="relative h-44 w-full flex justify-center items-center bg-white p-2 rounded-lg border border-slate-200">
                                 <canvas id="chartRepProgresoTarget"></canvas>
                             </div>
                         </div>
-                        <div id="repBoxGraficaFisicoPagable" class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2">
-                            <p class="text-xs font-black text-slate-900 uppercase tracking-wider">Metros Físicos vs Metros Pagables:</p>
-                            <div class="relative h-48 w-full flex justify-center items-center bg-white p-2 rounded-lg border border-slate-200">
+
+                        <div id="repBoxGraficaFisicoPagable" class="bg-slate-50 p-3.5 rounded-xl border border-slate-200 space-y-1.5">
+                            <p class="text-[11px] font-black text-slate-900 uppercase tracking-wider">Metros Físicos vs Metros Pagables:</p>
+                            <div class="relative h-44 w-full flex justify-center items-center bg-white p-2 rounded-lg border border-slate-200">
                                 <canvas id="chartRepFisicoPagable"></canvas>
                             </div>
                         </div>
@@ -1094,15 +1195,15 @@
                             <table class="w-full text-left text-xs border-collapse">
                                 <thead class="bg-slate-900 text-white uppercase font-black border-b border-slate-400">
                                     <tr>
-                                        <th class="p-2.5 border-r border-slate-700">Corrida</th>
-                                        <th class="p-2.5 border-r border-slate-700">Desde</th>
-                                        <th class="p-2.5 border-r border-slate-700">Hasta</th>
-                                        <th class="p-2.5 border-r border-slate-700">Avance</th>
-                                        <th class="p-2.5 border-r border-slate-700">Diám</th>
-                                        <th class="p-2.5 border-r border-slate-700">Recup</th>
-                                        <th class="p-2.5 border-r border-slate-700">% Rec</th>
-                                        <th class="p-2.5 border-r border-slate-700">Litología</th>
-                                        <th class="p-2.5 text-slate-200 font-black">Pago Estándar</th>
+                                        <th class="p-2 border-r border-slate-700" style="width: 7%;">Corr.</th>
+                                        <th class="p-2 border-r border-slate-700" style="width: 10%;">Desde</th>
+                                        <th class="p-2 border-r border-slate-700" style="width: 10%;">Hasta</th>
+                                        <th class="p-2 border-r border-slate-700" style="width: 10%;">Avance</th>
+                                        <th class="p-2 border-r border-slate-700" style="width: 8%;">Diám</th>
+                                        <th class="p-2 border-r border-slate-700" style="width: 10%;">Recup</th>
+                                        <th class="p-2 border-r border-slate-700" style="width: 9%;">% Rec</th>
+                                        <th class="p-2 border-r border-slate-700" style="width: 24%;">Litología</th>
+                                        <th class="p-2 text-slate-200 font-black" style="width: 12%;">Pago Est.</th>
                                     </tr>
                                 </thead>
                                 <tbody id="repTablaBody" class="divide-y divide-slate-200 font-mono-code text-slate-900"></tbody>
@@ -1130,7 +1231,7 @@
                     <span>Estadísticas & Analítica</span>
                     <span class="text-xs bg-sky-100 text-sky-700 px-3 py-1 rounded-full font-mono-code font-extrabold">GeoCore BI</span>
                 </h2>
-                <p class="text-sm text-slate-500 mt-1">Análisis por período mensual y métricas ejecutivas.</p>
+                <p class="text-sm text-slate-500 mt-1">Haz clic sobre cualquier punto de las gráficas para inspeccionar su detalle.</p>
             </div>
             <div class="flex items-center gap-3 w-full sm:w-auto flex-wrap">
                 <select id="filtroEstadisticasMes" onchange="renderizarEstadisticasGlobales()" class="input-field px-4 py-2 font-bold text-xs bg-white text-sky-700 border-sky-300">
@@ -1158,7 +1259,7 @@
             </select>
         </div>
 
-        <!-- VISTA 1: KPIs GLOBALES + GRÁFICAS COMPLEMENTARIAS MINIMALISTAS -->
+        <!-- VISTA 1: KPIs GLOBALES + GRÁFICAS COMPLEMENTARIAS INTERACTIVAS AL CLIC -->
         <div id="estContainer_KPI_GENERAL" class="space-y-6">
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
                 <div class="card-sub p-4 sm:p-5 border-t-4 border-t-sky-500">
@@ -1183,24 +1284,24 @@
                 </div>
             </div>
 
-            <!-- GRÁFICAS COMPLEMENTARIAS MINIMALISTAS PARA KPIs (SIN FECHAS SATURADAS) -->
+            <!-- GRÁFICAS COMPLEMENTARIAS MINIMALISTAS (CLIC PARA DETALLES) -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
                 <div class="card-sub p-5 space-y-3">
-                    <h3 class="text-xs font-extrabold text-slate-900 uppercase tracking-wider flex items-center justify-between">
-                        <span>Curva Analítica de Rendimiento (Turno a Turno)</span>
-                        <span class="text-xs text-sky-700 font-mono-code font-bold">Avance Promedio (m/turno)</span>
+                    <h3 class="text-xs font-extrabold text-slate-900 uppercase tracking-wider flex items-center justify-between flex-wrap gap-1">
+                        <span>Curva Analítica de Rendimiento</span>
+                        <span class="text-[11px] text-sky-700 font-mono-code font-bold bg-sky-100 px-2.5 py-0.5 rounded-full">Clic en un punto para detalle</span>
                     </h3>
-                    <div class="relative h-64 sm:h-72 w-full flex justify-center items-center bg-white p-3.5 rounded-2xl border border-slate-200">
+                    <div class="relative h-64 sm:h-72 w-full flex justify-center items-center bg-white p-3.5 rounded-2xl border border-slate-200 cursor-pointer">
                         <canvas id="chartKPI_Rendimiento"></canvas>
                     </div>
                 </div>
 
                 <div class="card-sub p-5 space-y-3">
-                    <h3 class="text-xs font-extrabold text-slate-900 uppercase tracking-wider flex items-center justify-between">
-                        <span>Calidad del Testigo (% Recuperación Secuencial)</span>
-                        <span class="text-xs text-indigo-700 font-mono-code font-bold">Recup (%)</span>
+                    <h3 class="text-xs font-extrabold text-slate-900 uppercase tracking-wider flex items-center justify-between flex-wrap gap-1">
+                        <span>Calidad del Testigo por Meteorización</span>
+                        <span class="text-[11px] text-indigo-700 font-mono-code font-bold bg-indigo-100 px-2.5 py-0.5 rounded-full">Clic en un punto para detalle</span>
                     </h3>
-                    <div class="relative h-64 sm:h-72 w-full flex justify-center items-center bg-white p-3.5 rounded-2xl border border-slate-200">
+                    <div class="relative h-64 sm:h-72 w-full flex justify-center items-center bg-white p-3.5 rounded-2xl border border-slate-200 cursor-pointer">
                         <canvas id="chartKPI_Calidad"></canvas>
                     </div>
                 </div>
@@ -1283,7 +1384,7 @@
     </button>
     <button type="button" onclick="switchTab('mod_estadisticas')" id="bnav-mod_estadisticas" class="bottom-nav-item">
         <div class="nav-icon-container">
-            <svg class="w-6 h-6 stroke-current fill-none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002-2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+            <svg class="w-6 h-6 stroke-current fill-none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
         </div>
         <span>Estadísticas</span>
     </button>
@@ -1315,6 +1416,8 @@
     let chartEstadisticaInst = null;
     let chartKpiRend = null;
     let chartKpiCal = null;
+    let chartRepRendInst = null;
+    let chartRepCalInst = null;
     let chartRepProgresoInst = null;
     let chartRepFisicoInst = null;
 
@@ -1384,6 +1487,15 @@
 
     function abrirMenuDrawer() { document.getElementById('drawerMenuOverlay').classList.add('open'); }
     function cerrarMenuDrawer() { document.getElementById('drawerMenuOverlay').classList.remove('open'); }
+
+    function abrirModalDetalleGrafica(titulo, htmlContenido) {
+        document.getElementById('modalDetalleTitulo').innerText = titulo;
+        document.getElementById('modalDetalleCuerpo').innerHTML = htmlContenido;
+        document.getElementById('modalDetalleGrafica').classList.remove('hidden');
+    }
+    function cerrarModalDetalleGrafica() {
+        document.getElementById('modalDetalleGrafica').classList.add('hidden');
+    }
 
     function abrirModalCambiarClaves() {
         if (perfilActual === 'GERENCIA') { alert("Acción permitida únicamente para perfil Geólogos."); return; }
@@ -1776,6 +1888,13 @@
         if (litUpper.includes('OXIDADA')) umbral = 80;
         if (litUpper.includes('FRESCA') || litUpper.includes('VETA')) umbral = 90;
         return pct >= umbral ? lonManiobra : rec;
+    }
+
+    function getUmbralPorMeteorizacion(litologia) {
+        let litUpper = (litologia || "").toUpperCase();
+        if (litUpper.includes('OXIDADA')) return 80;
+        if (litUpper.includes('FRESCA') || litUpper.includes('VETA')) return 90;
+        return 70;
     }
 
     function renderizarSalaSituacional() {
@@ -2188,17 +2307,6 @@
         verificarSeleccionRepositorioModulo();
         cargarDatosPozoEnFormularios(val);
         poblarSelectTurnosRepo();
-        
-        // REGLA: Si el pozo está CULMINADO, NO mostrar la opción de reporte culminado
-        const optCulminado = document.getElementById('optReporteCulminado');
-        const modoSelect = document.getElementById('repModoVista');
-        if (pozosData[pozoActivoId].estado === 'CULMINADO') {
-            if (optCulminado) optCulminado.style.display = 'none';
-            if (modoSelect.value === 'CULMINADO') modoSelect.value = 'ACUMULADO';
-        } else {
-            if (optCulminado) optCulminado.style.display = 'block';
-        }
-
         generarReporteDSR();
     }
 
@@ -2975,19 +3083,117 @@
         });
     }
 
+    function calcularCalidadPorMeteorizacion(listaAvances) {
+        const ordenEstratigrafico = [
+            "SUELO / RELLENO",
+            "SAPROLITA",
+            "SAPROCK",
+            "ROCA OXIDADA",
+            "ROCA FRACTURADA",
+            "ROCA FRESCA",
+            "ZONA DE VETA"
+        ];
+        const etiquetasCortas = [
+            "Suelo/Relleno",
+            "Saprolita",
+            "Saprock",
+            "R. Oxidada",
+            "R. Fracturada",
+            "R. Fresca",
+            "Zona Veta"
+        ];
+
+        let stats = {};
+        ordenEstratigrafico.forEach(cat => {
+            stats[cat] = { metros: 0, rec: 0, umbral: getUmbralPorMeteorizacion(cat) };
+        });
+
+        listaAvances.forEach(av => {
+            let lito = (av.meteorizacion || "SAPROLITA").toUpperCase();
+            if (!stats[lito]) stats[lito] = { metros: 0, rec: 0, umbral: getUmbralPorMeteorizacion(lito) };
+            let met = parseFloat(av.hasta) - parseFloat(av.desde);
+            let rec = parseFloat(av.recuperado) || 0;
+            stats[lito].metros += met;
+            stats[lito].rec += rec;
+        });
+
+        let labels = [], reales = [], estandares = [], detalles = [];
+        ordenEstratigrafico.forEach((cat, i) => {
+            let s = stats[cat];
+            if (s.metros > 0) {
+                let pctReal = ((s.rec / s.metros) * 100);
+                labels.push(etiquetasCortas[i]);
+                reales.push(parseFloat(pctReal.toFixed(1)));
+                estandares.push(s.umbral);
+                detalles.push({
+                    categoria: cat,
+                    metros: s.metros.toFixed(2),
+                    rec: s.rec.toFixed(2),
+                    pctReal: pctReal.toFixed(1),
+                    umbral: s.umbral
+                });
+            }
+        });
+
+        return { labels, reales, estandares, detalles };
+    }
+
+    function agruparRendimientoPorTurnos(listaAvances) {
+        let turnosMap = {};
+        let ordenIds = [];
+
+        listaAvances.forEach(av => {
+            let tid = av.turnoId || (av.fechaTurno + "_" + (av.jornada || "DIURNO"));
+            if (!turnosMap[tid]) {
+                turnosMap[tid] = {
+                    turnoId: tid,
+                    fecha: av.fechaTurno || (turnosData[tid] ? turnosData[tid].fecha : 'S/F'),
+                    jornada: av.jornada || (turnosData[tid] ? turnosData[tid].jornada : 'DIURNO'),
+                    perforador: av.perforador || (turnosData[tid] ? turnosData[tid].perforador : 'N/A'),
+                    geologo: av.geologoTurno || (turnosData[tid] ? turnosData[tid].geologo : 'N/A'),
+                    metros: 0,
+                    recuperado: 0
+                };
+                ordenIds.push(tid);
+            }
+            let met = parseFloat(av.hasta) - parseFloat(av.desde);
+            turnosMap[tid].metros += met;
+            turnosMap[tid].recuperado += (parseFloat(av.recuperado) || 0);
+        });
+
+        let valores = ordenIds.map(id => parseFloat(turnosMap[id].metros.toFixed(2)));
+        let detalles = ordenIds.map((id, idx) => ({
+            numero: idx + 1,
+            ...turnosMap[id]
+        }));
+        // Eje X vacío para mostrar solo el título general "Turnos"
+        let labelsVacios = ordenIds.map(() => "");
+
+        return { labelsVacios, valores, detalles };
+    }
+
     function generarReporteDSR() {
         if (!pozoActivoId || !pozosData[pozoActivoId]) return;
         let p = pozosData[pozoActivoId];
         let modoSelect = document.getElementById('repModoVista');
-        let modo = modoSelect.value;
-        let boxTurno = document.getElementById('boxSelectTurnoRepo');
+        let optAcumulado = document.getElementById('optReporteAcumulado');
+        let optCulminado = document.getElementById('optReporteCulminado');
 
-        if (p.estado === 'ABIERTO' && modo === 'CULMINADO') {
-            alert(`El sondaje (${p.codigo}) aún está ACTIVO.`);
-            modoSelect.value = 'ACUMULADO';
-            modo = 'ACUMULADO';
+        // REGLA ESTRICTA DE ESTADO DEL SONDAJE:
+        // Si está CULMINADO: desaparece Acumulado, queda Turno y Culminado.
+        // Si está ABIERTO: aparece Turno y Acumulado, desaparece Culminado.
+        if (p.estado === 'CULMINADO') {
+            if (optAcumulado) optAcumulado.style.display = 'none';
+            if (optCulminado) optCulminado.style.display = 'block';
+            if (modoSelect.value === 'ACUMULADO') modoSelect.value = 'CULMINADO';
+        } else {
+            if (optAcumulado) optAcumulado.style.display = 'block';
+            if (optCulminado) optCulminado.style.display = 'none';
+            if (modoSelect.value === 'CULMINADO') modoSelect.value = 'ACUMULADO';
         }
 
+        let modo = modoSelect.value;
+        let boxTurno = document.getElementById('boxSelectTurnoRepo');
         const boxGraficaProgreso = document.getElementById('repBoxGraficaProgresoTarget');
 
         if (modo === 'TURNO') {
@@ -2998,7 +3204,7 @@
             document.getElementById('repTituloPerfil2D').innerText = "Perfil Topográfico 2D & Log Litológico (Tramos del Turno):";
         } else if (modo === 'ACUMULADO') {
             boxTurno.classList.add('hidden');
-            boxGraficaProgreso.classList.remove('hidden'); // Se muestra en acumulado
+            boxGraficaProgreso.classList.remove('hidden');
             document.getElementById('repTituloPrincipalDSR').innerText = "REPORTE ACUMULADO DEL SONDAJE";
             document.getElementById('repTituloPrincipalDSRPrint').innerText = "REPORTE ACUMULADO DEL SONDAJE";
             document.getElementById('repTituloPerfil2D').innerText = "Perfil Topográfico 2D & Log Litológico (Acumulado General):";
@@ -3072,7 +3278,7 @@
 
             let tr = document.createElement('tr');
             tr.className = "border-b border-slate-200 hover:bg-slate-50";
-            tr.innerHTML = `<td class="p-2.5 border-r border-slate-200 font-bold">#${idx + 1}</td><td class="p-2.5 border-r border-slate-200">${t.desde}</td><td class="p-2.5 border-r border-slate-200">${t.hasta}</td><td class="p-2.5 border-r border-slate-200 font-bold">${met.toFixed(2)}</td><td class="p-2.5 border-r border-slate-200 font-bold text-slate-800">${t.diametro}</td><td class="p-2.5 border-r border-slate-200">${t.recuperado}</td><td class="p-2.5 border-r border-slate-200 font-bold ${parseFloat(t.porcentaje) < 70 ? 'text-amber-800' : 'text-slate-900'}">${t.porcentaje}%</td><td class="p-2.5 border-r border-slate-200">${t.meteorizacion}</td><td class="p-2.5 font-black text-slate-950 bg-slate-100">${pagoTramo.toFixed(2)} m</td>`;
+            tr.innerHTML = `<td class="p-2 border-r border-slate-200 font-bold">#${idx + 1}</td><td class="p-2 border-r border-slate-200">${t.desde}</td><td class="p-2 border-r border-slate-200">${t.hasta}</td><td class="p-2 border-r border-slate-200 font-bold">${met.toFixed(2)}</td><td class="p-2 border-r border-slate-200 font-bold text-slate-800">${t.diametro}</td><td class="p-2 border-r border-slate-200">${t.recuperado}</td><td class="p-2 border-r border-slate-200 font-bold ${parseFloat(t.porcentaje) < 70 ? 'text-amber-800' : 'text-slate-900'}">${t.porcentaje}%</td><td class="p-2 border-r border-slate-200">${t.meteorizacion}</td><td class="p-2 font-black text-slate-950 bg-slate-100">${pagoTramo.toFixed(2)} m</td>`;
             tbody.appendChild(tr);
         });
 
@@ -3102,8 +3308,77 @@
                 dibujarPerfilEnCanvasVertical(ctxR, p, canvasRep.width, canvasRep.height, listaAvancesFiltrada, true);
             }
 
-            // RENDERIZAR GRÁFICAS DENTRO DEL REPORTE DSR
+            // RENDERIZAR LAS 4 GRÁFICAS DENTRO DEL REPORTE DSR
             if (typeof Chart !== 'undefined') {
+                // 1. Curva de Rendimiento
+                if (chartRepRendInst) chartRepRendInst.destroy();
+                const datosRendRep = agruparRendimientoPorTurnos(listaAvancesFiltrada);
+                const ctxRendRep = document.getElementById('chartRepRendimiento').getContext('2d');
+                chartRepRendInst = new Chart(ctxRendRep, {
+                    type: 'line',
+                    data: {
+                        labels: datosRendRep.labelsVacios.length > 0 ? datosRendRep.labelsVacios : [''],
+                        datasets: [{
+                            label: 'Metros / Turno',
+                            data: datosRendRep.valores.length > 0 ? datosRendRep.valores : [0],
+                            borderColor: '#0284c7',
+                            backgroundColor: 'rgba(2, 132, 199, 0.1)',
+                            fill: true,
+                            tension: 0.3,
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        animation: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            x: { title: { display: true, text: 'Turnos', font: { weight: 'bold', size: 10 } } },
+                            y: { beginAtZero: true, title: { display: true, text: 'Metros (m)', font: { size: 9 } } }
+                        }
+                    }
+                });
+
+                // 2. Calidad del Testigo por Meteorización
+                if (chartRepCalInst) chartRepCalInst.destroy();
+                const datosCalRep = calcularCalidadPorMeteorizacion(listaAvancesFiltrada);
+                const ctxCalRep = document.getElementById('chartRepCalidad').getContext('2d');
+                chartRepCalInst = new Chart(ctxCalRep, {
+                    type: 'line',
+                    data: {
+                        labels: datosCalRep.labels.length > 0 ? datosCalRep.labels : ['Sin Datos'],
+                        datasets: [
+                            {
+                                label: '% Recup. Real',
+                                data: datosCalRep.reales.length > 0 ? datosCalRep.reales : [0],
+                                borderColor: '#10b981',
+                                backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                                fill: true,
+                                tension: 0.25,
+                                borderWidth: 2
+                            },
+                            {
+                                label: '% Estándar',
+                                data: datosCalRep.estandares.length > 0 ? datosCalRep.estandares : [0],
+                                borderColor: '#f59e0b',
+                                borderDash: [4, 4],
+                                fill: false,
+                                tension: 0,
+                                borderWidth: 1.5
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        animation: false,
+                        plugins: { legend: { labels: { boxWidth: 10, font: { size: 9 } } } },
+                        scales: { y: { min: 0, max: 100 } }
+                    }
+                });
+
+                // 3. Progreso Actual vs Target (Solo en Acumulado)
                 if (chartRepProgresoInst) chartRepProgresoInst.destroy();
                 if (modo === 'ACUMULADO') {
                     const ctxProgRep = document.getElementById('chartRepProgresoTarget').getContext('2d');
@@ -3116,22 +3391,33 @@
                                 { label: 'Target (m)', data: [targetNum], backgroundColor: '#cbd5e1', borderRadius: 4 }
                             ]
                         },
-                        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: true } } }
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            animation: false,
+                            plugins: { legend: { labels: { boxWidth: 10, font: { size: 9 } } } }
+                        }
                     });
                 }
 
+                // 4. Metros Físicos vs Pagables
                 if (chartRepFisicoInst) chartRepFisicoInst.destroy();
                 const ctxFisRep = document.getElementById('chartRepFisicoPagable').getContext('2d');
                 chartRepFisicoInst = new Chart(ctxFisRep, {
                     type: 'bar',
                     data: {
-                        labels: ['Metros'],
+                        labels: ['Consolidado'],
                         datasets: [
                             { label: 'Físico (m)', data: [totalMetros], backgroundColor: '#0284c7', borderRadius: 4 },
                             { label: 'Pagable (m)', data: [totalPagoFinal], backgroundColor: '#f59e0b', borderRadius: 4 }
                         ]
                     },
-                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: true } } }
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        animation: false,
+                        plugins: { legend: { labels: { boxWidth: 10, font: { size: 9 } } } }
+                    }
                 });
             }
         });
@@ -3148,7 +3434,7 @@
 
     function imprimirOExportarPDF() {
         showToast("Abriendo Impresión", "Cargando vista previa en formato Carta...");
-        setTimeout(() => { window.print(); }, 300);
+        setTimeout(() => { window.print(); }, 350);
     }
 
     function cambiarVistaEstadisticaMenu(val) {
@@ -3216,15 +3502,14 @@
             pozosKeys = pozosKeys.filter(k => pozosData[k].empresa === empFiltro);
         }
 
-        let totalMetrosFisicos = 0, totalMetrosPagables = 0, totalRecuperadoM = 0, totalTurnosContados = 0;
+        let totalMetrosFisicos = 0, totalMetrosPagables = 0, totalRecuperadoM = 0;
         let empresaMetrosMap = {};
         let pozosActivosProgresoLabels = [], pozosActivosActuales = [], pozosActivosTargets = [];
         let empresaPagosMap = {};
         let operadorMetrosMap = {};
-        let rendimientoSecuencialLabels = [], rendimientoSecuencialData = [];
-        let calidadSecuencialLabels = [], calidadSecuencialData = [];
+        let todosAvancesFiltrados = [];
 
-        // Rango dinámico de meses (desde mes seleccionado hasta el mes actual)
+        // Rango dinámico de meses (desde mes seleccionado hasta mes actual)
         let mesesRangoDinamico = [];
         let metrosPorMesRango = {};
         const now = new Date();
@@ -3238,7 +3523,7 @@
             anioInicio = parseInt(partesFiltro[0]);
             mesInicioNum = parseInt(partesFiltro[1]);
         } else {
-            anioInicio = anioActual - 1; // Por defecto último año si es todos
+            anioInicio = anioActual - 1;
             mesInicioNum = 1;
         }
 
@@ -3279,6 +3564,7 @@
                     let cumpleMes = (mesFiltro === 'TODOS' || (fAv && fAv.startsWith(mesFiltro)));
 
                     if (cumpleMes) {
+                        todosAvancesFiltrados.push(av);
                         let met = parseFloat(av.hasta) - parseFloat(av.desde);
                         let rec = parseFloat(av.recuperado) || 0;
                         let pag = av.pagoEstandar ? parseFloat(av.pagoEstandar) : calcularMetrosAPagar(met, rec, av.meteorizacion);
@@ -3293,14 +3579,6 @@
 
                         if (!operadorMetrosMap[perf]) operadorMetrosMap[perf] = 0;
                         operadorMetrosMap[perf] += met;
-
-                        // Curva secuencial por turno (SIN FECHAS SATURADAS)
-                        rendimientoSecuencialData.push(met);
-                        rendimientoSecuencialLabels.push(`Turno ${rendimientoSecuencialData.length}`);
-
-                        let pctRec = met > 0 ? ((rec / met) * 100).toFixed(1) : 0;
-                        calidadSecuencialData.push(pctRec);
-                        calidadSecuencialLabels.push(`Turno ${calidadSecuencialData.length}`);
                     }
 
                     if (fAv && fAv.length >= 7) {
@@ -3321,15 +3599,11 @@
         let fisicoPagosActivos = empresasPagosActivas.map(emp => empresaPagosMap[emp].fisico);
         let pagablePagosActivos = empresasPagosActivas.map(emp => empresaPagosMap[emp].pagable);
 
-        Object.keys(turnosData).forEach(tk => {
-            let t = turnosData[tk];
-            let cumpleMesTurno = (mesFiltro === 'TODOS' || (t.fecha && t.fecha.startsWith(mesFiltro)));
-            if (cumpleMesTurno && (empFiltro === 'TODAS' || (pozosData[t.pozo] && pozosData[t.pozo].empresa === empFiltro))) {
-                totalTurnosContados++;
-            }
-        });
+        // Agrupación real por turno
+        const datosRendimientoTurnos = agruparRendimientoPorTurnos(todosAvancesFiltrados);
+        let cantidadTurnosUnicos = datosRendimientoTurnos.valores.length;
 
-        let velProm = totalTurnosContados > 0 ? (totalMetrosFisicos / totalTurnosContados) : (totalMetrosFisicos > 0 ? totalMetrosFisicos : 0);
+        let velProm = cantidadTurnosUnicos > 0 ? (totalMetrosFisicos / cantidadTurnosUnicos) : 0;
         let recGralPct = totalMetrosFisicos > 0 ? ((totalRecuperadoM / totalMetrosFisicos) * 100) : 0;
 
         document.getElementById('kpiEstVelocidad').innerText = velProm.toFixed(2) + " m/turno";
@@ -3343,122 +3617,295 @@
             if (chartKpiRend) chartKpiRend.destroy();
             if (chartKpiCal) chartKpiCal.destroy();
 
+            // 1. CURVA ANALÍTICA DE RENDIMIENTO POR TURNO (EJE X SOLO CON TÍTULO "TURNOS", CLIC PARA DETALLE)
             const ctxRend = document.getElementById('chartKPI_Rendimiento').getContext('2d');
             chartKpiRend = new Chart(ctxRend, {
                 type: 'line',
                 data: {
-                    labels: rendimientoSecuencialLabels.length > 0 ? rendimientoSecuencialLabels : ['Sin Registros'],
+                    labels: datosRendimientoTurnos.labelsVacios.length > 0 ? datosRendimientoTurnos.labelsVacios : [''],
                     datasets: [{
-                        label: 'Avance Secuencial por Turno (m)',
-                        data: rendimientoSecuencialData.length > 0 ? rendimientoSecuencialData : [0],
+                        label: 'Metros Perforados (m)',
+                        data: datosRendimientoTurnos.valores.length > 0 ? datosRendimientoTurnos.valores : [0],
                         borderColor: '#0284c7',
-                        backgroundColor: 'rgba(2, 132, 199, 0.1)',
+                        backgroundColor: 'rgba(2, 132, 199, 0.12)',
                         fill: true,
                         tension: 0.3,
-                        borderWidth: 2.5
+                        borderWidth: 2.5,
+                        pointRadius: 5,
+                        pointHoverRadius: 7,
+                        pointBackgroundColor: '#0284c7'
                     }]
                 },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { enabled: false } // Desactivado hover automático: solo muestra al hacer clic
+                    },
+                    onClick: (e, elements) => {
+                        if (elements.length > 0 && datosRendimientoTurnos.detalles.length > 0) {
+                            const idx = elements[0].index;
+                            const info = datosRendimientoTurnos.detalles[idx];
+                            if (info) {
+                                const recPct = info.metros > 0 ? ((info.recuperado / info.metros) * 100).toFixed(1) : '0.0';
+                                abrirModalDetalleGrafica(
+                                    `Detalle Turno #${info.numero}`,
+                                    `<div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200 space-y-2">
+                                        <p><b>Fecha:</b> <span class="font-mono-code text-slate-900">${info.fecha}</span></p>
+                                        <p><b>Jornada:</b> <span class="text-sky-700 font-bold">${info.jornada}</span></p>
+                                        <p><b>Avance Perforado:</b> <span class="font-mono-code font-black text-emerald-700 text-sm">${info.metros.toFixed(2)} m</span></p>
+                                        <p><b>Recuperación Turno:</b> <span class="font-mono-code font-bold">${info.recuperado.toFixed(2)} m (${recPct}%)</span></p>
+                                        <p><b>Perforador:</b> <span class="font-bold text-slate-900">${info.perforador}</span></p>
+                                        <p><b>Geólogo Supervisor:</b> <span class="font-bold text-slate-900">${info.geologo}</span></p>
+                                    </div>`
+                                );
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Turnos',
+                                color: '#0f172a',
+                                font: { size: 12, weight: 'bold' }
+                            },
+                            ticks: { display: false },
+                            grid: { display: false }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Metros Perforados (m)',
+                                color: '#475569',
+                                font: { size: 11, weight: 'bold' }
+                            },
+                            ticks: { color: '#475569', font: { size: 10 } }
+                        }
+                    }
+                }
             });
 
+            // 2. CALIDAD DEL TESTIGO POR METEORIZACIÓN (ESTRATIGRAFÍA SECUENCIAL + CLIC PARA DETALLE)
+            const datosMeteorizacion = calcularCalidadPorMeteorizacion(todosAvancesFiltrados);
             const ctxCal = document.getElementById('chartKPI_Calidad').getContext('2d');
             chartKpiCal = new Chart(ctxCal, {
                 type: 'line',
                 data: {
-                    labels: calidadSecuencialLabels.length > 0 ? calidadSecuencialLabels : ['Sin Registros'],
+                    labels: datosMeteorizacion.labels.length > 0 ? datosMeteorizacion.labels : ['Sin Datos'],
+                    datasets: [
+                        {
+                            label: '% Recuperación Real',
+                            data: datosMeteorizacion.reales.length > 0 ? datosMeteorizacion.reales : [0],
+                            borderColor: '#10b981',
+                            backgroundColor: 'rgba(16, 185, 129, 0.14)',
+                            fill: true,
+                            tension: 0.25,
+                            borderWidth: 2.5,
+                            pointRadius: 5,
+                            pointHoverRadius: 7,
+                            pointBackgroundColor: '#10b981'
+                        },
+                        {
+                            label: '% Estándar Contractual',
+                            data: datosMeteorizacion.estandares.length > 0 ? datosMeteorizacion.estandares : [0],
+                            borderColor: '#f59e0b',
+                            borderDash: [5, 5],
+                            fill: false,
+                            tension: 0,
+                            borderWidth: 2,
+                            pointRadius: 4,
+                            pointBackgroundColor: '#f59e0b'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { labels: { color: '#475569', font: { size: 10, weight: 'bold' } } },
+                        tooltip: { enabled: false } // Desactivado hover automático: solo muestra al hacer clic
+                    },
+                    onClick: (e, elements) => {
+                        if (elements.length > 0 && datosMeteorizacion.detalles.length > 0) {
+                            const idx = elements[0].index;
+                            const info = datosMeteorizacion.detalles[idx];
+                            if (info) {
+                                const cumple = parseFloat(info.pctReal) >= info.umbral;
+                                abrirModalDetalleGrafica(
+                                    `Calidad: ${info.categoria}`,
+                                    `<div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200 space-y-2">
+                                        <p><b>Litología / Meteorización:</b> <span class="text-slate-900 font-bold">${info.categoria}</span></p>
+                                        <p><b>Metros Perforados:</b> <span class="font-mono-code font-bold">${info.metros} m</span></p>
+                                        <p><b>Metros Recuperados:</b> <span class="font-mono-code font-bold">${info.rec} m</span></p>
+                                        <p><b>Recuperación Real:</b> <span class="font-mono-code font-black text-sm ${cumple ? 'text-emerald-700' : 'text-amber-700'}">${info.pctReal}%</span></p>
+                                        <p><b>Estándar Exigido:</b> <span class="font-mono-code font-bold text-slate-700">&ge; ${info.umbral}%</span></p>
+                                        <p><b>Evaluación:</b> <span class="font-extrabold ${cumple ? 'text-emerald-700' : 'text-amber-700'}">${cumple ? 'CUMPLE ESTÁNDAR (PAGO 100%)' : 'BAJO ESTÁNDAR (PAGO RECUPERADO)'}</span></p>
+                                    </div>`
+                                );
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Grado de Meteorización (Suelo \u2192 Veta)',
+                                color: '#0f172a',
+                                font: { size: 11, weight: 'bold' }
+                            },
+                            ticks: { color: '#475569', font: { size: 9, weight: 'bold' } }
+                        },
+                        y: {
+                            min: 0,
+                            max: 100,
+                            title: {
+                                display: true,
+                                text: '% Recuperación vs Estándar',
+                                color: '#475569',
+                                font: { size: 11, weight: 'bold' }
+                            },
+                            ticks: { color: '#475569', font: { size: 10 } }
+                        }
+                    }
+                }
+            });
+            return;
+        }
+
+        if (chartEstadisticaInst) chartEstadisticaInst.destroy();
+        const ctxDinamica = document.getElementById('chartEstadisticaDinamica').getContext('2d');
+        const tituloEl = document.getElementById('tituloGraficaActiva');
+        const subtituloEl = document.getElementById('subtituloGraficaActiva');
+
+        if (menuVista === 'METROS_EMPRESA') {
+            tituloEl.innerText = "Metros Perforados por Empresas";
+            subtituloEl.innerText = "Acumulado Físico Activo (m)";
+            chartEstadisticaInst = new Chart(ctxDinamica, {
+                type: 'bar',
+                data: {
+                    labels: empresasConDatos.length > 0 ? empresasConDatos : ['Sin Actividad'],
                     datasets: [{
-                        label: '% Recuperación Turno',
-                        data: calidadSecuencialData.length > 0 ? calidadSecuencialData : [0],
-                        borderColor: '#10b981',
-                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                        fill: true,
-                        tension: 0.2,
-                        borderWidth: 2
+                        label: 'Metros Perforados (m)',
+                        data: metrosEmpresasActivas.length > 0 ? metrosEmpresasActivas : [0],
+                        backgroundColor: ['#0284c7', '#2563eb', '#10b981', '#f59e0b'],
+                        borderRadius: 8
                     }]
                 },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { max: 100 } } }
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, ticks: { color: '#475569', font: { size: 11 } }, grid: { color: '#e2e8f0' } },
+                        x: { ticks: { color: '#0f172a', font: { size: 11, weight: 'bold' } }, grid: { display: false } }
+                    }
+                }
             });
-        } else {
-            if (chartEstadisticaInst) chartEstadisticaInst.destroy();
-            const ctxD = document.getElementById('chartEstadisticaDinamica').getContext('2d');
-            const tituloGrafica = document.getElementById('tituloGraficaActiva');
-            const subtituloGrafica = document.getElementById('subtituloGraficaActiva');
+        } else if (menuVista === 'PROGRESO_ACTIVO') {
+            tituloEl.innerText = "Progreso de Metros Actuales vs Target (Pozos Activos)";
+            subtituloEl.innerText = "Comparativa Frentes en Ejecución";
+            chartEstadisticaInst = new Chart(ctxDinamica, {
+                type: 'bar',
+                data: {
+                    labels: pozosActivosProgresoLabels.length > 0 ? pozosActivosProgresoLabels : ['Sin Pozos Activos'],
+                    datasets: [
+                        { label: 'Metros Actuales (m)', data: pozosActivosActuales.length > 0 ? pozosActivosActuales : [0], backgroundColor: '#10b981', borderRadius: 6 },
+                        { label: 'Target Programado (m)', data: pozosActivosTargets.length > 0 ? pozosActivosTargets : [0], backgroundColor: '#cbd5e1', borderRadius: 6 }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { labels: { color: '#475569', font: { size: 11, weight: 'bold' } } } },
+                    scales: {
+                        y: { beginAtZero: true, ticks: { color: '#475569', font: { size: 11 } }, grid: { color: '#e2e8f0' } },
+                        x: { ticks: { color: '#0f172a', font: { size: 11, weight: 'bold' } }, grid: { display: false } }
+                    }
+                }
+            });
+        } else if (menuVista === 'FISICOS_VS_PAGABLES') {
+            tituloEl.innerText = "Metros Físicos vs Metros Pagables (Auditoría Contractual)";
+            subtituloEl.innerText = "Comparativa por Cliente Activo";
+            chartEstadisticaInst = new Chart(ctxDinamica, {
+                type: 'bar',
+                data: {
+                    labels: empresasPagosActivas.length > 0 ? empresasPagosActivas : ['Sin Actividad'],
+                    datasets: [
+                        { label: 'Metros Físicos Perforados (m)', data: fisicoPagosActivos.length > 0 ? fisicoPagosActivos : [0], backgroundColor: '#0284c7', borderRadius: 6 },
+                        { label: 'Metros Pagables Estándar (m)', data: pagablePagosActivos.length > 0 ? pagablePagosActivos : [0], backgroundColor: '#f59e0b', borderRadius: 6 }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { labels: { color: '#475569', font: { size: 11, weight: 'bold' } } } },
+                    scales: {
+                        y: { beginAtZero: true, ticks: { color: '#475569', font: { size: 11 } }, grid: { color: '#e2e8f0' } },
+                        x: { ticks: { color: '#0f172a', font: { size: 11, weight: 'bold' } }, grid: { display: false } }
+                    }
+                }
+            });
+        } else if (menuVista === 'RENDIMIENTO_MES') {
+            tituloEl.innerText = "Rendimiento de Perforación por Mes (Rango Dinámico)";
+            subtituloEl.innerText = "Progresión Mensual hasta Fecha Actual (m)";
+            let labelsMeses = mesesRangoDinamico.map(mStr => {
+                let p = mStr.split('-');
+                return `${nombresMesesCorto[parseInt(p[1])]} ${p[0]}`;
+            });
+            let dataMeses = mesesRangoDinamico.map(mStr => metrosPorMesRango[mStr]);
 
-            const commonOptions = {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { labels: { color: '#0f172a', font: { weight: 'bold', size: 12 } } } },
-                scales: { x: { ticks: { color: '#475569' } }, y: { ticks: { color: '#475569' } } }
-            };
+            chartEstadisticaInst = new Chart(ctxDinamica, {
+                type: 'bar',
+                data: {
+                    labels: labelsMeses,
+                    datasets: [{
+                        label: 'Metros Mensuales (m)',
+                        data: dataMeses,
+                        backgroundColor: '#2563eb',
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, ticks: { color: '#475569', font: { size: 11 } }, grid: { color: '#e2e8f0' } },
+                        x: { ticks: { color: '#0f172a', font: { size: 11, weight: 'bold' } }, grid: { display: false } }
+                    }
+                }
+            });
+        } else if (menuVista === 'RENDIMIENTO_OPERADOR') {
+            tituloEl.innerText = "Rendimiento por Operador Perforador";
+            subtituloEl.innerText = "Productividad Acumulada (m)";
+            let ops = Object.keys(operadorMetrosMap).filter(op => operadorMetrosMap[op] > 0);
+            let opMets = ops.map(op => operadorMetrosMap[op]);
 
-            if (menuVista === 'METROS_EMPRESA') {
-                tituloGrafica.innerText = "Metros Perforados por Empresas (Activas)";
-                subtituloGrafica.innerText = "Cero espacios en blanco";
-                chartEstadisticaInst = new Chart(ctxD, {
-                    type: 'bar',
-                    data: {
-                        labels: empresasConDatos,
-                        datasets: [{ label: 'Metros Perforados (m)', data: metrosEmpresasActivas, backgroundColor: '#0284c7', borderRadius: 8 }]
-                    },
-                    options: commonOptions
-                });
-            } else if (menuVista === 'PROGRESO_ACTIVO') {
-                tituloGrafica.innerText = "Progreso Actual vs Target (Pozos Activos)";
-                subtituloGrafica.innerText = "Sondajes en Ejecución";
-                chartEstadisticaInst = new Chart(ctxD, {
-                    type: 'bar',
-                    data: {
-                        labels: pozosActivosProgresoLabels,
-                        datasets: [
-                            { label: 'Metros Actuales (m)', data: pozosActivosActuales, backgroundColor: '#10b981', borderRadius: 6 },
-                            { label: 'Target Planificado (m)', data: pozosActivosTargets, backgroundColor: '#cbd5e1', borderRadius: 6 }
-                        ]
-                    },
-                    options: commonOptions
-                });
-            } else if (menuVista === 'FISICOS_VS_PAGABLES') {
-                tituloGrafica.innerText = "Metros Físicos vs Metros Pagables (Empresas Activas)";
-                subtituloGrafica.innerText = "Auditoría Contractual";
-                chartEstadisticaInst = new Chart(ctxD, {
-                    type: 'bar',
-                    data: {
-                        labels: empresasPagosActivas,
-                        datasets: [
-                            { label: 'Metros Físicos (m)', data: fisicoPagosActivos, backgroundColor: '#0284c7', borderRadius: 6 },
-                            { label: 'Metros Pagables (m)', data: pagablePagosActivos, backgroundColor: '#f59e0b', borderRadius: 6 }
-                        ]
-                    },
-                    options: commonOptions
-                });
-            } else if (menuVista === 'RENDIMIENTO_MES') {
-                tituloGrafica.innerText = "Rendimiento de Perforación por Rango Dinámico de Meses";
-                subtituloGrafica.innerText = "Evolución cronológica progresiva";
-                let labelsMesesFormateados = mesesRangoDinamico.map(mStr => {
-                    let parts = mStr.split('-');
-                    return `${nombresMesesCorto[parseInt(parts[1])] || parts[1]} ${parts[0]}`;
-                });
-                let dataMesesValores = mesesRangoDinamico.map(mStr => metrosPorMesRango[mStr]);
-
-                chartEstadisticaInst = new Chart(ctxD, {
-                    type: 'bar',
-                    data: {
-                        labels: labelsMesesFormateados,
-                        datasets: [{ label: 'Metros Perforados (m)', data: dataMesesValores, backgroundColor: '#6366f1', borderRadius: 8 }]
-                    },
-                    options: commonOptions
-                });
-            } else if (menuVista === 'RENDIMIENTO_OPERADOR') {
-                tituloGrafica.innerText = "Rendimiento por Operador Perforador";
-                subtituloGrafica.innerText = "Productividad por Nómina";
-                chartEstadisticaInst = new Chart(ctxD, {
-                    type: 'bar',
-                    data: {
-                        labels: Object.keys(operadorMetrosMap).length > 0 ? Object.keys(operadorMetrosMap) : ['Sin Registros'],
-                        datasets: [{ label: 'Metros por Operador (m)', data: Object.values(operadorMetrosMap).length > 0 ? Object.values(operadorMetrosMap) : [0], backgroundColor: '#2563eb', borderRadius: 8 }]
-                    },
-                    options: commonOptions
-                });
-            }
+            chartEstadisticaInst = new Chart(ctxDinamica, {
+                type: 'bar',
+                data: {
+                    labels: ops.length > 0 ? ops : ['Sin Operadores'],
+                    datasets: [{
+                        label: 'Metros Perforados (m)',
+                        data: opMets.length > 0 ? opMets : [0],
+                        backgroundColor: '#0284c7',
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { beginAtZero: true, ticks: { color: '#475569', font: { size: 11 } }, grid: { color: '#e2e8f0' } },
+                        y: { ticks: { color: '#0f172a', font: { size: 11, weight: 'bold' } }, grid: { display: false } }
+                    }
+                }
+            });
         }
     }
 
@@ -3467,186 +3914,134 @@
         if (!sel) return;
         sel.innerHTML = '<option value="">-- Seleccionar Sondaje a Eliminar --</option>';
         Object.keys(pozosData).forEach(k => {
+            let p = pozosData[k];
             let opt = document.createElement('option');
             opt.value = k;
-            opt.text = k + " [" + pozosData[k].empresa + "]";
+            opt.text = `${k} [${p.empresa}] (${p.estado})`;
             sel.appendChild(opt);
         });
     }
 
     function eliminarPozoEspecifico() {
         if (perfilActual === 'GERENCIA') return;
-        let codigo = document.getElementById('adminSelectPozoBorrar').value;
-        if (!codigo) { alert("Seleccione un sondaje."); return; }
-        if (confirm("¿Eliminar el sondaje " + codigo + " permanentemente?")) {
-            delete pozosData[codigo];
-            if (pozoActivoId === codigo) { pozoActivoId = ''; localStorage.removeItem('jireth_pozo_activo'); }
+        let cod = document.getElementById('adminSelectPozoBorrar').value;
+        if (!cod) { alert("Seleccione un sondaje."); return; }
+        if (confirm(`¿Eliminar permanentemente el sondaje ${cod}?`)) {
+            delete pozosData[cod];
+            if (pozoActivoId === cod) {
+                pozoActivoId = '';
+                localStorage.removeItem('jireth_pozo_activo');
+            }
+            Object.keys(turnosData).forEach(tk => {
+                if (turnosData[tk].pozo === cod) delete turnosData[tk];
+            });
             persistirLocalYEncolar();
-            registrarLogAuditoria("SONDAJE ELIMINADO", `Pozo ${codigo} borrado permanentemente`);
+            registrarLogAuditoria("SONDAJE ELIMINADO", `Pozo ${cod} borrado permanentemente.`);
+            poblarSelectAdminBorrar();
             refrescarSelectoresOperativos();
             refrescarSelectorModuloUno();
             poblarSelectTopografia();
             poblarSelectCierre();
-            poblarSelectAdminBorrar();
             renderizarSalaSituacional();
-            showToast("Sondaje Eliminado", "Borrado del sistema.");
+            showToast("Sondaje Eliminado", `Sondaje ${cod} eliminado.`);
         }
     }
 
-    function copiarReportePortapapeles() {
-        if (!pozoActivoId || !pozosData[pozoActivoId]) return;
-        let p = pozosData[pozoActivoId];
-        let texto = "=== COMPLEJO JIRETH C.A. — REPORTE DIARIO DE GEOLOGÍA (DSR) ===\nSondaje: " + p.codigo + " [" + p.empresa + "] | Proyecto: " + p.proyecto + "\n";
-        p.avances.forEach((t, i) => {
-            let lonM = parseFloat(t.hasta) - parseFloat(t.desde);
-            let pagVal = t.pagoEstandar ? parseFloat(t.pagoEstandar) : calcularMetrosAPagar(lonM, parseFloat(t.recuperado), t.meteorizacion);
-            texto += `Tramo #${i+1}: ${t.desde}-${t.hasta}m | ${t.diametro} | Rec: ${t.recuperado}m (${t.porcentaje}%) | Pago: ${pagVal}m | ${t.meteorizacion}\n`;
-        });
-        navigator.clipboard.writeText(texto).then(() => { showToast("Copiado", "Resumen copiado al portapapeles."); });
-    }
-
     function exportarBackupJSON() {
-        let backup = { pozos: pozosData, turnos: turnosData, perforadores: perforadoresData, activo: pozoActivoId, logs: auditLogs };
+        let backup = { pozos: pozosData, turnos: turnosData, perforadores: perforadoresData, logs: auditLogs };
         let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backup, null, 2));
-        let dlAnchorElem = document.createElement('a');
-        dlAnchorElem.setAttribute("href", dataStr);
-        dlAnchorElem.setAttribute("download", "jireth_geocore_backup_" + Date.now() + ".json");
-        dlAnchorElem.click();
-        registrarLogAuditoria("BACKUP EXPORTADO", "Respaldo JSON descargado localmente");
+        let dl = document.createElement('a');
+        dl.setAttribute("href", dataStr);
+        dl.setAttribute("download", "Jireth_GeoCore_Backup_" + new Date().toISOString().split('T')[0] + ".json");
+        dl.click();
+        registrarLogAuditoria("BACKUP EXPORTADO", "Se descargó copia JSON local.");
+        showToast("Backup Exportado", "Archivo JSON descargado.");
     }
 
-    function importarBackupJSON(event) {
-        if (perfilActual === 'GERENCIA') return;
-        let file = event.target.files[0];
+    function importarBackupJSON(e) {
+        let file = e.target.files[0];
         if (!file) return;
         let reader = new FileReader();
-        reader.onload = function(e) {
+        reader.onload = function(evt) {
             try {
-                let imp = JSON.parse(e.target.result);
-                if (imp.pozos) {
-                    pozosData = imp.pozos;
-                    turnosData = imp.turnos || {};
-                    perforadoresData = imp.perforadores || ["CARLOS PÉREZ", "JEAN C.", "MIGUEL TORRES"];
-                    pozoActivoId = imp.activo || '';
-                    auditLogs = imp.logs || [];
-                    migrarRecalcularPagosEstandar();
-                    persistirLocalYEncolar();
-                    registrarLogAuditoria("BACKUP IMPORTADO", "Base de datos restaurada desde archivo JSON");
-                    poblarSelectPerforadoresTurno();
-                    renderizarTablaPerforadores();
-                    refrescarSelectoresOperativos();
-                    refrescarSelectorModuloUno();
-                    poblarSelectTopografia();
-                    poblarSelectCierre();
-                    renderizarSalaSituacional();
-                    if (pozoActivoId) cargarDatosPozoEnFormularios(pozoActivoId);
-                    showToast("Respaldo Importado", "Base de datos restaurada con éxito.");
-                } else { alert("JSON inválido."); }
-            } catch(err) { alert("Error: " + err); }
+                let parsed = JSON.parse(evt.target.result);
+                if (parsed.pozos) { pozosData = parsed.pozos; localStorage.setItem('jireth_pozos', JSON.stringify(pozosData)); }
+                if (parsed.turnos) { turnosData = parsed.turnos; localStorage.setItem('jireth_turnos', JSON.stringify(turnosData)); }
+                if (parsed.perforadores) { perforadoresData = parsed.perforadores; localStorage.setItem('jireth_perforadores', JSON.stringify(perforadoresData)); }
+                registrarLogAuditoria("BACKUP IMPORTADO", "Se restauraron datos desde JSON externo.");
+                showToast("Backup Restaurado", "Los datos han sido importados con éxito.");
+                setTimeout(() => location.reload(), 800);
+            } catch (err) { alert("Error al leer JSON."); }
         };
         reader.readAsText(file);
+    }
+
+    function copiarReportePortapapeles() {
+        let el = document.getElementById('printable-area');
+        if (!el) return;
+        let texto = el.innerText;
+        navigator.clipboard.writeText(texto).then(() => {
+            showToast("Resumen Copiado", "Texto listo en el portapapeles.");
+        });
     }
 
     function persistirLocalYEncolar() {
         localStorage.setItem('jireth_pozos', JSON.stringify(pozosData));
         localStorage.setItem('jireth_turnos', JSON.stringify(turnosData));
         localStorage.setItem('jireth_perforadores', JSON.stringify(perforadoresData));
-        localStorage.setItem('jireth_audit_logs', JSON.stringify(auditLogs));
 
-        const payloadData = {
-            pozos: pozosData,
-            turnos: turnosData,
-            perforadores: perforadoresData,
-            logs: auditLogs,
-            actualizado: new Date().toISOString()
-        };
-
-        encolarSincronizacionLocal(payloadData);
-
-        if (navigator.onLine) {
-            initSupabaseSafe();
-            if (supabaseClient) {
-                procesarColaSincronizacion();
-            }
+        if (!navigator.onLine) {
+            syncQueue.push({ timestamp: Date.now(), tipo: "SYNC_FULL" });
+            localStorage.setItem('jireth_sync_queue', JSON.stringify(syncQueue));
+            actualizarBadgeSyncQueue();
+        } else {
+            sincronizarConSupabaseReal(true);
         }
     }
 
-    function encolarSincronizacionLocal(payload) {
-        syncQueue = [{ id: 'db_principal', payload: payload, timestamp: Date.now() }];
-        localStorage.setItem('jireth_sync_queue', JSON.stringify(syncQueue));
-        if (!navigator.onLine) marcarModoOfflineVisual();
-        actualizarBadgeSyncQueue();
-    }
-
-    async function procesarColaSincronizacion() {
-        if (!navigator.onLine || !supabaseClient || syncQueue.length === 0) return;
-        try {
-            const ultimoCambio = syncQueue[syncQueue.length - 1];
-            const { error } = await supabaseClient.from('jireth_geocore').upsert({ id: ultimoCambio.id, payload: ultimoCambio.payload });
-            if (!error) {
-                syncQueue = [];
-                localStorage.setItem('jireth_sync_queue', JSON.stringify(syncQueue));
-                actualizarBadgeSyncQueue();
-                const indRed = document.getElementById('indicadorRed');
-                if (indRed) {
-                    indRed.innerText = "(En Línea)";
-                    indRed.className = "text-emerald-600 font-extrabold";
-                }
-            }
-        } catch(e) { marcarModoOfflineVisual(); }
-    }
-
-    async function sincronizarDesdeSupabaseCloud(mostrarAlerta = true) {
-        if (!navigator.onLine) {
-            if (mostrarAlerta) alert("Estás en modo offline local.");
+    async function sincronizarConSupabaseReal(silencioso = false) {
+        initSupabaseSafe();
+        if (!supabaseClient || !navigator.onLine) {
+            if (!silencioso) showToast("Modo Offline", "Cambios guardados en dispositivo.");
             return;
         }
-        initSupabaseSafe();
-        if (!supabaseClient) return;
-
         try {
-            await procesarColaSincronizacion();
-            const { data, error } = await supabaseClient.from('jireth_geocore').select('payload').eq('id', 'db_principal').maybeSingle();
-            if (error) { if (mostrarAlerta) alert("Error de conexión con la nube."); return; }
+            const payload = { id: 'jireth_master_db', data: { pozos: pozosData, turnos: turnosData, perforadores: perforadoresData }, updated_at: new Date().toISOString() };
+            const { error } = await supabaseClient.from('geocore_sync').upsert(payload, { onConflict: 'id' });
+            if (!error) {
+                syncQueue = [];
+                localStorage.setItem('jireth_sync_queue', '[]');
+                actualizarBadgeSyncQueue();
+                if (!silencioso) showToast("Sincronizado", "Datos respaldados en la nube.");
+            }
+        } catch (err) { console.warn("Sync warning:", err); }
+    }
 
-            if (data && data.payload) {
-                if (data.payload.pozos && Object.keys(data.payload.pozos).length > 0) {
-                    pozosData = data.payload.pozos;
+    async function sincronizarDesdeSupabaseCloud(mostrarAlerta = false) {
+        initSupabaseSafe();
+        if (!supabaseClient || !navigator.onLine) return;
+        try {
+            const { data, error } = await supabaseClient.from('geocore_sync').select('data').eq('id', 'jireth_master_db').single();
+            if (!error && data && data.data) {
+                if (data.data.pozos && Object.keys(data.data.pozos).length > 0) {
+                    pozosData = data.data.pozos;
                     localStorage.setItem('jireth_pozos', JSON.stringify(pozosData));
                 }
-                if (data.payload.turnos) {
-                    turnosData = data.payload.turnos;
+                if (data.data.turnos && Object.keys(data.data.turnos).length > 0) {
+                    turnosData = data.data.turnos;
                     localStorage.setItem('jireth_turnos', JSON.stringify(turnosData));
                 }
-                if (data.payload.perforadores) {
-                    perforadoresData = data.payload.perforadores;
+                if (data.data.perforadores && data.data.perforadores.length > 0) {
+                    perforadoresData = data.data.perforadores;
                     localStorage.setItem('jireth_perforadores', JSON.stringify(perforadoresData));
-                    poblarSelectPerforadoresTurno();
-                    renderizarTablaPerforadores();
                 }
-                if (data.payload.logs) {
-                    auditLogs = data.payload.logs;
-                    localStorage.setItem('jireth_audit_logs', JSON.stringify(auditLogs));
-                }
-                migrarRecalcularPagosEstandar();
                 refrescarSelectoresOperativos();
                 refrescarSelectorModuloUno();
                 poblarSelectTopografia();
-                poblarSelectCierre();
-                poblarSelectRetomarTurno();
                 renderizarSalaSituacional();
-                renderizarLogAuditoriaUI();
-                if (pozoActivoId && pozosData[pozoActivoId]) cargarDatosPozoEnFormularios(pozoActivoId);
-                if (mostrarAlerta) showToast("Sincronizado", "Datos sincronizados con la nube.");
-            } else {
-                persistirLocalYEncolar();
+                if (mostrarAlerta) showToast("Nube Actualizada", "Datos descargados de Supabase.");
             }
-        } catch(e) { if (mostrarAlerta) alert("Error al sincronizar."); }
-    }
-
-    async function sincronizarConSupabaseReal() {
-        if (!navigator.onLine) { alert("No hay conexión a internet."); return; }
-        await sincronizarDesdeSupabaseCloud(true);
+        } catch (err) { console.warn("Download sync warning:", err); }
     }
 </script>
 </body>
